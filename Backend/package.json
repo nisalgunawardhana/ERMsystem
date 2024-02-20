@@ -11,5 +11,11 @@
     "project"
   ],
   "author": "Nisal Gunawardhana,Abhilasha gunawardhana,Thirasara dewmin,navindu sooriyaarachchi,hinesha,pamali sapunika,ranuga",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.18.2",
+    "mongoose": "^8.1.3"
+  }
 }
