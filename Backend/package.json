@@ -4,7 +4,8 @@
   "description": "ERM System",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "monstart" : "nodemon server.js "
   },
   "keywords": [
     "mern",
