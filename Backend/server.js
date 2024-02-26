@@ -23,6 +23,10 @@ connection.once("open", () => {
     console.log("MongoDB connection successful");
 });
 
+const otherRouter = require("./routes/otherExpense.js");
+
+app.use("/otherExpense", otherRouter);
+
 app.listen(PORT, () => {
     console.log(`Server is up and running on: ${PORT}`);
 });
