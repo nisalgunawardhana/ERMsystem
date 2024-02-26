@@ -3,7 +3,7 @@ let otherExpenses = require("../models/otherExpense");
 
 router.route("/add").post((req,res)=>{
     const Type = req.body.Type;
-    const Date = Date(req.body.Date);
+    const Date = req.body.Date;
     const Status = req.body.Status;
     const Cost = req.body.Cost;
 

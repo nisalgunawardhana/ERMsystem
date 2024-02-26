@@ -7,7 +7,7 @@ const otherSchema = new Schema({
         required: true
     },
     Date:{
-        type: Date,
+        type: String,
         required: true
     },
     Status:{
