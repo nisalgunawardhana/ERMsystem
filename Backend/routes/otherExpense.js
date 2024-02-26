@@ -24,7 +24,7 @@ router.route("/add").post((req,res)=>{
 
 
 router.route("/").get((req,res)=>{
-    newOther.find().then((otherExpense)=>{
+    otherExpenses.find().then((otherExpense)=>{
         res.json(otherExpense)
     }).catch((err)=>{
         console.log(err)
