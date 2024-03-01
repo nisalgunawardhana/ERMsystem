@@ -13,6 +13,7 @@ const BillSchema = new Schema({
     },
 
     items: [{
+        product_id: String,
         quantity: Number,
         unit_price: Number
       }],
