@@ -14,7 +14,7 @@ const otherSchema = new Schema({
         type: Number,
         required: true
     },
-    salaries:{
+    Salaries:{
         type: Number,
         required: true
     },
