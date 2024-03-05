@@ -9,30 +9,28 @@ const MeetingSchema = new Schema({
         unique: true
       },
 
-    trainee_name: {
-        first: {
-          type: String,
-          required: true
-        },
-        last: {
-          type: String,
-          required: true
-        }
-      },
-
-    trainee_gender: {
+    meeting_name: {
         type: String,
-        enum: ['male', 'female'],
-        required: true
+        required: true,
       },
 
-    trainee_contact: {
-        type: String,
-        required: true
-      },
-
-    trainee_rating: {
+    meeting_start: {
         type: Number,
+        required: true
+      },
+
+    meeting_end: {
+        type: Number,
+        required: true
+      },
+
+    meeting_date: {
+        type: String,
+        required: true
+      },
+
+    meeting_location: {
+        type: String,
         required: true
     } 
     
