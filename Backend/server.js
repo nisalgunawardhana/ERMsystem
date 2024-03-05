@@ -34,13 +34,16 @@ app.use("/bills", billsRouter);
 
 //tax func
 const taxRouter = require("./routes/tax.js");
-
 app.use("/tax", taxRouter);
 
 //profit func
 const profitRouter = require("./routes/profit.js");
-
 app.use("/profit", profitRouter);
+
+//customer func
+const customerRouter = require("./routes/customerroute.js");
+app.use("/customer", customerRouter);
+
 
 app.listen(PORT, () => {
     console.log(`Server is up and running on: ${PORT}`);
