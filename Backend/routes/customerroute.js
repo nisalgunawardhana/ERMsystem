@@ -74,5 +74,26 @@ router.route("/delete/:customer_id").delete(async (req, res) => {
     }
 })
 
+router.route("/points/:customer_id").get(async (req, res) => {
+    let cus_id = req.params.customer_id;
+
+    try {
+        // Find the customer based on the custom customer_id
+        const foundCustomer = await customer.findOne({ customer_id: cus_id });
+
+        if (foundCustomer) {
+            // Retrieve and send the points of the found customer
+            const points = foundCustomer.point;
+            res.status(200).send({ points });
+        } else {
+            res.status(404).send({ status: "Customer not found" });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ status: "Error retrieving points" });
+    }
+})
+
+
 
 module.exports = router;
