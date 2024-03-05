@@ -32,6 +32,10 @@ app.use("/otherExpense", otherRouter);
 const billsRouter = require("./routes/billingroutes.js");
 app.use("/bills", billsRouter);
 
+//Trainee func
+const traineesRouter = require("./routes/traineeroutes.js");
+app.use("/trainees", traineesRouter);
+
 //tax func
 const taxRouter = require("./routes/tax.js");
 app.use("/tax", taxRouter);
