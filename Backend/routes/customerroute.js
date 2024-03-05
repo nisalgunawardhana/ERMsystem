@@ -29,34 +29,50 @@ router.route("/").get((req,res)=>{
     })
 })
 
-router.route("/update/:customer_id").put(async (req,res)=>{
+router.route("/update/:customer_id").put(async (req, res) => {
     let cus_id = req.params.customer_id;
-    const {customer_id, customer_name, email, point} = req.body;
+    const { customer_id, customer_name, email, point } = req.body;
 
-    const updatecustomer = {
+    const updateCustomer = {
         customer_id,
         customer_name,
         email,
         point
     }
 
-    const update = await customer.findByIdAndUpdate(cus_id, updatecustomer).then(() => {
-        res.status(200).send({status: "Customer Details updated"})
-    }).catch((errr) => {
-        console.log(errr);
-        res.status(500).send({status: "Error with Updating Details"});
-    })
+    try {
+        // Update the customer record based on the custom customer_id
+        const updatedCustomer = await customer.findOneAndUpdate({ customer_id: cus_id }, updateCustomer, { new: true });
+
+        if (updatedCustomer) {
+            res.status(200).send({ status: "Customer Details updated", updatedCustomer });
+        } else {
+            res.status(404).send({ status: "Customer not found" });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ status: "Error with Updating Details" });
+    }
 })
 
-router.route("/delete/:customer_id").delete(async (req,res) => {
-    let cus_id = req.params.id;
 
-    await customer.findByIdAndDelete(cus_id).then(() => {
-        res.status(200).send({status: "Customer deleted"});
-    }).catch((errr) => {
-        console.log(errr);
-        res.status(500).send({status: "Error with deleting customer"});
-    })
+router.route("/delete/:customer_id").delete(async (req, res) => {
+    let cus_id = req.params.customer_id; // Corrected from req.params.id
+
+    try {
+        // Delete the customer based on the custom customer_id
+        const deletedCustomer = await customer.findOneAndDelete({ customer_id: cus_id });
+
+        if (deletedCustomer) {
+            res.status(200).send({ status: "Customer deleted", deletedCustomer });
+        } else {
+            res.status(404).send({ status: "Customer not found" });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ status: "Error with deleting customer" });
+    }
 })
+
 
 module.exports = router;
