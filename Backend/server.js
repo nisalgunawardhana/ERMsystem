@@ -32,15 +32,26 @@ app.use("/otherExpense", otherRouter);
 const billsRouter = require("./routes/billingroutes.js");
 app.use("/bills", billsRouter);
 
+//Trainee func
+const traineesRouter = require("./routes/traineeroutes.js");
+app.use("/trainees", traineesRouter);
+
+//Meeting func
+const MeetingsRouter = require("./routes/meetingroutes.js");
+app.use("/meetings", MeetingsRouter);
+
 //tax func
 const taxRouter = require("./routes/tax.js");
-
 app.use("/tax", taxRouter);
 
 //profit func
 const profitRouter = require("./routes/profit.js");
-
 app.use("/profit", profitRouter);
+
+//customer func
+const customerRouter = require("./routes/customerroute.js");
+app.use("/customer", customerRouter);
+
 
 app.listen(PORT, () => {
     console.log(`Server is up and running on: ${PORT}`);
