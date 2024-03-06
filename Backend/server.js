@@ -42,6 +42,16 @@ const profitRouter = require("./routes/profit.js");
 
 app.use("/profit", profitRouter);
 
+//supplier func
+const supplierRouter = require("./routes/supplierroutes.js");
+
+app.use("/supplier", supplierRouter);
+
+//purchase order func
+const purchaseOrderRouter = require("./routes/purchaseOrderroutes.js");
+
+app.use("/purchaseOrder", purchaseOrderRouter);
+
 app.listen(PORT, () => {
     console.log(`Server is up and running on: ${PORT}`);
 });
