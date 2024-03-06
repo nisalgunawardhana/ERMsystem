@@ -5,6 +5,7 @@ import AddOther from './components/AddOther';
 import AllOther from './components/AllOther';
 import {BrowserRouter,Router, Route, Routes} from "react-router-dom";
 
+
 function App() {
   return (
     <BrowserRouter>
@@ -16,7 +17,9 @@ function App() {
       <Routes>
         <Route path="/add" element={<AddOther/>}/>
         <Route path="/" element={<AllOther/>}/>
+        
       </Routes>
+      
     
   </div>
   </BrowserRouter>
