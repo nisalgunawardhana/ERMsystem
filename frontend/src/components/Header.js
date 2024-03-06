@@ -21,6 +21,9 @@ function Header() {
           <li class="nav-item">
             <a class="nav-link {{#if activeTab 'add'}}" href="/add">OtherExpenses</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link {{#if activeTab 'add'}}" href="/bill">Bills</a>
+          </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               Dropdown
