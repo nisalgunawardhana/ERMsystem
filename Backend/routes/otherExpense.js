@@ -71,4 +71,20 @@ router.route("/get/:id").get(async (req,res) => {
     })
 })
 
+
+
+router.route("/:date").get((req, res) => {
+    const { date } = req.params;
+    const query = date ? { Date: date } : {};
+
+    otherExpenses.find(query)
+        .then((otherExpense) => {
+            res.json(otherExpense);
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).json({ error: "Error fetching other expenses" });
+        });
+});
+
 module.exports = router;
