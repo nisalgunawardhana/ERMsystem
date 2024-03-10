@@ -42,6 +42,12 @@ const profitRouter = require("./routes/profit.js");
 
 app.use("/profit", profitRouter);
 
+//employee func
+const employeeRouter = require("./routes/employeeroutes.js");
+
+app.use("/employee", employeeRouter);
+
+
 app.listen(PORT, () => {
     console.log(`Server is up and running on: ${PORT}`);
 });
