@@ -23,10 +23,10 @@ connection.once("open", () => {
     console.log("MongoDB connection successful");
 });
 
-//other ex func
-const otherRouter = require("./routes/otherExpense.js");
 
-app.use("/otherExpense", otherRouter);
+const expenseRouter = require("./routes/expenseroutes.js");
+
+app.use("/otherExpense", expenseRouter);
 
 //Billing func
 const billsRouter = require("./routes/billingroutes.js");

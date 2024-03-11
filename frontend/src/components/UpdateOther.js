@@ -7,6 +7,7 @@ export default function UpdateOther() {
     const navigate = useNavigate();
 
     const [expense, setExpense] = useState({
+        Expense_id: '',
         Type: '',
         Date: '',
         Status: '',
@@ -44,13 +45,17 @@ export default function UpdateOther() {
     };
 
     const handleBack = () => {
-        navigate('/'); // Reset specificExpense to null to display all expenses
+        navigate('/otherExpense'); // Reset specificExpense to null to display all expenses
     };
 
     return (
         <div className="container">
             <h2>Update Expense</h2>
             <form onSubmit={handleSubmit}>
+                <div className="mb-3">
+                    <label htmlFor="Expense_id" className="form-label">Expense ID</label>
+                    <input type="text" className="form-control" id="Expense_id" name="Expense_id" value={expense.Expense_id} onChange={handleChange} readOnly/>
+                </div>
                 <div className="mb-3">
                     <label htmlFor="Type" className="form-label">Type</label>
                     <input type="text" className="form-control" id="Type" name="Type" value={expense.Type} onChange={handleChange} />

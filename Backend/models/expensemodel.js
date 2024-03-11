@@ -1,8 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const otherSchema = new Schema({
-    Type: {
         type : String,
         required: true
     },

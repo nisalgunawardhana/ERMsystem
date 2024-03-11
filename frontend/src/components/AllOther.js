@@ -78,6 +78,7 @@ export default function AllOther(){
                     <table className="table">
                         <thead>
                             <tr>
+                                <th>Expense_id</th>
                                 <th>Type</th>
                                 <th>Date</th>
                                 <th>Status</th>
@@ -87,12 +88,13 @@ export default function AllOther(){
                         </thead>
                         <tbody>
                             <tr key={specificExpense._id}>
+                                <td>{specificExpense.Expense_id}</td>
                                 <td>{specificExpense.Type}</td>
                                 <td>{specificExpense.Date}</td>
                                 <td>{specificExpense.Status}</td>
                                 <td>{specificExpense.Cost}</td>
                                 <td>
-                                    <Link to={`/update/${specificExpense._id}`} className="btn btn-primary me-2">Update</Link>
+                                    <Link to={`/otherExpense/update/${specificExpense._id}`} className="btn btn-primary me-2">Update</Link>
                                     <button className="btn btn-danger" onClick={() => handleDelete(specificExpense._id)}>Delete</button>
                                 </td>
                             </tr>
@@ -104,13 +106,14 @@ export default function AllOther(){
                 <div>
                     <div className="d-flex justify-content-start mb-3 align-items-center">
                        <h3 className="me-5">All Other Expenses</h3>
-                       <Link to="/add" className="btn btn-success">Add Expense</Link>
+                       <Link to="/otherExpense/add" className="btn btn-success">Add Expense</Link>
                     </div>
                     
                     <br></br>
                     <table className="table">
                         <thead>
                             <tr>
+                                <th>Expense_id</th>
                                 <th>Type</th>
                                 <th>Date</th>
                                 <th>Status</th>
@@ -121,12 +124,13 @@ export default function AllOther(){
                         <tbody>
                             {other.map(expense => (
                                 <tr key={expense._id}>
+                                    <td>{expense.Expense_id}</td>
                                     <td>{expense.Type}</td>
                                     <td>{expense.Date}</td>
                                     <td>{expense.Status}</td>
                                     <td>{expense.Cost}</td>
                                     <td>
-                                        <Link to={`/update/${expense._id}`} className="btn btn-primary me-2">Update</Link>
+                                        <Link to={`/otherExpense/update/${expense._id}`} className="btn btn-primary me-2">Update</Link>
                                         <button className="btn btn-danger" onClick={() => handleDelete(expense._id)}>Delete</button>
                                     </td>
                                 </tr>

@@ -7,6 +7,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 
 function AddOther() {
 
+    const [Expense_id,setID] = useState("");
     const [Type,setType] = useState("");
     const [Date,setDate] = useState("");
     const [Status,setStatus] = useState("");
@@ -16,6 +17,7 @@ function AddOther() {
     function sendData(e){
         e.preventDefault();
         const newOther ={
+            Expense_id,
             Type,
             Date,
             Status,
@@ -23,18 +25,19 @@ function AddOther() {
         }
         axios.post("http://localhost:8080/otherExpense/add", newOther).then(()=> {
             alert("Other expense Added")
+            setID("")
             setType("");
             setDate("");
             setStatus("");
             setCost("");
-            navigate('/');
+            navigate('/otherExpense');
         }).catch((err)=>{
             alert(err)
         })
     }
 
     const handleBack = () => {
-      navigate('/'); // Reset specificExpense to null to display all expenses
+      navigate('/otherExpense'); // Reset specificExpense to null to display all expenses
   };
 
   return (
@@ -42,6 +45,12 @@ function AddOther() {
             <Form onSubmit={sendData}>
                 <h2 className="form-title">Expense Details</h2>
                 <br></br>
+
+                <Form.Group className="mb-3" controlId="formBasicType">
+                    <Form.Label>Expense ID</Form.Label>
+                    <Form.Control type="text" placeholder="Enter Expense ID"  onChange={(e) => setID(e.target.value)} />
+                </Form.Group>
+
                 <Form.Group className="mb-3" controlId="formBasicType">
                     <Form.Label>Type</Form.Label>
                     <Form.Control type="text" placeholder="Enter Type"  onChange={(e) => setType(e.target.value)} />
@@ -77,6 +86,7 @@ function AddOther() {
                 </div>
             </Form>
         </div>
+        
   );
 }
 
