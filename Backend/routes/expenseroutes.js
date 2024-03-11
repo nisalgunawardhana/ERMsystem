@@ -1,13 +1,15 @@
 const router = require("express").Router();
-let otherExpenses = require("../models/otherExpense");
+let otherExpenses = require("../models/expensemodel");
 
 router.route("/add").post((req,res)=>{
+    const Expense_id = req.body.Expense_id;
     const Type = req.body.Type;
     const Date = req.body.Date;
     const Status = req.body.Status;
     const Cost = req.body.Cost;
 
     const newOther = new otherExpenses({
+        Expense_id,
         Type,
         Date,
         Status,
@@ -33,9 +35,10 @@ router.route("/").get((req,res)=>{
 
 router.route("/update/:id").put(async (req,res)=>{
     let expenseId = req.params.id;
-    const {Type, Date, Status, Cost} = req.body;
+    const {Expense_id, Type, Date, Status, Cost} = req.body;
 
     const updateOther = {
+        Expense_id,
         Type,
         Date,
         Status,
