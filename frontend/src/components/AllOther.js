@@ -1,13 +1,13 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from "axios";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
-export default function AllOther(){
+export default function AllOther() {
 
     const [other, setOther] = useState([]);
 
-    useEffect(()=>{
-        function getOther(){
+    useEffect(() => {
+        function getOther() {
             axios.get("http://localhost:8080/otherExpense/").then((res) => {
                 setOther(res.data);
             }).catch((err) => {
@@ -15,7 +15,7 @@ export default function AllOther(){
             })
         }
         getOther();
-    },[])
+    }, [])
 
     const [searchTerm, setSearchTerm] = useState('');
     const [searchDate, setSearchDate] = useState('');
@@ -53,8 +53,33 @@ export default function AllOther(){
     };
 
     const handleBack = () => {
-      setSpecificExpense(null); // Reset specificExpense to null to display all expenses
-  };
+        setSpecificExpense(null);
+    };
+
+    const [expenseToDelete, setExpenseToDelete] = useState(null);
+    const [showDeletePrompt, setShowDeletePrompt] = useState(false);
+
+    const handleDelete = async (id) => {
+        setExpenseToDelete(id);
+        setShowDeletePrompt(true);
+      };
+
+    const confirmDelete = async () => {
+        try {
+            await axios.delete(`http://localhost:8080/otherExpense/delete/${expenseToDelete}`);
+            alert("Expense deleted successfully.");
+            // Update the state to reflect the deletion
+            setOther(other.filter(expense => expense._id !== expenseToDelete));
+        } catch (error) {
+            console.error("Error deleting expense:", error);
+            alert("Error deleting expense. Please try again later.");
+        }
+        setShowDeletePrompt(false);
+    };
+
+    const cancelDelete = () => {
+        setShowDeletePrompt(false);
+    };
 
     return (
         <div className="container">
@@ -71,7 +96,7 @@ export default function AllOther(){
                 <button className="btn btn-secondary mb-3" onClick={handleBack}>Back</button>
             )}
             <br /><br />
-            
+
             {specificExpense ? (
                 <div>
                     <h3>Expense Details</h3>
@@ -102,13 +127,13 @@ export default function AllOther(){
                     </table>
                 </div>
             ) : (
-                
+
                 <div>
                     <div className="d-flex justify-content-start mb-3 align-items-center">
-                       <h3 className="me-5">All Other Expenses</h3>
-                       <Link to="/otherExpense/add" className="btn btn-success">Add Expense</Link>
+                        <h3 className="me-5">All Other Expenses</h3>
+                        <Link to="/otherExpense/add" className="btn btn-success">Add Expense</Link>
                     </div>
-                    
+
                     <br></br>
                     <table className="table">
                         <thead>
@@ -137,10 +162,19 @@ export default function AllOther(){
                             ))}
                         </tbody>
                     </table>
+                    {showDeletePrompt && (
+                        <div>
+                            <div>
+                                <p>Are you sure you want to delete this expense?</p>
+                                <div>
+                                    <button className="btn btn-danger me-2" onClick={confirmDelete}>Yes</button>
+                                    <button className="btn btn-secondary" onClick={cancelDelete}>No</button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             )}
         </div>
     )
-}const handleDelete = (id) => {
-  // Add delete logic here
 }
