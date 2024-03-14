@@ -25,10 +25,7 @@ function App() {
         <Route path="/otherExpense" element={<AllOther/>}/>
         <Route path="/bill" element={<Bill/>}/>
         <Route path="/otherExpense/update/:id" element={<UpdateOther/>}/>
-
-        
-      </Routes>
-      
+      </Routes>  
     
   </div>
   </BrowserRouter>
