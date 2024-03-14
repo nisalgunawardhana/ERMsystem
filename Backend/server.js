@@ -66,6 +66,10 @@ app.use("/supplier", supplierRouter);
 const purchaseOrderRouter = require("./routes/purchaseOrderroutes.js");
 app.use("/purchaseOrder", purchaseOrderRouter);
 
+//system user function
+const userRouter = require("./routes/userRoutes.js");
+app.use("/systemUser", userRouter);
+
 app.listen(PORT, () => {
     console.log(`Server is up and running on: ${PORT}`);
 });
