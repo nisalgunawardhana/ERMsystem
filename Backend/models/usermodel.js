@@ -39,12 +39,14 @@ const systemUserSchema = new Schema({
 
     password:{
         type: String,
+        required: true,
         minlength: 8,
         //password encryption
     },
 
     userRole: {
         type: String,
+        required: true,
         ref: "UserRole",
         unique: true
     },
