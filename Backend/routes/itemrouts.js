@@ -1,46 +1,43 @@
+// itemrouts.js
 const router = require("express").Router();
-let item = require("../models/itemtest");
+const Item = require("../models/itemtest");
 
-router.route("/add").post((req,res)=>{
-    const item_id = req.body.item_id;
-    const price = req.body.price;
-    
+// Add new item
+router.route("/add").post((req, res) => {
+    const { item_id, price } = req.body;
 
-    const newitem = new item({
+    const newItem = new Item({
         item_id,
         price
-        
-    })
-    
-    newitem.save().then(()=>{
-        res.json("New Customer Added")
-    }).catch((err)=>{
-        console.log(err);
-    })
-})
+    });
 
+    newItem.save()
+        .then(() => {
+            res.json("New Item Added");
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).json({ error: "Failed to add new item" });
+        });
+});
 
-
+// Get item price by ID
 router.route("/price/:item_id").get(async (req, res) => {
-    let cus_id = req.params.item_id;
+    const item_id = req.params.item_id;
 
     try {
-        // Find the customer based on the custom customer_id
-        const foundItem = await item.findOne({ item_id: cus_id });
+        const foundItem = await Item.findOne({ item_id });
 
         if (foundItem) {
-            // Retrieve and send the points of the found customer
             const price = foundItem.price;
-            res.status(200).send({ price });
+            res.status(200).json({ price });
         } else {
-            res.status(404).send({ status: "Customer not found" });
+            res.status(404).json({ error: "Item not found" });
         }
     } catch (error) {
         console.log(error);
-        res.status(500).send({ status: "Error retrieving points" });
+        res.status(500).json({ error: "Error retrieving item price" });
     }
-})
-
-
+});
 
 module.exports = router;

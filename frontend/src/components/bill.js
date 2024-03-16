@@ -92,7 +92,7 @@ export default function Bills(){
                         <div className="card-body">
                             <h5 className="card-title">Create Bill</h5>
                             <p className="card-text">Make New Bill</p>
-                            <Link to="/create-bill" className="btn btn-primary">Create New Bill</Link>
+                            <Link to="/CreateBill" className="btn btn-primary">Create New Bill</Link>
                         </div>
                     </div>
                 </div>

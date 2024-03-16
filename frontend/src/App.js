@@ -24,6 +24,7 @@ function App() {
         <Route path="/otherExpense/add" element={<AddOther/>}/>
         <Route path="/otherExpense" element={<AllOther/>}/>
         <Route path="/bill" element={<Bill/>}/>
+        <Route path="/CreateBill" element={<CreateBill/>}/>
         <Route path="/otherExpense/update/:id" element={<UpdateOther/>}/>
       </Routes>  
     
