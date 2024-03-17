@@ -6,12 +6,16 @@ router.route("/add").post((req,res)=>{
     const customer_name = req.body.customer_name;
     const email = req.body.email;
     const point = req.body.point;
+    const gender = req.body.gender;
+    
+    
 
     const newCustomer = new customer({
         customer_id,
         customer_name,
         email,
-        point
+        point,
+        gender
     })
     
     newCustomer.save().then(()=>{
@@ -31,13 +35,14 @@ router.route("/").get((req,res)=>{
 
 router.route("/update/:customer_id").put(async (req, res) => {
     let cus_id = req.params.customer_id;
-    const { customer_id, customer_name, email, point } = req.body;
+    const { customer_id, customer_name, email, point, gender } = req.body;
 
     const updateCustomer = {
         customer_id,
         customer_name,
         email,
-        point
+        point,
+        gender
     }
 
     try {

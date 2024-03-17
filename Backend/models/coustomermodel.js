@@ -20,7 +20,12 @@ const cusSchema = new Schema({
     point:{
         type: Number,
         required: true
-    }
+    },
+
+    gender:{
+        type: String,
+        required: true
+    } 
     
 })
 
