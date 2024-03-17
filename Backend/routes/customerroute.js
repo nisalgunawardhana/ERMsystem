@@ -74,6 +74,8 @@ router.route("/delete/:customer_id").delete(async (req, res) => {
     }
 })
 
+// nisal 
+
 router.route("/points/:customer_id").get(async (req, res) => {
     let cus_id = req.params.customer_id;
 

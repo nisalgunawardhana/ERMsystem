@@ -69,6 +69,7 @@ app.use("/purchaseOrder", purchaseOrderRouter);
 const userRouter = require("./routes/userRoutes.js");
 app.use("/systemUser", userRouter);
 
+//customer
 const customer = require("./routes/customerroute.js");
 app.use("/customer", customer);
 
