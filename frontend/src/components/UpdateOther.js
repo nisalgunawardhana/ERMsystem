@@ -27,16 +27,31 @@ export default function UpdateOther() {
     }, [id]);
 
     const handleChange = (e) => {
-        setExpense({ ...expense, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+    
+        // Check if the input is the date field
+        const newValue = name === 'Date' ? formatDate(value) : value;
+    
+        setExpense({ ...expense, [name]: newValue });
     };
-
+    
+    const formatDate = (dateString) => {
+        // Validate the date string and format it
+        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        if (dateString.match(dateRegex)) {
+            return dateString;
+        } else {
+            // If the date format is invalid, return an empty string
+            return '';
+        }
+    };
     const handleSubmit = (e) => {
         e.preventDefault();
         // Send updated expense data to the backend
         axios.put(`http://localhost:8080/otherExpense/update/${id}`, expense)
             .then((res) => {
                 console.log(res.data);
-                navigate('/');
+                navigate('/otherExpense');
             })
             .catch((err) => {
                 console.log(err);
@@ -54,7 +69,7 @@ export default function UpdateOther() {
             <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                     <label htmlFor="Expense_id" className="form-label">Expense ID</label>
-                    <input type="text" className="form-control" id="Expense_id" name="Expense_id" value={expense.Expense_id} onChange={handleChange} readOnly/>
+                    <input type="text" className="form-control" id="Expense_id" name="Expense_id" value={expense.Expense_id} onChange={handleChange} readOnly />
                 </div>
                 <div className="mb-3">
                     <label htmlFor="Type" className="form-label">Type</label>
@@ -62,7 +77,7 @@ export default function UpdateOther() {
                 </div>
                 <div className="mb-3">
                     <label htmlFor="Date" className="form-label">Date</label>
-                    <input type="date" className="form-control" id="Date" name="Date" value={expense.Date} onChange={handleChange} />
+                    <input type="date" className="form-control" id="Date" name="Date" value={expense.Date || ''} onChange={handleChange} />
                 </div>
                 <div className="mb-3">
                     <label htmlFor="Status" className="form-label">Status</label>
@@ -72,13 +87,13 @@ export default function UpdateOther() {
                     <label htmlFor="Cost" className="form-label">Cost</label>
                     <input type="text" className="form-control" id="Cost" name="Cost" value={expense.Cost} onChange={handleChange} />
                 </div>
-                
+
                 <div className="row mb-3">
                     <div className="col">
-                       <div className="btn-group">
-                          <button type="submit" className="btn btn-primary me-5 rounded">Update Expense</button>
-                          <button className="btn btn-secondary rounded" onClick={handleBack}>Back</button>
-                       </div>
+                        <div className="btn-group">
+                            <button type="submit" className="btn btn-primary me-5 rounded">Update Expense</button>
+                            <button className="btn btn-secondary rounded" onClick={handleBack}>Back</button>
+                        </div>
                     </div>
                 </div>
             </form>

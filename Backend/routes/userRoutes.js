@@ -13,7 +13,7 @@ router.route("/add").post((req,res)=>{
     const isActive = req.body.isActive;
     const createdDate = req.body.createdDate;
 
-    const newUser = new UserRole({
+    const newUser = new SystemUser({
         userId,
         empId,
         first_name,
@@ -34,7 +34,7 @@ router.route("/add").post((req,res)=>{
 })
 
 router.route("/").get((req,res)=>{
-    UserRole.find().then((usermodel)=>{
+    SystemUser.find().then((usermodel)=>{
         res.json(usermodel)
     }).catch((err)=>{
         console.log(err)

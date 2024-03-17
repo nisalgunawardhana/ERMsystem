@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import { Modal, Button } from 'react-bootstrap';
 
 export default function AllOther() {
 
@@ -62,11 +63,12 @@ export default function AllOther() {
     const handleDelete = async (id) => {
         setExpenseToDelete(id);
         setShowDeletePrompt(true);
-      };
+    };
 
     const confirmDelete = async () => {
         try {
             await axios.delete(`http://localhost:8080/otherExpense/delete/${expenseToDelete}`);
+            setShowDeletePrompt(false);
             alert("Expense deleted successfully.");
             // Update the state to reflect the deletion
             setOther(other.filter(expense => expense._id !== expenseToDelete));
@@ -81,8 +83,21 @@ export default function AllOther() {
         setShowDeletePrompt(false);
     };
 
+    const [month, setMonth] = useState({ Month: '' });
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setMonth(prevState => ({ ...prevState, [name]: value }));
+    };
+
+    const submit = (e) => {
+        e.preventDefault();
+        // Redirect to the page where total amount is fetched for the entered month
+        window.location.href = `/profit/${month.Month}`;
+    };
+
     return (
-        <div className="container">
+        <div className="container" >
             {!specificExpense ? (
                 <div className="row mb-3">
                     <div className="col">
@@ -162,16 +177,20 @@ export default function AllOther() {
                             ))}
                         </tbody>
                     </table>
+
                     {showDeletePrompt && (
-                        <div>
-                            <div>
-                                <p>Are you sure you want to delete this expense?</p>
-                                <div>
-                                    <button className="btn btn-danger me-2" onClick={confirmDelete}>Yes</button>
-                                    <button className="btn btn-secondary" onClick={cancelDelete}>No</button>
-                                </div>
-                            </div>
-                        </div>
+                        <Modal show={showDeletePrompt} onHide={cancelDelete}>
+                            <Modal.Header closeButton>
+                                <Modal.Title>Confirm Deletion</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                                Are you sure you want to delete this expense?
+                            </Modal.Body>
+                            <Modal.Footer>
+                                <Button variant="danger" onClick={confirmDelete}>Yes</Button>
+                                <Button variant="secondary" onClick={cancelDelete}>No</Button>
+                            </Modal.Footer>
+                        </Modal>
                     )}
                 </div>
             )}
