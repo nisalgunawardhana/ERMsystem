@@ -54,9 +54,7 @@ app.use("/profit", profitRouter);
 
 //employee func
 const employeeRouter = require("./routes/employeeroutes.js");
-
 app.use("/employee", employeeRouter);
-
 
 //supplier func
 const supplierRouter = require("./routes/supplierroutes.js");

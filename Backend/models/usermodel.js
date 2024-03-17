@@ -3,11 +3,11 @@ const Schema = mongoose.Schema;
 
 const systemUserSchema = new Schema({
 
-    userId: {
+    /*userId: {
         type : Number,
         required: true,
         unique: true
-    },
+    },*/
 
     empId: {
         type : Number,
