@@ -6,13 +6,11 @@ const itemSchema = new Schema({
         type : String,
         required: true
     },
-    
     price:{
         type: Number,
         required: true
     }
-    
 })
 
-const items = mongoose.model("items", itemSchema);
-module.exports = items;
+const Item = mongoose.model("Item", itemSchema);
+module.exports = Item;

@@ -92,7 +92,7 @@ export default function Bills(){
                         <div className="card-body">
                             <h5 className="card-title">Create Bill</h5>
                             <p className="card-text">Make New Bill</p>
-                            <Link to="/create-bill" className="btn btn-primary">Create New Bill</Link>
+                            <Link to="/CreateBill" className="btn btn-primary">Create New Bill</Link>
                         </div>
                     </div>
                 </div>
@@ -135,8 +135,9 @@ export default function Bills(){
                             </td>
                             <td>{bills.total_amount}</td>
                             <td>
-                            <Link to={`/update/${bills._id}`} className="btn btn-primary">Update</Link>
+                            <Link to={`/bill/update/${bills._id}`} className="btn btn-primary">Update</Link>
                             <button onClick={() => handleDelete(bills._id)} className="btn btn-danger">Delete</button>
+                            <Link to={`/bill/preview/${bills._id}`} className="btn btn-primary">preview</Link>
                             </td>
                         </tr>
                     ))}

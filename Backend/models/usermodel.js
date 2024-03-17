@@ -3,11 +3,11 @@ const Schema = mongoose.Schema;
 
 const systemUserSchema = new Schema({
 
-    userId: {
+    /*userId: {
         type : Number,
         required: true,
         unique: true
-    },
+    },*/
 
     empId: {
         type : Number,
@@ -39,12 +39,14 @@ const systemUserSchema = new Schema({
 
     password:{
         type: String,
+        required: true,
         minlength: 8,
         //password encryption
     },
 
     userRole: {
         type: String,
+        required: true,
         ref: "UserRole",
         unique: true
     },

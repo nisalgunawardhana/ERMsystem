@@ -54,9 +54,7 @@ app.use("/profit", profitRouter);
 
 //employee func
 const employeeRouter = require("./routes/employeeroutes.js");
-
 app.use("/employee", employeeRouter);
-
 
 //supplier func
 const supplierRouter = require("./routes/supplierroutes.js");
@@ -69,6 +67,13 @@ app.use("/purchaseOrder", purchaseOrderRouter);
 //system user function
 const userRouter = require("./routes/userRoutes.js");
 app.use("/systemUser", userRouter);
+
+//customer
+const customer = require("./routes/customerroute.js");
+app.use("/customer", customer);
+
+const discounts = require("./routes/discounttoute.js");
+app.use("/discounts", discounts);
 
 app.listen(PORT, () => {
     console.log(`Server is up and running on: ${PORT}`);

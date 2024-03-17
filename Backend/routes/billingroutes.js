@@ -59,6 +59,20 @@ router.route("/delete/:id").delete(async (req,res) => {
     })
 })
 
+router.route("/:id").get((req, res) => {
+    const billId = req.params.id;
+
+    bills.findById(billId).then((billModel) => {
+        if (!billModel) {
+            return res.status(404).json({ error: "Bill not found" });
+        }
+        res.json(billModel);
+    }).catch((err) => {
+        console.log(err);
+        res.status(500).json({ error: "Failed to retrieve bill" });
+    });
+});
+
 
 
 
