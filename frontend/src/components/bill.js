@@ -137,6 +137,7 @@ export default function Bills(){
                             <td>
                             <Link to={`/bill/update/${bills._id}`} className="btn btn-primary">Update</Link>
                             <button onClick={() => handleDelete(bills._id)} className="btn btn-danger">Delete</button>
+                            <Link to={`/bill/preview/${bills._id}`} className="btn btn-primary">preview</Link>
                             </td>
                         </tr>
                     ))}

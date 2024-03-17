@@ -14,7 +14,6 @@ function CreateBill() {
   const [items, setItems] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
   const [discount, setDiscount] = useState(0); // New state to hold the discount
-
   const navigate = useNavigate();
 
   // Fetch item price when item code changes
@@ -39,7 +38,7 @@ function CreateBill() {
       axios.get(`http://localhost:8080/customer/points/${customer_id}`)
         .then(response => {
           const points = response.data.points;
-          const calculatedDiscount = points * 2;
+          const calculatedDiscount =  points /100;
           setDiscount(calculatedDiscount);
         })
         .catch(error => {

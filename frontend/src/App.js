@@ -6,8 +6,10 @@ import AddOther from './components/AddOther';
 import AllOther from './components/AllOther';
 import Bill from './components/bill';
 import CreateBill from './components/createBill';
-import UpdateOther from './components/UpdateOther';
+import UpdateOther from './components/updateBill';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import UpdateBill from './components/updateBill';
+import BillPreview from './components/billPreview';
 
 
 function App() {
@@ -26,6 +28,8 @@ function App() {
         <Route path="/bill" element={<Bill/>}/>
         <Route path="/CreateBill" element={<CreateBill/>}/>
         <Route path="/otherExpense/update/:id" element={<UpdateOther/>}/>
+        <Route path="/bill/update/:id" element={<UpdateBill/>}/>
+        <Route path="/bill/preview/:id" element={<BillPreview/>}/>
       </Routes>  
     
   </div>
