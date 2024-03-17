@@ -110,6 +110,51 @@ function CreateBill() {
       });
   };
 
+  const printBill = (bill) => {
+    const printWindow = window.open("", "_blank", "width=600,height=600");
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>New Bill</title>
+          <style>
+            body {
+              font-size: 12pt;
+              margin: 20px;
+            }
+            h1, h2 {
+              font-size: 14pt;
+            }
+            ul {
+              list-style-type: none;
+              padding: 0;
+            }
+            li {
+              margin-bottom: 10px;
+            }
+          </style>
+        </head>
+        <body>
+          <div>
+            <h1>New Bill Details</h1>
+            <p><strong>Customer ID:</strong> ${bill.customer_id}</p>
+            <p><strong>Billing Date:</strong> ${bill.billing_date}</p>
+            <p><strong>Total Amount:</strong> ${bill.total_amount}</p>
+            <h2>Items:</h2>
+            <ul>
+              ${bill.items.map(
+                (item) => `<li>${item.product_id} - ${item.quantity} x ${item.unit_price}</li>`
+              )}
+            </ul>
+          </div>
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.print();
+  };
+
+
+
   const handleBack = () => {
     navigate("/bill/");
   };

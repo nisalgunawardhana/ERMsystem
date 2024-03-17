@@ -9,10 +9,15 @@ import Bill from './components/bill';
 import CreateBill from './components/createBill';
 import UpdateOther from './components/updateOther';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+<<<<<<< Updated upstream
 import AddProfit from './components/AddProfit';
 import FinanceDash from './components/financeDash';
 import ProfitDetails from './components/viewProfit';import UpdateBill from './components/updateBill';
 import BillPreview from './components/billPreview';
+=======
+import UpdateBill from './components/updateBill';
+import BillPreview from './components/billPreview'
+>>>>>>> Stashed changes
 
 
 function App() {
