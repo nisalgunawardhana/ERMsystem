@@ -135,7 +135,7 @@ export default function Bills(){
                             </td>
                             <td>{bills.total_amount}</td>
                             <td>
-                            <Link to={`/update/${bills._id}`} className="btn btn-primary">Update</Link>
+                            <Link to={`/bill/update/${bills._id}`} className="btn btn-primary">Update</Link>
                             <button onClick={() => handleDelete(bills._id)} className="btn btn-danger">Delete</button>
                             </td>
                         </tr>
