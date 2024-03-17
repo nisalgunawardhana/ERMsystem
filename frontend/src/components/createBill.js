@@ -13,6 +13,7 @@ function CreateBill() {
   const [itemQuantity, setItemQuantity] = useState(1);
   const [items, setItems] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
+  const [discount, setDiscount] = useState(0); // New state to hold the discount
 
   const navigate = useNavigate();
 
@@ -32,14 +33,31 @@ function CreateBill() {
     }
   }, [itemCode]);
 
-  // Calculate total amount whenever item quantity or price changes
+  // Fetch customer points when customer_id changes
+   useEffect(() => {
+    if (customer_id) {
+      axios.get(`http://localhost:8080/customer/points/${customer_id}`)
+        .then(response => {
+          const points = response.data.points;
+          const calculatedDiscount = points * 2;
+          setDiscount(calculatedDiscount);
+        })
+        .catch(error => {
+          console.error("Error fetching customer points:", error);
+        });
+    } else {
+      setDiscount(0);
+    }
+  }, [customer_id]);
+
+  // Calculate total amount whenever item quantity, price, or discount changes
   useEffect(() => {
     const calculateTotal = () => {
       const total = items.reduce((acc, curr) => acc + (curr.price * curr.quantity), 0);
-      setTotalAmount(total);
+      setTotalAmount(total - discount); // Apply discount to total amount
     };
     calculateTotal();
-  }, [items]);
+  }, [items, discount]);
 
   // Add item to the list
   const addItem = () => {
@@ -59,12 +77,24 @@ function CreateBill() {
   // When submitting the form
   const sendData = (e) => {
     e.preventDefault();
+    console.log("Submitting form...");
+    
+    // Convert items array to match the schema expected by the backend
+    const convertedItems = items.map(item => ({
+      product_id: item.code, // Assuming 'code' corresponds to 'product_id' in the backend
+      quantity: item.quantity,
+      unit_price: item.price // Assuming 'price' corresponds to 'unit_price' in the backend
+    }));
+  
     const newBill = {
       customer_id,
       billing_date,
-      items,
-      totalAmount
+      items: convertedItems, // Use converted items array
+      total_amount: totalAmount // Assuming 'totalAmount' corresponds to 'total_amount' in the backend
     };
+  
+    console.log("New bill data:", newBill);
+  
     axios
       .post("http://localhost:8080/bills/add", newBill)
       .then(() => {
@@ -73,10 +103,11 @@ function CreateBill() {
         setBillingDate("");
         setItems([]);
         setTotalAmount(0);
-        navigate("/bills/");
+        navigate("/bill/");
       })
       .catch((err) => {
-        alert(err);
+        console.error("Error while submitting form:", err);
+        alert("Error occurred while submitting the form. Please try again later.");
       });
   };
 
@@ -159,6 +190,7 @@ function CreateBill() {
         </div>
 
         <p>Total Amount: ${totalAmount}</p>
+        <p>Discount: ${discount}</p> {/* Display discount in the UI */}
 
         <div className="submit-btn-container">
           <div className="row mb-3">
