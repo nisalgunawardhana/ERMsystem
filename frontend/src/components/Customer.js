@@ -14,6 +14,8 @@ const CustomerR = () => {
         point: "",
         gender: "male" // Default to male
     });
+    const [customerToDelete, setCustomerToDelete] = useState(null);
+    const [showDeleteCustomerPrompt, setShowDeleteCustomerPrompt] = useState(false);
 
     useEffect(() => {
         fetchCustomers();
@@ -37,13 +39,25 @@ const CustomerR = () => {
         setFilteredCustomers(filtered);
     };
 
-    const handleDelete = async (customerId) => {
+    const handleDelete = async (id) => {
+        setCustomerToDelete(id);
+        setShowDeleteCustomerPrompt(true);
+    };
+
+    const confirmDelete = async () => {
         try {
-            await axios.delete(`/api/customers/delete/${customerId}`);
-            fetchCustomers();
+            await axios.delete(`http://localhost:8080/customer/delete/${customerToDelete}`);
+            setCustomers(customers.filter(customer => customer.customer_id !== customerToDelete));
+            alert("Customer deleted successfully.");
         } catch (error) {
             console.error("Error deleting customer:", error);
+            alert("Error deleting customer. Please try again later.");
         }
+        setShowDeleteCustomerPrompt(false);
+    };
+
+    const cancelDelete = () => {
+        setShowDeleteCustomerPrompt(false);
     };
 
     const handleSubmit = async (e) => {
@@ -114,7 +128,7 @@ const CustomerR = () => {
                                     <Button
                                         variant="danger"
                                         onClick={() =>
-                                            handleDelete(customer._id)
+                                            handleDelete(customer.customer_id)
                                         }
                                     >
                                         Delete
@@ -131,14 +145,8 @@ const CustomerR = () => {
                                 <td>{customer.gender}</td>
                                 <td>
                                     <Button variant="primary">Edit</Button>{" "}
-                                    <Button
-                                        variant="danger"
-                                        onClick={() =>
-                                            handleDelete(customer._id)
-                                        }
-                                    >
-                                        Delete
-                                    </Button>
+                                    <Button variant="danger" onClick={() => handleDelete(customer.customer_id)}>Delete</Button>
+
                                 </td>
                             </tr>
                         ))}
@@ -207,6 +215,18 @@ const CustomerR = () => {
                         </Button>
                     </Form>
                 </Modal.Body>
+            </Modal>
+            <Modal show={showDeleteCustomerPrompt} onHide={cancelDelete}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Confirm Deletion</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    Are you sure you want to delete this customer?
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="danger" onClick={confirmDelete}>Yes</Button>
+                    <Button variant="secondary" onClick={cancelDelete}>No</Button>
+                </Modal.Footer>
             </Modal>
         </div>
     );
