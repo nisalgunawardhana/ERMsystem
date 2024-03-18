@@ -20,7 +20,7 @@ export default function Bills(){
         }
 
         function getTotalAmount() {
-            axios.get("http://localhost:8080/profit/get/")
+            axios.get("http://localhost:8080/profit/get/bills/total")
                 .then((res) => {
                     setTotalAmount(res.data.totalAmount);
                 })
