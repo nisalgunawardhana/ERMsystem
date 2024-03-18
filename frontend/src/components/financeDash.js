@@ -221,7 +221,7 @@ const FinanceDash = () => {
                                 <div className="card mb-3" style={{ background: `linear-gradient(to right, rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8), rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8))`, color: 'white', borderRadius: '20px' }}>
                                     <div className="card-body text-center">
                                         <h5 className="card-title">Total Profit</h5>
-                                        <p className="card-text">Rs.{TotalProfit}</p>
+                                        <p className="card-text">Rs.{TotalProfit.toFixed(2)}</p>
                                     </div>
                                     <div className="card-footer bg-transparent border-top-0">
                                         <div className="progress" style={{ height: '8px' }}>
@@ -234,7 +234,7 @@ const FinanceDash = () => {
                                 <div className="card mb-3" style={{ background: `linear-gradient(to right, rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8), rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8))`, color: 'white', borderRadius: '20px' }}>
                                     <div className="card-body text-center">
                                         <h5 className="card-title">Total Profit(last year)</h5>
-                                        <p className="card-text">Rs.{TotalLastYear}</p>
+                                        <p className="card-text">Rs.{TotalLastYear.toFixed(2)}</p>
                                     </div>
                                     <div className="card-footer bg-transparent border-top-0">
                                         <div className="progress" style={{ height: '8px' }}>
@@ -247,7 +247,7 @@ const FinanceDash = () => {
                                 <div className="card mb-3" style={{ background: `linear-gradient(to right, rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8), rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8))`, color: 'white', borderRadius: '20px' }}>
                                     <div className="card-body text-center">
                                         <h5 className="card-title">Total Sales</h5>
-                                        <p className="card-text">Rs.{TotalSales}</p>
+                                        <p className="card-text">Rs.{TotalSales.toFixed(2)}</p>
                                     </div>
                                     <div className="card-footer bg-transparent border-top-0">
                                         <div className="progress" style={{ height: '8px' }}>
@@ -260,7 +260,7 @@ const FinanceDash = () => {
                                 <div className="card mb-3" style={{ background: `linear-gradient(to right, rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8), rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8))`, color: 'white', borderRadius: '20px' }}>
                                     <div className="card-body text-center">
                                         <h5 className="card-title">Total Expenses</h5>
-                                        <p className="card-text">Rs.{TotalExpenses}</p>
+                                        <p className="card-text">Rs.{TotalExpenses.toFixed(2)}</p>
                                     </div>
                                     <div className="card-footer bg-transparent border-top-0">
                                         <div className="progress" style={{ height: '8px' }}>

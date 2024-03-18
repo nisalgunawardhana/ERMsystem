@@ -77,7 +77,7 @@ export default function UpdateOther() {
                 </div>
                 <div className="mb-3">
                     <label htmlFor="Date" className="form-label">Date</label>
-                    <input type="date" className="form-control" id="Date" name="Date" value={expense.Date || ''} onChange={handleChange} />
+                    <input type="text" className="form-control" id="Date" name="Date" value={expense.Date || ''} onChange={handleChange} readOnly/>
                 </div>
                 <div className="mb-3">
                     <label htmlFor="Status" className="form-label">Status</label>
