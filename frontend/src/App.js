@@ -3,6 +3,7 @@ import Header from './components/Header';
 import Home from './components/Home';
 import AddOther from './components/AddOther';
 import AllOther from './components/AllOther';
+import FinanceDash from './components/financeDash';
 import Bill from './components/bill';
 import CreateBill from './components/createBill';
 import UpdateOther from './components/updateBill';
@@ -27,6 +28,7 @@ function App() {
         <Route path="/otherExpense" element={<AllOther/>}/>
         <Route path="/CreateBill" element={<CreateBill/>}/>
         <Route path="/otherExpense/update/:id" element={<UpdateOther/>}/>
+        <Route path="/finance" element={<FinanceDash/>}/>
 
         <Route path="/bill" element={<Bill/>}/>
         <Route path="/bill/update/:id" element={<UpdateBill/>}/>

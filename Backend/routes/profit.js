@@ -254,7 +254,8 @@ function monthToNumeric(month) {
   };
   return monthMap[month];
 }
-/*router.route("/get/").get(async (req,res) => {
+
+router.route("/get/bills/total").get(async (req,res) => {
   try {
       const totalAmount = await bills.aggregate([
         {
@@ -269,7 +270,7 @@ function monthToNumeric(month) {
       console.error(err);
       res.status(500).json({ message: "Internal server error" });
     }
-})*/
+})
 
 
 module.exports = router;
