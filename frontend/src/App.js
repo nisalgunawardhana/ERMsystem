@@ -4,6 +4,8 @@ import Home from './components/Home';
 import AddOther from './components/AddOther';
 import AllOther from './components/AllOther';
 import FinanceDash from './components/financeDash';
+import AddProfit from './components/AddProfit';
+import ProfitDetails from './components/viewProfit';
 import Bill from './components/bill';
 import CreateBill from './components/createBill';
 import UpdateOther from './components/updateOther';
@@ -15,6 +17,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import UpdateBill from './components/updateBill';
 import BillPreview from './components/billPreview';
 
+import CustomerR from './components/Customer';
 
 function App() {
   return (
