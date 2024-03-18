@@ -12,7 +12,7 @@ const CustomerR = () => {
         customer_name: "",
         email: "",
         point: "",
-        gender: ""
+        gender: "male" // Default to male
     });
 
     useEffect(() => {
@@ -46,30 +46,28 @@ const CustomerR = () => {
         }
     };
 
-    // Frontend code
-const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-        const { customer_id, customer_name, email, point, gender } = customerData;
-        if (!customer_id || !customer_name || !email || !point || !gender) {
-            console.error("All fields are required");
-            return;
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const { customer_id, customer_name, email, point, gender } = customerData;
+            if (!customer_id || !customer_name || !email || !point || !gender) {
+                console.error("All fields are required");
+                return;
+            }
+            await axios.post("http://localhost:8080/customer/add", { customer_id, customer_name, email, point, gender });
+            setShowModal(false);
+            fetchCustomers();
+            setCustomerData({
+                customer_id: "",
+                customer_name: "",
+                email: "",
+                point: "",
+                gender: "male" // Reset gender to male after adding
+            });
+        } catch (error) {
+            console.error("Error adding customer:", error);
         }
-        await axios.post("http://localhost:8080/customer/add", { customer_id, customer_name, email, point, gender });
-        setShowModal(false);
-        fetchCustomers();
-        setCustomerData({
-            customer_id: "",
-            customer_name: "",
-            email: "",
-            point: "",
-            gender: ""
-        });
-    } catch (error) {
-        console.error("Error adding customer:", error);
-    }
-};
-
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -105,45 +103,45 @@ const handleSubmit = async (e) => {
                 <tbody>
                     {searchQuery === ""
                         ? customers.map((customer) => (
-                              <tr key={customer._id}>
-                                  <td>{customer.customer_id}</td>
-                                  <td>{customer.customer_name}</td>
-                                  <td>{customer.email}</td>
-                                  <td>{customer.point}</td>
-                                  <td>{customer.gender}</td>
-                                  <td>
-                                      <Button variant="primary">Edit</Button>{" "}
-                                      <Button
-                                          variant="danger"
-                                          onClick={() =>
-                                              handleDelete(customer._id)
-                                          }
-                                      >
-                                          Delete
-                                      </Button>
-                                  </td>
-                              </tr>
-                          ))
+                            <tr key={customer._id}>
+                                <td>{customer.customer_id}</td>
+                                <td>{customer.customer_name}</td>
+                                <td>{customer.email}</td>
+                                <td>{customer.point}</td>
+                                <td>{customer.gender}</td>
+                                <td>
+                                    <Button variant="primary">Edit</Button>{" "}
+                                    <Button
+                                        variant="danger"
+                                        onClick={() =>
+                                            handleDelete(customer._id)
+                                        }
+                                    >
+                                        Delete
+                                    </Button>
+                                </td>
+                            </tr>
+                        ))
                         : filteredCustomers.map((customer) => (
-                              <tr key={customer._id}>
-                                  <td>{customer.customer_id}</td>
-                                  <td>{customer.customer_name}</td>
-                                  <td>{customer.email}</td>
-                                  <td>{customer.point}</td>
-                                  <td>{customer.gender}</td>
-                                  <td>
-                                      <Button variant="primary">Edit</Button>{" "}
-                                      <Button
-                                          variant="danger"
-                                          onClick={() =>
-                                              handleDelete(customer._id)
-                                          }
-                                      >
-                                          Delete
-                                      </Button>
-                                  </td>
-                              </tr>
-                          ))}
+                            <tr key={customer._id}>
+                                <td>{customer.customer_id}</td>
+                                <td>{customer.customer_name}</td>
+                                <td>{customer.email}</td>
+                                <td>{customer.point}</td>
+                                <td>{customer.gender}</td>
+                                <td>
+                                    <Button variant="primary">Edit</Button>{" "}
+                                    <Button
+                                        variant="danger"
+                                        onClick={() =>
+                                            handleDelete(customer._id)
+                                        }
+                                    >
+                                        Delete
+                                    </Button>
+                                </td>
+                            </tr>
+                        ))}
                 </tbody>
             </Table>
             <Button variant="success" onClick={() => setShowModal(true)}>
