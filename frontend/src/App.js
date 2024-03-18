@@ -7,6 +7,9 @@ import AllOther from './components/AllOther';
 import Bill from './components/bill';
 import CreateBill from './components/createBill';
 import UpdateOther from './components/UpdateOther';
+import Supplier from './components/supplier';
+import AddSupplier from './components/addSupplier';
+import AddPurchaseOrder from './components/addPurchaseOrder';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 
@@ -26,6 +29,9 @@ function App() {
         <Route path="/bill" element={<Bill/>}/>
         <Route path="/CreateBill" element={<CreateBill/>}/>
         <Route path="/otherExpense/update/:id" element={<UpdateOther/>}/>
+        <Route path="/supplier" element={<Supplier/>}/>
+        <Route path="/supplier/add" element={<AddSupplier/>}/>
+        <Route path="/purchaseOrder/add" element={<AddPurchaseOrder/>}/>
       </Routes>  
     
   </div>
