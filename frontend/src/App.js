@@ -7,12 +7,13 @@ import FinanceDash from './components/financeDash';
 import Bill from './components/bill';
 import CreateBill from './components/createBill';
 import UpdateOther from './components/updateOther';
+import Supplier from './components/supplier';
+import AddSupplier from './components/addSupplier';
+import AddPurchaseOrder from './components/addPurchaseOrder';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import UpdateBill from './components/updateBill';
 import BillPreview from './components/billPreview';
-import AddProfit from './components/AddProfit';
-import ProfitDetails from './components/viewProfit';
 
 
 function App() {
@@ -37,6 +38,10 @@ function App() {
         <Route path="/bill" element={<Bill/>}/>
         <Route path="/bill/update/:id" element={<UpdateBill/>}/>
         <Route path="/bill/preview/:id" element={<BillPreview/>}/>
+        <Route path="/supplier" element={<Supplier/>}/>
+        <Route path="/supplier/add" element={<AddSupplier/>}/>
+        <Route path="/purchaseOrder/add" element={<AddPurchaseOrder/>}/>
+        <Route path="/Customer" element={<CustomerR/>}/>
       </Routes>  
     
   </div>
