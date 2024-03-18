@@ -9,6 +9,7 @@ import UpdateOther from './components/updateBill';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import UpdateBill from './components/updateBill';
 import BillPreview from './components/billPreview';
+import CustomerR from './components/Customer';
 
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
         <Route path="/otherExpense/update/:id" element={<UpdateOther/>}/>
         <Route path="/bill/update/:id" element={<UpdateBill/>}/>
         <Route path="/bill/preview/:id" element={<BillPreview/>}/>
+        <Route path="/Customer" element={<CustomerR/>}/>
       </Routes>  
     
   </div>
