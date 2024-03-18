@@ -7,7 +7,7 @@ function Home() {
     <div style={{ marginTop: '150px', display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
     <div style={{ display: 'flex', justifyContent: 'center' }}>
       <Link to={`/bill`} className="btn btn-primary me-5" style={{ backgroundColor: '#007bff', color: '#fff', padding: '10px 20px', fontSize: '18px', borderRadius: '8px', marginBottom: '10px' }}>Billing</Link>
-      <Link to={`/otherExpense`} className="btn btn-primary me-5" style={{ backgroundColor: '#6c757d', color: '#fff', padding: '10px 20px', fontSize: '18px', borderRadius: '8px', marginBottom: '10px' }}>Finance</Link>
+      <Link to={`/finance`} className="btn btn-primary me-5" style={{ backgroundColor: '#6c757d', color: '#fff', padding: '10px 20px', fontSize: '18px', borderRadius: '8px', marginBottom: '10px' }}>Finance</Link>
       <Link to={`/customer`} className="btn btn-primary me-5" style={{ backgroundColor: '#28a745', color: '#fff', padding: '10px 20px', fontSize: '18px', borderRadius: '8px', marginBottom: '10px' }}>Customer</Link>
       <Link to={`/employee`} className="btn btn-primary me-5" style={{ backgroundColor: '#ffc107', color: '#000', padding: '10px 20px', fontSize: '18px', borderRadius: '8px', marginBottom: '10px' }}>Employee</Link>
     </div>

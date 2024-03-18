@@ -13,11 +13,9 @@ function CreateBill() {
   const [itemQuantity, setItemQuantity] = useState(1);
   const [items, setItems] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
-  const [discount, setDiscount] = useState(0); // New state to hold the discount
-
+  const [discount, setDiscount] = useState(0);
   const navigate = useNavigate();
 
-  // Fetch item price when item code changes
   useEffect(() => {
     if (itemCode) {
       axios.get(`http://localhost:8080/item/price/${itemCode}`)
@@ -28,18 +26,16 @@ function CreateBill() {
           console.log(error);
         });
     } else {
-      // Reset item price if item code is empty
       setItemPrice(0);
     }
   }, [itemCode]);
 
-  // Fetch customer points when customer_id changes
-   useEffect(() => {
+  useEffect(() => {
     if (customer_id) {
       axios.get(`http://localhost:8080/customer/points/${customer_id}`)
         .then(response => {
           const points = response.data.points;
-          const calculatedDiscount = points * 2;
+          const calculatedDiscount =  points / 100;
           setDiscount(calculatedDiscount);
         })
         .catch(error => {
@@ -50,16 +46,14 @@ function CreateBill() {
     }
   }, [customer_id]);
 
-  // Calculate total amount whenever item quantity, price, or discount changes
   useEffect(() => {
     const calculateTotal = () => {
       const total = items.reduce((acc, curr) => acc + (curr.price * curr.quantity), 0);
-      setTotalAmount(total - discount); // Apply discount to total amount
+      setTotalAmount(total - discount);
     };
     calculateTotal();
   }, [items, discount]);
 
-  // Add item to the list
   const addItem = () => {
     const newItem = { code: itemCode, price: itemPrice, quantity: itemQuantity };
     setItems([...items, newItem]);
@@ -67,42 +61,38 @@ function CreateBill() {
     setItemQuantity(1);
   };
 
-  // Remove item from the list
   const removeItem = (index) => {
     const updatedItems = [...items];
     updatedItems.splice(index, 1);
     setItems(updatedItems);
   };
 
-  // When submitting the form
   const sendData = (e) => {
     e.preventDefault();
     console.log("Submitting form...");
     
-    // Convert items array to match the schema expected by the backend
     const convertedItems = items.map(item => ({
-      product_id: item.code, // Assuming 'code' corresponds to 'product_id' in the backend
+      product_id: item.code,
       quantity: item.quantity,
-      unit_price: item.price // Assuming 'price' corresponds to 'unit_price' in the backend
+      unit_price: item.price
     }));
-  
+
     const newBill = {
       customer_id,
       billing_date,
-      items: convertedItems, // Use converted items array
-      total_amount: totalAmount // Assuming 'totalAmount' corresponds to 'total_amount' in the backend
+      items: convertedItems,
+      total_amount: totalAmount
     };
-  
-    console.log("New bill data:", newBill);
-  
+
     axios
       .post("http://localhost:8080/bills/add", newBill)
-      .then(() => {
+      .then((response) => {
         alert("Bill Added");
         setCustomerId("");
         setBillingDate("");
         setItems([]);
         setTotalAmount(0);
+        handlePrint(newBill);
         navigate("/bill/");
       })
       .catch((err) => {
@@ -110,6 +100,113 @@ function CreateBill() {
         alert("Error occurred while submitting the form. Please try again later.");
       });
   };
+
+  const handlePrint = (billToPrint) => {
+    const printWindow = window.open("", "_blank", "width=600,height=600");
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Print Bill</title>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              padding: 20px;
+            }
+            .bill-container {
+              max-width: 800px;
+              margin: 0 auto;
+              border: 1px solid #ccc;
+              padding: 20px;
+              border-radius: 10px;
+            }
+            .bill-header {
+              text-align: center;
+              margin-bottom: 20px;
+            }
+            .bill-header h1 {
+              margin: 0;
+              color: #333;
+            }
+            .bill-details {
+              margin-bottom: 20px;
+            }
+            .bill-details p {
+              margin: 5px 0;
+            }
+            .bill-items {
+              margin-bottom: 20px;
+            }
+            .bill-items table {
+              width: 100%;
+              border-collapse: collapse;
+            }
+            .bill-items th, .bill-items td {
+              border: 1px solid #ccc;
+              padding: 8px;
+              text-align: left;
+            }
+            .bill-items th {
+              background-color: #f2f2f2;
+            }
+            .bill-items td {
+              background-color: #fff;
+            }
+            .bill-total {
+              text-align: right;
+              font-weight: bold;
+            }
+            .back-button {
+              text-align: center;
+              margin-top: 20px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="bill-container">
+            <div class="bill-header">
+              <h2>Diyana fashion Store</h2>
+              <h1>Bill Details</h1>
+              <p>No 01, DS senanayaka Mw, Anuradhapura <br> 071 09876743</p>
+            </div>
+            <div class="bill-details">
+              <p><strong>Customer ID:</strong> ${billToPrint.customer_id}</p>
+              <p><strong>Billing Date:</strong> ${billToPrint.billing_date}</p>
+              <p><strong>Total Amount:</strong> ${billToPrint.total_amount}</p>
+            </div>
+            <div class="bill-items">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Product ID</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${billToPrint.items.map(item => `
+                    <tr>
+                      <td>${item.product_id}</td>
+                      <td>${item.quantity}</td>
+                      <td>${item.unit_price}</td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+            <div class="bill-total">
+              <p>Total: ${billToPrint.total_amount}</p>
+            </div>
+            <div class="back-button">
+              <button onclick="window.open('', '_self').close();">Back</button>
+            </div>
+          </div>
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.print();
+  };
+  
 
   const handleBack = () => {
     navigate("/bill/");
@@ -190,7 +287,7 @@ function CreateBill() {
         </div>
 
         <p>Total Amount: ${totalAmount}</p>
-        <p>Discount: ${discount}</p> {/* Display discount in the UI */}
+        <p>Discount: ${discount}</p>
 
         <div className="submit-btn-container">
           <div className="row mb-3">
