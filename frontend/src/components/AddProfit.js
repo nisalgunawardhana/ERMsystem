@@ -61,7 +61,7 @@ function AddProfit() {
                 setOther(0);
                 setDate("");
                 setDesc("");
-                navigate(`/${Profit_ID}`);
+                navigate(`/profit/get/${Profit_ID}`);
             })
             .catch((err) => {
                 alert(err);

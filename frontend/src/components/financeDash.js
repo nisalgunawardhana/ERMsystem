@@ -188,6 +188,44 @@ const FinanceDash = () => {
         window.location.href = `/profit/${month.Month}`;
     };
 
+    const getCurrentMonth = () => {
+        const months = [
+            'January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'
+        ];
+        const currentDate = new Date();
+        const monthIndex = currentDate.getMonth();
+        return months[monthIndex];
+    };
+
+    const getCurrentMonthProfitId = async () => {
+        try {
+            const currentMonth = getCurrentMonth();
+            const response = await axios.get(`http://localhost:8080/profit/search/${currentMonth}`);
+            const profit = response.data;
+            if (profit.length > 0) {
+                // Assuming the first profit record for the current month is the relevant one
+                return profit[0].Profit_ID;
+            } else {
+                // If there's no profit record for the current month, return null
+                return null;
+            }
+        } catch (error) {
+            console.error('Error fetching profit details:', error);
+            return null;
+        }
+    };
+
+    const handleClick = async () => {
+        const profitId = await getCurrentMonthProfitId();
+        if (profitId) {
+            window.location.href = `/profit/get/${profitId}`;
+        } else {
+            console.log('No profit record found for the current month.');
+            // Handle the case where there's no profit record for the current month
+        }
+    };
+
     return (
         <div className="container-fluid" style={{ backgroundColor: '#f2f2f2', marginTop: '-40px' }}>
             <div className="row">
@@ -198,7 +236,9 @@ const FinanceDash = () => {
                                 <a className="nav-link active text-light" href="#"><i className="bi bi-house-fill"></i> &nbsp; Dashboard</a>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link text-light" href="#"><i className="bi bi-cash"></i> &nbsp; Profit Log</a>
+                                <button className="nav-link text-light" onClick={handleClick}>
+                                    <i className="bi bi-cash"></i>&nbsp; Profit Log
+                                </button>
                             </li>
                             <li className="nav-item">
                                 <a className="nav-link text-light" href="/otherExpense"><i className="bi bi-wallet"></i> &nbsp; Other Expenses</a>

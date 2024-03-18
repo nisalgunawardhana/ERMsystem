@@ -6,11 +6,13 @@ import AllOther from './components/AllOther';
 import FinanceDash from './components/financeDash';
 import Bill from './components/bill';
 import CreateBill from './components/createBill';
-import UpdateOther from './components/updateBill';
+import UpdateOther from './components/updateOther';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import UpdateBill from './components/updateBill';
 import BillPreview from './components/billPreview';
+import AddProfit from './components/AddProfit';
+import ProfitDetails from './components/viewProfit';
 
 
 function App() {
@@ -29,6 +31,8 @@ function App() {
         <Route path="/CreateBill" element={<CreateBill/>}/>
         <Route path="/otherExpense/update/:id" element={<UpdateOther/>}/>
         <Route path="/finance" element={<FinanceDash/>}/>
+        <Route path="/profit/:month" element={<AddProfit/>}/>
+        <Route path="/profit/get/:id" element={<ProfitDetails/>}/>
 
         <Route path="/bill" element={<Bill/>}/>
         <Route path="/bill/update/:id" element={<UpdateBill/>}/>

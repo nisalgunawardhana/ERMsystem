@@ -41,6 +41,20 @@ router.route("/").get((req,res)=>{
   })
 })
 
+router.route("/search/:month").get((req, res) => {
+  const { month } = req.params;
+  const query = month ? { Month: month } : {};
+
+  Profit.find(query)
+      .then((profit) => {
+          res.json(profit);
+      })
+      .catch((err) => {
+          console.log(err);
+          res.status(500).json({ error: "Error fetching profit details" });
+      });
+});
+
 router.route("/year").get((req, res) => {
   const currentYear = new Date().getFullYear();
 
@@ -109,13 +123,19 @@ router.route("/update/:id").put(async (req, res) => {
 
 router.route("/get/:id").get(async (req, res) => {
   let profitId = req.params.id;
-  const profit = await Profit.findById(profitId).then((tax) => {
-    res.status(200).send({ status: "Profit details fetched", tax })
-  }).catch((errr) => {
-    console.log(errr);
-    res.status(500).send({ status: "Error with getting Profit details" });
-  })
-})
+  try {
+      const profit = await Profit.findOne({ Profit_ID: profitId });
+      if (profit) {
+          res.status(200).send({ status: "Profit details fetched", profit });
+      } else {
+          res.status(404).send({ status: "Profit not found" });
+      }
+  } catch (error) {
+      console.error(error);
+      res.status(500).send({ status: "Error with getting Profit details" });
+  }
+});
+
 
 router.route("/:month").get(async (req, res) => {
   try {
