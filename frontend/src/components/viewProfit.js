@@ -157,7 +157,7 @@ function ProfitDetails() {
                                     <div className="card-body">
                                         <i className="bi bi-cash h1 text-success"></i>
                                         <h5 className="card-title">Average Monthly Profit</h5>
-                                        <p className="card-text">Rs.{profit.Average_monthly_profit}</p>
+                                        <p className="card-text"></p>
                                     </div>
                                 </div>
                             </div>

@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Card } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 const FinanceDash = () => {
 
@@ -216,6 +217,7 @@ const FinanceDash = () => {
         }
     };
 
+    const profitId = getCurrentMonthProfitId();
     const handleClick = async () => {
         const profitId = await getCurrentMonthProfitId();
         if (profitId) {
@@ -236,9 +238,10 @@ const FinanceDash = () => {
                                 <a className="nav-link active text-light" href="#"><i className="bi bi-house-fill"></i> &nbsp; Dashboard</a>
                             </li>
                             <li className="nav-item">
-                                <button className="nav-link text-light" onClick={handleClick}>
+                                {/* Use the Link component for navigation */}
+                                <Link to={`/profit/get/${profitId}`} className="nav-link text-light" onClick={handleClick}>
                                     <i className="bi bi-cash"></i>&nbsp; Profit Log
-                                </button>
+                                </Link>
                             </li>
                             <li className="nav-item">
                                 <a className="nav-link text-light" href="/otherExpense"><i className="bi bi-wallet"></i> &nbsp; Other Expenses</a>
