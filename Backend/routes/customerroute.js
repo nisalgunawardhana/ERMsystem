@@ -79,6 +79,20 @@ router.route("/delete/:customer_id").delete(async (req, res) => {
     }
 })
 
+router.route("/:id").get((req, res) => {
+    const customer_id = req.params.id;
+
+    customer.findOne({ customer_id: customer_id }).then((customer) => {
+        if (!customer) {
+            return res.status(404).json({ error: "customer not found" });
+        }
+        res.json(customer);
+    }).catch((err) => {
+        console.log(err);
+        res.status(500).json({ error: "Failed to get customer details" });
+    });
+});
+
 // nisal 
 
 router.route("/points/:customer_id").get(async (req, res) => {
