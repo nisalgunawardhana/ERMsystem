@@ -6,6 +6,7 @@ import AllOther from './components/AllOther';
 import FinanceDash from './components/financeDash';
 import AddProfit from './components/AddProfit';
 import ProfitDetails from './components/viewProfit';
+import TaxDetails from './components/viewTax';
 import Bill from './components/bill';
 import CreateBill from './components/createBill';
 import UpdateOther from './components/updateOther';
@@ -37,6 +38,7 @@ function App() {
         <Route path="/finance" element={<FinanceDash/>}/>
         <Route path="/profit/:month" element={<AddProfit/>}/>
         <Route path="/profit/get/:id" element={<ProfitDetails/>}/>
+        <Route path="/tax/get/:id" element={<TaxDetails/>}/>
 
         <Route path="/bill" element={<Bill/>}/>
         <Route path="/bill/update/:id" element={<UpdateBill/>}/>

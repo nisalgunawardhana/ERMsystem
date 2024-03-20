@@ -2,15 +2,25 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
-function ProfitDetails() {
+function TaxDetails() {
     const { id } = useParams();
     const [mon, setMon] = useState(null);
+    const [tax, setTax] = useState(null);
     const [profit, setProfit] = useState(null);
     const [searchMonth, setSearchMonth] = useState('');
     const [searchResult, setSearchResult] = useState(null);
     const [displayedData, setDisplayedData] = useState(null);
 
     useEffect(() => {
+        axios.get(`http://localhost:8080/tax/get/${id}`)
+            .then((res) => {
+                setTax(res.data.tax);
+                setDisplayedData(res.data.tax); // Set the initial displayed data
+                setMon(res.data.profit.Month);
+            })
+            .catch((err) => {
+                console.error(err);
+            });
         axios.get(`http://localhost:8080/profit/get/${id}`)
             .then((res) => {
                 setProfit(res.data.profit);
@@ -23,12 +33,12 @@ function ProfitDetails() {
     }, [id]);
 
     const handleSearch = () => {
-        if (!selectedMonth || !selectedYear) {
-            console.log('Please select both month and year.');
+        if (!selectedYear) {
+            console.log('Please select year.');
             return;
         }
 
-        axios.get(`http://localhost:8080/profit/search/${selectedMonth}/${selectedYear}`)
+        axios.get(`http://localhost:8080/tax/search/${selectedYear}`)
             .then((res) => {
                 setSearchResult(res.data);
             })
@@ -97,7 +107,7 @@ function ProfitDetails() {
     };
 
     const handleReportGeneration = () => {
-        const dataToGenerateReport = searchResult || profit; // Use search result if available, otherwise use profit
+        const dataToGenerateReport = searchResult || tax; // Use search result if available, otherwise use profit
         if (dataToGenerateReport) {
             generateReport(dataToGenerateReport); // Call the generateReport function with dataToGenerateReport
         } else {
@@ -134,46 +144,50 @@ function ProfitDetails() {
                     </style>
                 </head>
                 <body>
-                    <h1>Profit Report</h1>
+                    <h1>Tax Report</h1>
                     <table>
                         <thead>
                             <tr>
-                                <th>Details</th>
-                                <th>Amount (Rs)</th>
+                                <th>Tax Details</th>
+                                <th>Values</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Month</td>
-                                <td>${searchResult ? searchResult[0].Month : profit.Month}</td>
+                                <td>Tax Doc ID</td>
+                                <td>${searchResult ? searchResult[0].Tax_ID : tax.Tax_ID}</td>
                             </tr>
                             <tr>
-                                <td>Sales Income</td>
-                                <td>${searchResult ? searchResult[0].Sales_income : totalAmount}</td>
+                                <td>Taxable Income</td>
+                                <td>Rs.${searchResult ? searchResult[0].Taxable_income : tax.Taxable_income}</td>
                             </tr>
                             <tr>
-                                <td>Supplier Expenses</td>
-                                <td>${searchResult ? searchResult[0].Supplier_expenses : totalSupp}</td>
+                                <td>Tax Rate</td>
+                                <td>${searchResult ? searchResult[0].Rate : tax.Rate}%</td>
                             </tr>
                             <tr>
-                                <td>Employee Salaries</td>
-                                <td>${searchResult ? searchResult[0].Salaries : profit.Salaries}</td>
+                                <td>Income Tax</td>
+                                <td>Rs.${searchResult ? searchResult[0].Income_tax : tax.Income_tax}</td>
                             </tr>
                             <tr>
-                                <td>Other Expenses</td>
-                                <td>${searchResult ? searchResult[0].Other_expenses : totalOther}</td>
-                            </tr>
-                            <tr>
-                                <td>Monthly Profit</td>
-                                <td>${searchResult ? searchResult[0].Monthly_profit : profit.Monthly_profit}</td>
+                                <td>Due Date</td>
+                                <td>${searchResult ? new Date(searchResult[0].Due_date).toLocaleDateString() : new Date(tax.Due_date).toLocaleDateString()}</td>
                             </tr>
                             <tr>
                                 <td>Date Created</td>
-                                <td>${searchResult ? new Date(searchResult[0].Date_created).toLocaleDateString() : new Date(profit.Date_created).toLocaleDateString()}</td>
+                                <td>${searchResult ? new Date(searchResult[0].Date_created).toLocaleDateString() : new Date(tax.Date_created).toLocaleDateString()}</td>
                             </tr>
                             <tr>
-                                <td>Description</td>
-                                <td>${searchResult ? searchResult[0].Description : profit.Description}</td>
+                                <td>Payment Status</td>
+                                <td>${searchResult ? searchResult[0].Status : tax.Status}</td>
+                            </tr>
+                            <tr>
+                                <td>EPF/ETF</td>
+                                <td>Rs.${searchResult ? searchResult[0].EPF_ETF : tax.EPF_ETF}</td>
+                            </tr>
+                            <tr>
+                                <td>TotalTax</td>
+                                <td>Rs.${searchResult ? searchResult[0].Total_tax : tax.Total_tax}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -258,43 +272,16 @@ function ProfitDetails() {
         return <option key={index} value={year}>{year}</option>;
     });
 
+    const year = searchResult ? new Date(searchResult[0]?.Date_created).getFullYear() : new Date(tax?.Date_created).getFullYear();
+
     return (
         <div style={{ marginTop: '-40px' }}>
-            {/* Side Navigation Bar */}
-            <nav className="col-md-2 d-none d-md-block bg-dark sidebar position-fixed" style={{ height: '100vh', overflowY: 'auto', marginTop: '-80px' }}>
-                <div className="sidebar-sticky">
-                    <ul className="nav flex-column" style={{ marginTop: '80px' }}>
-                        <li className="nav-item">
-                            <a className="nav-link active text-light" href="#"><i className="bi bi-house-fill"></i>&nbsp; Dashboard</a>
-                        </li>
-                        <li className="nav-item">
-                            <button className="nav-link text-light" onClick={handleClick}>
-                                <i className="bi bi-cash"></i>&nbsp; Profit Log
-                            </button>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link text-light" href="/otherExpense"><i className="bi bi-wallet"></i>&nbsp; Other Expenses</a>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link text-light" href="#"><i className="bi bi-file-earmark"></i>&nbsp; Tax Document</a>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link text-light" href="#"><i className="bi bi-box-arrow-right"></i>&nbsp; Logout</a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
+
 
             {/* Main Content */}
             <div className="container-fluid" style={{ marginLeft: '280px', marginTop: '40px', width: '1220px' }}>
                 <div className="row">
-                    <div className="col-md-4">
-                        <label htmlFor="month">Month:</label>
-                        <select id="month" className="form-control" value={selectedMonth} onChange={(e) => setSelectedMonth(e.target.value)}>
-                            <option value="">Select Month</option>
-                            {monthsOptions}
-                        </select>
-                    </div>
+
                     <div className="col-md-4">
                         <label htmlFor="year">Year:</label>
                         <select id="year" className="form-control" value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)}>
@@ -307,23 +294,110 @@ function ProfitDetails() {
                     </div>
                 </div>
 
-                <div className="row" style={{ marginTop: '40px' }}>
-                    {/* Generate Monthly Profit Report Card */}
-                    <div className="col-md-6">
-                        <div className="card" style={{ height: '160px' }}>
-                            <div className="card-body">
-                                <h5 className="card-title">Generate Monthly Profit Report</h5>
-                                <p className="card-text">Click the button below to generate a report for the monthly profit.</p>
-                                <button className="btn btn-primary" onClick={handleReportGeneration} style={{marginTop: '10px' }}> Generate Report</button>
+                <h2 className="mb-4" style={{ marginTop: '60px' }}><i className="fas fa-chart-line"></i> Tax Document {(searchResult || tax) && `- ${year}`}</h2>
+                <p className="text-muted">Explore the detailed breakdown of your profits, including sales income, expenses,<br></br> and monthly profit, to gain insights into your financial performance.</p>
+
+                {/* Display profit details for searched month */}
+                {(searchResult || tax) && (
+                    <div className="row">
+                        {/* Left Column for Profit Details */}
+                        <div className="col-md-6">
+                            <div className="card" style={{ marginTop: '25px' }}>
+                                <div className="card-body">
+                                    <table className="table">
+                                        <tbody>
+                                            <tr>
+                                                <th scope="row"><i className="bi bi-file-earmark-text"></i>&nbsp;&nbsp; Tax Doc ID:</th>
+                                                <td>{searchResult ? searchResult[0].Tax_ID : tax.Tax_ID}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row"><i className="bi bi-cash"></i>&nbsp;&nbsp; Taxable Income:</th>
+                                                <td>Rs.{searchResult ? searchResult[0].Taxable_income : tax.Taxable_income}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row"><i className="bi bi-percent"></i>&nbsp;&nbsp; Tax Rate:</th>
+                                                <td>{searchResult ? searchResult[0].Rate : tax.Rate}%</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row"><i className="bi bi-currency-dollar"></i>&nbsp;&nbsp; Income Tax:</th>
+                                                <td>Rs.{searchResult ? searchResult[0].Income_tax : tax.Income_tax}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row"><i className="bi bi-calendar"></i>&nbsp;&nbsp; Due Date:</th>
+                                                <td>{searchResult ? new Date(searchResult[0].Due_date).toLocaleDateString() : new Date(tax.Due_date).toLocaleDateString()}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row"><i className="bi bi-clock"></i>&nbsp;&nbsp; Date created:</th>
+                                                <td>{searchResult ? new Date(searchResult[0].Date_created).toLocaleDateString() : new Date(tax.Date_created).toLocaleDateString()}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row"><i className="bi bi-check-circle"></i>&nbsp;&nbsp; Payment status:</th>
+                                                <td>{searchResult ? searchResult[0].Status : tax.Status}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row"><i className="bi bi-credit-card"></i>&nbsp;&nbsp; EPF/ETF:</th>
+                                                <td>Rs.{searchResult ? searchResult[0].EPF_ETF : tax.EPF_ETF}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row"><i className="bi bi-info-circle"></i>&nbsp;&nbsp; Total Tax:</th>
+                                                <td>Rs.{searchResult ? searchResult[0].Total_tax : tax.Total_tax}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <div class="button-container">
+                                        <button onclick="window.print()" class="btn btn-primary" style={{ marginLeft: '180px', width: '160px' }}>Edit</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+
+                        {/* Right Column for Cards */}
+                        <div className="col-md-6" style={{ marginTop: '-155px', marginLeft: '0px' }}>
+                            <div className="row mb-4">
+                                <div className="col-md-6" style={{ height: '140px' }}>
+                                    <div className="card h-100">
+                                        <div className="card-body">
+                                            <i className="bi bi-calendar h1 text-primary"></i>
+                                            <h5 className="card-title">Due Date</h5>
+                                            <p className="card-text">{searchResult ? new Date(searchResult[0].Due_date).toLocaleDateString() : new Date(tax.Due_date).toLocaleDateString()}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-md-6">
+                                    <div className="card h-100">
+                                        <div className="card-body">
+                                            <i className="bi bi-info-circle h1 text-success"></i>
+                                            <h5 className="card-title">Total Tax Payable</h5>
+                                            <p className="card-text">Rs.{searchResult ? searchResult[0].Total_tax : tax.Total_tax}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div className="row">
+                                <div className="col-md-12 mt-4">
+                                    <div className="card" style={{ height: '140px' }}>
+                                        <div className="card-body">
+                                            <h5 className="card-title">Generate Tax Report</h5>
+                                            <p className="card-text">Click the button below to generate a report for the annual tax details.</p>
+                                            <button className="btn btn-primary" onClick={handleReportGeneration}> Generate Report</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
 
-                    {/* Add Profit Card */}
-                    <div className="col-md-6">
-                        <div className="card" style={{ height: '160px' }}>
-                            <div className="card-body">
-                                <form onSubmit={submit}>
+                )}
+
+                <div className="row mb-4">
+                    <div className="card" style={{ borderRadius: '20px', width: '585px', marginLeft: '622px', marginTop: '-150px', height: '150px' }}>
+                        <div className="card-body">
+                            <form onSubmit={submit}>
+                                <div className="mb-3">
                                     <h6>Create Monthly profit log in order to analyze sales vs expenses</h6>
                                     <div className="row mb-3" style={{ marginTop: '15px' }}>
                                         <div className="col-md-4">
@@ -333,135 +407,22 @@ function ProfitDetails() {
                                             <input type="text" className="form-control" id="Month" name="Month" value={month.Month} onChange={handleChange} />
                                         </div>
                                     </div>
-                                    <div className="row mb-3">
-                                        <div className="col">
-                                            <div className="btn-group">
-                                                <button type="submit" className="btn btn-primary" style={{ width: '200px' }}>Add Profit</button>
-                                            </div>
+                                </div>
+                                <div className="row mb-3">
+                                    <div className="col">
+                                        <div className="btn-group">
+                                            <button type="submit" className="btn btn-primary">Add Profit</button>
                                         </div>
                                     </div>
-                                </form>
-                            </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
-
-
-                <h2 className="mb-4" style={{ marginTop: '20px' }}><i className="fas fa-chart-line"></i> Profit Details {(searchResult || profit) && `- ${searchResult ? searchResult[0].Month : profit.Month}`}</h2>
-                <p className="text-muted">Explore the detailed breakdown of your profits, including sales income, expenses, and monthly profit, to gain insights into your financial performance.</p>
-
-                {/* Display profit details for searched month */}
-                {(searchResult || profit) && (
-                    <div className="row">
-                        {/* Left Column for Profit Details */}
-                        <div className="col-md-6">
-                            <div className="card" style={{ marginTop: '25px' }}>
-                                <div className="card-body">
-                                    <table className="table">
-                                        <tbody>
-                                            <tr>
-                                                <th scope="row"><i className="bi bi-list-ul"></i>&nbsp;&nbsp; Profit Log ID:</th>
-                                                <td>{searchResult ? searchResult[0].Profit_ID : profit.Profit_ID}</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row"><i className="bi bi-calendar"></i>&nbsp;&nbsp; Month:</th>
-                                                <td>{searchResult ? searchResult[0].Month : profit.Month}</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row"><i className="bi bi-cash"></i>&nbsp;&nbsp; Sales Income:</th>
-                                                <td>Rs.{searchResult ? searchResult[0].Sales_income : totalAmount}</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row"><i className="bi bi-shop"></i>&nbsp;&nbsp; Supplier Expenses:</th>
-                                                <td>Rs.{searchResult ? searchResult[0].Supplier_expenses : totalSupp}</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row"><i className="bi bi-person"></i>&nbsp;&nbsp; Employee Salaries:</th>
-                                                <td>Rs.{searchResult ? searchResult[0].Salaries : profit.Salaries}</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row"><i className="bi bi-wallet"></i>&nbsp;&nbsp; Other Expenses:</th>
-                                                <td>Rs.{searchResult ? searchResult[0].Other_expenses : totalOther}</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row"><i className="bi bi-graph-up"></i>&nbsp;&nbsp; Monthly Profit:</th>
-                                                <td>Rs.{searchResult ? searchResult[0].Monthly_profit : profit.Monthly_profit}</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row"><i className="bi bi-calendar"></i>&nbsp;&nbsp; Date Created:</th>
-                                                <td>{searchResult ? new Date(searchResult[0].Date_created).toLocaleDateString() : new Date(profit.Date_created).toLocaleDateString()}</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row"><i className="bi bi-chat-left"></i>&nbsp;&nbsp; Description:</th>
-                                                <td>{searchResult ? searchResult[0].Description : profit.Description}</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                    <div class="button-container">
-                                        <button onclick="window.print()" class="btn btn-primary" style={{ marginLeft: '180px', width: '160px' }}>Edit</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Right Column for Cards */}
-                        <div className="col-md-6" style={{ marginTop: '20px', marginLeft: '0px' }}>
-                            <div className="row mb-4">
-                                <div className="col-md-6" style={{ height: '140px' }}>
-                                    <div className="card h-90">
-                                        <div className="card-body">
-                                            <i className="bi bi-cash h1 text-primary"></i>
-                                            <h5 className="card-title">Monthly Profit</h5>
-                                            <p className="card-text">Rs.{searchResult ? searchResult[0].Monthly_profit : profit.Monthly_profit}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-md-6">
-                                    <div className="card h-90">
-                                        <div className="card-body">
-                                            <i className="bi bi-cash h1 text-success"></i>
-                                            <h5 className="card-title">Average Monthly Profit</h5>
-                                            <p className="card-text">Rs.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="col-md-6" style={{ height: '120px' }}>
-                                    <div className="card h-90">
-                                        <div className="card-body">
-                                            <i className="bi bi-cash h1 text-warning"></i>
-                                            <h5 className="card-title">Monthly Sales</h5>
-                                            <p className="card-text">Rs.{searchResult ? searchResult[0].Sales_income : totalAmount}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-md-6">
-                                    <div className="card h-90">
-                                        <div className="card-body">
-                                            <i className="bi bi-cash h1 text-danger"></i>
-                                            <h5 className="card-title">Monthly Expenses</h5>
-                                            <p className="card-text">Rs.{searchResult ? searchResult[0].Supplier_expenses + searchResult[0].Salaries + searchResult[0].Other_expenses : totalSupp + profit.Salaries + totalOther}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                )}
-
 
             </div>
         </div>
     );
 }
 
-export default ProfitDetails;
-
-
-
-
-
+export default TaxDetails;
