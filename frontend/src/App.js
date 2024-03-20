@@ -9,7 +9,7 @@ import ProfitDetails from './components/viewProfit';
 import TaxDetails from './components/viewTax';
 import Bill from './components/bill';
 import CreateBill from './components/createBill';
-import UpdateOther from './components/updateOther';
+import UpdateOther from './components/UpdateCustomer';
 import Supplier from './components/supplier';
 import AddSupplier from './components/addSupplier';
 import AddPurchaseOrder from './components/addPurchaseOrder';
@@ -19,7 +19,7 @@ import UpdateBill from './components/updateBill';
 import BillPreview from './components/billPreview';
 
 import CustomerR from './components/Customer';
-
+import UpdateCustomer from './components/UpdateCustomer';
 function App() {
   return (
     <BrowserRouter>
@@ -47,6 +47,7 @@ function App() {
         <Route path="/supplier/add" element={<AddSupplier/>}/>
         <Route path="/purchaseOrder/add" element={<AddPurchaseOrder/>}/>
         <Route path="/Customer" element={<CustomerR/>}/>
+        <Route path="/Customer/update/:id" element={<UpdateCustomer/>}/>
       </Routes>  
     
   </div>

@@ -4,7 +4,7 @@ let SystemUser = require("../models/usermodel");
 //create
 //arrow function in js?
 router.route("/add").post((req,res)=>{
-    //const userId = Number(req.body.userId);
+    
     const empId = Number(req.body.empId);
     const first_name = req.body.first_name;
     const last_name = req.body.last_name;
@@ -16,7 +16,6 @@ router.route("/add").post((req,res)=>{
     const createdDate = req.body.createdDate;
 
     const newUser = new SystemUser({
-        userId,
         empId,
         first_name,
         last_name,
@@ -50,10 +49,9 @@ router.route("/update/:id").put(async (req,res)=>{
     let sysuserId = req.params.id;  
 
     //destructure
-    const {/*userId,*/empId,first_name,last_name,nic,username,password,userRole,isActive,createdDate} = req.body;
+    const {empId,first_name,last_name,nic,username,password,userRole,isActive,createdDate} = req.body;
 
     const updateUser = {
-        //userId,
         empId,
         first_name,
         last_name,
