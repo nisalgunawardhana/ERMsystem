@@ -84,16 +84,17 @@ router.route("/delete/:id").delete(async (req,res) => {
     })
 })
 
-/*
+
+//viewing one user -- user profile
 router.route("/get/:id").get(async(req,res) => {
     let sysuserId = req.params.id;
-    await SystemUser.findById(sysuserId).then(() => {
-        res.status(200).send({status : "User fetched", user: user})
+    await SystemUser.findById(sysuserId).then((user) => {
+        res.status(200).send({status : "User fetched", user})
     }).catch(() => {
         console.log(err.message);
         res.status(500).send({status: "Error with get user", error: err.message});
     })
 })
-*/
+
 
 module.exports = router;
