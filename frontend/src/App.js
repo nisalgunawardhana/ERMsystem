@@ -7,9 +7,10 @@ import FinanceDash from './components/financeDash';
 import AddProfit from './components/AddProfit';
 import ProfitDetails from './components/viewProfit';
 import TaxDetails from './components/viewTax';
+import AddTax from './components/addTax';
 import Bill from './components/bill';
 import CreateBill from './components/createBill';
-import UpdateOther from './components/UpdateCustomer';
+import UpdateOther from './components/updateOther';
 import Supplier from './components/supplier';
 import AddSupplier from './components/addSupplier';
 import AddPurchaseOrder from './components/addPurchaseOrder';
@@ -20,6 +21,7 @@ import BillPreview from './components/billPreview';
 
 import CustomerR from './components/Customer';
 import UpdateCustomer from './components/UpdateCustomer';
+
 function App() {
   return (
     <BrowserRouter>
@@ -39,6 +41,7 @@ function App() {
         <Route path="/profit/:month" element={<AddProfit/>}/>
         <Route path="/profit/get/:id" element={<ProfitDetails/>}/>
         <Route path="/tax/get/:id" element={<TaxDetails/>}/>
+        <Route path="/tax/add" element={<AddTax/>}/>
 
         <Route path="/bill" element={<Bill/>}/>
         <Route path="/bill/update/:id" element={<UpdateBill/>}/>

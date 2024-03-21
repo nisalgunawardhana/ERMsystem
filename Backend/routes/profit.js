@@ -267,7 +267,6 @@ router.route("/supplier/:month").get(async (req, res) => {
     }
   });
 
-// Function to convert month name to numeric and obtain total monthly other expenses
 function monthToNumeric(month) {
   const monthMap = {
       "January": "01",
@@ -284,8 +283,60 @@ function monthToNumeric(month) {
       "December": "12"
   };
   return monthMap[month];
-}
+};
 
+// Function to obtain total monthly salaries
+router.route("/salaries/:month").get(async (req, res) => {
+  try {
+      const { month } = req.params;
+
+      // Convert the month name to a numeric representation (e.g., January -> 01)
+      const monthNumeric = monthToNumeric(month);
+
+      // Check if the month name is valid
+      if (!monthNumeric) {
+          return res.status(400).json({ message: "Invalid month name" });
+      }
+
+      // Get the current year
+      const currentYear = new Date().getFullYear();
+
+      // Determine the number of days in the given month
+      const daysInMonth = new Date(currentYear, monthNumeric, 0).getDate();
+
+      // Construct the start and end dates for the month
+      const startDate = new Date(`${currentYear}-${monthNumeric}-01`);
+      const endDate = new Date(`${currentYear}-${monthNumeric}-${daysInMonth}`);
+
+      // Aggregate to calculate the total amount for the given month and year
+      const totalSalary = await bills.aggregate([
+          {
+              $match: {
+                  billing_date: { $gte: startDate, $lte: endDate } // Match documents with Date_created within the given month and year
+              }
+          },
+          {
+              $group: {
+                  _id: null,
+                  totalSalary: { $sum: "$total_amount" }
+              }
+          }
+      ]);
+
+      // Check if totalAmount array is not empty
+      if (totalSalary && totalSalary.length > 0 && totalSalary[0].totalSalary !== undefined) {
+          res.json({ totalSalary: totalSalary[0].totalSalary });
+      } else {
+          // Return a message indicating no data found for the given month
+          res.status(404).json({ message: "No data found for the given month" });
+      }
+  } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+// Function to convert month name to numeric and obtain total monthly other expenses
 router.route("/other/:month").get(async (req, res) => {
   try {
       const { month } = req.params;

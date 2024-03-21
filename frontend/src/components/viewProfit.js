@@ -138,8 +138,8 @@ function ProfitDetails() {
                     <table>
                         <thead>
                             <tr>
-                                <th>Details</th>
-                                <th>Amount (Rs)</th>
+                                <th>Profit Details</th>
+                                <th>Values</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -149,23 +149,23 @@ function ProfitDetails() {
                             </tr>
                             <tr>
                                 <td>Sales Income</td>
-                                <td>${searchResult ? searchResult[0].Sales_income : totalAmount}</td>
+                                <td>Rs.${searchResult ? searchResult[0].Sales_income : totalAmount}</td>
                             </tr>
                             <tr>
                                 <td>Supplier Expenses</td>
-                                <td>${searchResult ? searchResult[0].Supplier_expenses : totalSupp}</td>
+                                <td>Rs.${searchResult ? searchResult[0].Supplier_expenses : totalSupp}</td>
                             </tr>
                             <tr>
                                 <td>Employee Salaries</td>
-                                <td>${searchResult ? searchResult[0].Salaries : profit.Salaries}</td>
+                                <td>Rs.${searchResult ? searchResult[0].Salaries : profit.Salaries}</td>
                             </tr>
                             <tr>
                                 <td>Other Expenses</td>
-                                <td>${searchResult ? searchResult[0].Other_expenses : totalOther}</td>
+                                <td>Rs.${searchResult ? searchResult[0].Other_expenses : totalOther}</td>
                             </tr>
                             <tr>
                                 <td>Monthly Profit</td>
-                                <td>${searchResult ? searchResult[0].Monthly_profit : profit.Monthly_profit}</td>
+                                <td>Rs.${searchResult ? searchResult[0].Monthly_profit : profit.Monthly_profit}</td>
                             </tr>
                             <tr>
                                 <td>Date Created</td>

@@ -6,7 +6,9 @@ function TaxDetails() {
     const { id } = useParams();
     const [mon, setMon] = useState(null);
     const [tax, setTax] = useState(null);
+    const [Tax_income, setTaxableIncome] = useState(null);
     const [profit, setProfit] = useState(null);
+    const [totalSalary, setTotalSalary] = useState(0);
     const [searchMonth, setSearchMonth] = useState('');
     const [searchResult, setSearchResult] = useState(null);
     const [displayedData, setDisplayedData] = useState(null);
@@ -24,8 +26,9 @@ function TaxDetails() {
         axios.get(`http://localhost:8080/profit/get/${id}`)
             .then((res) => {
                 setProfit(res.data.profit);
-                setDisplayedData(res.data.profit); // Set the initial displayed data
-                setMon(res.data.profit.Month);
+                
+                const totalSalary = res.data.profit.Monthly_profit;
+                setTotalSalary(totalSalary);
             })
             .catch((err) => {
                 console.error(err);
@@ -119,7 +122,7 @@ function TaxDetails() {
         const pdfContent = `
             <html>
                 <head>
-                    <title>Profit Report</title>
+                    <title>Tax Report</title>
                     <style>
                         body {
                             font-family: Arial, sans-serif;
@@ -208,7 +211,7 @@ function TaxDetails() {
             const pdfUrl = URL.createObjectURL(pdfBlob);
             const a = document.createElement("a");
             a.href = pdfUrl;
-            a.download = "profit_report.pdf";
+            a.download = "tax_report.pdf";
             a.click();
             URL.revokeObjectURL(pdfUrl);
             printWindow.close();
@@ -255,6 +258,13 @@ function TaxDetails() {
             .catch((err) => {
                 console.error(err);
             });
+        axios.get(`http://localhost:8080/profit/salary/${currentMonth}`)
+            .then((res) => {
+                setTotalSalary(res.data.totalSupp);
+            })
+            .catch((err) => {
+                console.error(err);
+            });
     }, [month]);
 
     const [selectedMonth, setSelectedMonth] = useState('');
@@ -273,6 +283,33 @@ function TaxDetails() {
     });
 
     const year = searchResult ? new Date(searchResult[0]?.Date_created).getFullYear() : new Date(tax?.Date_created).getFullYear();
+
+    const [EPF, setEPF] = useState(0);
+    const [ETF, setETF] = useState(0);
+    const [salary, setSalary] = useState('');
+    const [isCalculating, setIsCalculating] = useState(false);
+
+    const calculateEPFETF = async () => {
+        setIsCalculating(true);
+        try {
+            // Assuming salary is entered in the form
+            if (!salary) {
+                throw new Error('Please enter the salary.');
+            }
+
+            // Calculate EPF (10% of salary) and ETF (3% of salary)
+            const EPF = (parseInt(salary) * 10) / 100;
+            const ETF = (parseInt(salary) * 3) / 100;
+
+            setEPF(EPF);
+            setETF(ETF);
+        } catch (error) {
+            console.error('Error calculating EPF and ETF:', error);
+        } finally {
+            setIsCalculating(false);
+        }
+    };
+
 
     return (
         <div style={{ marginTop: '-40px' }}>
@@ -294,6 +331,38 @@ function TaxDetails() {
                     </div>
                 </div>
 
+                <div className="row" style={{ marginTop: '40px' }}>
+                    {/* Generate Monthly Profit Report Card */}
+                    <div className="col-md-6">
+                        <div className="card" style={{ height: '160px' }}>
+                            <div className="card-body">
+                                <h5 className="card-title">Generate Monthly Profit Report</h5>
+                                <p className="card-text">Click the button below to generate a report for the monthly profit.</p>
+                                <button className="btn btn-primary" onClick={handleReportGeneration} style={{ marginTop: '10px' }}> Generate Report</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Add Profit Card */}
+                    <div className="col-md-6">
+                        <div className="card" style={{ height: '160px' }}>
+                            <div className="card-body">
+                                <form onSubmit={submit}>
+                                    <h6>Add New Tax Document</h6>
+                                    <p className="card-text">You can create a tax document to keep track of the tax details.</p>
+                                    <div className="row mb-3">
+                                        <div className="col">
+                                            <div className="btn-group">
+                                                <button type="submit" className="btn btn-primary" style={{ marginTop: '20px' }}>Add Tax Document</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <h2 className="mb-4" style={{ marginTop: '60px' }}><i className="fas fa-chart-line"></i> Tax Document {(searchResult || tax) && `- ${year}`}</h2>
                 <p className="text-muted">Explore the detailed breakdown of your profits, including sales income, expenses,<br></br> and monthly profit, to gain insights into your financial performance.</p>
 
@@ -302,7 +371,7 @@ function TaxDetails() {
                     <div className="row">
                         {/* Left Column for Profit Details */}
                         <div className="col-md-6">
-                            <div className="card" style={{ marginTop: '25px' }}>
+                            <div className="card" style={{ marginTop: '25px', marginBottom: '25px' }}>
                                 <div className="card-body">
                                     <table className="table">
                                         <tbody>
@@ -373,52 +442,33 @@ function TaxDetails() {
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-
-
-                            <div className="row">
-                                <div className="col-md-12 mt-4">
-                                    <div className="card" style={{ height: '140px' }}>
-                                        <div className="card-body">
-                                            <h5 className="card-title">Generate Tax Report</h5>
-                                            <p className="card-text">Click the button below to generate a report for the annual tax details.</p>
-                                            <button className="btn btn-primary" onClick={handleReportGeneration}> Generate Report</button>
+                                
+                                <div className="card">
+                                    <div className="card-body">
+                                        <h5 className="card-title">EPF & ETF Calculator</h5>
+                                        <div className="mb-3">
+                                            <label htmlFor="salary" className="form-label">Enter Salary</label>
+                                            <input type="number" className="form-control" id="salary" value={totalSalary} onChange={(e) => setSalary(e.target.value)} />
                                         </div>
+                                        <button className="btn btn-primary" onClick={calculateEPFETF} disabled={isCalculating}>
+                                            {isCalculating ? 'Calculating...' : 'Calculate'}
+                                        </button>
+                                        {EPF !== 0 && (
+                                            <div>
+                                                <p>EPF: Rs. {EPF}</p>
+                                                <p>ETF: Rs. {ETF}</p>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>
+
                         </div>
+
 
                     </div>
 
                 )}
-
-                <div className="row mb-4">
-                    <div className="card" style={{ borderRadius: '20px', width: '585px', marginLeft: '622px', marginTop: '-150px', height: '150px' }}>
-                        <div className="card-body">
-                            <form onSubmit={submit}>
-                                <div className="mb-3">
-                                    <h6>Create Monthly profit log in order to analyze sales vs expenses</h6>
-                                    <div className="row mb-3" style={{ marginTop: '15px' }}>
-                                        <div className="col-md-4">
-                                            <label htmlFor="Month" className="form-label">Enter Month</label>
-                                        </div>
-                                        <div className="col-md-8">
-                                            <input type="text" className="form-control" id="Month" name="Month" value={month.Month} onChange={handleChange} />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="row mb-3">
-                                    <div className="col">
-                                        <div className="btn-group">
-                                            <button type="submit" className="btn btn-primary">Add Profit</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
 
             </div>
         </div>
