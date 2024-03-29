@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import { Link} from "react-router-dom";
 
 function ProfitDetails() {
     const { id } = useParams();
@@ -258,6 +259,28 @@ function ProfitDetails() {
         return <option key={index} value={year}>{year}</option>;
     });
 
+    const year = searchResult ? new Date(searchResult[0]?.Date_created).getFullYear() : new Date(profit?.Date_created).getFullYear();
+
+    // Assuming you have a variable `endDateString` containing the value of the "Date created" field
+    let endDateString = null;
+    if (searchResult && searchResult[0] && searchResult[0].Date_created) {
+        endDateString = new Date(searchResult[0].Date_created);
+    } else if (profit && profit.Date_created) {
+        endDateString = new Date(profit.Date_created);
+    }
+    
+    // Function to format the date as "1st Jan 2024"
+    const formatEndDate = (date) => {
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        return date.toLocaleDateString('en-US', options);
+    };
+    
+    // Use the formatEndDate function to format the end date if it's not null
+    let endDateFormatted = null;
+    if (endDateString) {
+        endDateFormatted = formatEndDate(endDateString);
+    }
+
     return (
         <div style={{ marginTop: '-40px' }}>
             {/* Side Navigation Bar */}
@@ -314,7 +337,7 @@ function ProfitDetails() {
                             <div className="card-body">
                                 <h5 className="card-title">Generate Monthly Profit Report</h5>
                                 <p className="card-text">Click the button below to generate a report for the monthly profit.</p>
-                                <button className="btn btn-primary" onClick={handleReportGeneration} style={{marginTop: '10px' }}> Generate Report</button>
+                                <button className="btn btn-primary" onClick={handleReportGeneration} style={{ marginTop: '10px' }}> Generate Report</button>
                             </div>
                         </div>
                     </div>
@@ -346,7 +369,6 @@ function ProfitDetails() {
                     </div>
                 </div>
 
-
                 <h2 className="mb-4" style={{ marginTop: '20px' }}><i className="fas fa-chart-line"></i> Profit Details {(searchResult || profit) && `- ${searchResult ? searchResult[0].Month : profit.Month}`}</h2>
                 <p className="text-muted">Explore the detailed breakdown of your profits, including sales income, expenses, and monthly profit, to gain insights into your financial performance.</p>
 
@@ -355,8 +377,9 @@ function ProfitDetails() {
                     <div className="row">
                         {/* Left Column for Profit Details */}
                         <div className="col-md-6">
-                            <div className="card" style={{ marginTop: '25px' }}>
+                            <div className="card" style={{ marginTop: '25px', marginBottom: '30px' }}>
                                 <div className="card-body">
+                                    <h4 className="mb-3">Valid Period: {searchResult ? searchResult[0].Month : profit.Month} 1, {year}  - {endDateFormatted}</h4>
                                     <table className="table">
                                         <tbody>
                                             <tr>
@@ -398,7 +421,7 @@ function ProfitDetails() {
                                         </tbody>
                                     </table>
                                     <div class="button-container">
-                                        <button onclick="window.print()" class="btn btn-primary" style={{ marginLeft: '180px', width: '160px' }}>Edit</button>
+                                        <Link to={`/profit/update/${profit._id}`} className="btn btn-primary me-2" style={{ marginLeft: '180px', width: '160px' }}>Edit</Link>
                                     </div>
                                 </div>
                             </div>

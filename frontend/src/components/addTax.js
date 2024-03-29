@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from 'react-router-dom';
 
-function AddTax() {
+function AddTax({ EPF, ETF }) {
     const [totalProfit, setTotalProfit] = useState(0);
     const [totalSalary, setTotalSalary] = useState(0);
     const [Tax_ID, setID] = useState("");
@@ -12,15 +12,16 @@ function AddTax() {
     const [Due_date, setDue] = useState();
     const [Date_created, setCreated] = useState();
     const [Status, setStatus] = useState();
-    const [EPF_ETF, setEpf] = useState("");
     const [Total_tax, setTotal] = useState("");
     const navigate = useNavigate();
-    const { month } = useParams();
+    const { epfetf } = useParams();
 
     const getCurrentYear = () => {
         const currentDate = new Date();
         return currentDate.getFullYear();
     };
+
+    const [EPF_ETF, setEpf] = useState(epfetf);
 
     useEffect(() => {
         let currentYear = getCurrentYear();
@@ -31,7 +32,7 @@ function AddTax() {
             .catch((err) => {
                 console.error(err);
             });
-        axios.get(`http://localhost:8080/tax/salary/${month}`)
+        axios.get(`http://localhost:8080/tax/salary/`)
             .then((res) => {
                 setTotalSalary(res.data.totalProfit);
             })
@@ -49,6 +50,8 @@ function AddTax() {
     const sendData = (e) => {
         e.preventDefault();
 
+        const totTax = (parseFloat(EPF_ETF) + parseFloat(totalProfit)).toFixed(2);
+
         const newTax = {
             Tax_ID,
             Taxable_income: totalProfit,
@@ -57,13 +60,13 @@ function AddTax() {
             Due_date,
             Date_created,
             Status,
-            EPF_ETF,
-            Total_tax
+            EPF_ETF: EPF_ETF,
+            Total_tax: totTax
         };
 
         axios.post("http://localhost:8080/tax/add", newTax)
             .then(() => {
-                alert("Profit details Added");
+                alert("Tax details Added");
                 setID("");
                 setProfit("");
                 setRate(0);
@@ -73,7 +76,7 @@ function AddTax() {
                 setStatus("");
                 setEpf("");
                 setTotal("");
-                navigate(`/profit/get/`);
+                navigate(`/tax/get/${Tax_ID}`);
             })
             .catch((err) => {
                 alert(err);
@@ -138,13 +141,13 @@ function AddTax() {
                                 <label htmlFor="date" className="form-label">
                                     <i className="bi bi-calendar2 me-2"></i>EPF/ETF
                                 </label>
-                                <input type="text" className="form-control" id="date" value={EPF_ETF} onChange={(e) => setEpf(e.target.value)} />
+                                <input type="text" className="form-control" id="date" value={parseFloat(EPF_ETF).toFixed(2)} onChange={(e) => setEpf(e.target.value)} />
                             </div>
                             <div className="mb-3">
                                 <label htmlFor="desc" className="form-label">
                                     <i className="bi bi-chat-dots me-2"></i>Total Tax
                                 </label>
-                                <input type="text" className="form-control" id="desc" value={Total_tax} onChange={(e) => setTotal(e.target.value)} rows={5} />
+                                <input type="text" className="form-control" id="desc" value={(parseFloat(EPF_ETF) + parseFloat(totalProfit)).toFixed(2)} onChange={(e) => setTotal(e.target.value)} rows={5} />
                             </div>
                         </div>
                     </div>

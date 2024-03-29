@@ -26,9 +26,6 @@ function TaxDetails() {
         axios.get(`http://localhost:8080/profit/get/${id}`)
             .then((res) => {
                 setProfit(res.data.profit);
-                
-                const totalSalary = res.data.profit.Monthly_profit;
-                setTotalSalary(totalSalary);
             })
             .catch((err) => {
                 console.error(err);
@@ -227,8 +224,9 @@ function TaxDetails() {
 
     const submit = (e) => {
         e.preventDefault();
+        const epfetf = EPF + ETF;
         // Redirect to the page where total amount is fetched for the entered month
-        window.location.href = `/profit/${month.Month}`;
+        window.location.href = `/tax/${epfetf}`;
     };
 
     const [totalAmount, setTotalAmount] = useState(0);
@@ -267,6 +265,21 @@ function TaxDetails() {
             });
     }, [month]);
 
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get('http://localhost:8080/profit/year');
+                setProfit(response.data);
+            } catch (error) {
+                console.error('Error fetching profit data:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    const TotalProfit = profit ? profit.reduce((acc, curr) => acc + parseFloat(curr.Monthly_profit), 0) : 0;
+
     const [selectedMonth, setSelectedMonth] = useState('');
     const [selectedYear, setSelectedYear] = useState('');
 
@@ -288,18 +301,20 @@ function TaxDetails() {
     const [ETF, setETF] = useState(0);
     const [salary, setSalary] = useState('');
     const [isCalculating, setIsCalculating] = useState(false);
+    let TotEtf = 0;
 
     const calculateEPFETF = async () => {
         setIsCalculating(true);
         try {
             // Assuming salary is entered in the form
-            if (!salary) {
+            if (!totalAmount) {
                 throw new Error('Please enter the salary.');
             }
 
             // Calculate EPF (10% of salary) and ETF (3% of salary)
-            const EPF = (parseInt(salary) * 10) / 100;
-            const ETF = (parseInt(salary) * 3) / 100;
+            const EPF = (parseInt(totalAmount) * 20) / 100;
+            const ETF = (parseInt(totalAmount) * 3) / 100;
+            TotEtf = parseFloat(TotEtf).toFixed(2) + parseFloat(ETF).toFixed(2);
 
             setEPF(EPF);
             setETF(ETF);
@@ -310,6 +325,25 @@ function TaxDetails() {
         }
     };
 
+    // Assuming you have a variable `endDateString` containing the value of the "Date created" field
+    let endDateString = null;
+    if (searchResult && searchResult[0] && searchResult[0].Date_created) {
+        endDateString = new Date(searchResult[0].Date_created);
+    } else if (tax && tax.Date_created) {
+        endDateString = new Date(tax.Date_created);
+    }
+    
+    // Function to format the date as "1st Jan 2024"
+    const formatEndDate = (date) => {
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        return date.toLocaleDateString('en-US', options);
+    };
+    
+    // Use the formatEndDate function to format the end date if it's not null
+    let endDateFormatted = null;
+    if (endDateString) {
+        endDateFormatted = formatEndDate(endDateString);
+    }
 
     return (
         <div style={{ marginTop: '-40px' }}>
@@ -348,7 +382,7 @@ function TaxDetails() {
                         <div className="card" style={{ height: '160px' }}>
                             <div className="card-body">
                                 <form onSubmit={submit}>
-                                    <h6>Add New Tax Document</h6>
+                                    <h5>Add New Tax Document</h5>
                                     <p className="card-text">You can create a tax document to keep track of the tax details.</p>
                                     <div className="row mb-3">
                                         <div className="col">
@@ -373,6 +407,7 @@ function TaxDetails() {
                         <div className="col-md-6">
                             <div className="card" style={{ marginTop: '25px', marginBottom: '25px' }}>
                                 <div className="card-body">
+                                    <h4 className="mb-3">Valid Period: January 1, {year} - {endDateFormatted}</h4>
                                     <table className="table">
                                         <tbody>
                                             <tr>
@@ -381,7 +416,7 @@ function TaxDetails() {
                                             </tr>
                                             <tr>
                                                 <th scope="row"><i className="bi bi-cash"></i>&nbsp;&nbsp; Taxable Income:</th>
-                                                <td>Rs.{searchResult ? searchResult[0].Taxable_income : tax.Taxable_income}</td>
+                                                <td>Rs.{searchResult ? searchResult[0].Taxable_income : TotalProfit}</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row"><i className="bi bi-percent"></i>&nbsp;&nbsp; Tax Rate:</th>
@@ -389,7 +424,7 @@ function TaxDetails() {
                                             </tr>
                                             <tr>
                                                 <th scope="row"><i className="bi bi-currency-dollar"></i>&nbsp;&nbsp; Income Tax:</th>
-                                                <td>Rs.{searchResult ? searchResult[0].Income_tax : tax.Income_tax}</td>
+                                                <td>Rs.{searchResult ? searchResult[0].Income_tax : parseFloat(tax.Rate).toFixed(2) * parseFloat(TotalProfit).toFixed(2) / 100.00}</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row"><i className="bi bi-calendar"></i>&nbsp;&nbsp; Due Date:</th>
@@ -405,7 +440,7 @@ function TaxDetails() {
                                             </tr>
                                             <tr>
                                                 <th scope="row"><i className="bi bi-credit-card"></i>&nbsp;&nbsp; EPF/ETF:</th>
-                                                <td>Rs.{searchResult ? searchResult[0].EPF_ETF : tax.EPF_ETF}</td>
+                                                <td>Rs.{searchResult ? searchResult[0].EPF_ETF.toFixed(2) : parseFloat(tax.EPF_ETF).toFixed(2)}</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row"><i className="bi bi-info-circle"></i>&nbsp;&nbsp; Total Tax:</th>
@@ -424,46 +459,56 @@ function TaxDetails() {
                         {/* Right Column for Cards */}
                         <div className="col-md-6" style={{ marginTop: '-155px', marginLeft: '0px' }}>
                             <div className="row mb-4">
-                                <div className="col-md-6" style={{ height: '140px' }}>
+                                <div className="col-md-6 mb-3">
                                     <div className="card h-100">
-                                        <div className="card-body">
-                                            <i className="bi bi-calendar h1 text-primary"></i>
-                                            <h5 className="card-title">Due Date</h5>
-                                            <p className="card-text">{searchResult ? new Date(searchResult[0].Due_date).toLocaleDateString() : new Date(tax.Due_date).toLocaleDateString()}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-md-6">
-                                    <div className="card h-100">
-                                        <div className="card-body">
-                                            <i className="bi bi-info-circle h1 text-success"></i>
-                                            <h5 className="card-title">Total Tax Payable</h5>
-                                            <p className="card-text">Rs.{searchResult ? searchResult[0].Total_tax : tax.Total_tax}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div className="card">
-                                    <div className="card-body">
-                                        <h5 className="card-title">EPF & ETF Calculator</h5>
-                                        <div className="mb-3">
-                                            <label htmlFor="salary" className="form-label">Enter Salary</label>
-                                            <input type="number" className="form-control" id="salary" value={totalSalary} onChange={(e) => setSalary(e.target.value)} />
-                                        </div>
-                                        <button className="btn btn-primary" onClick={calculateEPFETF} disabled={isCalculating}>
-                                            {isCalculating ? 'Calculating...' : 'Calculate'}
-                                        </button>
-                                        {EPF !== 0 && (
+                                        <div className="card-body d-flex justify-content-between align-items-center">
                                             <div>
-                                                <p>EPF: Rs. {EPF}</p>
-                                                <p>ETF: Rs. {ETF}</p>
+                                                <h4 className="card-title mb-0">{searchResult ? new Date(searchResult[0].Due_date).toLocaleDateString() : new Date(tax.Due_date).toLocaleDateString()}</h4>
+                                                <p className="card-text">Due Date</p>
                                             </div>
-                                        )}
+                                            <i className="bi bi-calendar h1 text-primary"></i>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div className="col-md-6 mb-3">
+                                    <div className="card h-100">
+                                        <div className="card-body d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h4 className="card-title mb-0">Rs.{searchResult ? searchResult[0].Total_tax : tax.Total_tax}</h4>
+                                                <p className="card-text">Total Tax Payable</p>
+                                            </div>
+                                            <i className="bi bi-info-circle h1 text-success"></i>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div className="col-md-12 mb-3">
+                                    <div className="card" style={{ marginTop: '70px' }}>
+                                        <div className="card-body">
+                                            <h5 className="card-title">EPF & ETF Calculator</h5>
+                                            <div className="mb-3">
+                                                <label htmlFor="salary" className="form-label">Salary for current month</label>
+                                                <input type="number" className="form-control" id="salary" value={totalAmount} onChange={(e) => setSalary(e.target.value)} />
+                                            </div>
+                                            <button className="btn btn-primary" onClick={calculateEPFETF} disabled={isCalculating}>
+                                                {isCalculating ? 'Calculating...' : 'Calculate'}
+                                            </button>
+                                            <div className="mt-3">
+                                                {EPF !== 0 && (
+                                                    <div>
+                                                        <h5 className="mb-3"><strong>EPF:</strong> Rs. {EPF}</h5>
+                                                        <h5 className="mb-0"><strong>ETF:</strong> Rs. {ETF}</h5>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
+
 
 
                     </div>

@@ -165,6 +165,16 @@ router.route("/get/:id").get(async (req, res) => {
   }
 });
 
+router.route("/gett/:id").get(async (req,res) => {
+    let profitId = req.params.id;
+    const profit = await Profit.findById(profitId).then((profit) => {
+        res.status(200).send({status: "Profit log fetched", profit})
+    }).catch((errr) => {
+        console.log(errr);
+        res.status(500).send({status: "Error with getting Profit log"});
+    })
+})
+
 //Function to obtain total monthly sales
 router.route("/:month").get(async (req, res) => {
   try {

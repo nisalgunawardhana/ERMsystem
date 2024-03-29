@@ -469,7 +469,7 @@ const FinanceDash = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="row-md-4" style={{ marginTop: '40px' }}>
+                                <div className="row-md-4" style={{ marginTop: '40px', marginBottom: '40px' }}>
                                     <div className="card" style={{ borderRadius: '20px' }}>
                                         <div className="card-body">
                                             <h5 className="card-title">Monthly Profit</h5>
