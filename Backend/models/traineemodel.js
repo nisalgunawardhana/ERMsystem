@@ -14,6 +14,11 @@ const TraineeSchema = new Schema({
       required: true
     },
 
+    trainee_email: {
+        type: String,
+        required: true
+    },
+
     trainee_gender: {
         type: String,
         enum: ['male', 'female'],

@@ -11,10 +11,11 @@ import TaxDetails from './components/viewTax';
 import AddTax from './components/addTax';
 import Bill from './components/bill';
 import CreateBill from './components/createBill';
-import UpdateOther from './components/updateOther';
+import UpdateOther from './components/UpdateOther';
 import Supplier from './components/supplier';
 import AddSupplier from './components/addSupplier';
 import AddPurchaseOrder from './components/addPurchaseOrder';
+import Trainees from './components/Trainee';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import UpdateBill from './components/updateBill';
@@ -54,6 +55,10 @@ function App() {
         <Route path="/purchaseOrder/add" element={<AddPurchaseOrder/>}/>
         <Route path="/Customer" element={<CustomerR/>}/>
         <Route path="/Customer/update/:id" element={<UpdateCustomer/>}/>
+
+        <Route path="/trainee" element={<Trainees/>}/>
+
+
       </Routes>  
     
   </div>
