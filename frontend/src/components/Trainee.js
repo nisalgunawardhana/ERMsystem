@@ -36,12 +36,109 @@ export default function Trainee() {
                 alert(err.message);
             });
     }
+
+    const generateReport = () => {
+        // Fetch trainee data
+        axios.get('http://localhost:8080/trainees/')
+            .then(res => {
+                const traineesData = res.data;
+                const printWindow = window.open("", "_blank", "width=600,height=600");
+                printWindow.document.write(`
+                    <html>
+                        <head>
+                            <title>Trainee Report</title>
+                            <style>
+                                body {
+                                    font-family: Arial, sans-serif;
+                                    padding: 20px;
+                                }
+                                h1 {
+                                    text-align: center;
+                                }
+                                table {
+                                    width: 100%;
+                                    border-collapse: collapse;
+                                    margin-bottom: 20px;
+                                }
+                                th, td {
+                                    border: 1px solid #ccc;
+                                    padding: 8px;
+                                    text-align: left;
+                                }
+                                th {
+                                    background-color: #f2f2f2;
+                                }
+                            </style>
+                        </head>
+                        <body>
+                            <h1>Trainee Report</h1>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Trainee ID</th>
+                                        <th>Name</th>
+                                        <th>Ratings</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${trainees.map(trainee => `
+                                        <tr>
+                                            <td>${trainee.trainee_id}</td>
+                                            <td>${trainee.trainee_name}</td>
+                                            <td>${trainee.trainee_rating}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                            <div class="back-button">
+                                <button onclick="window.close()" class="btn btn-secondary">Back</button>
+                            </div>
+                        </body>
+                    </html>
+                `);
+                printWindow.document.close();
+                printWindow.print();
+            })
+            .catch(err => {
+                console.error('Error fetching trainee data:', err);
+                alert('Error fetching trainee data. Please try again.');
+            });
+    };
     
-
-
+    
     return (
         <div className="container">
             <h1>Dashboard</h1>
+
+            <div className="row mb-4">
+                <div className="col-md-4">
+                    <div className="card">
+                        <div className="card-body">
+                            <h5 className="card-title">Total Trainees</h5>
+                            <p className="card-text">{trainees.length}</p>
+                            <Link to="/addTrainee" className="btn btn-primary">Add New Trainee</Link>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-md-4">
+                    <div className="card">
+                        <div className="card-body">
+                            <h5 className="card-title">Total Sessions</h5>
+                            <p className="card-text">{meetings.length}</p>
+                            <Link to="/addMeeting" className="btn btn-primary">Add New Session</Link>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-md-4">
+                    <div className="card">
+                        <div className="card-body">
+                            <h5 className="card-title">Generate Report</h5>
+                            <p className="card-text">Generate a report summarizing trainee data.</p>
+                            <button onClick={generateReport} className="btn btn-primary">Generate Report</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div className="row">
                 <div className="col-md-12">
@@ -74,7 +171,6 @@ export default function Trainee() {
                                     </tbody>
                                 </table>
                             </div>
-                            <Link to="/addMeeting" className="btn btn-primary">Add New Meeting</Link>
                         </div>
                     </div>
                 </div>
@@ -94,6 +190,7 @@ export default function Trainee() {
                                             <th>Contact No</th>
                                             <th>Gender</th>
                                             <th>Ratings</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -105,14 +202,13 @@ export default function Trainee() {
                                                 <td>{trainee.trainee_gender}</td>
                                                 <td>{trainee.trainee_rating}</td>
                                                 <td>
-                            <button onClick={() => handleDelete(trainee._id)} className="btn btn-danger">Delete</button>
-                            </td>
+                                                    <button onClick={() => handleDelete(trainee._id)} className="btn btn-danger">Delete</button>
+                                                </td>
                                             </tr>
                                         ))}
                                     </tbody>
                                 </table>
                             </div>
-                            <Link to="/addTrainee" className="btn btn-primary">Add New Trainee</Link>
                         </div>
                     </div>
                 </div>
