@@ -16,7 +16,7 @@ function Home() {
         <Link to={`/users`} className="btn btn-primary me-5" style={{ backgroundColor: '#6610f2', color: '#fff', padding: '10px 20px', fontSize: '18px', borderRadius: '8px', marginBottom: '10px' }}>Users</Link>
         <Link to={`/supplier`} className="btn btn-primary me-5" style={{ backgroundColor: '#17a2b8', color: '#fff', padding: '10px 20px', fontSize: '18px', borderRadius: '8px', marginBottom: '10px' }}>Supplier</Link>
         <Link to={`/stock`} className="btn btn-primary me-5" style={{ backgroundColor: '#dc3545', color: '#fff', padding: '10px 20px', fontSize: '18px', borderRadius: '8px', marginBottom: '10px' }}>Stock</Link>
-        <Link to={`/staff`} className="btn btn-primary me-5" style={{ backgroundColor: '#20c997', color: '#fff', padding: '10px 20px', fontSize: '18px', borderRadius: '8px', marginBottom: '10px' }}>Staff Training</Link>
+        <Link to={`/Trainee`} className="btn btn-primary me-5" style={{ backgroundColor: '#20c997', color: '#fff', padding: '10px 20px', fontSize: '18px', borderRadius: '8px', marginBottom: '10px' }}>Staff Training</Link>
       </div>
     </div>
 
