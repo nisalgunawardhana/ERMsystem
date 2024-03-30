@@ -5,6 +5,15 @@ import { Link } from 'react-router-dom';
 export default function Trainee() {
     const [meetings, setMeetings] = useState([]);
     const [trainees, setTrainees] = useState([]);
+    const [showForm, setShowForm] = useState(false);
+    const [formData, setFormData] = useState({
+        trainee_id: '',
+        trainee_name: '',
+        trainee_email: '',
+        trainee_gender: '',
+        trainee_contact: '',
+        trainee_rating: ''
+    });
 
     useEffect(() => {
         // Fetch meetings
@@ -35,6 +44,30 @@ export default function Trainee() {
             .catch((err) => {
                 alert(err.message);
             });
+    }
+
+    function handleChange(e) {
+        const { name, value } = e.target;
+        setFormData(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+    }
+
+    function handleSubmit(e) {
+        e.preventDefault();
+        axios.post('http://localhost:8080/trainees/add', formData)
+            .then(() => {
+                // Reload the page after adding trainee
+                window.location.reload();
+            })
+            .catch((err) => {
+                alert(err.message);
+            });
+    }
+
+    function toggleForm() {
+        setShowForm(prevState => !prevState);
     }
 
     const generateReport = () => {
@@ -104,8 +137,7 @@ export default function Trainee() {
                 alert('Error fetching trainee data. Please try again.');
             });
     };
-    
-    
+
     return (
         <div className="container">
             <h1>Dashboard</h1>
@@ -116,7 +148,7 @@ export default function Trainee() {
                         <div className="card-body">
                             <h5 className="card-title">Total Trainees</h5>
                             <p className="card-text">{trainees.length}</p>
-                            <Link to="/addTrainee" className="btn btn-primary">Add New Trainee</Link>
+                            <button onClick={toggleForm} className="btn btn-primary">Add New Trainee</button>
                         </div>
                     </div>
                 </div>
@@ -139,6 +171,53 @@ export default function Trainee() {
                     </div>
                 </div>
             </div>
+
+            {/* Add Trainee Form */}
+            {showForm && (
+                <div className="modal" style={{ display: 'block' }}>
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">Add New Trainee</h5>
+                                <button type="button" className="btn-close" onClick={toggleForm}></button>
+                            </div>
+                            <div className="modal-body">
+                                <form onSubmit={handleSubmit}>
+                                    <div className="mb-3">
+                                        <label className="form-label">Trainee ID</label>
+                                        <input type="text" className="form-control" name="trainee_id" value={formData.trainee_id} onChange={handleChange} required />
+                                    </div>
+                                    <div className="mb-3">
+                                        <label className="form-label">Name</label>
+                                        <input type="text" className="form-control" name="trainee_name" value={formData.trainee_name} onChange={handleChange} required />
+                                    </div>
+                                    <div className="mb-3">
+                                        <label className="form-label">Email</label>
+                                        <input type="email" className="form-control" name="trainee_email" value={formData.trainee_email} onChange={handleChange} required />
+                                    </div>
+                                    <div className="mb-3">
+                                        <label className="form-label">Gender</label>
+                                        <select className="form-select" name="trainee_gender" value={formData.trainee_gender} onChange={handleChange} required>
+                                            <option value="">Select Gender</option>
+                                            <option value="male">Male</option>
+                                            <option value="female">Female</option>
+                                        </select>
+                                    </div>
+                                    <div className="mb-3">
+                                        <label className="form-label">Contact No</label>
+                                        <input type="text" className="form-control" name="trainee_contact" value={formData.trainee_contact} onChange={handleChange} required />
+                                    </div>
+                                    <div className="mb-3">
+                                        <label className="form-label">Ratings</label>
+                                        <input type="number" className="form-control" name="trainee_rating" value={formData.trainee_rating} onChange={handleChange} required />
+                                    </div>
+                                    <button type="submit" className="btn btn-primary">Submit</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             <div className="row">
                 <div className="col-md-12">
