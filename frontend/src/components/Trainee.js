@@ -138,9 +138,17 @@ export default function Trainee() {
             });
     };
 
+    function formatTime(time) {
+        const hours = Math.floor(time);
+        const minutes = Math.round((time - hours) * 60);
+        return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+      }
+      
+
     return (
         <div className="container">
-            <h1>Dashboard</h1>
+            <h1>Trainee Management</h1>
+            <br></br>
 
             <div className="row mb-4">
                 <div className="col-md-4">
@@ -223,7 +231,8 @@ export default function Trainee() {
                 <div className="col-md-12">
                     <div className="card">
                         <div className="card-body">
-                            <h5 className="card-title">Meeting Database</h5>
+                            <h5 className="card-title">Scheduled Meetings</h5>
+                            <br></br>
                             <div className="table-responsive">
                                 <table className="table">
                                     <thead>
@@ -241,8 +250,8 @@ export default function Trainee() {
                                             <tr key={meeting.meeting_id}>
                                                 <td>{meeting.meeting_id}</td>
                                                 <td>{meeting.meeting_name}</td>
-                                                <td>{meeting.meeting_start}</td>
-                                                <td>{meeting.meeting_end}</td>
+                                                <td>{formatTime(meeting.meeting_start)}</td>
+                                                <td>{formatTime(meeting.meeting_end)}</td>
                                                 <td>{meeting.meeting_date}</td>
                                                 <td>{meeting.meeting_location}</td>
                                             </tr>
@@ -259,7 +268,8 @@ export default function Trainee() {
                 <div className="col-md-12">
                     <div className="card">
                         <div className="card-body">
-                            <h5 className="card-title">Trainee Database</h5>
+                            <h5 className="card-title">Trainees' Details</h5>
+                            <br></br>
                             <div className="table-responsive">
                                 <table className="table">
                                     <thead>
