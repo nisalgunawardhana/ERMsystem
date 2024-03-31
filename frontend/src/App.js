@@ -51,7 +51,6 @@ function App() {
         <Route path="/Customer" element={<CustomerR/>}/>
         <Route path="/Customer/update/:id" element={<UpdateCustomer/>}/>
         <Route path="/trainee" element={<Trainees/>}/>
-      
       //billing 
         <Route path="/bill" element={<Bill/>}/>
         <Route path="/bill/CreateBill" element={<CreateBill/>}/>

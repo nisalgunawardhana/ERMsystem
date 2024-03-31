@@ -10,6 +10,8 @@ export default function Bills(){
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedBill, setSelectedBill] = useState(null);
     const [showPreviewModal, setShowPreviewModal] = useState(false);
+    const [selectAll, setSelectAll] = useState(false); 
+
    
 
 
@@ -46,120 +48,7 @@ export default function Bills(){
                 alert(err.message);
             });
     };
-    const handlePrint = (billId) => {
-        // Implement printing logic here
-        const billToPrint = bill.find(bills => bills._id === billId);
-        if (!billToPrint) {
-            alert("Bill not found!");
-            return;
-        }
     
-        const printWindow = window.open("", "_blank", "width=600,height=600");
-        printWindow.document.write(`
-            <html>
-                <head>
-                    <title>Print Bill</title>
-                    <style>
-                        body {
-                            font-family: Arial, sans-serif;
-                            padding: 20px;
-                        }
-                        .bill-container {
-                            max-width: 800px;
-                            margin: 0 auto;
-                            border: 1px solid #ccc;
-                            padding: 20px;
-                            border-radius: 10px;
-                        }
-                        .bill-header {
-                            text-align: center;
-                            margin-bottom: 20px;
-                        }
-                        .bill-header h1 {
-                            margin: 0;
-                            color: #333;
-                        }
-                        .bill-details {
-                            margin-bottom: 20px;
-                        }
-                        .bill-details p {
-                            margin: 5px 0;
-                        }
-                        .bill-items {
-                            margin-bottom: 20px;
-                        }
-                        .bill-items table {
-                            width: 100%;
-                            border-collapse: collapse;
-                        }
-                        .bill-items th, .bill-items td {
-                            border: 1px solid #ccc;
-                            padding: 8px;
-                            text-align: left;
-                        }
-                        .bill-items th {
-                            background-color: #f2f2f2;
-                        }
-                        .bill-items td {
-                            background-color: #fff;
-                        }
-                        .bill-total {
-                            text-align: right;
-                            font-weight: bold;
-                        }
-                        .back-button {
-                            text-align: center;
-                            margin-top: 20px;
-                        }
-                    </style>
-                </head>
-                <body>
-                    <div class="bill-container">
-                        <div class="bill-header">
-                            <h2>Diyana fashion Store</h2>
-                            <h1>Bill Details</h1>
-                            <P>No 01,DS senanayaka Mw,Anuradhapura <br> 071 09876743</P>
-                        </div>
-                        <div class="bill-details">
-                            <p><strong>Customer ID:</strong> ${billToPrint.customer_id}</p>
-                            <p><strong>Billing Date:</strong> ${billToPrint.billing_date}</p>
-                            <p><strong>Total Amount:</strong> ${billToPrint.total_amount}</p>
-                        </div>
-                        <div class="bill-items">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Product ID</th>
-                                        <th>Quantity</th>
-                                        <th>Unit Price</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${billToPrint.items.map(item => `
-                                        <tr>
-                                            <td>${item.product_id}</td>
-                                            <td>${item.quantity}</td>
-                                            <td>${item.unit_price}</td>
-                                        </tr>
-                                    `).join('')}
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="bill-total">
-                            <p>Total: ${billToPrint.total_amount}</p>
-                        </div>
-                        <div class="back-button">
-                            <button onclick="window.open('', '_self').close();">Back</button>
-                        </div>
-                    </div>
-                </body>
-            </html>
-        `);
-        printWindow.document.close();
-        printWindow.print();
-    };
-
-
     const generateReport = () => {
         const printWindow = window.open("", "_blank", "width=600,height=600");
         printWindow.document.write(`
@@ -209,6 +98,7 @@ export default function Bills(){
                             `).join('')}
                         </tbody>
                     </table>
+                    <h3>Total Amount :${totalAmount.toFixed(2)}</h3>
                     <div class="back-button">
                     <button onclick="window.close()" class="btn btn-secondary">Back</button>
                 </div>
@@ -241,6 +131,35 @@ export default function Bills(){
         const month = (date.getMonth() + 1).toString().padStart(2, '0');
         const day = date.getDate().toString().padStart(2, '0');
         return `${year}-${month}-${day}`;
+    };
+
+    const handleSelectAll = () => {
+        setSelectAll(!selectAll);
+        const updatedBill = bill.map(b => ({ ...b, selected: !selectAll }));
+        setbill(updatedBill);
+    };
+
+    const handleSelectBill = (billId) => {
+        const updatedBill = bill.map(b => {
+            if (b._id === billId) {
+                return { ...b, selected: !b.selected };
+            }
+            return b;
+        });
+        setbill(updatedBill);
+    };
+
+    const handleDeleteSelected = () => {
+        const selectedBills = bill.filter(b => b.selected).map(b => b._id);
+        selectedBills.forEach(id => {
+            axios.delete(`http://localhost:8080/bills/delete/${id}`)
+                .then(() => {
+                    setbill(prevBills => prevBills.filter(b => b._id !== id));
+                })
+                .catch((err) => {
+                    alert(err.message);
+                });
+        });
     };
     
     
@@ -284,9 +203,15 @@ export default function Bills(){
             <br/>
             
             <h4>All Bills</h4>
-            <div className="mb-3">
+            <div className="d-flex justify-content-between align-items-center mb-3">
+            <div className="flex-grow-1">
                 <input type="text" className="form-control" placeholder="Search by Customer ID" value={searchQuery} onChange={handleSearch} />
             </div>
+            <div>
+             <button className="btn btn-primary mr-2" onClick={handleSelectAll} style={{ margin: '0 5px' }}>Select All</button>
+            <button className="btn btn-danger" onClick={handleDeleteSelected} style={{ margin: '0 5px' }}>Delete Selected</button>
+        </div>
+    </div>
 
 
                 <table className="table">
@@ -298,6 +223,8 @@ export default function Bills(){
                         <th style={{ textAlign: 'center' }}>Items</th>
                         <th>Total Amount</th>
                         <th style={{ textAlign: 'center' }}>Action</th>
+                        <th style={{ textAlign: 'center' }}>Select</th>
+
                     </tr>
                 </thead>
                 <tbody>
@@ -321,10 +248,10 @@ export default function Bills(){
                             <td style={{ textAlign: 'center' }}>
                                 <Link to={`/bill/update/${bills._id}`} className="btn btn-primary" style={{ margin: '0 5px' }}>Update</Link>
                                 <button onClick={() => handleDelete(bills._id)} className="btn btn-danger" style={{ margin: '0 5px' }}>Delete</button>
-                                <button onClick={() => handlePrint(bills._id)} className="btn btn-success" style={{ margin: '0 5px' }}>Print Bill</button>
                                 <button onClick={() => handlePreview(bills)} className="btn btn-dark" style={{ margin: '0 5px' }}>Preview</button>
 
                             </td>
+                            <td style={{ textAlign: 'center' }}><input type="checkbox" checked={bills.selected || false} onChange={() => handleSelectBill(bills._id)} /></td>
                         </tr>
                     ))}
                 </tbody>
@@ -336,6 +263,7 @@ export default function Bills(){
                     bill={selectedBill}
                 />
             )}
+            
         </div>
         
     )
