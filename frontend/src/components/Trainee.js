@@ -6,6 +6,7 @@ export default function Trainee() {
     const [meetings, setMeetings] = useState([]);
     const [trainees, setTrainees] = useState([]);
     const [showForm, setShowForm] = useState(false);
+    const [showMeetingForm, setShowMeetingForm] = useState(false); // New state for showing meeting form
     const [searchTerm, setSearchTerm] = useState('');
     const [formData, setFormData] = useState({
         trainee_id: '',
@@ -14,6 +15,14 @@ export default function Trainee() {
         trainee_gender: '',
         trainee_contact: '',
         trainee_rating: ''
+    });
+    const [meetingFormData, setMeetingFormData] = useState({ // New state for meeting form data
+        meeting_id: '',
+        meeting_name: '',
+        meeting_start: '',
+        meeting_end: '',
+        meeting_date: '',
+        meeting_location: ''
     });
 
     useEffect(() => {
@@ -55,6 +64,14 @@ export default function Trainee() {
         }));
     }
 
+    function handleMeetingChange(e) { // Handle meeting form change
+        const { name, value } = e.target;
+        setMeetingFormData(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+    }
+
     function handleSubmit(e) {
         e.preventDefault();
         axios.post('http://localhost:8080/trainees/add', formData)
@@ -67,8 +84,24 @@ export default function Trainee() {
             });
     }
 
+    function handleMeetingSubmit(e) { // Handle meeting form submission
+        e.preventDefault();
+        axios.post('http://localhost:8080/meetings/add', meetingFormData)
+            .then(() => {
+                // Reload the page after adding meeting
+                window.location.reload();
+            })
+            .catch((err) => {
+                alert(err.message);
+            });
+    }
+
     function toggleForm() {
         setShowForm(prevState => !prevState);
+    }
+
+    function toggleMeetingForm() { // Toggle meeting form visibility
+        setShowMeetingForm(prevState => !prevState);
     }
 
     const generateReport = () => {
@@ -169,7 +202,7 @@ export default function Trainee() {
                         <div className="card-body">
                             <h5 className="card-title">Total Sessions</h5>
                             <p className="card-text">{meetings.length}</p>
-                            <Link to="/addMeeting" className="btn btn-primary">Add New Session</Link>
+                            <button onClick={toggleMeetingForm} className="btn btn-primary">Add New Session</button> {/* Updated to toggle meeting form */}
                         </div>
                     </div>
                 </div>
@@ -222,6 +255,49 @@ export default function Trainee() {
                                     <div className="mb-3">
                                         <label className="form-label">Ratings</label>
                                         <input type="number" className="form-control" name="trainee_rating" value={formData.trainee_rating} onChange={handleChange} required />
+                                    </div>
+                                    <button type="submit" className="btn btn-primary">Submit</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Add Meeting Form */}
+            {showMeetingForm && (
+                <div className="modal" style={{ display: 'block' }}>
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">Add New Session</h5>
+                                <button type="button" className="btn-close" onClick={toggleMeetingForm}></button>
+                            </div>
+                            <div className="modal-body">
+                                <form onSubmit={handleMeetingSubmit}>
+                                    <div className="mb-3">
+                                        <label className="form-label">Meeting ID</label>
+                                        <input type="text" className="form-control" name="meeting_id" value={meetingFormData.meeting_id} onChange={handleMeetingChange} required />
+                                    </div>
+                                    <div className="mb-3">
+                                        <label className="form-label">Name</label>
+                                        <input type="text" className="form-control" name="meeting_name" value={meetingFormData.meeting_name} onChange={handleMeetingChange} required />
+                                    </div>
+                                    <div className="mb-3">
+                                        <label className="form-label">Start Time</label>
+                                        <input type="number" className="form-control" name="meeting_start" value={meetingFormData.meeting_start} onChange={handleMeetingChange} required />
+                                    </div>
+                                    <div className="mb-3">
+                                        <label className="form-label">End Time</label>
+                                        <input type="number" className="form-control" name="meeting_end" value={meetingFormData.meeting_end} onChange={handleMeetingChange} required />
+                                    </div>
+                                    <div className="mb-3">
+                                        <label className="form-label">Date</label>
+                                        <input type="text" className="form-control" name="meeting_date" value={meetingFormData.meeting_date} onChange={handleMeetingChange} required />
+                                    </div>
+                                    <div className="mb-3">
+                                        <label className="form-label">Location</label>
+                                        <input type="text" className="form-control" name="meeting_location" value={meetingFormData.meeting_location} onChange={handleMeetingChange} required />
                                     </div>
                                     <button type="submit" className="btn btn-primary">Submit</button>
                                 </form>
