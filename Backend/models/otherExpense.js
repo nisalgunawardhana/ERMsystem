@@ -2,16 +2,12 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const otherSchema = new Schema({
-    Expense_id: {
-        type : String,
-        required: true
-    },
     Type: {
         type : String,
         required: true
     },
     Date:{
-        type: Date,
+        type: String,
         required: true
     },
     Status:{

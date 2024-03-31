@@ -1,4 +1,4 @@
-import React,{useState} from "react"
+import React, { useState } from "react"
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import axios from "axios";
@@ -7,23 +7,23 @@ import { useParams, useNavigate } from 'react-router-dom';
 
 function AddOther() {
 
-    const [Expense_id,setID] = useState("");
-    const [Type,setType] = useState("");
-    const [Date,setDate] = useState("");
-    const [Status,setStatus] = useState("");
-    const [Cost,setCost] = useState("");
+    const [Expense_id, setID] = useState("");
+    const [Type, setType] = useState("");
+    const [Date, setDate] = useState("");
+    const [Status, setStatus] = useState("");
+    const [Cost, setCost] = useState("");
     const navigate = useNavigate();
 
-    function sendData(e){
+    function sendData(e) {
         e.preventDefault();
-        const newOther ={
+        const newOther = {
             Expense_id,
             Type,
             Date,
             Status,
             Cost
         }
-        axios.post("http://localhost:8080/otherExpense/add", newOther).then(()=> {
+        axios.post("http://localhost:8080/otherExpense/add", newOther).then(() => {
             alert("Other expense Added")
             setID("")
             setType("");
@@ -31,63 +31,67 @@ function AddOther() {
             setStatus("");
             setCost("");
             navigate('/otherExpense');
-        }).catch((err)=>{
+        }).catch((err) => {
             alert(err)
         })
     }
 
     const handleBack = () => {
-      navigate('/otherExpense'); // Reset specificExpense to null to display all expenses
-  };
+        navigate('/otherExpense'); // Reset specificExpense to null to display all expenses
+    };
 
-  return (
-    <div className="custom-form-container">
-            <Form onSubmit={sendData}>
-                <h2 className="form-title">Expense Details</h2>
-                <br></br>
-
-                <Form.Group className="mb-3" controlId="formBasicType">
-                    <Form.Label>Expense ID</Form.Label>
-                    <Form.Control type="text" placeholder="Enter Expense ID"  onChange={(e) => setID(e.target.value)} />
-                </Form.Group>
-
-                <Form.Group className="mb-3" controlId="formBasicType">
-                    <Form.Label>Type</Form.Label>
-                    <Form.Control type="text" placeholder="Enter Type"  onChange={(e) => setType(e.target.value)} />
-                </Form.Group>
-
-                <Form.Group className="mb-3" controlId="formBasicDate">
-                    <Form.Label>Date</Form.Label>
-                    <Form.Control type="date" placeholder="Enter date"  onChange={(e) => setDate(e.target.value)} />
-                </Form.Group>
-
-                <Form.Group className="mb-3" controlId="formBasicStatus">
-                    <Form.Label>Status</Form.Label>
-                    <Form.Control type="text" placeholder="Enter status"  onChange={(e) => setStatus(e.target.value)} />
-                </Form.Group>
-
-                <Form.Group className="mb-3" controlId="formBasicCost">
-                    <Form.Label>Cost</Form.Label>
-                    <Form.Control type="text" placeholder="Enter cost"  onChange={(e) => setCost(e.target.value)} />
-                </Form.Group>
-
-                <div className="submit-btn-container">
-                <div className="row mb-3">
-                    <div className="col">
-                       <div className="btn-group">
-                          <Button variant="primary" type="submit" className="me-5 rounded">
-                             Submit
-                          </Button>
-                          <button className="btn btn-secondary rounded" onClick={handleBack}>Back</button>
-                       </div>
-                    </div>
+    return (
+        <div class="container" style={{marginTop: '20px'}}>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-light shadow-sm">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">Other Expenses</h2>
+                    <form onSubmit={sendData}>
+                        <div class="row gy-3 gy-md-4">
+                            <div class="col-12">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-card-list"></i></span>
+                                    <input type="text" class="form-control" name="id" id="id" placeholder="Expense ID" onChange={(e) => setID(e.target.value)} required />
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-chat-left-text"></i></span>
+                                    <input type="text" class="form-control" name="type" id="type" placeholder="Type of expense" onChange={(e) => setType(e.target.value)} required />
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-calendar3"></i></span>
+                                    <input type="date" class="form-control" name="date" id="date" onChange={(e) => setDate(e.target.value)} required />
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-check-circle"></i></span>
+                                    <input type="text" class="form-control" name="status" id="status" placeholder="Payment status" onChange={(e) => setStatus(e.target.value)} required />
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-currency-dollar"></i></span>
+                                    <input type="text" class="form-control" name="cost" id="cost" placeholder="Amount of expense" onChange={(e) => setCost(e.target.value)} required />
+                                </div>
+                            </div>
+                            <div class="col-12" style={{marginLeft: '640px'}}>
+                                <button class="btn btn-primary btn-lg btn-block" type="submit">Add Expense</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-                   
-                </div>
-            </Form>
+            </div>
         </div>
-        
-  );
+    </div>
+</div>
+
+
+    );
 }
 
 export default AddOther;

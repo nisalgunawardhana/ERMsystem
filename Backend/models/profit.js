@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const otherSchema = new Schema({
+    Profit_ID: {
+        type : String,
+        required: true
+    },
     Month: {
         type : String,
         required: true
@@ -18,10 +22,23 @@ const otherSchema = new Schema({
         type: Number,
         required: true
     },
-    Profit:{
+    Other_expenses: {
+        type : Number,
+        required: true
+    },
+    Monthly_profit:{
         type: Number,
         required: true
+    },
+    Date_created: {
+        type : Date,
+        required: true
+    },
+    Description: {
+        type : String,
+        required: true
     }
+    
 })
 
 const profit = mongoose.model("profit", otherSchema);
