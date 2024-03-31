@@ -6,6 +6,7 @@ export default function Trainee() {
     const [meetings, setMeetings] = useState([]);
     const [trainees, setTrainees] = useState([]);
     const [showForm, setShowForm] = useState(false);
+    const [showMeetingForm, setShowMeetingForm] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [formData, setFormData] = useState({
         trainee_id: '',
@@ -15,18 +16,24 @@ export default function Trainee() {
         trainee_contact: '',
         trainee_rating: ''
     });
+    const [meetingFormData, setMeetingFormData] = useState({
+        meeting_id: '',
+        meeting_name: '',
+        meeting_start: '',
+        meeting_end: '',
+        meeting_date: '',
+        meeting_location: ''
+    });
 
     useEffect(() => {
-        // Fetch meetings
         axios.get('http://localhost:8080/meetings/')
             .then(res => {
-                setMeetings(res.data);
+                setMeetings(res.data.reverse());
             })
             .catch(err => {
                 console.error('Error fetching meetings:', err);
             });
 
-        // Fetch trainees
         axios.get('http://localhost:8080/trainees/')
             .then(res => {
                 setTrainees(res.data);
@@ -39,7 +46,6 @@ export default function Trainee() {
     function handleDelete(id) {
         axios.delete(`http://localhost:8080/trainees/delete/${id}`)
             .then(() => {
-                // Reload the page after deletion
                 window.location.reload();
             })
             .catch((err) => {
@@ -55,11 +61,29 @@ export default function Trainee() {
         }));
     }
 
+    function handleMeetingChange(e) {
+        const { name, value } = e.target;
+        setMeetingFormData(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+    }
+
     function handleSubmit(e) {
         e.preventDefault();
         axios.post('http://localhost:8080/trainees/add', formData)
             .then(() => {
-                // Reload the page after adding trainee
+                window.location.reload();
+            })
+            .catch((err) => {
+                alert(err.message);
+            });
+    }
+
+    function handleMeetingSubmit(e) {
+        e.preventDefault();
+        axios.post('http://localhost:8080/meetings/add', meetingFormData)
+            .then(() => {
                 window.location.reload();
             })
             .catch((err) => {
@@ -71,8 +95,11 @@ export default function Trainee() {
         setShowForm(prevState => !prevState);
     }
 
+    function toggleMeetingForm() {
+        setShowMeetingForm(prevState => !prevState);
+    }
+
     const generateReport = () => {
-        // Fetch trainee data
         axios.get('http://localhost:8080/trainees/')
             .then(res => {
                 const traineesData = res.data;
@@ -139,12 +166,6 @@ export default function Trainee() {
             });
     };
 
-    const formatTime = (time) => {
-        const hours = Math.floor(time);
-        const minutes = Math.round((time - hours) * 60);
-        return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
-    };
-
     const filteredTrainees = trainees.filter(trainee =>
         trainee.trainee_name.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -169,7 +190,7 @@ export default function Trainee() {
                         <div className="card-body">
                             <h5 className="card-title">Total Sessions</h5>
                             <p className="card-text">{meetings.length}</p>
-                            <Link to="/addMeeting" className="btn btn-primary">Add New Session</Link>
+                            <button onClick={toggleMeetingForm} className="btn btn-primary">Add New Session</button>
                         </div>
                     </div>
                 </div>
@@ -183,8 +204,8 @@ export default function Trainee() {
                     </div>
                 </div>
             </div>
+            <br></br>
 
-            {/* Add Trainee Form */}
             {showForm && (
                 <div className="modal" style={{ display: 'block' }}>
                     <div className="modal-dialog">
@@ -231,6 +252,48 @@ export default function Trainee() {
                 </div>
             )}
 
+            {showMeetingForm && (
+                <div className="modal" style={{ display: 'block' }}>
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">Add New Session</h5>
+                                <button type="button" className="btn-close" onClick={toggleMeetingForm}></button>
+                            </div>
+                            <div className="modal-body">
+                                <form onSubmit={handleMeetingSubmit}>
+                                    <div className="mb-3">
+                                        <label className="form-label">Meeting ID</label>
+                                        <input type="text" className="form-control" name="meeting_id" value={meetingFormData.meeting_id} onChange={handleMeetingChange} required />
+                                    </div>
+                                    <div className="mb-3">
+                                        <label className="form-label">Name</label>
+                                        <input type="text" className="form-control" name="meeting_name" value={meetingFormData.meeting_name} onChange={handleMeetingChange} required />
+                                    </div>
+                                    <div className="mb-3">
+                                        <label className="form-label">Start Time</label>
+                                        <input type="number" step="0.01" className="form-control" name="meeting_start" value={meetingFormData.meeting_start} onChange={handleMeetingChange} required />
+                                    </div>
+                                    <div className="mb-3">
+                                        <label className="form-label">End Time</label>
+                                        <input type="number" step="0.01" className="form-control" name="meeting_end" value={meetingFormData.meeting_end} onChange={handleMeetingChange} required />
+                                    </div>
+                                    <div className="mb-3">
+                                        <label className="form-label">Date</label>
+                                        <input type="text" className="form-control" name="meeting_date" value={meetingFormData.meeting_date} onChange={handleMeetingChange} required />
+                                    </div>
+                                    <div className="mb-3">
+                                        <label className="form-label">Location</label>
+                                        <input type="text" className="form-control" name="meeting_location" value={meetingFormData.meeting_location} onChange={handleMeetingChange} required />
+                                    </div>
+                                    <button type="submit" className="btn btn-primary">Submit</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <div className="row">
                 <div className="col-md-12">
                     <div className="card">
@@ -254,8 +317,8 @@ export default function Trainee() {
                                             <tr key={meeting.meeting_id}>
                                                 <td>{meeting.meeting_id}</td>
                                                 <td>{meeting.meeting_name}</td>
-                                                <td>{formatTime(meeting.meeting_start)}</td>
-                                                <td>{formatTime(meeting.meeting_end)}</td>
+                                                <td>{parseFloat(meeting.meeting_start).toFixed(2)}</td>
+                                                <td>{parseFloat(meeting.meeting_end).toFixed(2)}</td>
                                                 <td>{meeting.meeting_date}</td>
                                                 <td>{meeting.meeting_location}</td>
                                             </tr>
@@ -268,7 +331,6 @@ export default function Trainee() {
                 </div>
             </div>
             <br></br>
-            <br></br>
 
             <div className="row mt-4">
                 <div className="col-md-12">
@@ -276,8 +338,6 @@ export default function Trainee() {
                         <div className="card-body">
                             <div className="d-flex justify-content-between align-items-center">
                                 <h5 className="card-title">Trainees' Details</h5>
-
-                                {/* Search Bar */}
                                 <div className="col-sm-4">
                                     <input
                                         type="text"
@@ -289,7 +349,6 @@ export default function Trainee() {
                                 </div>
                             </div>
                             <br></br>
-
                             <div className="table-responsive">
                                 <table className="table">
                                     <thead>
