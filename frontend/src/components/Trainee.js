@@ -24,6 +24,7 @@ export default function Trainee() {
         meeting_location: ''
     });
     const [selectedMeetingId, setSelectedMeetingId] = useState(null);
+    const [selectedTraineeId, setselectedTraineeId] = useState(null);
 
     useEffect(() => {
         axios.get('http://localhost:8080/meetings/')
@@ -53,6 +54,16 @@ export default function Trainee() {
             });
     }
 
+    function handleDeleteTrainee(id) {
+        axios.delete(`http://localhost:8080/trainees/delete/${id}`)
+            .then(() => {
+                window.location.reload();
+            })
+            .catch((err) => {
+                alert(err.message);
+            });
+    }
+
     function handleChange(e) {
         const { name, value } = e.target;
         setFormData(prevState => ({
@@ -69,17 +80,28 @@ export default function Trainee() {
         }));
     }
 
-    function handleSubmit(e) {
+    function handleTraineeSubmit(e) {
         e.preventDefault();
-        axios.post('http://localhost:8080/trainees/add', formData)
-            .then(() => {
-                window.location.reload();
-            })
-            .catch((err) => {
-                alert(err.message);
-            });
+        if (selectedTraineeId) {
+            axios.put(`http://localhost:8080/trainees/update/${selectedTraineeId}`, formData)
+                .then(() => {
+                    window.location.reload();
+                })
+                .catch((err) => {
+                    alert(err.message);
+                });
+        } else {
+            axios.post('http://localhost:8080/trainees/add', formData)
+                .then(() => {
+                    window.location.reload();
+                })
+                .catch((err) => {
+                    alert(err.message);
+                });
+        }
     }
-
+    
+    
     function handleMeetingSubmit(e) {
         e.preventDefault();
         if (selectedMeetingId) {
@@ -100,6 +122,7 @@ export default function Trainee() {
                 });
         }
     }
+    
 
     function toggleForm() {
         setShowForm(prevState => !prevState);
@@ -120,6 +143,19 @@ export default function Trainee() {
             meeting_location: meeting.meeting_location
         });
         setShowMeetingForm(true);
+    }
+
+    function editTrainee(trainee) {
+        setselectedTraineeId(trainee._id); // Corrected line
+        setFormData({  // Corrected line
+            trainee_id: trainee.trainee_id,
+            trainee_name: trainee.trainee_name,
+            trainee_email: trainee.trainee_email,
+            trainee_gender: trainee.trainee_gender,
+            trainee_contact: trainee.trainee_contact,
+            trainee_rating: trainee.trainee_rating
+        });
+        setShowForm(true);
     }
 
     const generateReport = () => {
@@ -237,7 +273,7 @@ export default function Trainee() {
                                 <button type="button" className="btn-close" onClick={toggleForm}></button>
                             </div>
                             <div className="modal-body">
-                                <form onSubmit={handleSubmit}>
+                                <form onSubmit={handleTraineeSubmit}>
                                     <div className="mb-3">
                                         <label className="form-label">Trainee ID</label>
                                         <input type="text" className="form-control" name="trainee_id" value={formData.trainee_id} onChange={handleChange} required />
@@ -266,7 +302,7 @@ export default function Trainee() {
                                         <label className="form-label">Ratings</label>
                                         <input type="number" className="form-control" name="trainee_rating" value={formData.trainee_rating} onChange={handleChange} required />
                                     </div>
-                                    <button type="submit" className="btn btn-primary">Submit</button>
+                                    <button type="submit" className="btn btn-primary">{selectedTraineeId ? 'Update' : 'Submit'}</button>
                                 </form>
                             </div>
                         </div>
@@ -397,7 +433,8 @@ export default function Trainee() {
                                                 <td>{trainee.trainee_gender}</td>
                                                 <td>{trainee.trainee_rating}</td>
                                                 <td>
-                                                    <button onClick={() => handleDelete(trainee._id)} className="btn btn-danger">Delete</button>
+                                                    <button onClick={() => editTrainee(trainee)} className="btn btn-primary" style={{ margin: '0 5px' }} >Update</button>
+                                                    <button onClick={() => handleDeleteTrainee(trainee._id)} className="btn btn-danger" style={{ margin: '0 5px' }} >Delete</button>
                                                 </td>
                                             </tr>
                                         ))}
