@@ -274,20 +274,21 @@ export default function Trainee() {
                 <div className="col-md-12">
                     <div className="card">
                         <div className="card-body">
-                            <h5 className="card-title">Trainees' Details</h5>
+                            <div className="d-flex justify-content-between align-items-center">
+                                <h5 className="card-title">Trainees' Details</h5>
 
-                            {/* Search Bar */}
-                            <div className="row mb-4">
-                                <div className="col">
+                                {/* Search Bar */}
+                                <div className="col-sm-4">
                                     <input
                                         type="text"
                                         className="form-control"
                                         placeholder="Search by Trainee Name"
-                                            value={searchTerm}
+                                        value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
                                     />
                                 </div>
                             </div>
+                            <br></br>
 
                             <div className="table-responsive">
                                 <table className="table">
