@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 
 export default function Trainee() {
     const [meetings, setMeetings] = useState([]);
@@ -24,6 +23,7 @@ export default function Trainee() {
         meeting_date: '',
         meeting_location: ''
     });
+    const [selectedMeetingId, setSelectedMeetingId] = useState(null);
 
     useEffect(() => {
         axios.get('http://localhost:8080/meetings/')
@@ -44,7 +44,7 @@ export default function Trainee() {
     }, []);
 
     function handleDelete(id) {
-        axios.delete(`http://localhost:8080/trainees/delete/${id}`)
+        axios.delete(`http://localhost:8080/meetings/delete/${id}`)
             .then(() => {
                 window.location.reload();
             })
@@ -82,13 +82,23 @@ export default function Trainee() {
 
     function handleMeetingSubmit(e) {
         e.preventDefault();
-        axios.post('http://localhost:8080/meetings/add', meetingFormData)
-            .then(() => {
-                window.location.reload();
-            })
-            .catch((err) => {
-                alert(err.message);
-            });
+        if (selectedMeetingId) {
+            axios.put(`http://localhost:8080/meetings/update/${selectedMeetingId}`, meetingFormData)
+                .then(() => {
+                    window.location.reload();
+                })
+                .catch((err) => {
+                    alert(err.message);
+                });
+        } else {
+            axios.post('http://localhost:8080/meetings/add', meetingFormData)
+                .then(() => {
+                    window.location.reload();
+                })
+                .catch((err) => {
+                    alert(err.message);
+                });
+        }
     }
 
     function toggleForm() {
@@ -99,10 +109,22 @@ export default function Trainee() {
         setShowMeetingForm(prevState => !prevState);
     }
 
+    function editMeeting(meeting) {
+        setSelectedMeetingId(meeting._id);
+        setMeetingFormData({
+            meeting_id: meeting.meeting_id,
+            meeting_name: meeting.meeting_name,
+            meeting_start: meeting.meeting_start,
+            meeting_end: meeting.meeting_end,
+            meeting_date: meeting.meeting_date,
+            meeting_location: meeting.meeting_location
+        });
+        setShowMeetingForm(true);
+    }
+
     const generateReport = () => {
         axios.get('http://localhost:8080/trainees/')
             .then(res => {
-                const traineesData = res.data;
                 const printWindow = window.open("", "_blank", "width=600,height=600");
                 printWindow.document.write(`
                     <html>
@@ -257,7 +279,7 @@ export default function Trainee() {
                     <div className="modal-dialog">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title">Add New Session</h5>
+                                <h5 className="modal-title">{selectedMeetingId ? 'Update' : 'Add'} Meeting</h5>
                                 <button type="button" className="btn-close" onClick={toggleMeetingForm}></button>
                             </div>
                             <div className="modal-body">
@@ -280,13 +302,13 @@ export default function Trainee() {
                                     </div>
                                     <div className="mb-3">
                                         <label className="form-label">Date</label>
-                                        <input type="text" className="form-control" name="meeting_date" value={meetingFormData.meeting_date} onChange={handleMeetingChange} required />
+                                        <input type="date" className="form-control" name="meeting_date" value={meetingFormData.meeting_date} onChange={handleMeetingChange} required />
                                     </div>
                                     <div className="mb-3">
                                         <label className="form-label">Location</label>
                                         <input type="text" className="form-control" name="meeting_location" value={meetingFormData.meeting_location} onChange={handleMeetingChange} required />
                                     </div>
-                                    <button type="submit" className="btn btn-primary">Submit</button>
+                                    <button type="submit" className="btn btn-primary">{selectedMeetingId ? 'Update' : 'Submit'}</button>
                                 </form>
                             </div>
                         </div>
@@ -310,6 +332,7 @@ export default function Trainee() {
                                             <th>End Time</th>
                                             <th>Date</th>
                                             <th>Location</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -321,6 +344,10 @@ export default function Trainee() {
                                                 <td>{parseFloat(meeting.meeting_end).toFixed(2)}</td>
                                                 <td>{meeting.meeting_date}</td>
                                                 <td>{meeting.meeting_location}</td>
+                                                <td>
+                                                    <button onClick={() => editMeeting(meeting)} className="btn btn-primary" style={{ margin: '0 5px' }} >Update</button>
+                                                    <button onClick={() => handleDelete(meeting._id)} className="btn btn-danger" style={{ margin: '0 5px' }} >Delete</button>
+                                                </td>
                                             </tr>
                                         ))}
                                     </tbody>
