@@ -2,13 +2,13 @@ import React, {useState, useEffect} from 'react';
 import axios from "axios";
 import {Link} from "react-router-dom";
 
-
 export default function Bills(){
 
     const [bill, setbill] = useState([]);
     const [totalAmount, setTotalAmount] = useState(0);
     const [searchQuery, setSearchQuery] = useState('');
-    const [searchResults, setSearchResults] = useState([]);
+   
+
 
     useEffect(()=>{
         function getbill(){
@@ -220,84 +220,85 @@ export default function Bills(){
     const handleSearch = (e) => {
         const query = e.target.value;
         setSearchQuery(query);
-        const filteredBills = bill.filter(bills =>
-            bills.customer_id.toLowerCase().includes(query.toLowerCase())
-        );
-        setSearchResults(filteredBills);
     };
 
-    
+    const filteredBills = bill.filter(bills =>
+        bills.customer_id.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+    
     
     return(
         
         <div className="container">
 
             <h3>Bills</h3>
-
-            <div className="mb-3">
-                <input type="text" className="form-control" placeholder="Search by Customer ID" value={searchQuery} onChange={handleSearch} />
-                <div className="dropdown">
-                    {searchResults.length > 0 && (
-                        <div className="dropdown-menu show">
-                            {searchResults.map((bills, index) => (
-                                <Link to={`/bill/${bills._id}`} key={index} className="dropdown-item">
-                                    {bills.customer_id}
-                                </Link>
-                            ))}
-                        </div>
-                    )}
-                </div>
-            </div>
-            
             <div className="row">
                 <div className="col-md-4">
-                <div className="card">
+                <div className="card border-success mb-3">
                 <div className="card-body">
                     <h5 className="card-title">Total Amount</h5>
-                    <p className="card-text">{totalAmount.toFixed(2)}</p>
-                    <Link to="/CreateBill" className="btn btn-primary">Create New Bill</Link>
+                    <p className="card-text">Rs.{totalAmount.toFixed(2)}</p>
+                    <Link to="/CreateBill" className="btn btn-success">Create New Bill</Link>
                     
                 </div>
             </div>
                 </div>
                 <div className="col-md-4">
-                    <div className="card">
+                <div className="card mb-3" style={{ background: `linear-gradient(to right, rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8), rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8))`, color: 'white', borderRadius: '20px' }}>
                         <div className="card-body">
-                            <h5 className="card-title">Create Bill</h5>
-                            <p className="card-text">Make New Bill</p>
-                            <Link to="/CreateBill" className="btn btn-primary">Create New Bill</Link>
+                            <h5 className="card-title">Create Discount Rule</h5>
+                            <p className="card-text">Make New Discount Rule</p>
+                            <Link to="/CreateBill" className="btn btn-dark">Create New Rule</Link>
                         </div>
                     </div>
                 </div>
                 <div className="col-md-4">
-                    <div className="card">
+                    <div className="card mb-3" style={{ background: `linear-gradient(to right, rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8), rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8))`, color: 'white', borderRadius: '20px' }}>
                         <div className="card-body">
                             <h5 className="card-title">Generate Reports</h5>
                             <p className="card-text">Generate and download sales reports.</p>
-                            <button onClick={generateReport} className="btn btn-primary">Generate Report</button>
+                            <button onClick={generateReport} className="btn btn-dark">Generate Report</button>
+                            <div className="progress-bar bg-light" role="progressbar" style={{ width: '75%' }} aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                     </div>
                 </div>
             </div>
 
+            <br/>
+            
+            <h4>All Bills</h4>
+            <div className="mb-3">
+                <input type="text" className="form-control" placeholder="Search by Customer ID" value={searchQuery} onChange={handleSearch} />
+            </div>
+
+
                 <table className="table">
-                <thead>
-                    <tr>
-                        <th>Customer ID</th>
+                <thead class="table-dark">
+                    <tr >
+                        <th >#</th>
+                        <th >Customer ID</th>
                         <th>Billing Date</th>
-                        <th>Items</th>
+                        <th style={{ textAlign: 'center' }}>Items</th>
                         <th>Total Amount</th>
-                        <th>Action</th>
+                        <th style={{ textAlign: 'center' }}>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {bill.map(bills => (
+                    {filteredBills.map((bills, index) => (
                         <tr key={bills._id}>
+                            <td>{index + 1}</td>
                             <td>{bills.customer_id}</td>
-                            <td>{bills.billing_date}</td>
+                            <td>{formatDate(bills.billing_date)}</td>
                             <td>
-                                <ul>
+                                <ol>
                                     {bills.items.map(item => (
                                         <li key={item.product_id}>
                                             <div>Product ID: {item.product_id}</div>
@@ -305,13 +306,13 @@ export default function Bills(){
                                             <div>Unit Price: {item.unit_price}</div>
                                         </li>
                                     ))}
-                                </ul>
+                                </ol>
                             </td>
-                            <td>{bills.total_amount}</td>
-                            <td>
-                            <Link to={`/bill/update/${bills._id}`} className="btn btn-primary">Update</Link>
-                            <button onClick={() => handleDelete(bills._id)} className="btn btn-danger">Delete</button>
-                            <button onClick={() => handlePrint(bills._id)} className="btn btn-success">Print Bill</button>
+                            <td>{bills.total_amount.toFixed(2)}</td>
+                            <td style={{ textAlign: 'center' }}>
+                                <Link to={`/bill/update/${bills._id}`} className="btn btn-primary" style={{ margin: '0 5px' }}>Update</Link>
+                                <button onClick={() => handleDelete(bills._id)} className="btn btn-danger" style={{ margin: '0 5px' }}>Delete</button>
+                                <button onClick={() => handlePrint(bills._id)} className="btn btn-success" style={{ margin: '0 5px' }}>Print Bill</button>
                             </td>
                         </tr>
                     ))}

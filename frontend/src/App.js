@@ -1,4 +1,5 @@
 import './App.css';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from './components/Header';
 import Home from './components/Home';
 import AddOther from './components/AddOther';
@@ -16,13 +17,11 @@ import Supplier from './components/supplier';
 import AddSupplier from './components/addSupplier';
 import AddPurchaseOrder from './components/addPurchaseOrder';
 import Trainees from './components/Trainee';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-
 import UpdateBill from './components/updateBill';
-import BillPreview from './components/billPreview';
-
 import CustomerR from './components/Customer';
 import UpdateCustomer from './components/UpdateCustomer';
+
+
 
 
 function App() {
@@ -46,17 +45,17 @@ function App() {
         <Route path="/profit/update/:id" element={<UpdateProfit/>}/>
         <Route path="/tax/get/:id" element={<TaxDetails/>}/>
         <Route path="/tax/:epfetf" element={<AddTax/>}/>
-
         <Route path="/bill" element={<Bill/>}/>
         <Route path="/bill/update/:id" element={<UpdateBill/>}/>
-        <Route path="/bill/preview/:id" element={<BillPreview/>}/>
         <Route path="/supplier" element={<Supplier/>}/>
         <Route path="/supplier/add" element={<AddSupplier/>}/>
         <Route path="/purchaseOrder/add" element={<AddPurchaseOrder/>}/>
         <Route path="/Customer" element={<CustomerR/>}/>
         <Route path="/Customer/update/:id" element={<UpdateCustomer/>}/>
-
         <Route path="/trainee" element={<Trainees/>}/>
+        
+        
+       
 
 
       </Routes>  
