@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 function CreateBill() {
   const [customer_id, setCustomerId] = useState("");
-  const [billing_date, setBillingDate] = useState("");
+  const [billing_date, setBillingDate] = useState(new Date().toISOString().split('T')[0]);
   const [itemCode, setItemCode] = useState("");
   const [itemPrice, setItemPrice] = useState(0);
   const [itemQuantity, setItemQuantity] = useState(1);
@@ -15,6 +15,7 @@ function CreateBill() {
   const [totalAmount, setTotalAmount] = useState(0);
   const [discount, setDiscount] = useState(0);
   const navigate = useNavigate();
+  const [discountRules, setDiscountRules] = useState([]);
 
   useEffect(() => {
     if (itemCode) {
@@ -29,6 +30,30 @@ function CreateBill() {
       setItemPrice(0);
     }
   }, [itemCode]);
+
+  useEffect(() => {
+        // Fetch discount rules when the component mounts
+        axios.get('http://localhost:8080/discounts/')
+            .then((response) => {
+                // Assuming the response data is an array of discount rules
+                setDiscountRules(response.data);
+            })
+            .catch((error) => {
+                console.error("Error fetching discount rules:", error);
+                // Handle error appropriately (e.g., show error message to the user)
+            });
+    }, []);
+
+  const calculateApplicableDiscount = (discountRules, totalAmount) => {
+    let applicableDiscount = 0;
+    discountRules.forEach(rule => {
+        if (totalAmount >= rule.rule_con) {
+            // Accumulate the discount instead of overwriting
+            applicableDiscount += (totalAmount * rule.Discount_presentage) / 100;
+        }
+    });
+    return applicableDiscount;
+};
 
   useEffect(() => {
     if (customer_id) {
@@ -49,10 +74,13 @@ function CreateBill() {
   useEffect(() => {
     const calculateTotal = () => {
       const total = items.reduce((acc, curr) => acc + (curr.price * curr.quantity), 0);
-      setTotalAmount(total - discount);
+      const loyaltyPointsDiscount = discount ;
+      const applicableDiscount = calculateApplicableDiscount(discountRules, total);
+      setTotalAmount(total - applicableDiscount - loyaltyPointsDiscount);
     };
     calculateTotal();
-  }, [items, discount]);
+  }, [items, discount, discountRules]);
+
 
   const addItem = () => {
     const newItem = { code: itemCode, price: itemPrice, quantity: itemQuantity };
@@ -100,6 +128,8 @@ function CreateBill() {
         alert("Error occurred while submitting the form. Please try again later.");
       });
   };
+  
+
 
   const handlePrint = (billToPrint) => {
     const printWindow = window.open("", "_blank", "width=600,height=600");
@@ -213,8 +243,12 @@ function CreateBill() {
   };
 
   return (
-    <div className="custom-form-container">
-      <Form onSubmit={sendData}>
+    
+     <div className="container-fluid">
+      <div className="row">
+        <div className="col-md-6">
+          <div className="card">
+      <Form card-body border rounded p-4 style={{ margin: '30px' }} onSubmit={sendData}>
         <h2 className="form-title">Bill details</h2>
         <br />
 
@@ -279,24 +313,27 @@ function CreateBill() {
           <ul>
             {items.map((item, index) => (
               <li key={index}>
-                {item.code} - ${item.price} x {item.quantity}{" "}
+                {item.code} - Rs{item.price} x {item.quantity}{" "}
                 <button type="button" onClick={() => removeItem(index)}>Remove</button>
               </li>
             ))}
           </ul>
         </div>
 
-        <p>Total Amount: ${totalAmount}</p>
-        <p>Discount: ${discount}</p>
+        
+        <p>Discount: Rs{calculateApplicableDiscount(discountRules, totalAmount).toFixed(2)}</p>
+        <p>Loyalty points Discount: Rs{discount}</p>
+        <h3>Total Amount: Rs{totalAmount}</h3>
+
 
         <div className="submit-btn-container">
           <div className="row mb-3">
             <div className="col">
               <div className="btn-group">
-                <Button variant="primary" type="submit" className="me-5 rounded">
+                <Button variant="btn btn-success" type="submit" className="me-5 rounded">
                   Submit
                 </Button>
-                <button className="btn btn-secondary rounded" onClick={handleBack}>
+                <button className="btn btn-dark rounded" onClick={handleBack}>
                   Back
                 </button>
               </div>
@@ -305,7 +342,37 @@ function CreateBill() {
         </div>
       </Form>
     </div>
+        </div>
+        <div className="col-md-6">
+  <div className="card">
+    <div className="card-body">
+      <h3 className="card-title">Instructions:</h3>
+      <p className="card-text">To create a new bill, please follow these steps:</p>
+      <ol>
+        <li>Enter the <strong>Customer ID</strong> of the customer making the purchase.</li>
+        <li>Select the <strong>Billing Date</strong> from the calendar.</li>
+        <li>Enter the <strong>Item Code</strong> of the product being purchased.</li>
+        <li>The <strong>Item Price</strong> will be automatically fetched based on the entered Item Code.</li>
+        <li>Enter the <strong>Item Quantity</strong> being purchased.</li>
+        <li>Click on <strong>Add Item</strong> to add the item to the bill.</li>
+        <li>Repeat steps 3-6 to add more items to the bill.</li>
+        <li>The list of added items will be displayed under <strong>Items</strong>.</li>
+        <li>The <strong>Discount</strong> and <strong>Loyalty Points Discount</strong> will be calculated automatically based on the items added and customer's loyalty points.</li>
+        <li>The <strong>Total Amount</strong> will be calculated after applying discounts.</li>
+        <li>Review the bill details.</li>
+        <li>Click on <strong>Submit</strong> to add the bill.</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+      </div>
+          <br></br>
+    <br></br>
+    </div>
   );
 }
+
+
 
 export default CreateBill;

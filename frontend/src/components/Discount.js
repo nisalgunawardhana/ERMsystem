@@ -9,7 +9,7 @@ export default function Discounts() {
     const [showUpdateModal, setShowUpdateModal] = useState(false);
     const [selectedDiscount, setSelectedDiscount] = useState(null); // State variable to store selected discount for update
     const [ruleName, setRuleName] = useState('');
-    const [createDate, setCreateDate] = useState('');
+    const [createDate, setCreateDate] = useState(new Date().toISOString().split('T')[0]);
     const [discountPercentage, setDiscountPercentage] = useState('');
     const [ruleCon, setRuleCon] = useState('');
     const [error, setError] = useState('');
