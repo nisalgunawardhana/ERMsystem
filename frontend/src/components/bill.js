@@ -11,6 +11,8 @@ export default function Bills(){
     const [selectedBill, setSelectedBill] = useState(null);
     const [showPreviewModal, setShowPreviewModal] = useState(false);
     const [selectAll, setSelectAll] = useState(false); 
+    const [currentPage, setCurrentPage] = useState(1);
+    const billsPerPage = 10;
 
    
 
@@ -161,6 +163,18 @@ export default function Bills(){
                 });
         });
     };
+
+    const indexOfLastBill = currentPage * billsPerPage;
+    const indexOfFirstBill = indexOfLastBill - billsPerPage;
+    const currentBills = filteredBills.slice(indexOfFirstBill, indexOfLastBill);
+
+    const totalPages = Math.ceil(filteredBills.length / billsPerPage);
+
+    const paginate = (pageNumber) => {
+        if (pageNumber > 0 && pageNumber <= totalPages) {
+            setCurrentPage(pageNumber);
+        }
+    };
     
     
     return(
@@ -230,7 +244,7 @@ export default function Bills(){
                     </tr>
                 </thead>
                 <tbody>
-                    {filteredBills.map((bills, index) => (
+                    {currentBills.map((bills, index) => (
                         <tr key={bills._id}>
                             <td>{index + 1}</td>
                             <td>{bills.customer_id}</td>
@@ -258,6 +272,23 @@ export default function Bills(){
                     ))}
                 </tbody>
             </table>
+            
+            <ul className="pagination justify-content-end">
+                <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+                    <button className="page-link" onClick={() => paginate(currentPage - 1)}>Previous</button>
+                </li>
+                {Array.from({ length: totalPages }, (_, i) => (
+                    <li key={i} className={`page-item ${currentPage === i + 1 ? 'active' : ''}`}>
+                        <button className="page-link" onClick={() => paginate(i + 1)}>{i + 1}</button>
+                    </li>
+                ))}
+                <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+                    <button className="page-link" onClick={() => paginate(currentPage + 1)}>Next</button>
+                </li>
+            </ul>
+            <hr></hr>
+            <br></br>
+            <br></br>
             {showPreviewModal && (
                 <BillPreviewModal
                     show={showPreviewModal}
@@ -267,6 +298,9 @@ export default function Bills(){
             )}
             
         </div>
+        
+
+
         
     )
 }
