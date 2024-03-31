@@ -6,6 +6,7 @@ export default function Trainee() {
     const [meetings, setMeetings] = useState([]);
     const [trainees, setTrainees] = useState([]);
     const [showForm, setShowForm] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
     const [formData, setFormData] = useState({
         trainee_id: '',
         trainee_name: '',
@@ -138,12 +139,15 @@ export default function Trainee() {
             });
     };
 
-    function formatTime(time) {
+    const formatTime = (time) => {
         const hours = Math.floor(time);
         const minutes = Math.round((time - hours) * 60);
         return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
-      }
-      
+    };
+
+    const filteredTrainees = trainees.filter(trainee =>
+        trainee.trainee_name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     return (
         <div className="container">
@@ -263,13 +267,28 @@ export default function Trainee() {
                     </div>
                 </div>
             </div>
+            <br></br>
+            <br></br>
 
             <div className="row mt-4">
                 <div className="col-md-12">
                     <div className="card">
                         <div className="card-body">
                             <h5 className="card-title">Trainees' Details</h5>
-                            <br></br>
+
+                            {/* Search Bar */}
+                            <div className="row mb-4">
+                                <div className="col">
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="Search by Trainee Name"
+                                            value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                    />
+                                </div>
+                            </div>
+
                             <div className="table-responsive">
                                 <table className="table">
                                     <thead>
@@ -283,7 +302,7 @@ export default function Trainee() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {trainees.map(trainee => (
+                                        {filteredTrainees.map(trainee => (
                                             <tr key={trainee._id}>
                                                 <td>{trainee.trainee_name}</td>
                                                 <td>{trainee.trainee_email}</td>
@@ -302,6 +321,8 @@ export default function Trainee() {
                     </div>
                 </div>
             </div>
+            <br></br>
+            <br></br>
         </div>
     );
 }
