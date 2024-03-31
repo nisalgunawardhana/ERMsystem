@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import './Discount.css';
 
 export default function Discounts() {
     const [discounts, setDiscounts] = useState([]);
@@ -14,6 +15,7 @@ export default function Discounts() {
     const [ruleCon, setRuleCon] = useState('');
     const [error, setError] = useState('');
     const [totalAmount, setTotalAmount] = useState(0);
+    const [selectAll, setSelectAll] = useState(false);
 
     useEffect(() => {
         axios.get('http://localhost:8080/discounts/')
@@ -59,6 +61,7 @@ export default function Discounts() {
     // Function to open add modal
     const handleOpenAddModal = () => {
         setShowAddModal(true);
+        
     };
 
     // Function to open update modal and set selected discount
@@ -120,6 +123,35 @@ export default function Discounts() {
         discount.Rule_name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
+    const handleSelectAll = () => {
+    setSelectAll(!selectAll);
+    const updatedDiscounts = discounts.map(d => ({ ...d, selected: !selectAll }));
+    setDiscounts(updatedDiscounts);
+};
+
+const handleSelectDiscount = (discountId) => {
+    const updatedDiscounts = discounts.map(d => {
+        if (d._id === discountId) {
+            return { ...d, selected: !d.selected };
+        }
+        return d;
+    });
+    setDiscounts(updatedDiscounts);
+};
+
+const handleDeleteSelected = () => {
+    const selectedDiscounts = discounts.filter(d => d.selected).map(d => d._id);
+    selectedDiscounts.forEach(id => {
+        axios.delete(`http://localhost:8080/discounts/delete/${id}`)
+            .then(() => {
+                setDiscounts(prevDiscounts => prevDiscounts.filter(d => d._id !== id));
+            })
+            .catch((err) => {
+                alert(err.message);
+            });
+    });
+};
+
     return (
         <div className="container">
             <h4>Manage Discount Rules</h4>
@@ -157,18 +189,19 @@ export default function Discounts() {
             </div>
 
 {/* Search input */}
-            <div className="mb-3">
-                <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Search by Rule Name"
-                    value={searchQuery}
-                    onChange={handleSearch}
-                />
+            <div className="d-flex justify-content-between align-items-center mb-3">
+            <div className="flex-grow-1">
+                <input type="text" className="form-control" placeholder="Search by Customer ID" value={searchQuery} onChange={handleSearch} />
             </div>
-            
+            <div>
+             <button onClick={handleSelectAll} className="btn btn-primary" style={{ margin: '0 5px' }}>
+                    {selectAll ? 'Unselect All' : 'Select All'}
+                </button>
+            <button className="btn btn-danger" onClick={handleDeleteSelected} style={{ margin: '0 5px' }}>Delete Selected</button>
+        </div>
+    </div>
 
-
+            <div className="modal-backdrop" style={{ display: showAddModal || showUpdateModal ? 'block' : 'none' }}></div>
 
             {/* Modal for adding new discount rule */}
             <div className="modal" style={{ display: showAddModal ? 'block' : 'none' }}>
@@ -206,6 +239,7 @@ export default function Discounts() {
                     </div>
                 </div>
             </div>
+            
 
             {/* Modal for updating discount rule */}
             <div className="modal" style={{ display: showUpdateModal ? 'block' : 'none' }}>
@@ -254,6 +288,7 @@ export default function Discounts() {
                         <th>Discount Percentage</th>
                         <th>Rule Condition</th>
                         <th>Action</th>
+                        <th style={{ textAlign: 'center' }}>Select</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -268,6 +303,9 @@ export default function Discounts() {
                                 <button className="btn btn-primary" onClick={() => handleOpenUpdateModal(discount)} style={{ margin: '0 5px' }}>Update</button>
                                 <button onClick={() => handleDeleteDiscount(discount._id)} className="btn btn-danger ml-2" style={{ margin: '0 5px' }}>Delete</button>
                             </td>
+                            <td style={{ textAlign: 'center' }}>
+    <input type="checkbox" checked={discount.selected || false} onChange={() => handleSelectDiscount(discount._id)} />
+</td>
                         </tr>
                     ))}
                 </tbody>

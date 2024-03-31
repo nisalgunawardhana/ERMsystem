@@ -208,7 +208,9 @@ export default function Bills(){
                 <input type="text" className="form-control" placeholder="Search by Customer ID" value={searchQuery} onChange={handleSearch} />
             </div>
             <div>
-             <button className="btn btn-primary mr-2" onClick={handleSelectAll} style={{ margin: '0 5px' }}>Select All</button>
+             <button onClick={handleSelectAll} className="btn btn-primary"style={{ margin: '0 5px' }}>
+                    {selectAll ? 'Unselect All' : 'Select All'}
+                </button>
             <button className="btn btn-danger" onClick={handleDeleteSelected} style={{ margin: '0 5px' }}>Delete Selected</button>
         </div>
     </div>
