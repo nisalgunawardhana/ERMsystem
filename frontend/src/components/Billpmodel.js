@@ -1,11 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 
-export default function BillPreviewModal({ bill }) {
-    const [show, setShow] = useState(false);
-
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+export default function BillPreviewModal({ show, handleClose, bill }) {
 
     const handlePrint = (billId) => {
         // Implement printing logic here
@@ -121,37 +117,35 @@ export default function BillPreviewModal({ bill }) {
     };
 
     return (
-        <>
-            <Button variant="btn btn-dark" onClick={handleShow} style={{ marginLeft: '5px' }}>
-                Preview
-            </Button>
-
-            <Modal show={show} onHide={handleClose}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Bill Preview</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-    <p><strong>Customer ID:</strong> {bill.customer_id}</p>
-    <p><strong>Billing Date:</strong> {new Date(bill.billing_date).toLocaleDateString()}</p>
-    <p><strong>Total Amount:</strong> {bill.total_amount}</p>
-    <p><strong>Items:</strong></p>
-    <ul>
-        {bill.items.map((item, index) => (
-            <li key={index}>
-                Product ID: {item.product_id}, Quantity: {item.quantity}, Unit Price: {item.unit_price}
-            </li>
-        ))}
-    </ul>
-</Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
-                        Close
-                    </Button>
-                    <Button variant="dark" onClick={handlePrint}>
-                        Print
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-        </>
+        <Modal show={show} onHide={handleClose}>
+            <Modal.Header closeButton>
+                <Modal.Title>Bill Preview</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                {bill && (
+                    <>
+                        <p><strong>Customer ID:</strong> {bill.customer_id}</p>
+                        <p><strong>Billing Date:</strong> {new Date(bill.billing_date).toLocaleDateString()}</p>
+                        <p><strong>Total Amount:</strong> {bill.total_amount}</p>
+                        <p><strong>Items:</strong></p>
+                        <ul>
+                            {bill.items.map((item, index) => (
+                                <li key={index}>
+                                    Product ID: {item.product_id}, Quantity: {item.quantity}, Unit Price: {item.unit_price}
+                                </li>
+                            ))}
+                        </ul>
+                    </>
+                )}
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={handleClose}>
+                    Close
+                </Button>
+                <Button variant="dark" onClick={handlePrint}>
+                    Print
+                </Button>
+            </Modal.Footer>
+        </Modal>
     );
 }

@@ -1,12 +1,15 @@
 import React, {useState, useEffect} from 'react';
 import axios from "axios";
 import {Link} from "react-router-dom";
+import BillPreviewModal from './Billpmodel';
 
 export default function Bills(){
 
     const [bill, setbill] = useState([]);
     const [totalAmount, setTotalAmount] = useState(0);
     const [searchQuery, setSearchQuery] = useState('');
+    const [selectedBill, setSelectedBill] = useState(null);
+    const [showPreviewModal, setShowPreviewModal] = useState(false);
    
 
 
@@ -215,6 +218,12 @@ export default function Bills(){
         printWindow.document.close();
         printWindow.print();
     };
+
+    const handlePreview = (selectedBill) => {
+        setSelectedBill(selectedBill);
+        setShowPreviewModal(true); 
+    };
+    
     
 
     const handleSearch = (e) => {
@@ -313,11 +322,21 @@ export default function Bills(){
                                 <Link to={`/bill/update/${bills._id}`} className="btn btn-primary" style={{ margin: '0 5px' }}>Update</Link>
                                 <button onClick={() => handleDelete(bills._id)} className="btn btn-danger" style={{ margin: '0 5px' }}>Delete</button>
                                 <button onClick={() => handlePrint(bills._id)} className="btn btn-success" style={{ margin: '0 5px' }}>Print Bill</button>
+                                <button onClick={() => handlePreview(bills)} className="btn btn-dark" style={{ margin: '0 5px' }}>Preview</button>
+
                             </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
+            {showPreviewModal && (
+                <BillPreviewModal
+                    show={showPreviewModal}
+                    handleClose={() => setShowPreviewModal(false)}
+                    bill={selectedBill}
+                />
+            )}
         </div>
+        
     )
 }
