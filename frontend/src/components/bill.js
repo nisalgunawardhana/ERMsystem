@@ -255,7 +255,7 @@ export default function Bills(){
                 <div className="card-body">
                     <h5 className="card-title">Total Amount</h5>
                     <p className="card-text">Rs.{totalAmount.toFixed(2)}</p>
-                    <Link to="/CreateBill" className="btn btn-success">Create New Bill</Link>
+                    <Link to="/bill/CreateBill" className="btn btn-success">Create New Bill</Link>
                     
                 </div>
             </div>
@@ -265,7 +265,7 @@ export default function Bills(){
                         <div className="card-body">
                             <h5 className="card-title">Create Discount Rule</h5>
                             <p className="card-text">Make New Discount Rule</p>
-                            <Link to="/CreateBill" className="btn btn-dark">Create New Rule</Link>
+                            <Link to="/bill/discounts" className="btn btn-dark">Manage Discount Rule</Link>
                         </div>
                     </div>
                 </div>

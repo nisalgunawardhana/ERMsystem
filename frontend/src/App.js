@@ -20,6 +20,7 @@ import Trainees from './components/Trainee';
 import UpdateBill from './components/updateBill';
 import CustomerR from './components/Customer';
 import UpdateCustomer from './components/UpdateCustomer';
+import Discounts from './components/Discount';
 
 
 
@@ -37,7 +38,6 @@ function App() {
         <Route path="/" element={<Home/>}/>
         <Route path="/otherExpense/add" element={<AddOther/>}/>
         <Route path="/otherExpense" element={<AllOther/>}/>
-        <Route path="/CreateBill" element={<CreateBill/>}/>
         <Route path="/otherExpense/update/:id" element={<UpdateOther/>}/>
         <Route path="/finance" element={<FinanceDash/>}/>
         <Route path="/profit/:month" element={<AddProfit/>}/>
@@ -45,18 +45,18 @@ function App() {
         <Route path="/profit/update/:id" element={<UpdateProfit/>}/>
         <Route path="/tax/get/:id" element={<TaxDetails/>}/>
         <Route path="/tax/:epfetf" element={<AddTax/>}/>
-        <Route path="/bill" element={<Bill/>}/>
-        <Route path="/bill/update/:id" element={<UpdateBill/>}/>
         <Route path="/supplier" element={<Supplier/>}/>
         <Route path="/supplier/add" element={<AddSupplier/>}/>
         <Route path="/purchaseOrder/add" element={<AddPurchaseOrder/>}/>
         <Route path="/Customer" element={<CustomerR/>}/>
         <Route path="/Customer/update/:id" element={<UpdateCustomer/>}/>
         <Route path="/trainee" element={<Trainees/>}/>
-        
-        
-       
-
+      
+      //billing 
+        <Route path="/bill" element={<Bill/>}/>
+        <Route path="/bill/CreateBill" element={<CreateBill/>}/>
+        <Route path="/bill/discounts" element={<Discounts/>} />
+        <Route path="/bill/update/:id" element={<UpdateBill/>}/>
 
       </Routes>  
     
