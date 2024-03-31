@@ -6,7 +6,7 @@ export default function Trainee() {
     const [meetings, setMeetings] = useState([]);
     const [trainees, setTrainees] = useState([]);
     const [showForm, setShowForm] = useState(false);
-    const [showMeetingForm, setShowMeetingForm] = useState(false); // New state for showing meeting form
+    const [showMeetingForm, setShowMeetingForm] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [formData, setFormData] = useState({
         trainee_id: '',
@@ -16,7 +16,7 @@ export default function Trainee() {
         trainee_contact: '',
         trainee_rating: ''
     });
-    const [meetingFormData, setMeetingFormData] = useState({ // New state for meeting form data
+    const [meetingFormData, setMeetingFormData] = useState({
         meeting_id: '',
         meeting_name: '',
         meeting_start: '',
@@ -26,16 +26,14 @@ export default function Trainee() {
     });
 
     useEffect(() => {
-        // Fetch meetings
         axios.get('http://localhost:8080/meetings/')
             .then(res => {
-                setMeetings(res.data);
+                setMeetings(res.data.reverse());
             })
             .catch(err => {
                 console.error('Error fetching meetings:', err);
             });
 
-        // Fetch trainees
         axios.get('http://localhost:8080/trainees/')
             .then(res => {
                 setTrainees(res.data);
@@ -48,7 +46,6 @@ export default function Trainee() {
     function handleDelete(id) {
         axios.delete(`http://localhost:8080/trainees/delete/${id}`)
             .then(() => {
-                // Reload the page after deletion
                 window.location.reload();
             })
             .catch((err) => {
@@ -64,7 +61,7 @@ export default function Trainee() {
         }));
     }
 
-    function handleMeetingChange(e) { // Handle meeting form change
+    function handleMeetingChange(e) {
         const { name, value } = e.target;
         setMeetingFormData(prevState => ({
             ...prevState,
@@ -76,7 +73,6 @@ export default function Trainee() {
         e.preventDefault();
         axios.post('http://localhost:8080/trainees/add', formData)
             .then(() => {
-                // Reload the page after adding trainee
                 window.location.reload();
             })
             .catch((err) => {
@@ -84,11 +80,10 @@ export default function Trainee() {
             });
     }
 
-    function handleMeetingSubmit(e) { // Handle meeting form submission
+    function handleMeetingSubmit(e) {
         e.preventDefault();
         axios.post('http://localhost:8080/meetings/add', meetingFormData)
             .then(() => {
-                // Reload the page after adding meeting
                 window.location.reload();
             })
             .catch((err) => {
@@ -100,12 +95,11 @@ export default function Trainee() {
         setShowForm(prevState => !prevState);
     }
 
-    function toggleMeetingForm() { // Toggle meeting form visibility
+    function toggleMeetingForm() {
         setShowMeetingForm(prevState => !prevState);
     }
 
     const generateReport = () => {
-        // Fetch trainee data
         axios.get('http://localhost:8080/trainees/')
             .then(res => {
                 const traineesData = res.data;
@@ -172,12 +166,6 @@ export default function Trainee() {
             });
     };
 
-    const formatTime = (time) => {
-        const hours = Math.floor(time);
-        const minutes = Math.round((time - hours) * 60);
-        return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
-    };
-
     const filteredTrainees = trainees.filter(trainee =>
         trainee.trainee_name.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -202,7 +190,7 @@ export default function Trainee() {
                         <div className="card-body">
                             <h5 className="card-title">Total Sessions</h5>
                             <p className="card-text">{meetings.length}</p>
-                            <button onClick={toggleMeetingForm} className="btn btn-primary">Add New Session</button> {/* Updated to toggle meeting form */}
+                            <button onClick={toggleMeetingForm} className="btn btn-primary">Add New Session</button>
                         </div>
                     </div>
                 </div>
@@ -216,8 +204,8 @@ export default function Trainee() {
                     </div>
                 </div>
             </div>
+            <br></br>
 
-            {/* Add Trainee Form */}
             {showForm && (
                 <div className="modal" style={{ display: 'block' }}>
                     <div className="modal-dialog">
@@ -264,7 +252,6 @@ export default function Trainee() {
                 </div>
             )}
 
-            {/* Add Meeting Form */}
             {showMeetingForm && (
                 <div className="modal" style={{ display: 'block' }}>
                     <div className="modal-dialog">
@@ -285,11 +272,11 @@ export default function Trainee() {
                                     </div>
                                     <div className="mb-3">
                                         <label className="form-label">Start Time</label>
-                                        <input type="number" className="form-control" name="meeting_start" value={meetingFormData.meeting_start} onChange={handleMeetingChange} required />
+                                        <input type="number" step="0.01" className="form-control" name="meeting_start" value={meetingFormData.meeting_start} onChange={handleMeetingChange} required />
                                     </div>
                                     <div className="mb-3">
                                         <label className="form-label">End Time</label>
-                                        <input type="number" className="form-control" name="meeting_end" value={meetingFormData.meeting_end} onChange={handleMeetingChange} required />
+                                        <input type="number" step="0.01" className="form-control" name="meeting_end" value={meetingFormData.meeting_end} onChange={handleMeetingChange} required />
                                     </div>
                                     <div className="mb-3">
                                         <label className="form-label">Date</label>
@@ -330,8 +317,8 @@ export default function Trainee() {
                                             <tr key={meeting.meeting_id}>
                                                 <td>{meeting.meeting_id}</td>
                                                 <td>{meeting.meeting_name}</td>
-                                                <td>{formatTime(meeting.meeting_start)}</td>
-                                                <td>{formatTime(meeting.meeting_end)}</td>
+                                                <td>{parseFloat(meeting.meeting_start).toFixed(2)}</td>
+                                                <td>{parseFloat(meeting.meeting_end).toFixed(2)}</td>
                                                 <td>{meeting.meeting_date}</td>
                                                 <td>{meeting.meeting_location}</td>
                                             </tr>
@@ -344,7 +331,6 @@ export default function Trainee() {
                 </div>
             </div>
             <br></br>
-            <br></br>
 
             <div className="row mt-4">
                 <div className="col-md-12">
@@ -352,8 +338,6 @@ export default function Trainee() {
                         <div className="card-body">
                             <div className="d-flex justify-content-between align-items-center">
                                 <h5 className="card-title">Trainees' Details</h5>
-
-                                {/* Search Bar */}
                                 <div className="col-sm-4">
                                     <input
                                         type="text"
@@ -365,7 +349,6 @@ export default function Trainee() {
                                 </div>
                             </div>
                             <br></br>
-
                             <div className="table-responsive">
                                 <table className="table">
                                     <thead>
