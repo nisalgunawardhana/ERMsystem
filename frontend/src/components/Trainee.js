@@ -362,7 +362,7 @@ export default function Trainee() {
                 <div className="col-md-12">
                     <div className="card">
                         <div className="card-body">
-                            <h5 className="card-title">Scheduled Meetings</h5>
+                            <h4 className="card-title">Scheduled Meetings</h4>
                             <br></br>
                             <div className="table-responsive">
                                 <table className="table">
@@ -406,7 +406,7 @@ export default function Trainee() {
                     <div className="card">
                         <div className="card-body">
                             <div className="d-flex justify-content-between align-items-center">
-                                <h5 className="card-title">Trainees' Details</h5>
+                                <h4 className="card-title">Trainees' Details</h4>
                                 <div className="col-sm-4">
                                     <input
                                         type="text"
@@ -418,34 +418,24 @@ export default function Trainee() {
                                 </div>
                             </div>
                             <br></br>
-                            <div className="table-responsive">
-                                <table className="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Email</th>
-                                            <th>Contact No</th>
-                                            <th>Gender</th>
-                                            <th>Ratings</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {filteredTrainees.map(trainee => (
-                                            <tr key={trainee._id}>
-                                                <td>{trainee.trainee_name}</td>
-                                                <td>{trainee.trainee_email}</td>
-                                                <td>{trainee.trainee_contact}</td>
-                                                <td>{trainee.trainee_gender}</td>
-                                                <td>{trainee.trainee_rating}</td>
-                                                <td>
+                            <div className="row row-cols-1 row-cols-md-2 g-4">
+                                {filteredTrainees.map(trainee => (
+                                    <div key={trainee._id} className="col">
+                                        <div className="card">
+                                            <div className="card-body">
+                                                <h5 className="card-title">{trainee.trainee_name}</h5>
+                                                <p className="card-text">Email: {trainee.trainee_email}</p>
+                                                <p className="card-text">Contact No: {trainee.trainee_contact}</p>
+                                                <p className="card-text">Gender: {trainee.trainee_gender}</p>
+                                                <p className="card-text">Ratings: {trainee.trainee_rating}</p>
+                                                <div>
                                                     <button onClick={() => editTrainee(trainee)} className="btn btn-primary" style={{ margin: '0 5px' }} >Update</button>
                                                     <button onClick={() => handleDeleteTrainee(trainee._id)} className="btn btn-danger" style={{ margin: '0 5px' }} >Delete</button>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </div>
