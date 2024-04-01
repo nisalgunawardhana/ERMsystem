@@ -87,9 +87,12 @@ function UpdateBill() {
   };
 
   return (
-    <div className='custom-form-container'>
-      <h2>Update Bill</h2>
-      <Form>
+    <div className="container-fluid">
+      <div className="row">
+        <div className="col-md-6">
+        <div className="card">
+      <h2 style={{ textAlign: 'center' }} >Update Bill</h2>
+      <Form card-body border rounded p-4 style={{ margin: '30px' }}>
         <Form.Group controlId="customerId">
           <Form.Label>Customer ID</Form.Label>
           <Form.Control type="text" value={customer_id}readOnly  />
@@ -114,9 +117,33 @@ function UpdateBill() {
           <Form.Label>Total Amount</Form.Label>
           <Form.Control type="number" value={total_amount} onChange={e => setTotalAmount(e.target.value)} />
         </Form.Group>
+        <br></br>
         <Button variant="primary" onClick={handleUpdate}>Update Bill</Button>
       </Form>
+      </div>
     </div>
+    
+    <div className="col-md-6">
+    <div className="card">
+    <div className="card-body">
+      <h3 className="card-title">Instructions:</h3>
+      <p className="card-text">To create a new bill, please follow these steps:</p>
+      <ol>
+        <li><strong>Customer ID:</strong> Verify the customer's identification.</li>
+        <li><strong>Billing Date:</strong> Select the updated billing date from the calendar.</li>
+        <li><strong>Items:</strong> Review and modify the details of each item as necessary.</li>
+        <li><strong>Total Amount:</strong> Ensure the total amount accurately reflects the updated bill.</li>
+        <li>Click on the <strong>"Update Bill"</strong> button to save the changes.</li>
+      </ol>
+    </div>
+  </div>
+    </div>
+    </div>
+    <br></br>
+    <br></br>
+    </div>
+    
+
   );
 }
 
