@@ -31,35 +31,35 @@ function CreateBill() {
   }, [itemCode]);
 
   useEffect(() => {
-        // Fetch discount rules when the component mounts
-        axios.get('http://localhost:8080/discounts/')
-            .then((response) => {
-                // Assuming the response data is an array of discount rules
-                setDiscountRules(response.data);
-            })
-            .catch((error) => {
-                console.error("Error fetching discount rules:", error);
-                // Handle error appropriately (e.g., show error message to the user)
-            });
-    }, []);
+    // Fetch discount rules when the component mounts
+    axios.get('http://localhost:8080/discounts/')
+      .then((response) => {
+        // Assuming the response data is an array of discount rules
+        setDiscountRules(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching discount rules:", error);
+        // Handle error appropriately (e.g., show error message to the user)
+      });
+  }, []);
 
   const calculateApplicableDiscount = (discountRules, totalAmount) => {
     let applicableDiscount = 0;
     discountRules.forEach(rule => {
-        if (totalAmount >= rule.rule_con) {
-            // Accumulate the discount instead of overwriting
-            applicableDiscount += (totalAmount * rule.Discount_presentage) / 100;
-        }
+      if (totalAmount >= rule.rule_con) {
+        // Accumulate the discount instead of overwriting
+        applicableDiscount += (totalAmount * rule.Discount_presentage) / 100;
+      }
     });
     return applicableDiscount;
-};
+  };
 
   useEffect(() => {
     if (customer_id) {
       axios.get(`http://localhost:8080/customer/points/${customer_id}`)
         .then(response => {
           const points = response.data.points;
-          const calculatedDiscount =  points / 100;
+          const calculatedDiscount = points / 100;
           setDiscount(calculatedDiscount);
         })
         .catch(error => {
@@ -73,7 +73,7 @@ function CreateBill() {
   useEffect(() => {
     const calculateTotal = () => {
       const total = items.reduce((acc, curr) => acc + (curr.price * curr.quantity), 0);
-      const loyaltyPointsDiscount = discount ;
+      const loyaltyPointsDiscount = discount;
       const applicableDiscount = calculateApplicableDiscount(discountRules, total);
       setTotalAmount(total - applicableDiscount - loyaltyPointsDiscount);
     };
@@ -97,7 +97,7 @@ function CreateBill() {
   const sendData = (e) => {
     e.preventDefault();
     console.log("Submitting form...");
-    
+
     const convertedItems = items.map(item => ({
       product_id: item.code,
       quantity: item.quantity,
@@ -127,7 +127,7 @@ function CreateBill() {
         alert("Error occurred while submitting the form. Please try again later.");
       });
   };
-  
+
 
 
   const handlePrint = (billToPrint) => {
@@ -235,148 +235,148 @@ function CreateBill() {
     printWindow.document.close();
     printWindow.print();
   };
-  
+
 
   const handleBack = () => {
     navigate("/bill/");
   };
 
   return (
-    
-     <div className="container-fluid">
+
+    <div className="container-fluid">
       <div className="row">
         <div className="col-md-6">
           <div className="card">
-      <Form card-body border rounded p-4 style={{ margin: '30px' }} onSubmit={sendData}>
-        <h2 className="form-title">Bill details</h2>
-        <br />
+            <Form card-body border rounded p-4 style={{ margin: '30px' }} onSubmit={sendData}>
+              <h2 className="form-title">Bill details</h2>
+              <br />
 
-        <Form.Group className="mb-3" controlId="formBasicCustomerId">
-          <Form.Label>Customer ID</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Enter Customer ID"
-            value={customer_id}
-            onChange={(e) => setCustomerId(e.target.value)}
-          />
-        </Form.Group>
+              <Form.Group className="mb-3" controlId="formBasicCustomerId">
+                <Form.Label>Customer ID</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter Customer ID"
+                  value={customer_id}
+                  onChange={(e) => setCustomerId(e.target.value)}
+                />
+              </Form.Group>
 
-        <Form.Group className="mb-3" controlId="formBasicBillingDate">
-          <Form.Label>Billing Date</Form.Label>
-          <Form.Control
-            type="date"
-            placeholder="Enter Billing Date"
-            value={billing_date}
-            onChange={(e) => setBillingDate(e.target.value)}
-          />
-        </Form.Group>
+              <Form.Group className="mb-3" controlId="formBasicBillingDate">
+                <Form.Label>Billing Date</Form.Label>
+                <Form.Control
+                  type="date"
+                  placeholder="Enter Billing Date"
+                  value={billing_date}
+                  onChange={(e) => setBillingDate(e.target.value)}
+                />
+              </Form.Group>
 
-        <Form.Group className="mb-3" controlId="formBasicItemCode">
-          <Form.Label>Item Code</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Enter Item Code"
-            value={itemCode}
-            onChange={(e) => setItemCode(e.target.value)}
-          />
-        </Form.Group>
+              <Form.Group className="mb-3" controlId="formBasicItemCode">
+                <Form.Label>Item Code</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter Item Code"
+                  value={itemCode}
+                  onChange={(e) => setItemCode(e.target.value)}
+                />
+              </Form.Group>
 
-        <Form.Group className="mb-3" controlId="formBasicItemPrice">
-          <Form.Label>Item Price</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Item Price"
-            value={itemPrice}
-            readOnly
-          />
-        </Form.Group>
+              <Form.Group className="mb-3" controlId="formBasicItemPrice">
+                <Form.Label>Item Price</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Item Price"
+                  value={itemPrice}
+                  readOnly
+                />
+              </Form.Group>
 
-        <Form.Group className="mb-3" controlId="formBasicItemQuantity">
-          <Form.Label>Item Quantity</Form.Label>
-          <Form.Control
-            type="number"
-            placeholder="Enter Item Quantity"
-            value={itemQuantity}
-            onChange={(e) => setItemQuantity(e.target.value)}
-          />
-        </Form.Group>
+              <Form.Group className="mb-3" controlId="formBasicItemQuantity">
+                <Form.Label>Item Quantity</Form.Label>
+                <Form.Control
+                  type="number"
+                  placeholder="Enter Item Quantity"
+                  value={itemQuantity}
+                  onChange={(e) => setItemQuantity(e.target.value)}
+                />
+              </Form.Group>
 
-        <Button variant="primary" onClick={addItem}>
-          Add Item
-        </Button>
+              <Button variant="primary" onClick={addItem}>
+                Add Item
+              </Button>
 
-        <br/><br/>
+              <br /><br />
 
-        <div>
-          <h4>Items:</h4>
-          <ul>
-            {items.map((item, index) => (
-              <li key={index}>
-                {item.code} - Rs{item.price} x {item.quantity}{" "}
-                <button type="button" onClick={() => removeItem(index)}>Remove</button>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        
-        <p>Discount: Rs{calculateApplicableDiscount(discountRules, totalAmount).toFixed(2)}</p>
-        <p>Loyalty points Discount: Rs{discount}</p>
-        <h3>Total Amount: Rs{totalAmount}</h3>
-
-
-        <div className="submit-btn-container">
-          <div className="row mb-3">
-            <div className="col">
-              <div className="btn-group">
-                <Button variant="btn btn-success" type="submit" className="me-5 rounded">
-                  Submit
-                </Button>
-                <button className="btn btn-dark rounded" onClick={handleBack}>
-                  Back
-                </button>
+              <div>
+                <h4>Items:</h4>
+                <ul>
+                  {items.map((item, index) => (
+                    <li key={index}>
+                      {item.code} - Rs{item.price} x {item.quantity}{" "}
+                      <button type="button" onClick={() => removeItem(index)}>Remove</button>
+                    </li>
+                  ))}
+                </ul>
               </div>
+
+
+              <p>Discount: Rs{calculateApplicableDiscount(discountRules, totalAmount).toFixed(2)}</p>
+              <p>Loyalty points Discount: Rs{discount}</p>
+              <h3>Total Amount: Rs{totalAmount}</h3>
+
+
+              <div className="submit-btn-container">
+                <div className="row mb-3">
+                  <div className="col">
+                    <div className="btn-group">
+                      <Button variant="btn btn-success" type="submit" className="me-5 rounded">
+                        Submit
+                      </Button>
+                      <button className="btn btn-dark rounded" onClick={handleBack}>
+                        Back
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Form>
+          </div>
+        </div>
+        <div className="col-md-6">
+          <div className="card">
+            <div className="card-body">
+              <h3 className="card-title">Instructions:</h3>
+              <p className="card-text">To create a new bill, please follow these steps:</p>
+              <ol>
+                <li>Enter the <strong>Customer ID</strong> of the customer making the purchase.</li>
+                <li>Select the <strong>Billing Date</strong> from the calendar.</li>
+                <li>Enter the <strong>Item Code</strong> of the product being purchased.</li>
+                <li>The <strong>Item Price</strong> will be automatically fetched based on the entered Item Code.</li>
+                <li>Enter the <strong>Item Quantity</strong> being purchased.</li>
+                <li>Click on <strong>Add Item</strong> to add the item to the bill.</li>
+                <li>Repeat steps 3-6 to add more items to the bill.</li>
+                <li>The list of added items will be displayed under <strong>Items</strong>.</li>
+                <li>The <strong>Discount</strong> and <strong>Loyalty Points Discount</strong> will be calculated automatically based on the items added and customer's loyalty points.</li>
+                <li>The <strong>Total Amount</strong> will be calculated after applying discounts.</li>
+                <li>Review the bill details.</li>
+                <li>Click on <strong>Submit</strong> to add the bill.</li>
+              </ol>
+            </div>
+          </div>
+          <div className="card">
+            <div className="card-body">
+              <h3 className="card-title">Stuff Notification:</h3>
+              <p className="card-text"> Upcoming events And other Notice:</p>
+              <ol>
+
+              </ol>
             </div>
           </div>
         </div>
-      </Form>
-    </div>
-        </div>
-        <div className="col-md-6">
-  <div className="card">
-    <div className="card-body">
-      <h3 className="card-title">Instructions:</h3>
-      <p className="card-text">To create a new bill, please follow these steps:</p>
-      <ol>
-        <li>Enter the <strong>Customer ID</strong> of the customer making the purchase.</li>
-        <li>Select the <strong>Billing Date</strong> from the calendar.</li>
-        <li>Enter the <strong>Item Code</strong> of the product being purchased.</li>
-        <li>The <strong>Item Price</strong> will be automatically fetched based on the entered Item Code.</li>
-        <li>Enter the <strong>Item Quantity</strong> being purchased.</li>
-        <li>Click on <strong>Add Item</strong> to add the item to the bill.</li>
-        <li>Repeat steps 3-6 to add more items to the bill.</li>
-        <li>The list of added items will be displayed under <strong>Items</strong>.</li>
-        <li>The <strong>Discount</strong> and <strong>Loyalty Points Discount</strong> will be calculated automatically based on the items added and customer's loyalty points.</li>
-        <li>The <strong>Total Amount</strong> will be calculated after applying discounts.</li>
-        <li>Review the bill details.</li>
-        <li>Click on <strong>Submit</strong> to add the bill.</li>
-      </ol>
-    </div>
-  </div>
-  <div className="card">
-    <div className="card-body">
-      <h3 className="card-title">Stuff Notification:</h3>
-      <p className="card-text"> Upcoming events And other Notice:</p>
-      <ol>
-        
-      </ol>
-    </div>
-</div>
-</div>
 
       </div>
-          <br></br>
-    <br></br>
+      <br></br>
+      <br></br>
     </div>
   );
 }

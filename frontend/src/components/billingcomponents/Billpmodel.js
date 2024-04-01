@@ -10,7 +10,7 @@ export default function BillPreviewModal({ show, handleClose, bill }) {
             alert("Bill not found!");
             return;
         }
-    
+
         const printWindow = window.open("", "_blank", "width=600,height=600");
         printWindow.document.write(`
             <html>

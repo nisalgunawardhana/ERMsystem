@@ -1,24 +1,24 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from "axios";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import BillPreviewModal from './Billpmodel';
 
-export default function Bills(){
+export default function Bills() {
 
     const [bill, setbill] = useState([]);
     const [totalAmount, setTotalAmount] = useState(0);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedBill, setSelectedBill] = useState(null);
     const [showPreviewModal, setShowPreviewModal] = useState(false);
-    const [selectAll, setSelectAll] = useState(false); 
+    const [selectAll, setSelectAll] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const billsPerPage = 10;
 
-   
 
 
-    useEffect(()=>{
-        function getbill(){
+
+    useEffect(() => {
+        function getbill() {
             axios.get("http://localhost:8080/bills/").then((res) => {
                 setbill(res.data);
             }).catch((err) => {
@@ -38,7 +38,7 @@ export default function Bills(){
 
         getbill();
         getTotalAmount();
-    },[])
+    }, [])
 
     const handleDelete = (id) => {
         axios.delete(`http://localhost:8080/bills/delete/${id}`)
@@ -50,7 +50,7 @@ export default function Bills(){
                 alert(err.message);
             });
     };
-    
+
     const generateReport = () => {
         const printWindow = window.open("", "_blank", "width=600,height=600");
         printWindow.document.write(`
@@ -113,10 +113,10 @@ export default function Bills(){
 
     const handlePreview = (selectedBill) => {
         setSelectedBill(selectedBill);
-        setShowPreviewModal(true); 
+        setShowPreviewModal(true);
     };
-    
-    
+
+
 
     const handleSearch = (e) => {
         const query = e.target.value;
@@ -175,26 +175,26 @@ export default function Bills(){
             setCurrentPage(pageNumber);
         }
     };
-    
-    
-    return(
-        
+
+
+    return (
+
         <div className="container">
 
             <h3>Bills</h3>
             <div className="row">
                 <div className="col-md-4">
-                <div className="card border-success mb-3">
-                <div className="card-body">
-                    <h5 className="card-title">Total Amount</h5>
-                    <p className="card-text">Rs.{totalAmount.toFixed(2)}</p>
-                    <Link to="/bill/CreateBill" className="btn btn-success">Create New Bill</Link>
-                    
-                </div>
-            </div>
+                    <div className="card border-success mb-3">
+                        <div className="card-body">
+                            <h5 className="card-title">Total Amount</h5>
+                            <p className="card-text">Rs.{totalAmount.toFixed(2)}</p>
+                            <Link to="/bill/CreateBill" className="btn btn-success">Create New Bill</Link>
+
+                        </div>
+                    </div>
                 </div>
                 <div className="col-md-4">
-                <div className="card mb-3" style={{ background: `linear-gradient(to right, rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8), rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8))`, color: 'white', borderRadius: '20px' }}>
+                    <div className="card mb-3" style={{ background: `linear-gradient(to right, rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8), rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8))`, color: 'white', borderRadius: '20px' }}>
                         <div className="card-body">
                             <h5 className="card-title">Create Discount Rule</h5>
                             <p className="card-text">Make New Discount Rule</p>
@@ -214,23 +214,23 @@ export default function Bills(){
                 </div>
             </div>
 
-            <br/>
-            
+            <br />
+
             <h4>All Bills</h4>
             <div className="d-flex justify-content-between align-items-center mb-3">
-            <div className="flex-grow-1">
-                <input type="text" className="form-control" placeholder="Search by Customer ID" value={searchQuery} onChange={handleSearch} />
+                <div className="flex-grow-1">
+                    <input type="text" className="form-control" placeholder="Search by Customer ID" value={searchQuery} onChange={handleSearch} />
+                </div>
+                <div>
+                    <button onClick={handleSelectAll} className="btn btn-secondary" style={{ margin: '0 5px' }}>
+                        {selectAll ? 'Unselect All' : 'Select All'}
+                    </button>
+                    <button className="btn btn-dark" onClick={handleDeleteSelected} style={{ margin: '0 5px' }}>Delete Selected</button>
+                </div>
             </div>
-            <div>
-             <button onClick={handleSelectAll} className="btn btn-secondary" style={{ margin: '0 5px' }}>
-                    {selectAll ? 'Unselect All' : 'Select All'}
-                </button>
-            <button className="btn btn-dark" onClick={handleDeleteSelected} style={{ margin: '0 5px' }}>Delete Selected</button>
-        </div>
-    </div>
 
 
-                <table className="table">
+            <table className="table">
                 <thead class="table-dark">
                     <tr >
                         <th style={{ textAlign: 'center' }}>Select</th>
@@ -296,11 +296,11 @@ export default function Bills(){
                     bill={selectedBill}
                 />
             )}
-            
+
         </div>
-        
 
 
-        
+
+
     )
 }

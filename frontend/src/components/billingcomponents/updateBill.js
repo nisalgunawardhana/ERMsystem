@@ -70,7 +70,7 @@ function UpdateBill() {
     setItems(updatedItems);
 
     const newTotalAmount = updatedItems.reduce((total, item) => total + (item.quantity * item.unit_price), 0);
-  setTotalAmount(newTotalAmount);
+    setTotalAmount(newTotalAmount);
   };
 
   const addItem = () => {
@@ -83,66 +83,66 @@ function UpdateBill() {
     setItems(updatedItems);
 
     const newTotalAmount = updatedItems.reduce((total, item) => total + (item.quantity * item.unit_price), 0);
-  setTotalAmount(newTotalAmount);
+    setTotalAmount(newTotalAmount);
   };
 
   return (
     <div className="container-fluid">
       <div className="row">
         <div className="col-md-6">
-        <div className="card">
-      <h2 style={{ textAlign: 'center' }} >Update Bill</h2>
-      <Form card-body border rounded p-4 style={{ margin: '30px' }}>
-        <Form.Group controlId="customerId">
-          <Form.Label>Customer ID</Form.Label>
-          <Form.Control type="text" value={customer_id}readOnly  />
-        </Form.Group>
-        <Form.Group controlId="billingDate">
-          <Form.Label>Billing Date</Form.Label>
-          <Form.Control type="date" value={billing_date} readOnly />
-        </Form.Group>
-        <Form.Group controlId="items">
-          <Form.Label>Items</Form.Label>
-          {items.map((item, index) => (
-            <div key={index}>
-              <Form.Control type="text" placeholder="Product ID" value={item.product_id} readOnly />
-              <Form.Control type="number" placeholder="Quantity" value={item.quantity} onChange={e => handleItemChange(index, 'quantity', e.target.value)} />
-              <Form.Control type="number" placeholder="Unit Price" value={item.unit_price} onChange={e => handleItemChange(index, 'unit_price', e.target.value)} readOnly/>
-              <Button variant="danger" onClick={() => removeItem(index)}>Remove Item</Button>
+          <div className="card">
+            <h2 style={{ textAlign: 'center' }} >Update Bill</h2>
+            <Form card-body border rounded p-4 style={{ margin: '30px' }}>
+              <Form.Group controlId="customerId">
+                <Form.Label>Customer ID</Form.Label>
+                <Form.Control type="text" value={customer_id} readOnly />
+              </Form.Group>
+              <Form.Group controlId="billingDate">
+                <Form.Label>Billing Date</Form.Label>
+                <Form.Control type="date" value={billing_date} readOnly />
+              </Form.Group>
+              <Form.Group controlId="items">
+                <Form.Label>Items</Form.Label>
+                {items.map((item, index) => (
+                  <div key={index}>
+                    <Form.Control type="text" placeholder="Product ID" value={item.product_id} readOnly />
+                    <Form.Control type="number" placeholder="Quantity" value={item.quantity} onChange={e => handleItemChange(index, 'quantity', e.target.value)} />
+                    <Form.Control type="number" placeholder="Unit Price" value={item.unit_price} onChange={e => handleItemChange(index, 'unit_price', e.target.value)} readOnly />
+                    <Button variant="danger" onClick={() => removeItem(index)}>Remove Item</Button>
+                  </div>
+                ))}
+
+              </Form.Group>
+              <Form.Group controlId="totalAmount">
+                <Form.Label>Total Amount</Form.Label>
+                <Form.Control type="number" value={total_amount} onChange={e => setTotalAmount(e.target.value)} />
+              </Form.Group>
+              <br></br>
+              <Button variant="primary" onClick={handleUpdate}>Update Bill</Button>
+            </Form>
+          </div>
+        </div>
+
+        <div className="col-md-6">
+          <div className="card">
+            <div className="card-body">
+              <h3 className="card-title">Instructions:</h3>
+              <p className="card-text">To create a new bill, please follow these steps:</p>
+              <ol>
+                <li><strong>Customer ID:</strong> Verify the customer's identification.</li>
+                <li><strong>Billing Date:</strong> Select the updated billing date from the calendar.</li>
+                <li><strong>Items:</strong> Review and modify the details of each item as necessary.</li>
+                <li><strong>Total Amount:</strong> Ensure the total amount accurately reflects the updated bill.</li>
+                <li>Click on the <strong>"Update Bill"</strong> button to save the changes.</li>
+              </ol>
             </div>
-          ))}
-          
-        </Form.Group>
-        <Form.Group controlId="totalAmount">
-          <Form.Label>Total Amount</Form.Label>
-          <Form.Control type="number" value={total_amount} onChange={e => setTotalAmount(e.target.value)} />
-        </Form.Group>
-        <br></br>
-        <Button variant="primary" onClick={handleUpdate}>Update Bill</Button>
-      </Form>
+          </div>
+        </div>
       </div>
+      <br></br>
+      <br></br>
     </div>
-    
-    <div className="col-md-6">
-    <div className="card">
-    <div className="card-body">
-      <h3 className="card-title">Instructions:</h3>
-      <p className="card-text">To create a new bill, please follow these steps:</p>
-      <ol>
-        <li><strong>Customer ID:</strong> Verify the customer's identification.</li>
-        <li><strong>Billing Date:</strong> Select the updated billing date from the calendar.</li>
-        <li><strong>Items:</strong> Review and modify the details of each item as necessary.</li>
-        <li><strong>Total Amount:</strong> Ensure the total amount accurately reflects the updated bill.</li>
-        <li>Click on the <strong>"Update Bill"</strong> button to save the changes.</li>
-      </ol>
-    </div>
-  </div>
-    </div>
-    </div>
-    <br></br>
-    <br></br>
-    </div>
-    
+
 
   );
 }
