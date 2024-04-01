@@ -19,6 +19,7 @@ import UpdateSupplier from './components/updateSupplier';
 import RFQ from './components/rfq';
 import CustomerR from './components/Customer';
 import UpdateCustomer from './components/UpdateCustomer';
+import Trainees from'./components/Trainee';
 //billing
 import Bill from './components/billingComponents/bill';
 import CreateBill from './components/billingComponents/createBill';
