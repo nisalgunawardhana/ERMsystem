@@ -11,7 +11,7 @@ import TaxDetails from './components/viewTax';
 import AddTax from './components/addTax';
 import Bill from './components/bill';
 import CreateBill from './components/createBill';
-import UpdateOther from './components/UpdateOther';
+import UpdateOther from './components/updateOther';
 import Supplier from './components/supplier';
 import AddSupplier from './components/addSupplier';
 import AddPurchaseOrder from './components/addPurchaseOrder';
