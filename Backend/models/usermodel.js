@@ -3,12 +3,6 @@ const Schema = mongoose.Schema;
 
 const systemUserSchema = new Schema({
 
-    /*userId: {
-        type : Number,
-        required: true,
-        unique: true
-    },*/
-
     empId: {
         type : Number,
         required: true,
@@ -47,21 +41,16 @@ const systemUserSchema = new Schema({
     userRole: {
         type: String,
         required: true,
-        ref: "UserRole",
         unique: true
     },
 
     isActive:{   
         type : Boolean,
         required: true
-    },
-
-    createdDate: {
-        type : Date,
-        default: Date.now
     }
-    
-})
+
+}, {timestamps: true})
+
 
 const SystemUser = mongoose.model("SystemUser", systemUserSchema);
 module.exports = SystemUser;

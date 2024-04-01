@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Form, Button, Table, Modal } from "react-bootstrap";
+import { Form, Button, Table, Modal, Row, Col, Card } from "react-bootstrap";
 import axios from "axios";
+import {Link} from "react-router-dom";
 
 const CustomerR = () => {
     const [customers, setCustomers] = useState([]);
@@ -12,8 +13,10 @@ const CustomerR = () => {
         customer_name: "",
         email: "",
         point: "",
-        gender: ""
+        gender: "male" // Default to male
     });
+    const [customerToDelete, setCustomerToDelete] = useState(null);
+    const [showDeleteCustomerPrompt, setShowDeleteCustomerPrompt] = useState(false);
 
     useEffect(() => {
         fetchCustomers();
@@ -37,51 +40,160 @@ const CustomerR = () => {
         setFilteredCustomers(filtered);
     };
 
-    const handleDelete = async (customerId) => {
-        try {
-            await axios.delete(`/api/customers/delete/${customerId}`);
-            fetchCustomers();
-        } catch (error) {
-            console.error("Error deleting customer:", error);
-        }
+    const handleDelete = async (id) => {
+        setCustomerToDelete(id);
+        setShowDeleteCustomerPrompt(true);
     };
 
-    // Frontend code
-const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-        const { customer_id, customer_name, email, point, gender } = customerData;
-        if (!customer_id || !customer_name || !email || !point || !gender) {
-            console.error("All fields are required");
-            return;
+    const confirmDelete = async () => {
+        try {
+            await axios.delete(`http://localhost:8080/customer/delete/${customerToDelete}`);
+            setCustomers(customers.filter(customer => customer.customer_id !== customerToDelete));
+            alert("Customer deleted successfully.");
+        } catch (error) {
+            console.error("Error deleting customer:", error);
+            alert("Error deleting customer. Please try again later.");
         }
-        await axios.post("http://localhost:8080/customer/add", { customer_id, customer_name, email, point, gender });
-        setShowModal(false);
-        fetchCustomers();
-        setCustomerData({
-            customer_id: "",
-            customer_name: "",
-            email: "",
-            point: "",
-            gender: ""
-        });
-    } catch (error) {
-        console.error("Error adding customer:", error);
-    }
-};
+        setShowDeleteCustomerPrompt(false);
+    };
 
+    const cancelDelete = () => {
+        setShowDeleteCustomerPrompt(false);
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const { customer_id, customer_name, email, point, gender } = customerData;
+            if (!customer_id || !customer_name || !email || !point || !gender) {
+                console.error("All fields are required");
+                return;
+            }
+            await axios.post("http://localhost:8080/customer/add", { customer_id, customer_name, email, point, gender });
+            setShowModal(false);
+            fetchCustomers();
+            setCustomerData({
+                customer_id: "",
+                customer_name: "",
+                email: "",
+                point: "",
+                gender: "male" // Reset gender to male after adding
+            });
+        } catch (error) {
+            console.error("Error adding customer:", error);
+        }
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setCustomerData({
-            ...customerData,
-            [name]: value
-        });
+        if (name === "gender") {
+            // Capitalize the first letter of the gender value
+            const capitalizedValue = value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+            setCustomerData({
+                ...customerData,
+                [name]: capitalizedValue
+            });
+        } else {
+            setCustomerData({
+                ...customerData,
+                [name]: value
+            });
+        }
     };
+    
+    
+
+    const handleGenerateReport = () => {
+        const printWindow = window.open("", "_blank", "width=600,height=600");
+        printWindow.document.write(`
+            <html>
+                <head>
+                    <title>Customer Report</title>
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;
+                            padding: 20px;
+                        }
+                        h1 {
+                            text-align: center;
+                        }
+                        table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            margin-bottom: 20px;
+                        }
+                        th, td {
+                            border: 1px solid #ccc;
+                            padding: 8px;
+                            text-align: left;
+                        }
+                        th {
+                            background-color: #f2f2f2;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <h1>Customer Report</h1>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Customer ID</th>
+                                <th>Customer Name</th>
+                                <th>Email</th>
+                                <th>Point</th>
+                                <th>Gender</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${customers.map(customer => `
+                                <tr>
+                                    <td>${customer.customer_id}</td>
+                                    <td>${customer.customer_name}</td>
+                                    <td>${customer.email}</td>
+                                    <td>${customer.point}</td>
+                                    <td>${customer.gender}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                    <div class="back-button">
+                        <button onclick="window.close()" class="btn btn-secondary">Back</button>
+                    </div>
+                </body>
+            </html>
+        `);
+        printWindow.document.close();
+        printWindow.print();
+    };
+    
 
     return (
         <div className="container">
             <h1>Customer Management</h1>
+            <Row className="mb-3">
+                <Col>
+                    <Card>
+                        <Card.Body>
+                            <Card.Title>Generate Report</Card.Title>
+                            <Card.Text>
+                                Generate a report about all customer details and loyalty points.
+                            </Card.Text>
+                            <Button variant="primary" onClick={handleGenerateReport}>Generate Report</Button>
+                        </Card.Body>
+                    </Card>
+                </Col>
+                <Col>
+                    <Card>
+                        <Card.Body>
+                            <Card.Title>Add Customer</Card.Title>
+                            <Card.Text>
+                                Add a new customer to the database.
+                            </Card.Text>
+                            <Button variant="success" onClick={() => setShowModal(true)}>Add Customer</Button>
+                        </Card.Body>
+                    </Card>
+                </Col>
+            </Row>
             <div className="mb-3">
                 <input
                     type="text"
@@ -99,56 +211,50 @@ const handleSubmit = async (e) => {
                         <th>Email</th>
                         <th>Point</th>
                         <th>Gender</th>
-                        <th>Action</th>
+                        <th colSpan="2">Action</th> {/* Spanning two columns for Edit and Delete buttons */}
                     </tr>
                 </thead>
                 <tbody>
                     {searchQuery === ""
                         ? customers.map((customer) => (
-                              <tr key={customer._id}>
-                                  <td>{customer.customer_id}</td>
-                                  <td>{customer.customer_name}</td>
-                                  <td>{customer.email}</td>
-                                  <td>{customer.point}</td>
-                                  <td>{customer.gender}</td>
-                                  <td>
-                                      <Button variant="primary">Edit</Button>{" "}
-                                      <Button
-                                          variant="danger"
-                                          onClick={() =>
-                                              handleDelete(customer._id)
-                                          }
-                                      >
-                                          Delete
-                                      </Button>
-                                  </td>
-                              </tr>
-                          ))
+                            <tr key={customer._id}>
+                                <td>{customer.customer_id}</td>
+                                <td>{customer.customer_name}</td>
+                                <td>{customer.email}</td>
+                                <td>{customer.point}</td>
+                                <td>{customer.gender}</td>
+                                <td>
+                                <Link to={`/customer/update/${customer.customer_id}`} className="btn btn-primary">Update</Link>
+                                </td>
+                                <td>
+                                    <Button
+                                        variant="danger"
+                                        onClick={() =>
+                                            handleDelete(customer.customer_id)
+                                        }
+                                    >
+                                        Delete
+                                    </Button>
+                                </td>
+                            </tr>
+                        ))
                         : filteredCustomers.map((customer) => (
-                              <tr key={customer._id}>
-                                  <td>{customer.customer_id}</td>
-                                  <td>{customer.customer_name}</td>
-                                  <td>{customer.email}</td>
-                                  <td>{customer.point}</td>
-                                  <td>{customer.gender}</td>
-                                  <td>
-                                      <Button variant="primary">Edit</Button>{" "}
-                                      <Button
-                                          variant="danger"
-                                          onClick={() =>
-                                              handleDelete(customer._id)
-                                          }
-                                      >
-                                          Delete
-                                      </Button>
-                                  </td>
-                              </tr>
-                          ))}
+                            <tr key={customer._id}>
+                                <td>{customer.customer_id}</td>
+                                <td>{customer.customer_name}</td>
+                                <td>{customer.email}</td>
+                                <td>{customer.point}</td>
+                                <td>{customer.gender}</td>
+                                <td>
+                                    <Button variant="primary">Edit</Button>
+                                </td>
+                                <td>
+                                    <Button variant="danger" onClick={() => handleDelete(customer.customer_id)}>Delete</Button>
+                                </td>
+                            </tr>
+                        ))}
                 </tbody>
             </Table>
-            <Button variant="success" onClick={() => setShowModal(true)}>
-                Add Customer
-            </Button>
             <Modal show={showModal} onHide={() => setShowModal(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>Add Customer</Modal.Title>
@@ -199,8 +305,8 @@ const handleSubmit = async (e) => {
                                 onChange={handleChange}
                                 value={customerData.gender}
                             >
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
                                 <option value="other">Other</option>
                             </Form.Control>
                         </Form.Group>
@@ -209,6 +315,18 @@ const handleSubmit = async (e) => {
                         </Button>
                     </Form>
                 </Modal.Body>
+            </Modal>
+            <Modal show={showDeleteCustomerPrompt} onHide={cancelDelete}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Confirm Deletion</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    Are you sure you want to delete this customer?
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="danger" onClick={confirmDelete}>Yes</Button>
+                    <Button variant="secondary" onClick={cancelDelete}>No</Button>
+                </Modal.Footer>
             </Modal>
         </div>
     );

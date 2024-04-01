@@ -3,11 +3,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Card } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 const FinanceDash = () => {
 
     const [otherExpenses, setOtherExpenses] = useState([]);
     const [profit, setProfit] = useState([]);
+    const [tax, setTax] = useState([]);
     const [monthlyProfit, setMonthlyProfit] = useState(0);
     const [monthlySales, setMonthlySales] = useState(0);
     const [monthlyExpenses, setMonthlyExpenses] = useState(0);
@@ -188,6 +190,152 @@ const FinanceDash = () => {
         window.location.href = `/profit/${month.Month}`;
     };
 
+    const getCurrentMonth = () => {
+        const months = [
+            'January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'
+        ];
+        const currentDate = new Date();
+        const monthIndex = currentDate.getMonth();
+        return months[monthIndex];
+    };
+
+    const getPreviousMonth = () => {
+        const months = [
+            'January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'
+        ];
+        const currentDate = new Date();
+        const monthIndex = (currentDate.getMonth() - 1 + 12) % 12; // Handling December as previous month
+        return months[monthIndex];
+    };
+
+    const getCurrentYear = () => {
+        const currentDate = new Date();
+        return currentDate.getFullYear();
+    };
+
+    const getPreviousYear = () => {
+        const currentDate = new Date();
+        const currentYear = currentDate.getFullYear();
+        const previousYear = currentYear - 1;
+        return previousYear;
+    };
+
+    const getCurrentMonthProfitId = async () => {
+        try {
+            let currentMonth = getCurrentMonth();
+            let currentYear = getCurrentYear();
+            let response = await axios.get(`http://localhost:8080/profit/search/${currentMonth}`);
+            let profit = response.data;
+
+            if (profit.length > 0) {
+                // Filter profit records based on date_created column
+                const currentYearProfit = profit.find(item => {
+                    const dateCreated = new Date(item.Date_created);
+                    return dateCreated.getFullYear() === currentYear;
+                });
+
+                if (currentYearProfit) {
+                    // Assuming the first profit record for the current month and year is the relevant one
+                    return currentYearProfit.Profit_ID;
+                }
+            }
+
+            // If there's no profit record for the current month of the current year,
+            // try fetching the previous month's profit of the current year
+            let previousMonth = getPreviousMonth();
+            response = await axios.get(`http://localhost:8080/profit/search/${previousMonth}`);
+            profit = response.data;
+
+            if (profit.length > 0) {
+                // Filter profit records based on date_created column
+                const currentYearProfit = profit.find(item => {
+                    const dateCreated = new Date(item.Date_created);
+                    return dateCreated.getFullYear() === currentYear;
+                });
+
+                if (currentYearProfit) {
+                    // Assuming the first profit record for the previous month of the current year is the relevant one
+                    return currentYearProfit.Profit_ID;
+                }
+            }
+
+            // If there's no profit record for the previous month as well, or if it's not related to the current year, return null
+            window.location.href = `/profit/get/PL#`;
+            return null;
+        } catch (error) {
+            console.error('Error fetching profit details:', error);
+            return null;
+        }
+    };
+
+    const handleClick = async () => {
+        const profitId = await getCurrentMonthProfitId();
+        if (profitId) {
+            window.location.href = `/profit/get/${profitId}`;
+        } else {
+            console.log('No profit record found for the current and previous months of the current year.');
+            // Handle the case where there's no profit record for the current and previous months of the current year
+        }
+    };
+
+    const getCurrentTaxId = async () => {
+        try {
+            let currentYear = getCurrentYear();
+            let response = await axios.get(`http://localhost:8080/tax/search/${currentYear}`);
+            let tax = response.data;
+    
+            if (tax.length > 0) {
+                // Filter tax records based on date_created column
+                const currentYearTax = tax.find(item => {
+                    const dateCreated = new Date(item.Date_created);
+                    return dateCreated.getFullYear() === currentYear;
+                });
+    
+                if (currentYearTax) {
+                    // Assuming the first tax record for the current year is the relevant one
+                    return currentYearTax.Tax_ID;
+                }
+            }
+    
+            // If there's no tax record for the current year, try fetching the tax details for the previous year
+            let previousYear = getPreviousYear();
+            response = await axios.get(`http://localhost:8080/tax/search/${previousYear}`);
+            tax = response.data;
+    
+            if (tax.length > 0) {
+                // Filter tax records based on date_created column
+                const previousYearTax = tax.find(item => {
+                    const dateCreated = new Date(item.Date_created);
+                    return dateCreated.getFullYear() === previousYear;
+                });
+    
+                if (previousYearTax) {
+                    // Assuming the first tax record for the previous year is the relevant one
+                    return previousYearTax.Tax_ID;
+                }
+            }
+    
+            // If there's no tax record for the previous year as well, or if it's not related to the current year, return null
+            window.location.href = `/tax/get/T#`;
+            return null;
+        } catch (error) {
+            console.error('Error fetching tax details:', error);
+            return null;
+        }
+    };
+    
+    const handleClickTax = async () => {
+        const taxId = await getCurrentTaxId();
+        if (taxId) {
+            window.location.href = `/tax/get/${taxId}`;
+        } else {
+            console.log('No profit record found for the current and previous months of the current year.');
+            // Handle the case where there's no profit record for the current and previous months of the current year
+        }
+    };
+
     return (
         <div className="container-fluid" style={{ backgroundColor: '#f2f2f2', marginTop: '-40px' }}>
             <div className="row">
@@ -198,13 +346,17 @@ const FinanceDash = () => {
                                 <a className="nav-link active text-light" href="#"><i className="bi bi-house-fill"></i> &nbsp; Dashboard</a>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link text-light" href="#"><i className="bi bi-cash"></i> &nbsp; Profit Log</a>
+                                <button className="nav-link text-light" onClick={handleClick}>
+                                    <i className="bi bi-cash"></i>&nbsp; Profit Log
+                                </button>
                             </li>
                             <li className="nav-item">
                                 <a className="nav-link text-light" href="/otherExpense"><i className="bi bi-wallet"></i> &nbsp; Other Expenses</a>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link text-light" href="#"><i className="bi bi-file-earmark"></i> &nbsp; Tax Document</a>
+                                <button className="nav-link text-light" onClick={handleClickTax}>
+                                    <i className="bi bi-file-earmark"></i>&nbsp; Tax Document
+                                </button>
                             </li>
                             <li className="nav-item">
                                 <a className="nav-link text-light" href="#"><i className="bi bi-box-arrow-right"></i> &nbsp; Logout</a>
@@ -298,7 +450,7 @@ const FinanceDash = () => {
                                                         <div className="row mb-3">
                                                             <div className="col">
                                                                 <div className="btn-group">
-                                                                    <button type="submit" className="btn btn-primary">Add Profit</button>
+                                                                    <button type="submit" className="btn btn-primary" style={{ width: '200px', marginTop: '10px' }}>Add Profit</button>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -309,15 +461,15 @@ const FinanceDash = () => {
                                         <div className="row" style={{ marginTop: '20px' }}>
                                             <div className="card mb-3" style={{ borderRadius: '20px' }}>
                                                 <div className="card-body">
-                                                    <h5 className="card-title">Monthly Profit Report</h5>
-                                                    <p className="card-text">Generate a report on the monthly profit.</p>
-                                                    <button className="btn btn-primary">Generate Report</button>
+                                                    <h5 className="card-title">Other Expenses</h5>
+                                                    <p className="card-text">Add your repairing, transportational and constructional expenses.</p>
+                                                    <Link to={`/otherExpense/add`} className="btn btn-primary me-2" style={{ width: '200px' }}>Add</Link>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="row-md-4" style={{ marginTop: '40px' }}>
+                                <div className="row-md-4" style={{ marginTop: '40px', marginBottom: '40px' }}>
                                     <div className="card" style={{ borderRadius: '20px' }}>
                                         <div className="card-body">
                                             <h5 className="card-title">Monthly Profit</h5>

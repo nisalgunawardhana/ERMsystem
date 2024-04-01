@@ -1,23 +1,81 @@
 import React from "react";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function Home() {
-
   return (
-    <div style={{ marginTop: '150px', display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
-    <div style={{ display: 'flex', justifyContent: 'center' }}>
-      <Link to={`/bill`} className="btn btn-primary me-5" style={{ backgroundColor: '#007bff', color: '#fff', padding: '10px 20px', fontSize: '18px', borderRadius: '8px', marginBottom: '10px' }}>Billing</Link>
-      <Link to={`/finance`} className="btn btn-primary me-5" style={{ backgroundColor: '#6c757d', color: '#fff', padding: '10px 20px', fontSize: '18px', borderRadius: '8px', marginBottom: '10px' }}>Finance</Link>
-      <Link to={`/customer`} className="btn btn-primary me-5" style={{ backgroundColor: '#28a745', color: '#fff', padding: '10px 20px', fontSize: '18px', borderRadius: '8px', marginBottom: '10px' }}>Customer</Link>
-      <Link to={`/employee`} className="btn btn-primary me-5" style={{ backgroundColor: '#ffc107', color: '#000', padding: '10px 20px', fontSize: '18px', borderRadius: '8px', marginBottom: '10px' }}>Employee</Link>
-    </div>
-
-    <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>  
-      <Link to={`/supplier`} className="btn btn-primary me-5" style={{ backgroundColor: '#17a2b8', color: '#fff', padding: '10px 20px', fontSize: '18px', borderRadius: '8px', marginBottom: '10px' }}>Supplier</Link>
-      <Link to={`/stock`} className="btn btn-primary me-5" style={{ backgroundColor: '#dc3545', color: '#fff', padding: '10px 20px', fontSize: '18px', borderRadius: '8px', marginBottom: '10px' }}>Stock</Link>
-      <Link to={`/staff`} className="btn btn-primary me-5" style={{ backgroundColor: '#6610f2', color: '#fff', padding: '10px 20px', fontSize: '18px', borderRadius: '8px', marginBottom: '10px' }}>Staff Training</Link>
-    </div>
-  </div>
+    
+      <div className="card mb-1" style={{ margin: '50px'}}>
+        <div className="card-body">
+          <h5 className="card-title">All Departments</h5>
+          <div className="row">
+            <div className="col-md-4">
+              <div className="card mb-3" style={{ background: `linear-gradient(to right, rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8), rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8))`, color: 'white', borderRadius: '20px' }}>
+                <div className="card-body">
+                  <h5 className="card-title">Billing</h5>
+                  <Link to={`/bill`} className="btn btn-primary" style={{ color: '#fff' }}>Go to Billing</Link>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="card mb-3" style={{ background: `linear-gradient(to right, rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8), rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8))`, color: 'white', borderRadius: '20px' }}>
+                <div className="card-body">
+                  <h5 className="card-title">Finance</h5>
+                  <Link to={`/finance`} className="btn btn-primary" style={{ color: '#fff' }}>Go to Finance</Link>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="card mb-3" style={{ background: `linear-gradient(to right, rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8), rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8))`, color: 'white', borderRadius: '20px' }}>
+                <div className="card-body">
+                  <h5 className="card-title">Customer</h5>
+                  <Link to={`/customer`} className="btn btn-primary" style={{ color: '#fff' }}>Go to Customer</Link>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="card mb-3" style={{ background: `linear-gradient(to right, rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8), rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8))`, color: 'white', borderRadius: '20px' }}>
+                <div className="card-body">
+                  <h5 className="card-title">Employee</h5>
+                  <Link to={`/employee`} className="btn btn-primary" style={{ color: '#000' }}>Go to Employee</Link>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="card mb-3" style={{ background: `linear-gradient(to right, rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8), rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8))`, color: 'white', borderRadius: '20px' }}>
+                <div className="card-body">
+                  <h5 className="card-title">Users</h5>
+                  <Link to={`/users`} className="btn btn-primary" style={{ color: '#fff' }}>Go to Users</Link>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="card mb-3" style={{ background: `linear-gradient(to right, rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8), rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8))`, color: 'white', borderRadius: '20px' }}>
+                <div className="card-body">
+                  <h5 className="card-title">Supplier</h5>
+                  <Link to={`/supplier`} className="btn btn-primary" style={{ color: '#fff' }}>Go to Supplier</Link>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="card mb-3" style={{ background: `linear-gradient(to right, rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8), rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8))`, color: 'white', borderRadius: '20px' }}>
+                <div className="card-body">
+                  <h5 className="card-title">Stock</h5>
+                  <Link to={`/stock`} className="btn btn-primary" style={{ color: '#fff' }}>Go to Stock</Link>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="card mb-3" style={{ background: `linear-gradient(to right, rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8), rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8))`, color: 'white', borderRadius: '20px' }}>
+                <div className="card-body">
+                  <h5 className="card-title">Staff Training</h5>
+                  <Link to={`/Trainee`} className="btn btn-primary" style={{ color: '#fff' }}>Go to Staff Training</Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
   );
 }
 

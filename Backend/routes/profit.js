@@ -1,8 +1,10 @@
 const router = require("express").Router();
 const bills = require("../models/billlingmodel");
 const otherexpenses = require("../models/expensemodel");
+const pos = require("../models/purchaseOrdermodel");
 let Profit = require("../models/profit");
 
+//route for adding profit log
 router.route("/add").post((req, res) => {
   const Profit_ID = req.body.Profit_ID;
   const Month = req.body.Month;
@@ -40,6 +42,49 @@ router.route("/").get((req,res)=>{
       console.log(err)
   })
 })
+
+router.route("/search/:month").get((req, res) => {
+  const { month } = req.params;
+  const query = month ? { Month: month } : {};
+
+  Profit.find(query)
+      .then((profit) => {
+          res.json(profit);
+      })
+      .catch((err) => {
+          console.log(err);
+          res.status(500).json({ error: "Error fetching profit details" });
+      });
+});
+
+//search route for profit log
+router.route("/search/:month/:year").get((req, res) => {
+    const { month, year } = req.params;
+    
+    // Construct aggregation pipeline to filter by month and year
+    const pipeline = [
+      {
+        $addFields: {
+          year: { $year: "$Date_created" } // Extract year from Date_created
+        }
+      },
+      {
+        $match: {
+          Month: month,
+          year: parseInt(year) // Convert year to integer for comparison
+        }
+      }
+    ];
+  
+    Profit.aggregate(pipeline)
+      .then((profit) => {
+        res.json(profit);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json({ error: "Error fetching profit details" });
+      });
+  });  
 
 router.route("/year").get((req, res) => {
   const currentYear = new Date().getFullYear();
@@ -106,17 +151,32 @@ router.route("/update/:id").put(async (req, res) => {
   })
 })
 
-
 router.route("/get/:id").get(async (req, res) => {
   let profitId = req.params.id;
-  const profit = await Profit.findById(profitId).then((tax) => {
-    res.status(200).send({ status: "Profit details fetched", tax })
-  }).catch((errr) => {
-    console.log(errr);
-    res.status(500).send({ status: "Error with getting Profit details" });
-  })
+  try {
+      const profit = await Profit.findOne({ Profit_ID: profitId });
+      if (profit) {
+          res.status(200).send({ status: "Profit details fetched", profit });
+      } else {
+          res.status(404).send({ status: "Profit not found" });
+      }
+  } catch (error) {
+      console.error(error);
+      res.status(500).send({ status: "Error with getting Profit details" });
+  }
+});
+
+router.route("/gett/:id").get(async (req,res) => {
+    let profitId = req.params.id;
+    const profit = await Profit.findById(profitId).then((profit) => {
+        res.status(200).send({status: "Profit log fetched", profit})
+    }).catch((errr) => {
+        console.log(errr);
+        res.status(500).send({status: "Error with getting Profit log"});
+    })
 })
 
+//Function to obtain total monthly sales
 router.route("/:month").get(async (req, res) => {
   try {
       const { month } = req.params;
@@ -167,7 +227,57 @@ router.route("/:month").get(async (req, res) => {
   }
 });
 
-// Function to convert month name to numeric representation
+//Function to obtain total monthly supplier expenses
+router.route("/supplier/:month").get(async (req, res) => {
+    try {
+        const { month } = req.params;
+  
+        // Convert the month name to a numeric representation (e.g., January -> 01)
+        const monthNumeric = monthToNumeric(month);
+  
+        // Check if the month name is valid
+        if (!monthNumeric) {
+            return res.status(400).json({ message: "Invalid month name" });
+        }
+  
+        // Get the current year
+        const currentYear = new Date().getFullYear();
+  
+        // Determine the number of days in the given month
+        const daysInMonth = new Date(currentYear, monthNumeric, 0).getDate();
+  
+        // Construct the start and end dates for the month
+        const startDate = new Date(`${currentYear}-${monthNumeric}-01`);
+        const endDate = new Date(`${currentYear}-${monthNumeric}-${daysInMonth}`);
+  
+        // Aggregate to calculate the total amount for the given month and year
+        const totalSupp = await pos.aggregate([
+            {
+                $match: {
+                    order_date: { $gte: startDate, $lte: endDate } // Match documents with Date_created within the given month and year
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    totalSupp: { $sum: "$total_order_amount" }
+                }
+            }
+        ]);
+  
+        // Check if totalAmount array is not empty
+        if (totalSupp && totalSupp.length > 0 && totalSupp[0].totalSupp !== undefined) {
+            res.json({ totalSupp: totalSupp[0].totalSupp });
+        } else {
+            // Return a message indicating no data found for the given month
+            res.status(404).json({ message: "No data found for the given month" });
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
 function monthToNumeric(month) {
   const monthMap = {
       "January": "01",
@@ -184,8 +294,60 @@ function monthToNumeric(month) {
       "December": "12"
   };
   return monthMap[month];
-}
+};
 
+// Function to obtain total monthly salaries
+router.route("/salaries/:month").get(async (req, res) => {
+  try {
+      const { month } = req.params;
+
+      // Convert the month name to a numeric representation (e.g., January -> 01)
+      const monthNumeric = monthToNumeric(month);
+
+      // Check if the month name is valid
+      if (!monthNumeric) {
+          return res.status(400).json({ message: "Invalid month name" });
+      }
+
+      // Get the current year
+      const currentYear = new Date().getFullYear();
+
+      // Determine the number of days in the given month
+      const daysInMonth = new Date(currentYear, monthNumeric, 0).getDate();
+
+      // Construct the start and end dates for the month
+      const startDate = new Date(`${currentYear}-${monthNumeric}-01`);
+      const endDate = new Date(`${currentYear}-${monthNumeric}-${daysInMonth}`);
+
+      // Aggregate to calculate the total amount for the given month and year
+      const totalSalary = await bills.aggregate([
+          {
+              $match: {
+                  billing_date: { $gte: startDate, $lte: endDate } // Match documents with Date_created within the given month and year
+              }
+          },
+          {
+              $group: {
+                  _id: null,
+                  totalSalary: { $sum: "$total_amount" }
+              }
+          }
+      ]);
+
+      // Check if totalAmount array is not empty
+      if (totalSalary && totalSalary.length > 0 && totalSalary[0].totalSalary !== undefined) {
+          res.json({ totalSalary: totalSalary[0].totalSalary });
+      } else {
+          // Return a message indicating no data found for the given month
+          res.status(404).json({ message: "No data found for the given month" });
+      }
+  } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+// Function to convert month name to numeric and obtain total monthly other expenses
 router.route("/other/:month").get(async (req, res) => {
   try {
       const { month } = req.params;
