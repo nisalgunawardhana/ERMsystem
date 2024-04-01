@@ -19,7 +19,7 @@ const otherSchema = new Schema({
         required: true
     },
     Cost:{
-        type: String,
+        type: Number,
         required: true
     }
 })

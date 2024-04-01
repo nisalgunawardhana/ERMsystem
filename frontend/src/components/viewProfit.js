@@ -381,6 +381,7 @@ function ProfitDetails() {
                                 <div className="card-body">
                                     <h4 className="mb-3">Valid Period: {searchResult ? searchResult[0].Month : profit.Month} 1, {year}  - {endDateFormatted}</h4>
                                     <table className="table">
+                                    <thead class="table-dark"><tr>Hello</tr></thead>
                                         <tbody>
                                             <tr>
                                                 <th scope="row"><i className="bi bi-list-ul"></i>&nbsp;&nbsp; Profit Log ID:</th>

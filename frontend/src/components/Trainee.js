@@ -161,6 +161,7 @@ export default function Trainee() {
     const generateReport = () => {
         axios.get('http://localhost:8080/trainees/')
             .then(res => {
+                const sortedTrainees = res.data.sort((a, b) => b.trainee_rating - a.trainee_rating); // Sort trainees array by ratings in descending order
                 const printWindow = window.open("", "_blank", "width=600,height=600");
                 printWindow.document.write(`
                     <html>
@@ -200,7 +201,7 @@ export default function Trainee() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    ${trainees.map(trainee => `
+                                    ${sortedTrainees.map(trainee => `
                                         <tr>
                                             <td>${trainee.trainee_id}</td>
                                             <td>${trainee.trainee_name}</td>
@@ -223,6 +224,7 @@ export default function Trainee() {
                 alert('Error fetching trainee data. Please try again.');
             });
     };
+    
 
     const filteredTrainees = trainees.filter(trainee =>
         trainee.trainee_name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -237,8 +239,10 @@ export default function Trainee() {
                 <div className="col-md-4">
                     <div className="card">
                         <div className="card-body">
-                            <h5 className="card-title">Total Trainees</h5>
-                            <p className="card-text">{trainees.length}</p>
+                            <h4 className="card-title">Total Trainees</h4>
+                            <div className="text-center my-auto">
+                            <h1 className="card-text">{trainees.length}</h1>
+                            </div>
                             <button onClick={toggleForm} className="btn btn-primary">Add New Trainee</button>
                         </div>
                     </div>
@@ -246,8 +250,10 @@ export default function Trainee() {
                 <div className="col-md-4">
                     <div className="card">
                         <div className="card-body">
-                            <h5 className="card-title">Total Sessions</h5>
-                            <p className="card-text">{meetings.length}</p>
+                            <h4 className="card-title">Total Sessions</h4>
+                            <div className="text-center my-auto">
+                            <h1 className="card-text">{meetings.length}</h1>
+                            </div>
                             <button onClick={toggleMeetingForm} className="btn btn-primary">Add New Session</button>
                         </div>
                     </div>
@@ -256,7 +262,7 @@ export default function Trainee() {
                     <div className="card">
                         <div className="card-body">
                             <h5 className="card-title">Generate Report</h5>
-                            <p className="card-text">Generate a report summarizing trainee data.</p>
+                            <p className="card-text">Here's the comprehensive report summarizing all trainees, sorted by ratings, for your review.</p>
                             <button onClick={generateReport} className="btn btn-primary">Generate Report</button>
                         </div>
                     </div>
