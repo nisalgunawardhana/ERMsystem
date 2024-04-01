@@ -19,9 +19,9 @@ import CustomerR from './components/Customer';
 import UpdateCustomer from './components/UpdateCustomer';
 
 //billing
-import Bill from './components/billingcomponents/bill';
-import CreateBill from './components/billingcomponents/createBill';
-import UpdateBill from './components/billingcomponents/updateBill';
+import Bill from './components/billingComponents/bill';
+import CreateBill from './components/billingComponents/createBill';
+import UpdateBill from './components/billingComponents/updateBill';
 //discount
 import Discounts from './components/discountComponents/Discount';
 
