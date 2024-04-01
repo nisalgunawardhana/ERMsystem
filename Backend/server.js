@@ -64,9 +64,15 @@ app.use("/supplier", supplierRouter);
 const purchaseOrderRouter = require("./routes/purchaseOrderroutes.js");
 app.use("/purchaseOrder", purchaseOrderRouter);
 
+
 //system user function
 const userRouter = require("./routes/userRoutes.js");
 app.use("/systemUser", userRouter);
+
+//login and signup
+const userRoutes = require("./routes/user.js");
+app.use('/user', userRoutes);
+
 
 //customer
 const customer = require("./routes/customerroute.js");

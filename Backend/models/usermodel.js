@@ -47,14 +47,10 @@ const systemUserSchema = new Schema({
     isActive:{   
         type : Boolean,
         required: true
-    },
-
-    createdDate: {
-        type : Date,
-        default: Date.now
     }
-    
-})
+
+}, {timestamps: true})
+
 
 const SystemUser = mongoose.model("SystemUser", systemUserSchema);
 module.exports = SystemUser;
