@@ -23,6 +23,7 @@ import CreateBill from './components/billingComponents/createBill';
 import UpdateBill from './components/billingComponents/updateBill';
 //discount
 import Discounts from './components/discountComponents/Discount';
+import Employees from './components/employeeComponent/employee';
 
 
 
@@ -57,6 +58,7 @@ function App() {
         <Route path="/bill/CreateBill" element={<CreateBill/>}/>
         <Route path="/bill/update/:id" element={<UpdateBill/>}/>
          <Route path="/bill/discounts" element={<Discounts/>} />
+         <Route path="/employee" element={<Employees/>}/>
 
       </Routes>  
     
