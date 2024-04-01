@@ -87,4 +87,16 @@ router.route("/delete/:id").delete(async (req,res) => {
 })
 
 
+//GET ONE SUPPLIER
+router.route("/get/:id").get(async (req,res) => {
+    let supID = req.params.id;
+    const sup = await suppliers.findById(supID)
+    .then((supplier) => {
+        res.status(200).send({status: "Supplier fetched", supplier})
+    }).catch((err) => {
+        console.log(err.message);
+        res.status(500).send({status: "Error with getting supplier detials", error: err.message});
+    })
+})
+
 module.exports = router;

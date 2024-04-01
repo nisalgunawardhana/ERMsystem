@@ -85,14 +85,40 @@ router.route("/update/:id").put(async (req,res)=>{
 
 
 //DELETE
-router.route("/delete/:id").delete(async (req,res) => {
-    let poID = req.params.id;
+// router.route("/delete/:id").delete(async (req,res) => {
+//     let poID = req.params.id;
 
-    await purchaseOrder.findByIdAndDelete(poID).then(() => {
-        res.status(200).send({status: "Purchase Order deleted"});
-    }).catch((errr) => {
-        console.log(errr);
-        res.status(500).send({status: "Error with deleting Purchase Order"});
+//     await purchaseOrder.findByIdAndDelete(poID).then(() => {
+//         res.status(200).send({status: "Purchase Order deleted"});
+//     }).catch((errr) => {
+//         console.log(errr);
+//         res.status(500).send({status: "Error with deleting Purchase Order"});
+//     })
+// })
+
+router.delete('/delete/:id', async (req, res) => {
+    try {
+      const deletedOrder = await purchaseOrder.findByIdAndDelete(req.params.id);
+      if (!deletedOrder) {
+        return res.status(404).json({ error: 'Purchase order not found' });
+      }
+      res.json({ message: 'Purchase order deleted successfully' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+
+
+//GET ONE PURCHASE ORDER
+router.route("/get/:id").get(async (req,res) => {
+    let poID = req.params.id;
+    const purchaseO = await purchaseOrder.findById(poID)
+    .then((po) => {
+        res.status(200).send({status: "Purchase Order fetched", po})
+    }).catch((err) => {
+        console.log(err.message);
+        res.status(500).send({status: "Error with getting purchase Order", error: err.message});
     })
 })
 

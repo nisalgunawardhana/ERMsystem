@@ -64,6 +64,10 @@ app.use("/supplier", supplierRouter);
 const purchaseOrderRouter = require("./routes/purchaseOrderroutes.js");
 app.use("/purchaseOrder", purchaseOrderRouter);
 
+//Requests For Quotations(RFQ) func
+const requestForQuotationRouter = require("./routes/rfqroutes.js");
+app.use("/rfq", requestForQuotationRouter);
+
 //system user function
 const userRouter = require("./routes/userRoutes.js");
 app.use("/systemUser", userRouter);
