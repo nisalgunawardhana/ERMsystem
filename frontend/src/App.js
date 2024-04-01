@@ -16,10 +16,7 @@ import PurchaseOrder from './components/purchaseOrders';
 import AddSupplier from './components/addSupplier';
 import AddPurchaseOrder from './components/addPurchaseOrder';
 import UpdateSupplier from './components/updateSupplier';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import RFQ from './components/rfq';
-import UpdateBill from './components/updateBill';
-import BillPreview from './components/billPreview';
 import CustomerR from './components/Customer';
 import UpdateCustomer from './components/UpdateCustomer';
 //billing
