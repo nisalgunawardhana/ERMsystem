@@ -243,7 +243,7 @@ export default function Trainee() {
                             <div className="text-center my-auto">
                             <h1 className="card-text">{trainees.length}</h1>
                             </div>
-                            <button onClick={toggleForm} className="btn btn-primary">Add New Trainee</button>
+                            <button onClick={toggleForm} className="btn btn-success">Add New Trainee</button>
                         </div>
                     </div>
                 </div>
@@ -254,7 +254,7 @@ export default function Trainee() {
                             <div className="text-center my-auto">
                             <h1 className="card-text">{meetings.length}</h1>
                             </div>
-                            <button onClick={toggleMeetingForm} className="btn btn-primary">Add New Session</button>
+                            <button onClick={toggleMeetingForm} className="btn btn-success">Add New Session</button>
                         </div>
                     </div>
                 </div>
