@@ -233,19 +233,21 @@ export default function Bills(){
                 <table className="table">
                 <thead class="table-dark">
                     <tr >
+                        <th style={{ textAlign: 'center' }}>Select</th>
                         <th >#</th>
                         <th >Customer ID</th>
                         <th>Billing Date</th>
                         <th style={{ textAlign: 'center' }}>Items</th>
                         <th>Total Amount</th>
                         <th style={{ textAlign: 'center' }}>Action</th>
-                        <th style={{ textAlign: 'center' }}>Select</th>
+
 
                     </tr>
                 </thead>
                 <tbody>
                     {currentBills.map((bills, index) => (
                         <tr key={bills._id}>
+                            <td style={{ textAlign: 'center' }}><input type="checkbox" checked={bills.selected || false} onChange={() => handleSelectBill(bills._id)} /></td>
                             <td>{index + 1}</td>
                             <td>{bills.customer_id}</td>
                             <td>{formatDate(bills.billing_date)}</td>
@@ -267,12 +269,10 @@ export default function Bills(){
                                 <button onClick={() => handlePreview(bills)} className="btn btn-dark" style={{ margin: '0 5px' }}>Preview</button>
 
                             </td>
-                            <td style={{ textAlign: 'center' }}><input type="checkbox" checked={bills.selected || false} onChange={() => handleSelectBill(bills._id)} /></td>
                         </tr>
                     ))}
                 </tbody>
             </table>
-            
             <ul className="pagination justify-content-end">
                 <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
                     <button className="page-link" onClick={() => paginate(currentPage - 1)}>Previous</button>

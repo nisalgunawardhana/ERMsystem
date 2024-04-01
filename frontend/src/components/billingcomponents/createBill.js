@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
-import "./OtherFormdesign.css";
 import { useNavigate } from "react-router-dom";
 
 function CreateBill() {
