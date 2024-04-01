@@ -7,7 +7,7 @@ import AllOther from './components/AllOther';
 import FinanceDash from './components/financeDash';
 import AddProfit from './components/AddProfit';
 import ProfitDetails from './components/viewProfit';
-import UpdateProfit from './components/editProfit';
+import EditProfit from './components/editProfit';
 import TaxDetails from './components/viewTax';
 import AddTax from './components/addTax';
 import UpdateOther from './components/UpdateOther';
@@ -18,9 +18,9 @@ import Trainees from './components/Trainee';
 import CustomerR from './components/Customer';
 import UpdateCustomer from './components/UpdateCustomer';
 //billing
-import Bill from './components/billingComponents/bill';
-import CreateBill from './components/billingComponents/createBill';
-import UpdateBill from './components/billingComponents/updateBill';
+import Bill from './components/billingcomponents/bill';
+import CreateBill from './components/billingcomponents/createBill';
+import UpdateBill from './components/billingcomponents/updateBill';
 //discount
 import Discounts from './components/discountComponents/Discount';
 import Employees from './components/employeeComponent/employee';
@@ -45,7 +45,7 @@ function App() {
         <Route path="/finance" element={<FinanceDash/>}/>
         <Route path="/profit/:month" element={<AddProfit/>}/>
         <Route path="/profit/get/:id" element={<ProfitDetails/>}/>
-        <Route path="/profit/update/:id" element={<UpdateProfit/>}/>
+        <Route path="/profit/update/:id" element={<EditProfit/>}/>
         <Route path="/tax/get/:id" element={<TaxDetails/>}/>
         <Route path="/tax/:epfetf" element={<AddTax/>}/>
         <Route path="/supplier" element={<Supplier/>}/>
