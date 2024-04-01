@@ -10,8 +10,8 @@ import ProfitDetails from './components/viewProfit';
 import UpdateProfit from './components/editProfit';
 import TaxDetails from './components/viewTax';
 import AddTax from './components/addTax';
-import Bill from './components/bill';
-import CreateBill from './components/createBill';
+
+
 import UpdateOther from './components/updateOther';
 import Supplier from './components/supplier';
 import AddSupplier from './components/addSupplier';
