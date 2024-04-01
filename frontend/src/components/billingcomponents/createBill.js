@@ -363,6 +363,15 @@ function CreateBill() {
       </ol>
     </div>
   </div>
+  <div className="card">
+    <div className="card-body">
+      <h3 className="card-title">Stuff Notification:</h3>
+      <p className="card-text"> Upcoming events And other Notice:</p>
+      <ol>
+        
+      </ol>
+    </div>
+</div>
 </div>
 
       </div>
