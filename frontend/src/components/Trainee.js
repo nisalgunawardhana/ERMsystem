@@ -100,8 +100,8 @@ export default function Trainee() {
                 });
         }
     }
-    
-    
+
+
     function handleMeetingSubmit(e) {
         e.preventDefault();
         if (selectedMeetingId) {
@@ -122,7 +122,7 @@ export default function Trainee() {
                 });
         }
     }
-    
+
 
     function toggleForm() {
         setShowForm(prevState => !prevState);
@@ -224,7 +224,7 @@ export default function Trainee() {
                 alert('Error fetching trainee data. Please try again.');
             });
     };
-    
+
 
     const filteredTrainees = trainees.filter(trainee =>
         trainee.trainee_name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -241,7 +241,7 @@ export default function Trainee() {
                         <div className="card-body">
                             <h4 className="card-title">Total Trainees</h4>
                             <div className="text-center my-auto">
-                            <h1 className="card-text">{trainees.length}</h1>
+                                <h1 className="card-text">{trainees.length}</h1>
                             </div>
                             <button onClick={toggleForm} className="btn btn-success">Add New Trainee</button>
                         </div>
@@ -252,7 +252,7 @@ export default function Trainee() {
                         <div className="card-body">
                             <h4 className="card-title">Total Sessions</h4>
                             <div className="text-center my-auto">
-                            <h1 className="card-text">{meetings.length}</h1>
+                                <h1 className="card-text">{meetings.length}</h1>
                             </div>
                             <button onClick={toggleMeetingForm} className="btn btn-success">Add New Session</button>
                         </div>
@@ -420,10 +420,12 @@ export default function Trainee() {
                             <br></br>
                             <div className="row row-cols-1 row-cols-md-2 g-4">
                                 {filteredTrainees.map(trainee => (
-                                    <div key={trainee._id} className="col">
+                                    <div key={trainee._id} className="col-md-4">
                                         <div className="card">
                                             <div className="card-body">
+                                                <div className="text-center my-auto">
                                                 <h5 className="card-title">{trainee.trainee_name}</h5>
+                                                <br></br>
                                                 <p className="card-text">Email: {trainee.trainee_email}</p>
                                                 <p className="card-text">Contact No: {trainee.trainee_contact}</p>
                                                 <p className="card-text">Gender: {trainee.trainee_gender}</p>
@@ -431,6 +433,7 @@ export default function Trainee() {
                                                 <div>
                                                     <button onClick={() => editTrainee(trainee)} className="btn btn-primary" style={{ margin: '0 5px' }} >Update</button>
                                                     <button onClick={() => handleDeleteTrainee(trainee._id)} className="btn btn-danger" style={{ margin: '0 5px' }} >Delete</button>
+                                                </div>
                                                 </div>
                                             </div>
                                         </div>
