@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button, Table, Modal, Row, Col, Card } from "react-bootstrap";
 import axios from "axios";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const CustomerR = () => {
     const [customers, setCustomers] = useState([]);
@@ -13,7 +13,7 @@ const CustomerR = () => {
         customer_name: "",
         email: "",
         point: "",
-        gender: "male" // Default to male
+        gender: "Male" // Default to Male
     });
     const [customerToDelete, setCustomerToDelete] = useState(null);
     const [showDeleteCustomerPrompt, setShowDeleteCustomerPrompt] = useState(false);
@@ -77,12 +77,31 @@ const CustomerR = () => {
                 customer_name: "",
                 email: "",
                 point: "",
-                gender: "male" // Reset gender to male after adding
+                gender: "Male" // Reset gender to Male after adding
             });
         } catch (error) {
             console.error("Error adding customer:", error);
         }
     };
+    const handleDeleteAllPoints = async () => {
+        try {
+            const isConfirmed = window.confirm("Are you sure you want to delete all loyalty points?");
+
+            if (isConfirmed) {
+                await axios.delete("http://localhost:8080/customer/delete-all-points");
+            fetchCustomers(); // Refresh the customer list
+            alert("All customer loyalty points deleted successfully.");
+                // Proceed with deleting loyalty points
+                console.log("Deleting all loyalty points...");
+
+            }
+            
+        } catch (error) {
+            console.error("Error deleting all customer loyalty points:", error);
+            alert("Error deleting all customer loyalty points. Please try again later.");
+        }
+    };
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -100,8 +119,6 @@ const CustomerR = () => {
             });
         }
     };
-    
-    
 
     const handleGenerateReport = () => {
         const printWindow = window.open("", "_blank", "width=600,height=600");
@@ -140,7 +157,7 @@ const CustomerR = () => {
                                 <th>Customer ID</th>
                                 <th>Customer Name</th>
                                 <th>Email</th>
-                                <th>Point</th>
+                                <th>Points</th>
                                 <th>Gender</th>
                             </tr>
                         </thead>
@@ -156,14 +173,27 @@ const CustomerR = () => {
                             `).join('')}
                         </tbody>
                     </table>
-                    <div class="back-button">
-                        <button onclick="window.close()" class="btn btn-secondary">Back</button>
+                    <div class="button-container">
+                        <button onclick="window.print()" class="btn btn-primary">Print</button>
+                        <button onclick="downloadCustomerReport()" class="btn btn-primary">Download PDF</button>
+                        <button onclick="window.close()" class="btn btn-secondary">Close</button>
                     </div>
                 </body>
             </html>
         `);
         printWindow.document.close();
-        printWindow.print();
+    
+        printWindow.downloadCustomerReport = () => {
+            const pdfContent = printWindow.document.documentElement.outerHTML;
+            const pdfBlob = new Blob([pdfContent], { type: "application/pdf" });
+            const pdfUrl = URL.createObjectURL(pdfBlob);
+            const a = document.createElement("a");
+            a.href = pdfUrl;
+            a.download = "customer_report.pdf";
+            a.click();
+            URL.revokeObjectURL(pdfUrl);
+            printWindow.close();
+        };
     };
     
 
@@ -172,7 +202,7 @@ const CustomerR = () => {
             <h1>Customer Management</h1>
             <Row className="mb-3">
                 <Col>
-                    <Card>
+                    <Card className="h-100">
                         <Card.Body>
                             <Card.Title>Generate Report</Card.Title>
                             <Card.Text>
@@ -183,13 +213,24 @@ const CustomerR = () => {
                     </Card>
                 </Col>
                 <Col>
-                    <Card>
+                    <Card className="h-100">
                         <Card.Body>
                             <Card.Title>Add Customer</Card.Title>
                             <Card.Text>
                                 Add a new customer to the database.
                             </Card.Text>
                             <Button variant="success" onClick={() => setShowModal(true)}>Add Customer</Button>
+                        </Card.Body>
+                    </Card>
+                </Col>
+                <Col>
+                    <Card className="h-100">
+                        <Card.Body>
+                            <Card.Title>Delete All Points</Card.Title>
+                            <Card.Text>
+                                Delete all points after all year.
+                            </Card.Text>
+                            <Button variant="danger" onClick={handleDeleteAllPoints}>Delete All Points</Button>
                         </Card.Body>
                     </Card>
                 </Col>
@@ -224,7 +265,7 @@ const CustomerR = () => {
                                 <td>{customer.point}</td>
                                 <td>{customer.gender}</td>
                                 <td>
-                                <Link to={`/customer/update/${customer.customer_id}`} className="btn btn-primary">Update</Link>
+                                    <Link to={`/customer/update/${customer.customer_id}`} className="btn btn-primary">Update</Link>
                                 </td>
                                 <td>
                                     <Button
@@ -307,7 +348,7 @@ const CustomerR = () => {
                             >
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
-                                <option value="other">Other</option>
+                                <option value="Other">Other</option>
                             </Form.Control>
                         </Form.Group>
                         <Button variant="primary" type="submit">

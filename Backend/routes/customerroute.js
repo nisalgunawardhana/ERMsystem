@@ -78,6 +78,18 @@ router.route("/delete/:customer_id").delete(async (req, res) => {
         res.status(500).send({ status: "Error with deleting customer" });
     }
 })
+router.route("/delete-all-points").delete(async (req, res) => {
+    try {
+        // Delete all customer loyalty points
+        await customer.updateMany({}, { $set: { point: 0 } });
+
+        res.status(200).send({ status: "All customer loyalty points deleted" });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ status: "Error deleting all customer loyalty points" });
+    }
+})
+
 
 router.route("/:id").get((req, res) => {
     const customer_id = req.params.id;
