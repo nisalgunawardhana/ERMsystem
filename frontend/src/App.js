@@ -27,7 +27,10 @@ import UpdateBill from './components/billingComponents/updateBill';
 //discount
 import Discounts from './components/discountComponents/Discount';
 import Employees from './components/employeeComponent/employee';
-
+//login
+import Login from './pages/Login';
+//signup
+import Signup from './pages/Signup';
 
 
 
@@ -64,8 +67,10 @@ function App() {
         <Route path="/bill" element={<Bill/>}/>
         <Route path="/bill/CreateBill" element={<CreateBill/>}/>
         <Route path="/bill/update/:id" element={<UpdateBill/>}/>
-         <Route path="/bill/discounts" element={<Discounts/>} />
-         <Route path="/employee" element={<Employees/>}/>
+        <Route path="/bill/discounts" element={<Discounts/>} />
+        <Route path="/employee" element={<Employees/>}/>
+        <Route path="/login" element={<Login/>}/>
+        <Route path="/signup" element={<Signup/>}/>
 
       </Routes>  
     
