@@ -424,7 +424,7 @@ export default function Trainee() {
                                         <div className="card">
                                             <div className="card-body">
                                                 <div className="text-center my-auto">
-                                                <h5 className="card-title">{trainee.trainee_name}</h5>
+                                                <h4 className="card-title">{trainee.trainee_name}</h4>
                                                 <br></br>
                                                 <p className="card-text">Email: {trainee.trainee_email}</p>
                                                 <p className="card-text">Contact No: {trainee.trainee_contact}</p>
