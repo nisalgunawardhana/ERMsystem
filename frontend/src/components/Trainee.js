@@ -232,6 +232,12 @@ export default function Trainee() {
 
     return (
         <div className="container">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Trainee</li>
+                </ol>
+            </nav>
             <h1>Trainee Management</h1>
             <br></br>
 

@@ -181,6 +181,13 @@ export default function Bills() {
 
         <div className="container">
 
+        <nav aria-label="breadcrumb">
+         <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Bills</li>
+        </ol>
+        </nav>
+
             <h3>Bills</h3>
             <div className="row">
                 <div className="col-md-4">
