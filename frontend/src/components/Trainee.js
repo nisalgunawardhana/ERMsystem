@@ -430,16 +430,16 @@ export default function Trainee() {
                                         <div className="card">
                                             <div className="card-body">
                                                 <div className="text-center my-auto">
-                                                <h5 className="card-title">{trainee.trainee_name}</h5>
-                                                <br></br>
-                                                <p className="card-text">Email: {trainee.trainee_email}</p>
-                                                <p className="card-text">Contact No: {trainee.trainee_contact}</p>
-                                                <p className="card-text">Gender: {trainee.trainee_gender}</p>
-                                                <p className="card-text">Ratings: {trainee.trainee_rating}</p>
-                                                <div>
-                                                    <button onClick={() => editTrainee(trainee)} className="btn btn-primary" style={{ margin: '0 5px' }} >Update</button>
-                                                    <button onClick={() => handleDeleteTrainee(trainee._id)} className="btn btn-danger" style={{ margin: '0 5px' }} >Delete</button>
-                                                </div>
+                                                    <h4 className="card-title">{trainee.trainee_name}</h4>
+                                                    <br></br>
+                                                    <p className="card-text">Email: {trainee.trainee_email}</p>
+                                                    <p className="card-text">Contact No: {trainee.trainee_contact}</p>
+                                                    <p className="card-text">Gender: {trainee.trainee_gender}</p>
+                                                    <p className="card-text">Ratings: {trainee.trainee_rating}</p>
+                                                    <div>
+                                                        <button onClick={() => editTrainee(trainee)} className="btn btn-primary" style={{ margin: '0 5px' }} >Update</button>
+                                                        <button onClick={() => handleDeleteTrainee(trainee._id)} className="btn btn-danger" style={{ margin: '0 5px' }} >Delete</button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
