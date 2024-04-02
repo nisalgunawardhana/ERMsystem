@@ -181,12 +181,12 @@ export default function Bills() {
 
         <div className="container">
 
-        <nav aria-label="breadcrumb">
-         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/">Home</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Bills</li>
-        </ol>
-        </nav>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Bills</li>
+                </ol>
+            </nav>
 
             <h3>Bills</h3>
             <div className="row">
@@ -280,19 +280,37 @@ export default function Bills() {
                     ))}
                 </tbody>
             </table>
-            <ul className="pagination justify-content-end">
-                <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                    <button className="page-link" onClick={() => paginate(currentPage - 1)}>Previous</button>
-                </li>
-                {Array.from({ length: totalPages }, (_, i) => (
-                    <li key={i} className={`page-item ${currentPage === i + 1 ? 'active' : ''}`}>
-                        <button className="page-link" onClick={() => paginate(i + 1)}>{i + 1}</button>
-                    </li>
-                ))}
-                <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-                    <button className="page-link" onClick={() => paginate(currentPage + 1)}>Next</button>
-                </li>
-            </ul>
+            <div class="container text-center">
+                <div class="row">
+                    <div class="col">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Bills</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class="col">
+                        
+                    </div>
+                    <div class="col">
+                        <ul className="pagination justify-content-end">
+                            <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+                                <button className="page-link" onClick={() => paginate(currentPage - 1)}>Previous</button>
+                            </li>
+                            {Array.from({ length: totalPages }, (_, i) => (
+                                <li key={i} className={`page-item ${currentPage === i + 1 ? 'active' : ''}`}>
+                                    <button className="page-link" onClick={() => paginate(i + 1)}>{i + 1}</button>
+                                </li>
+                            ))}
+                            <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+                                <button className="page-link" onClick={() => paginate(currentPage + 1)}>Next</button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
             <hr></hr>
             <br></br>
             <br></br>
