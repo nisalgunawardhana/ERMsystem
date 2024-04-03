@@ -1,5 +1,6 @@
 import './App.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import Header from './components/Header';
 import Home from './components/Home';
 import AddOther from './components/AddOther';
@@ -27,22 +28,23 @@ import UpdateBill from './components/billingComponents/updateBill';
 //discount
 import Discounts from './components/discountComponents/Discount';
 import Employees from './components/employeeComponent/employee';
-//login
-import Login from './pages/Login';
-//signup
-import Signup from './pages/Signup';
-
-
-
 
 function App() {
+  const [isSidebarOpen, setSidebarOpen] = useState(true);
+   useEffect(() => {
+    // Close the sidebar on route change
+    setSidebarOpen(false);
+  }, []);
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!isSidebarOpen);
+  };
   return (
     <BrowserRouter>
     <div>
-      <Header/>
-      <br></br>
-      <br></br><br></br>
-      <br></br>
+      <Header toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen}/>
+      <div style={{ paddingTop: "0px", paddingLeft: isSidebarOpen ? "250px" : "0" }}>
+
       
       <Routes>
         <Route path="/" element={<Home/>}/>
@@ -67,13 +69,11 @@ function App() {
         <Route path="/bill" element={<Bill/>}/>
         <Route path="/bill/CreateBill" element={<CreateBill/>}/>
         <Route path="/bill/update/:id" element={<UpdateBill/>}/>
-        <Route path="/bill/discounts" element={<Discounts/>} />
-        <Route path="/employee" element={<Employees/>}/>
-        <Route path="/login" element={<Login/>}/>
-        <Route path="/signup" element={<Signup/>}/>
+         <Route path="/bill/discounts" element={<Discounts/>} />
+         <Route path="/employee" element={<Employees/>}/>
 
       </Routes>  
-    
+    </div>
   </div>
   </BrowserRouter>
     
