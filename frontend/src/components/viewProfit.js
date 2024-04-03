@@ -12,7 +12,7 @@ function ProfitDetails() {
     const [displayedData, setDisplayedData] = useState(null);
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/profit/get/${id}`)
+        axios.get(`http://localhost:8080/profit/get/${id}`)//fetch profit log
             .then((res) => {
                 setProfit(res.data.profit);
                 setDisplayedData(res.data.profit); // Set the initial displayed data
@@ -23,6 +23,7 @@ function ProfitDetails() {
             });
     }, [id]);
 
+    //function to search for profit log
     const handleSearch = () => {
         if (!selectedMonth || !selectedYear) {
             console.log('Please select both month and year.');
@@ -97,6 +98,7 @@ function ProfitDetails() {
         }
     };
 
+    //report generation of profitlog
     const handleReportGeneration = () => {
         const dataToGenerateReport = searchResult || profit; // Use search result if available, otherwise use profit
         if (dataToGenerateReport) {
@@ -221,21 +223,21 @@ function ProfitDetails() {
 
     useEffect(() => {
         const currentMonth = getCurrentMonth();
-        axios.get(`http://localhost:8080/profit/${currentMonth}`)
+        axios.get(`http://localhost:8080/profit/${currentMonth}`)//fetch monthly sales
             .then((res) => {
                 setTotalAmount(res.data.totalAmount);
             })
             .catch((err) => {
                 console.error(err);
             });
-        axios.get(`http://localhost:8080/profit/other/${currentMonth}`)
+        axios.get(`http://localhost:8080/profit/other/${currentMonth}`)//fetch monthly other expenses
             .then((res) => {
                 setTotalOther(res.data.totalOther);
             })
             .catch((err) => {
                 console.error(err);
             });
-        axios.get(`http://localhost:8080/profit/supplier/${currentMonth}`)
+        axios.get(`http://localhost:8080/profit/supplier/${currentMonth}`)//fetch monthly supplier expenses
             .then((res) => {
                 setTotalSupp(res.data.totalSupp);
             })
@@ -308,7 +310,7 @@ function ProfitDetails() {
                 </div>
             </nav>
 
-            {/* Main Content */}
+            {/* Search for profit log */}
             <div className="container-fluid" style={{ marginLeft: '280px', marginTop: '40px', width: '1220px' }}>
                 <div className="row">
                     <div className="col-md-4">
@@ -331,7 +333,7 @@ function ProfitDetails() {
                 </div>
 
                 <div className="row" style={{ marginTop: '40px' }}>
-                    {/* Generate Monthly Profit Report Card */}
+                    {/* Generate Monthly Profit Report*/}
                     <div className="col-md-6">
                         <div className="card" style={{ height: '160px' }}>
                             <div className="card-body">
@@ -342,7 +344,7 @@ function ProfitDetails() {
                         </div>
                     </div>
 
-                    {/* Add Profit Card */}
+                    {/* Add Profit log */}
                     <div className="col-md-6">
                         <div className="card" style={{ height: '160px' }}>
                             <div className="card-body">
@@ -372,7 +374,7 @@ function ProfitDetails() {
                 <h2 className="mb-4" style={{ marginTop: '20px' }}><i className="fas fa-chart-line"></i> Profit Details {(searchResult || profit) && `- ${searchResult ? searchResult[0].Month : profit.Month}`}</h2>
                 <p className="text-muted">Explore the detailed breakdown of your profits, including sales income, expenses, and monthly profit, to gain insights into your financial performance.</p>
 
-                {/* Display profit details for searched month */}
+                {/* Display profit details for searched month or current month */}
                 {(searchResult || profit) && (
                     <div className="row">
                         {/* Left Column for Profit Details */}
@@ -381,6 +383,7 @@ function ProfitDetails() {
                                 <div className="card-body">
                                     <h4 className="mb-3">Valid Period: {searchResult ? searchResult[0].Month : profit.Month} 1, {year}  - {endDateFormatted}</h4>
                                     <table className="table">
+                                    <thead class="table-dark"><tr>Hello</tr></thead>
                                         <tbody>
                                             <tr>
                                                 <th scope="row"><i className="bi bi-list-ul"></i>&nbsp;&nbsp; Profit Log ID:</th>
@@ -427,7 +430,7 @@ function ProfitDetails() {
                             </div>
                         </div>
 
-                        {/* Right Column for Cards */}
+                        {/* Right Column for profit log summary */}
                         <div className="col-md-6" style={{ marginTop: '20px', marginLeft: '0px' }}>
                             <div className="row mb-4">
                                 <div className="col-md-6" style={{ height: '140px' }}>

@@ -100,8 +100,8 @@ export default function Trainee() {
                 });
         }
     }
-    
-    
+
+
     function handleMeetingSubmit(e) {
         e.preventDefault();
         if (selectedMeetingId) {
@@ -122,7 +122,7 @@ export default function Trainee() {
                 });
         }
     }
-    
+
 
     function toggleForm() {
         setShowForm(prevState => !prevState);
@@ -161,6 +161,7 @@ export default function Trainee() {
     const generateReport = () => {
         axios.get('http://localhost:8080/trainees/')
             .then(res => {
+                const sortedTrainees = res.data.sort((a, b) => b.trainee_rating - a.trainee_rating); // Sort trainees array by ratings in descending order
                 const printWindow = window.open("", "_blank", "width=600,height=600");
                 printWindow.document.write(`
                     <html>
@@ -200,7 +201,7 @@ export default function Trainee() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    ${trainees.map(trainee => `
+                                    ${sortedTrainees.map(trainee => `
                                         <tr>
                                             <td>${trainee.trainee_id}</td>
                                             <td>${trainee.trainee_name}</td>
@@ -224,12 +225,19 @@ export default function Trainee() {
             });
     };
 
+
     const filteredTrainees = trainees.filter(trainee =>
         trainee.trainee_name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     return (
         <div className="container">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Trainee</li>
+                </ol>
+            </nav>
             <h1>Trainee Management</h1>
             <br></br>
 
@@ -237,18 +245,22 @@ export default function Trainee() {
                 <div className="col-md-4">
                     <div className="card">
                         <div className="card-body">
-                            <h5 className="card-title">Total Trainees</h5>
-                            <p className="card-text">{trainees.length}</p>
-                            <button onClick={toggleForm} className="btn btn-primary">Add New Trainee</button>
+                            <h4 className="card-title">Total Trainees</h4>
+                            <div className="text-center my-auto">
+                                <h1 className="card-text">{trainees.length}</h1>
+                            </div>
+                            <button onClick={toggleForm} className="btn btn-success">Add New Trainee</button>
                         </div>
                     </div>
                 </div>
                 <div className="col-md-4">
                     <div className="card">
                         <div className="card-body">
-                            <h5 className="card-title">Total Sessions</h5>
-                            <p className="card-text">{meetings.length}</p>
-                            <button onClick={toggleMeetingForm} className="btn btn-primary">Add New Session</button>
+                            <h4 className="card-title">Total Sessions</h4>
+                            <div className="text-center my-auto">
+                                <h1 className="card-text">{meetings.length}</h1>
+                            </div>
+                            <button onClick={toggleMeetingForm} className="btn btn-success">Add New Session</button>
                         </div>
                     </div>
                 </div>
@@ -256,7 +268,7 @@ export default function Trainee() {
                     <div className="card">
                         <div className="card-body">
                             <h5 className="card-title">Generate Report</h5>
-                            <p className="card-text">Generate a report summarizing trainee data.</p>
+                            <p className="card-text">Here's the comprehensive report summarizing all trainees, sorted by ratings, for your review.</p>
                             <button onClick={generateReport} className="btn btn-primary">Generate Report</button>
                         </div>
                     </div>
@@ -356,7 +368,7 @@ export default function Trainee() {
                 <div className="col-md-12">
                     <div className="card">
                         <div className="card-body">
-                            <h5 className="card-title">Scheduled Meetings</h5>
+                            <h4 className="card-title">Scheduled Meetings</h4>
                             <br></br>
                             <div className="table-responsive">
                                 <table className="table">
@@ -400,7 +412,7 @@ export default function Trainee() {
                     <div className="card">
                         <div className="card-body">
                             <div className="d-flex justify-content-between align-items-center">
-                                <h5 className="card-title">Trainees' Details</h5>
+                                <h4 className="card-title">Trainees' Details</h4>
                                 <div className="col-sm-4">
                                     <input
                                         type="text"
@@ -412,34 +424,27 @@ export default function Trainee() {
                                 </div>
                             </div>
                             <br></br>
-                            <div className="table-responsive">
-                                <table className="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Email</th>
-                                            <th>Contact No</th>
-                                            <th>Gender</th>
-                                            <th>Ratings</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {filteredTrainees.map(trainee => (
-                                            <tr key={trainee._id}>
-                                                <td>{trainee.trainee_name}</td>
-                                                <td>{trainee.trainee_email}</td>
-                                                <td>{trainee.trainee_contact}</td>
-                                                <td>{trainee.trainee_gender}</td>
-                                                <td>{trainee.trainee_rating}</td>
-                                                <td>
-                                                    <button onClick={() => editTrainee(trainee)} className="btn btn-primary" style={{ margin: '0 5px' }} >Update</button>
-                                                    <button onClick={() => handleDeleteTrainee(trainee._id)} className="btn btn-danger" style={{ margin: '0 5px' }} >Delete</button>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                            <div className="row row-cols-1 row-cols-md-2 g-4">
+                                {filteredTrainees.map(trainee => (
+                                    <div key={trainee._id} className="col-md-4">
+                                        <div className="card">
+                                            <div className="card-body">
+                                                <div className="text-center my-auto">
+                                                    <h4 className="card-title">{trainee.trainee_name}</h4>
+                                                    <br></br>
+                                                    <p className="card-text">Email: {trainee.trainee_email}</p>
+                                                    <p className="card-text">Contact No: {trainee.trainee_contact}</p>
+                                                    <p className="card-text">Gender: {trainee.trainee_gender}</p>
+                                                    <p className="card-text">Ratings: {trainee.trainee_rating}</p>
+                                                    <div>
+                                                        <button onClick={() => editTrainee(trainee)} className="btn btn-primary" style={{ margin: '0 5px' }} >Update</button>
+                                                        <button onClick={() => handleDeleteTrainee(trainee._id)} className="btn btn-danger" style={{ margin: '0 5px' }} >Delete</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </div>

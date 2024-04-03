@@ -18,6 +18,7 @@ export default function AllOther() {
         getOther();
     }, [])
 
+    const [filteredOther, setFilteredOther] = useState([]); // State to hold filtered data
     const [searchTerm, setSearchTerm] = useState('');
     const [searchDate, setSearchDate] = useState('');
     const [specificExpense, setSpecificExpense] = useState(null);
@@ -28,30 +29,14 @@ export default function AllOther() {
             axios.get(url)
                 .then((res) => {
                     setOther(res.data);
+                    setFilteredOther(res.data);
                 })
                 .catch((err) => {
                     alert(err.message);
                 })
         }
         getOther();
-    }, [searchTerm]);
-
-    const handleSearch = () => {
-        const url = searchDate ? `http://localhost:8080/otherExpense/?date=${searchDate}` : "http://localhost:8080/otherExpense/";
-        axios.get(url)
-            .then((res) => {
-                const foundExpense = res.data.find(expense => expense.Date === searchDate);
-                if (foundExpense) {
-                    setSpecificExpense(foundExpense);
-                } else {
-                    setSpecificExpense(null);
-                    alert("No expense found for the selected date.");
-                }
-            })
-            .catch((err) => {
-                alert(err.message);
-            })
-    };
+    }, []);
 
     const handleBack = () => {
         setSpecificExpense(null);
@@ -96,104 +81,139 @@ export default function AllOther() {
         window.location.href = `/profit/${month.Month}`;
     };
 
+    const columns = [
+        { field: 'Expense_id', label: 'Expense ID', sortable: true },
+        { field: 'Type', label: 'Type', sortable: false },
+        { field: 'Date', label: 'Date', sortable: true },
+        { field: 'Status', label: 'Status', sortable: false },
+        { field: 'Cost', label: 'Cost', sortable: true },
+
+    ];
+
+    const [sortConfig, setSortConfig] = useState(null);
+
+    useEffect(() => {
+        // Function to filter data based on search term
+        const filteredData = other.filter(entry =>
+            Object.values(entry).some(value =>
+                value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+            )
+        );
+        setFilteredOther(filteredData);
+    }, [searchTerm, other]); // Trigger filtering whenever search term or original data changes
+
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
+    };
+
+    const requestSort = (field) => {
+        const direction = sortConfig && sortConfig.field === field && sortConfig.direction === 'asc' ? 'desc' : 'asc';
+        setSortConfig({ field, direction });
+    };
+
+    const getSortIcon = (field) => {
+        if (sortConfig && sortConfig.field === field) {
+            return sortConfig.direction === 'asc' ? '▲' : '▼';
+        }
+        return '';
+    };
+
+    const sortedData = () => {
+        if (!sortConfig) return filteredOther;
+        return [...filteredOther].sort((a, b) => {
+            const aValue = a[sortConfig.field];
+            const bValue = b[sortConfig.field];
+    
+            // Check if the values are not strings
+            if (typeof aValue !== 'string' || typeof bValue !== 'string') {
+                // Handle comparison for non-string values (e.g., Date)
+                return sortConfig.direction === 'asc' ? aValue - bValue : bValue - aValue;
+            }
+    
+            // Use localeCompare for string values
+            return sortConfig.direction === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+        });
+    };    
+
     return (
         <div className="container" >
-            {!specificExpense ? (
-                <div className="row mb-3">
-                    <div className="col">
-                        <input type="date" className="form-control" value={searchDate} onChange={(e) => setSearchDate(e.target.value)} />
-                    </div>
-                    <div className="col-auto">
-                        <button className="btn btn-primary" onClick={handleSearch}>Search</button>
-                    </div>
+
+            <div className="row mb-3">
+                <div className="col">
+                    <input type="text" className="form-control" value={searchTerm} onChange={handleSearchChange} placeholder="Search..." />
                 </div>
-            ) : (
-                <button className="btn btn-secondary mb-3" onClick={handleBack}>Back</button>
-            )}
+            </div>
+
             <br /><br />
 
-            {specificExpense ? (
-                <div>
-                    <h3>Expense Details</h3>
-                    <table className="table">
-                        <thead>
-                            <tr>
-                                <th>Expense_id</th>
-                                <th>Type</th>
-                                <th>Date</th>
-                                <th>Status</th>
-                                <th>Cost</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr key={specificExpense._id}>
-                                <td>{specificExpense.Expense_id}</td>
-                                <td>{specificExpense.Type}</td>
-                                <td>{specificExpense.Date}</td>
-                                <td>{specificExpense.Status}</td>
-                                <td>{specificExpense.Cost}</td>
-                                <td>
-                                    <Link to={`/otherExpense/update/${specificExpense._id}`} className="btn btn-primary me-2">Update</Link>
-                                    <button className="btn btn-danger" onClick={() => handleDelete(specificExpense._id)}>Delete</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <div>
+                <div className="d-flex justify-content-start mb-3 align-items-center">
+                    <h3 className="me-5">All Other Expenses</h3>
+                    <Link to="/otherExpense/add" className="btn btn-success">Add Expense</Link>
                 </div>
-            ) : (
 
-                <div>
-                    <div className="d-flex justify-content-start mb-3 align-items-center">
-                        <h3 className="me-5">All Other Expenses</h3>
-                        <Link to="/otherExpense/add" className="btn btn-success">Add Expense</Link>
+                <br></br>
+                <div className="container-fluid">
+                    <div className="row">
+                        <div className="col">
+                            <div className="table-responsive">
+                                <table className="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th style={{ cursor: 'pointer' }} onClick={() => requestSort('Expense_id')}>
+                                                Expense ID
+                                                {getSortIcon('Expense_id')}
+                                            </th>
+                                            <th>Type</th>
+                                            <th style={{ cursor: 'pointer' }} onClick={() => requestSort('Date')}>
+                                                Date
+                                                {getSortIcon('Date')}
+                                            </th>
+                                            <th>Status</th>
+                                            <th style={{ cursor: 'pointer' }} onClick={() => requestSort('Cost')}>
+                                                Cost
+                                                {getSortIcon('Cost')}
+                                            </th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {sortedData().map(expense => (
+                                            <tr key={expense._id}>
+                                                <td>{expense.Expense_id}</td>
+                                                <td>{expense.Type}</td>
+                                                <td>{expense.Date}</td>
+                                                <td>{expense.Status}</td>
+                                                <td>{expense.Cost}</td>
+                                                <td>
+                                                    <Link to={`/otherExpense/update/${expense._id}`} className="btn btn-primary me-2">Update</Link>
+                                                    <button className="btn btn-danger" onClick={() => handleDelete(expense._id)}>Delete</button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
-
-                    <br></br>
-                    <table className="table">
-                        <thead>
-                            <tr>
-                                <th>Expense_id</th>
-                                <th>Type</th>
-                                <th>Date</th>
-                                <th>Status</th>
-                                <th>Cost</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {other.map(expense => (
-                                <tr key={expense._id}>
-                                    <td>{expense.Expense_id}</td>
-                                    <td>{expense.Type}</td>
-                                    <td>{expense.Date}</td>
-                                    <td>{expense.Status}</td>
-                                    <td>{expense.Cost}</td>
-                                    <td>
-                                        <Link to={`/otherExpense/update/${expense._id}`} className="btn btn-primary me-2">Update</Link>
-                                        <button className="btn btn-danger" onClick={() => handleDelete(expense._id)}>Delete</button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-
-                    {showDeletePrompt && (
-                        <Modal show={showDeletePrompt} onHide={cancelDelete}>
-                            <Modal.Header closeButton>
-                                <Modal.Title>Confirm Deletion</Modal.Title>
-                            </Modal.Header>
-                            <Modal.Body>
-                                Are you sure you want to delete this expense?
-                            </Modal.Body>
-                            <Modal.Footer>
-                                <Button variant="danger" onClick={confirmDelete}>Yes</Button>
-                                <Button variant="secondary" onClick={cancelDelete}>No</Button>
-                            </Modal.Footer>
-                        </Modal>
-                    )}
                 </div>
-            )}
+
+                {showDeletePrompt && (
+                    <Modal show={showDeletePrompt} onHide={cancelDelete}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>Confirm Deletion</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            Are you sure you want to delete this expense?
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="danger" onClick={confirmDelete}>Yes</Button>
+                            <Button variant="secondary" onClick={cancelDelete}>No</Button>
+                        </Modal.Footer>
+                    </Modal>
+                )}
+            </div>
+
         </div>
     )
 }

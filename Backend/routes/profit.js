@@ -4,6 +4,7 @@ const otherexpenses = require("../models/expensemodel");
 const pos = require("../models/purchaseOrdermodel");
 let Profit = require("../models/profit");
 
+//route for adding profit log
 router.route("/add").post((req, res) => {
   const Profit_ID = req.body.Profit_ID;
   const Month = req.body.Month;
