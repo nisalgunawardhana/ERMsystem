@@ -372,6 +372,17 @@ function CreateBill() {
               </ol>
             </div>
           </div>
+          <div className="card">
+            <div class="container mt-5">
+              <form id="employeeForm" action="submit_employee.php" method="post">
+                <div class="form-group">
+                  <label for="employeeID">Employee ID:</label>
+                  <input type="text" class="form-control" id="employeeID" name="employeeID" />
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </form>
+            </div>
+          </div>
         </div>
 
       </div>
