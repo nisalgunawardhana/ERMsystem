@@ -1,5 +1,6 @@
 import './App.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import Header from './components/Header';
 import Home from './components/Home';
 import AddOther from './components/AddOther';
@@ -28,18 +29,22 @@ import UpdateBill from './components/billingComponents/updateBill';
 import Discounts from './components/discountComponents/Discount';
 import Employees from './components/employeeComponent/employee';
 
-
-
-
-
 function App() {
+  const [isSidebarOpen, setSidebarOpen] = useState(true);
+   useEffect(() => {
+    // Close the sidebar on route change
+    setSidebarOpen(false);
+  }, []);
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!isSidebarOpen);
+  };
   return (
     <BrowserRouter>
     <div>
-      <Header/>
-      <br></br>
-      <br></br><br></br>
-      <br></br>
+      <Header toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen}/>
+      <div style={{ paddingTop: "0px", paddingLeft: isSidebarOpen ? "250px" : "0" }}>
+
       
       <Routes>
         <Route path="/" element={<Home/>}/>
@@ -68,7 +73,7 @@ function App() {
          <Route path="/employee" element={<Employees/>}/>
 
       </Routes>  
-    
+    </div>
   </div>
   </BrowserRouter>
     
