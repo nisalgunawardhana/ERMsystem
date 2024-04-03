@@ -76,7 +76,6 @@ app.use("/systemUser", userRouter);
 const userRoutes = require("./routes/user.js");
 app.use('/user', userRoutes);
 
-
 //customer
 const customer = require("./routes/customerroute.js");
 app.use("/customer", customer);
