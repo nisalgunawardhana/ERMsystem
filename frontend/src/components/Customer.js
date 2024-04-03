@@ -100,7 +100,24 @@ const CustomerR = () => {
             });
         }
     };
-    
+    const handleDeleteAllPoints = async () => {
+        try {
+            const isConfirmed = window.confirm("Are you sure you want to delete all loyalty points?");
+
+            if (isConfirmed) {
+                await axios.delete("http://localhost:8080/customer/delete-all-points");
+            fetchCustomers(); // Refresh the customer list
+            alert("All customer loyalty points deleted successfully.");
+                // Proceed with deleting loyalty points
+                console.log("Deleting all loyalty points...");
+
+            }
+            
+        } catch (error) {
+            console.error("Error deleting all customer loyalty points:", error);
+            alert("Error deleting all customer loyalty points. Please try again later.");
+        }
+    };
     
 
     const handleGenerateReport = () => {
@@ -193,6 +210,7 @@ const CustomerR = () => {
                         </Card.Body>
                     </Card>
                 </Col>
+                
             </Row>
             <div className="mb-3">
                 <input
