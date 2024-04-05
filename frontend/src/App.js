@@ -35,6 +35,7 @@ import Signup from './pages/Signup';
 
 
 
+//registering the routes
 function App() {
   return (
     <BrowserRouter>
@@ -43,7 +44,7 @@ function App() {
       <br></br>
       <br></br><br></br>
       <br></br>
-      
+    
       <Routes>
         <Route path="/" element={<Home/>}/>
         <Route path="/otherExpense/add" element={<AddOther/>}/>
@@ -71,7 +72,7 @@ function App() {
         <Route path="/employee" element={<Employees/>}/>
         <Route path="/login" element={<Login/>}/>
         <Route path="/signup" element={<Signup/>}/>
-
+        
       </Routes>  
     
   </div>

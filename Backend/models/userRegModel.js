@@ -28,9 +28,31 @@ const userSchema = new Schema({
     
     userRole: {
         type: String,
+        enum: ['Cashier', 'Staff Manager', 'Training Coordinator', 'Financial Manager', 'Logistic Manager', 'Admin'],
         required: true,
         unique: true
-    }/*,
+    },
+    
+    isCashier: {
+        type: Boolean,
+        default: fault
+    },
+
+    isStaffManager: {
+        type: Boolean,
+        default: fault
+    },
+
+    isStaffManager: {
+        type: Boolean,
+        default: fault
+    },
+
+    isCashier: {
+        type: Boolean,
+        default: fault
+    },
+    /*,
 
     isActive: {   
         type: Boolean,

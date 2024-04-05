@@ -1,50 +1,47 @@
 // Header.js
 import React from "react";
 import { Link } from "react-router-dom";
+import { useAuthContext } from '../hooks/useAuthContext' // Import useAuthContext hook
 
-function Header({ toggleSidebar, isSidebarOpen }) {
+const Header = ({ isSidebarOpen, toggleSidebar }) => {
+  const { user, logout } = useAuthContext(); // Destructure user and logout from useAuthContext
+
+  // Define handleClick function
+  const handleClick = () => {
+    logout();
+  }
+
   return (
-    <div>
-      {/* Sidebar */}
-      <div
-        className={`offcanvas offcanvas-start ${isSidebarOpen ? "show" : ""}`}
-        tabIndex="-1"
-        id="offcanvasNavbar"
-        aria-labelledby="offcanvasNavbarLabel"
-        style={{ width: "250px", position: "fixed", zIndex: "1040" }}
-      >
-        <div class="list-group" style={{ marginTop: '60px' }} >
-          <ul class="list-group">
-            <li class="list-group-item"><a href="/">Home</a></li>
-            <li class="list-group-item">A second item</li>
-            <li class="list-group-item">A third item</li>
-            <li class="list-group-item">A fourth item</li>
-            <li class="list-group-item">And a fifth one</li>
-          </ul>
-        </div>
-        </div>
+    <header>
+      <div>
+        <nav>
+          {/* Page Content */}
+          <div style={{ marginLeft: isSidebarOpen ? "250px" : "0", transition: "margin-left 0.3s", marginTop: "60px", zIndex: "1030" }}>
+            {/* Header */}
+            <nav className="navbar bg-body-tertiary fixed-top" style={{ zIndex: "1050" }}>
 
-        {/* Page Content */}
-        <div style={{ marginLeft: isSidebarOpen ? "250px" : "0", transition: "margin-left 0.3s", marginTop: "60px", zIndex: "1030" }}>
-          {/* Header */}
-          <nav className="navbar bg-body-tertiary fixed-top" style={{ zIndex: "1050" }}>
-
-            <div className="container-fluid">
-              <a className="navbar-brand" href="#">
-                Diyana Fashion Store
-              </a>
-              <button
-                className="navbar-toggler"
-                type="button"
-                onClick={toggleSidebar}
-              >
-                <span className="navbar-toggler-icon"></span>
-              </button>
-            </div>
-          </nav>
-        </div>
+              <div className="container-fluid">
+                <a className="navbar-brand" href="#">
+                  Diyana Fashion 
+                </a>
+                {user ? ( // Use conditional rendering to show either logout button or login/signup links
+                  <div>
+                    <span>{user.email}</span>
+                    <button type="button" className="btn btn-primary" onClick={handleClick}>Log out</button>
+                  </div>
+                ) : (
+                  <div>
+                    <a class="btn btn-primary" href="/login" role="button">Login</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a class="btn btn-primary" href="/signup" role="button">Sign Up</a>
+                  </div>
+                )}
+              </div>
+            </nav>
+          </div>
+        </nav>
       </div>
-      );
+    </header>
+  );
 }
 
-      export default Header;
+export default Header;

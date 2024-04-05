@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken')
 
 const createToken = (_id) => {
     return jwt.sign({_id}, process.env.SECRET, {expiresIn: '1d'})
+    //user remains logged in for 1 day
 }
 
 //login user
@@ -16,6 +17,7 @@ const loginUser = async(req, res) => {
         const token = createToken(user._id)
 
         res.status(200).json({
+            //fetch details and display
             email: user.email,
             token})
     }catch (error){
@@ -34,10 +36,11 @@ const signupUser = async(req, res) => {
         const token = createToken(user._id)
 
         res.status(200).json({
+            //fetch details and display
             first_name: user.first_name,
             last_name: user.last_name,
             email: user.email,
-            token,
+            token,  //encoded header, payload, signatures
             userRole: user.userRole})
     }catch (error){
         res.status(400).json({error: error.message})
