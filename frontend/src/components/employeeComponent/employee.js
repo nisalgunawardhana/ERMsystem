@@ -29,7 +29,14 @@ export default function Employees() {
     const handleDeleteEmployee = (id) => {
         axios.delete(`http://localhost:8080/employee/delete/${id}`)
             .then(() => {
-                setEmployees(employees.filter(employee => employee._id !== id));
+                // Fetch the updated list of employees from the server after deletion
+                axios.get('http://localhost:8080/employee/')
+                    .then((res) => {
+                        setEmployees(res.data);
+                    })
+                    .catch((err) => {
+                        alert(err.message);
+                    });
             })
             .catch((err) => {
                 alert(err.message);
