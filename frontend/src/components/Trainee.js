@@ -230,6 +230,8 @@ export default function Trainee() {
         trainee.trainee_name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+
+
     return (
         <div className="container">
             <nav aria-label="breadcrumb">
@@ -267,8 +269,8 @@ export default function Trainee() {
                 <div className="col-md-4">
                     <div className="card">
                         <div className="card-body">
-                            <h5 className="card-title">Generate Report</h5>
-                            <p className="card-text">Here's the comprehensive report summarizing all trainees, sorted by ratings, for your review.</p>
+                            <h4 className="card-title">Generate Report</h4>
+                            <p className="card-text">Generate a summary of trainee performance.</p>
                             <button onClick={generateReport} className="btn btn-primary">Generate Report</button>
                         </div>
                     </div>
