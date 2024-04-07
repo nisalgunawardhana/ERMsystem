@@ -12,7 +12,11 @@ const UserForm = () => {
 
         const user = {first_name, last_name, email, password}
 
-        const response = await fetch('')
+        const response = await fetch('/userRoutes', {
+            method: 'POST'
+            body: 
+        })
+
     }
     return(
         <form className="create" onSubmit={handleSubmit}>
