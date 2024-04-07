@@ -3,7 +3,7 @@ import { useAuthContext } from './useAuthContext'
 
 export const useLogin = () => {
   const [error, setError] = useState(null)
-  const [isLoading, setIsLoading] = useState(null)
+  const [isLoading, setIsLoading] = useState(false) // Initialize to false instead of null
   const { dispatch } = useAuthContext()
 
   const login = async (email, password) => {

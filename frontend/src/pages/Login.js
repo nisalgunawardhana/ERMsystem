@@ -6,22 +6,20 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { login, error, isLoading } = useLogin();
-
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Call the login function from the useLogin hook
     await login(email, password);
-
-    // Navigate to the login page after successful login
     
+    // After successful login, navigate to the desired page
+    navigate('/dashboard'); // Example: Navigate to the dashboard page
   };
 
   return (
-
     <div style={{ display: "flex", height: "80vh" }}>
-      {/* Right side: Form */}
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "40vh" }}>
         <div style={{ border: "1.5px solid #ccc", borderRadius: "8px", padding: "40px", maxWidth: "500px" }}>
           <form className="login" onSubmit={handleSubmit}>
@@ -33,7 +31,7 @@ const Login = () => {
             </div>
             <div className="mb-3">
               <label htmlFor="InputPassword1" className="form-label">Password</label>
-              <input type="text" className="form-control" id="InputPassword1"
+              <input type="password" className="form-control" id="InputPassword1"
                 onChange={(e) => setPassword(e.target.value)}
                 value={password} />
             </div>
@@ -45,7 +43,6 @@ const Login = () => {
             {error && <div className="error">{error}</div>}
           </form>
         </div>
-
       </div>
     </div>
   );
