@@ -1,15 +1,16 @@
-import { useState } from "react";
-import { useLogin } from '../hooks/useLogin';
+import { useState } from "react"
+import { useLogin } from '../hooks/useLogin'
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { login, error, isLoading } = useLogin();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
     // Call the login function from the useLogin hook
     await login(email, password);
@@ -45,7 +46,8 @@ const Login = () => {
         </div>
       </div>
     </div>
-  );
-};
+   
+  )
+}
 
-export default Login;
+export default Login
