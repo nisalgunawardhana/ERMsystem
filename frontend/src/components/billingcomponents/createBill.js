@@ -59,8 +59,16 @@ function CreateBill() {
       axios.get(`http://localhost:8080/customer/points/${customer_id}`)
         .then(response => {
           const points = response.data.points;
-          const calculatedDiscount = points / 100;
+          const calculatedDiscount = points / 10;
+          const newPointcount =  points-calculatedDiscount
           setDiscount(calculatedDiscount);
+          axios.put(`http://localhost:8080/customer/update/${customer_id}`, { point: newPointcount })
+            .then(response => {
+              console.log("Customer points updated:", response.data);
+            })
+            .catch(error => {
+              console.error("Error updating customer points:", error);
+            });
         })
         .catch(error => {
           console.error("Error fetching customer points:", error);
@@ -75,7 +83,7 @@ function CreateBill() {
       const total = items.reduce((acc, curr) => acc + (curr.price * curr.quantity), 0);
       const loyaltyPointsDiscount = discount;
       const applicableDiscount = calculateApplicableDiscount(discountRules, total);
-      setTotalAmount(total - applicableDiscount - loyaltyPointsDiscount);
+      setTotalAmount(total - applicableDiscount - total * loyaltyPointsDiscount/ 100);
     };
     calculateTotal();
   }, [items, discount, discountRules]);
