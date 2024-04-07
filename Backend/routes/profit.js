@@ -2,6 +2,7 @@ const router = require("express").Router();
 const bills = require("../models/billlingmodel");
 const otherexpenses = require("../models/expensemodel");
 const pos = require("../models/purchaseOrdermodel");
+const salary = require("../models/salary");
 let Profit = require("../models/profit");
 
 //route for adding profit log
@@ -12,6 +13,7 @@ router.route("/add").post((req, res) => {
   const Supplier_expenses = req.body.Supplier_expenses;
   const Salaries = req.body.Salaries;
   const Other_expenses = req.body.Other_expenses;
+  const EPF_ETF = req.body.EPF_ETF;
   const Monthly_profit = req.body.Monthly_profit;
   const Date_created = req.body.Date_created;
   const Description = req.body.Description;
@@ -22,6 +24,7 @@ router.route("/add").post((req, res) => {
     Sales_income,
     Supplier_expenses,
     Salaries,
+    EPF_ETF,
     Other_expenses,
     Monthly_profit,
     Date_created,
@@ -129,7 +132,7 @@ router.route("/lastyear").get((req, res) => {
 
 router.route("/update/:id").put(async (req, res) => {
   let profitId = req.params.id;
-  const { Profit_ID, Month, Sales_income, Supplier_expenses, Salaries, Other_expenses, Monthly_profit, Date_created, Description } = req.body;
+  const { Profit_ID, Month, Sales_income, Supplier_expenses, Salaries, Other_expenses, EPF_ETF, Monthly_profit, Date_created, Description } = req.body;
 
   const updateProfit = {
     Profit_ID,
@@ -138,6 +141,7 @@ router.route("/update/:id").put(async (req, res) => {
     Supplier_expenses,
     Salaries,
     Other_expenses,
+    EPF_ETF,
     Monthly_profit,
     Date_created,
     Description
@@ -320,16 +324,16 @@ router.route("/salaries/:month").get(async (req, res) => {
       const endDate = new Date(`${currentYear}-${monthNumeric}-${daysInMonth}`);
 
       // Aggregate to calculate the total amount for the given month and year
-      const totalSalary = await bills.aggregate([
+      const totalSalary = await salary.aggregate([
           {
               $match: {
-                  billing_date: { $gte: startDate, $lte: endDate } // Match documents with Date_created within the given month and year
+                  Date: { $gte: startDate, $lte: endDate } // Match documents with Date_created within the given month and year
               }
           },
           {
               $group: {
                   _id: null,
-                  totalSalary: { $sum: "$total_amount" }
+                  totalSalary: { $sum: "$Salary" }
               }
           }
       ]);
@@ -432,7 +436,85 @@ router.route("/get/bills/total").get(async (req,res) => {
       console.error(err);
       res.status(500).json({ message: "Internal server error" });
     }
-})
+});
 
+router.route('/epfetf/:month').post(async (req, res) => {
+    try {
+      const { month } = req.params;
+      
+      // Map month names to month numbers
+      const monthMap = {
+        'January': 1,
+        'February': 2,
+        'March': 3,
+        'April': 4,
+        'May': 5,
+        'June': 6,
+        'July': 7,
+        'August': 8,
+        'September': 9,
+        'October': 10,
+        'November': 11,
+        'December': 12
+      };
+
+      // Get the corresponding month number from the month name
+      const monthNumber = monthMap[month];
+
+      if (!monthNumber) {
+        return res.status(400).json({ message: 'Invalid month' });
+      }
+
+      // Get the current year
+      const currentYear = new Date().getFullYear();
+
+      // Find employees for the specified month and current year
+      const employees = await salary.aggregate([
+        {
+          $addFields: {
+            month: { $month: { $toDate: '$Date' } },
+            year: { $year: { $toDate: '$Date' } }
+          }
+        },
+        {
+          $match: {
+            month: monthNumber,
+            year: currentYear
+          }
+        }
+      ]);
+
+      let totalEPF = 0;
+      let totalETF = 0;
+      let total = 0;
+
+      for (const employee of employees) {
+        const employeeId = employee._id;
+        // Calculate EPF and ETF
+        const epf = employee.Salary * 0.08; // 8% EPF
+        const epf2 = employee.Salary * 0.12; //12% from employer
+        const etf = employee.Salary * 0.03; // 3% ETF
+
+        totalEPF += epf + epf2;
+        totalETF += etf;
+
+        // Deduct EPF from salary
+        const updatedSalary = employee.Salary - epf;
+
+        // Update Salary
+        await salary.updateOne(
+            { _id: employeeId },
+            { $set: { Salary: updatedSalary } },
+            { upsert: true }
+          );
+      }
+
+      total = totalEPF + totalETF;
+      res.status(200).json({ message: 'Salary updated successfully', totalEPF, totalETF, total });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
 
 module.exports = router;
