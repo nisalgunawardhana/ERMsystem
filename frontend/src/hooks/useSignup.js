@@ -1,16 +1,19 @@
 import { useState } from 'react'
-import { useAuthContext } from './useAuthContext'
+import { useNavigate } from 'react-router-dom';
+import { useAuthContext } from './useAuthContext';
 
 export const useSignup = () => {
+
   const [error, setError] = useState(null)
   const [isLoading, setIsLoading] = useState(null)
   const { dispatch } = useAuthContext()
+
 
   const signup = async (first_name, last_name, email, password, userRole) => {
     setIsLoading(true)
     setError(null)
 
-    const response = await fetch('api/systemUser/add', {
+    const response = await fetch('http://localhost:8080/user/signup', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({ first_name, last_name, email, password, userRole })
@@ -33,6 +36,8 @@ export const useSignup = () => {
 
       // update loading state
       setIsLoading(false)
+
+      
     }
   }
 
