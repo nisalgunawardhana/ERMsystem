@@ -35,32 +35,48 @@ const userSchema = new Schema({
     
     isCashier: {
         type: Boolean,
+<<<<<<< Updated upstream
         default: false,
+=======
+        default: false
+>>>>>>> Stashed changes
     },
 
     isStaffManager: {
         type: Boolean,
+<<<<<<< Updated upstream
         default: false,
+=======
+        default: false
+>>>>>>> Stashed changes
     },
 
     isTrainingCoordinator: {
         type: Boolean,
+<<<<<<< Updated upstream
         default: false,
+=======
+        default: false
+>>>>>>> Stashed changes
     },
 
     isFinancialManager: {
         type: Boolean,
+<<<<<<< Updated upstream
         default: false,
+=======
+        default: false
+>>>>>>> Stashed changes
     },
 
     isLogisticManager: {
         type: Boolean,
-        default: fault
+        default: false
     },
 
     isAdmin: {
         type: Boolean,
-        default: fault
+        default: false
     }
 
     /*,

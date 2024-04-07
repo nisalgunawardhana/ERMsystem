@@ -22,7 +22,7 @@ const Login = () => {
   </div>*/}
 
     {/* Right side: Form */}
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "40vh"}}>
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "40vh"}}>  {/*grid-template-columns: 3fr 1fr;*/}
       <div style={{border: "1.5px solid #ccc", borderRadius: "8px", padding: "40px", maxWidth: "500px"}}>
         <form className="login" onSubmit={handleSubmit}>
 
