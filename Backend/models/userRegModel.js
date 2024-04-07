@@ -43,15 +43,26 @@ const userSchema = new Schema({
         default: false,
     },
 
-    isStaffManager: {
+    isTrainingCoordinator: {
         type: Boolean,
         default: false,
     },
 
-    isCashier: {
+    isFinancialManager: {
         type: Boolean,
         default: false,
     },
+
+    isLogisticManager: {
+        type: Boolean,
+        default: fault
+    },
+
+    isAdmin: {
+        type: Boolean,
+        default: fault
+    }
+
     /*,
 
     isActive: {   
