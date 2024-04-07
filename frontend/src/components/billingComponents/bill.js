@@ -189,6 +189,7 @@ export default function Bills() {
             </nav>
 
             <h3>Bills</h3>
+            
             <div className="row">
                 <div className="col-md-4">
                     <div className="card border-success mb-3">
@@ -219,6 +220,7 @@ export default function Bills() {
                         </div>
                     </div>
                 </div>
+           
             </div>
 
             <br />
