@@ -11,8 +11,7 @@ router.route("/add").post((req,res)=>{
     const Due_date = req.body.Due_date;
     const Date_created = req.body.Date_created;
     const Status = req.body.Status;
-    const EPF_ETF = Number(req.body.EPF_ETF);
-    const Total_tax = Number(req.body.Total_tax);
+    const Final_profit = Number(req.body.Final_profit);
 
     const newTax = new Tax({
         Tax_ID,
@@ -22,8 +21,7 @@ router.route("/add").post((req,res)=>{
         Due_date,
         Date_created,
         Status,
-        EPF_ETF,
-        Total_tax
+        Final_profit
     })
     
     newTax.save().then(()=>{
@@ -44,7 +42,7 @@ router.route("/").get((req,res)=>{
 //route to update tax doc
 router.route("/update/:id").put(async (req,res)=>{
     let taxId = req.params.id;
-    const { Tax_ID, Taxable_income,Rate,Income_tax,Due_date,Date_created, Status,EPF_ETF,Total_tax} = req.body;
+    const { Tax_ID, Taxable_income,Rate,Income_tax,Due_date,Date_created, Status,Final_profit} = req.body;
 
     const updateTax = {
         Tax_ID,
@@ -54,8 +52,7 @@ router.route("/update/:id").put(async (req,res)=>{
         Due_date,
         Date_created,
         Status,
-        EPF_ETF,
-        Total_tax
+        Final_profit
     }
 
     const update = await Tax.findByIdAndUpdate(taxId, updateTax).then(() => {

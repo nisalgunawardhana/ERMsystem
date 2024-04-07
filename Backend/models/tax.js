@@ -30,11 +30,7 @@ const otherSchema = new Schema({
         type: String,
         required: true
     },
-    EPF_ETF:{
-        type: Number,
-        required: true
-    },
-    Total_tax:{
+    Final_profit:{
         type: Number,
         required: true
     }
