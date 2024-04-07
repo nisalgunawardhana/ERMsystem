@@ -83,6 +83,9 @@ app.use("/customer", customer);
 const discounts = require("./routes/discounttoute.js");
 app.use("/discounts", discounts);
 
+const Attendance = require("./routes/attendanceroute.js");
+app.use("/Attendance", Attendance);
+
 app.listen(PORT, () => {
     console.log(`Server is up and running on: ${PORT}`);
 });
