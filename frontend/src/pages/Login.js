@@ -16,7 +16,7 @@ const Login = () => {
     await login(email, password);
     
     // After successful login, navigate to the desired page
-    navigate('/dashboard'); // Example: Navigate to the dashboard page
+    navigate('/'); // Example: Navigate to the dashboard page
   };
 
   return (
@@ -32,7 +32,7 @@ const Login = () => {
             </div>
             <div className="mb-3">
               <label htmlFor="InputPassword1" className="form-label">Password</label>
-              <input type="password" className="form-control" id="InputPassword1"
+              <input type="text" className="form-control" id="InputPassword1"
                 onChange={(e) => setPassword(e.target.value)}
                 value={password} />
             </div>

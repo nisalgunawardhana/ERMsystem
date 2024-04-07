@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useSignup } from "../hooks/useSignup";
-
+import { useNavigate } from "react-router-dom";
 const Signup = () => {
   const [first_name, setfirst_name] = useState("");
   const [last_name, setlast_name] = useState("");
@@ -8,6 +8,7 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [userRole, setuserRole] = useState("");
   const { signup, error, isLoading } = useSignup();
+  const navigate = useNavigate();
 
   //handleSubmit function - triggered when the form is submitted
   const handleSubmit = async (e) => {
@@ -15,6 +16,7 @@ const Signup = () => {
 
     //call the signup function with the user inputs
     await signup(first_name, last_name, email, password, userRole);
+    navigate('/Login')
   };
 
   return (
