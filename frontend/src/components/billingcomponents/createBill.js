@@ -16,6 +16,7 @@ function CreateBill() {
   const navigate = useNavigate();
   const [discountRules, setDiscountRules] = useState([]);
 
+
   useEffect(() => {
     if (itemCode) {
       axios.get(`http://localhost:8080/item/price/${itemCode}`)
@@ -98,11 +99,16 @@ function CreateBill() {
     e.preventDefault();
     console.log("Submitting form...");
 
+
+
+
     const convertedItems = items.map(item => ({
       product_id: item.code,
       quantity: item.quantity,
       unit_price: item.price
     }));
+
+
 
     const newBill = {
       customer_id,
@@ -110,6 +116,19 @@ function CreateBill() {
       items: convertedItems,
       total_amount: totalAmount
     };
+
+    axios
+      .get(`http://localhost:8080/customer/calculate-loyalty-points/${customer_id}`)
+      .then((response) => {
+        const { loyaltyPoints } = response.data;
+        alert(`Points Added: ${loyaltyPoints}`);
+      })
+      .catch((err) => {
+        console.error("Error while submitting form:", err);
+        alert("Error occurred while submitting the form. Please try again later.");
+      });
+
+
 
     axios
       .post("http://localhost:8080/bills/add", newBill)
@@ -127,7 +146,6 @@ function CreateBill() {
         alert("Error occurred while submitting the form. Please try again later.");
       });
   };
-
 
 
   const handlePrint = (billToPrint) => {
