@@ -28,6 +28,7 @@ import UpdateBill from './components/billingComponents/updateBill';
 //discount
 import Discounts from './components/discountComponents/Discount';
 import Employees from './components/employeeComponent/employee';
+import Attendance from './components/employeeComponent/attendance';
 
 function App() {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
@@ -71,6 +72,7 @@ function App() {
         <Route path="/bill/update/:id" element={<UpdateBill/>}/>
          <Route path="/bill/discounts" element={<Discounts/>} />
          <Route path="/employee" element={<Employees/>}/>
+         <Route path="/attendance" element={<Attendance/>}/>
 
       </Routes>  
     </div>

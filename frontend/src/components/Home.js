@@ -36,7 +36,7 @@ function Home() {
               <div className="card mb-3" style={{ background: `linear-gradient(to right, rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8), rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8))`, color: 'white', borderRadius: '20px' }}>
                 <div className="card-body">
                   <h5 className="card-title">Employee</h5>
-                  <Link to={`/employee`} className="btn btn-primary" style={{ color: '#000' }}>Go to Employee</Link>
+                  <Link to={`/employee`} className="btn btn-primary" style={{ color: '#fff' }}>Go to Employee</Link>
                 </div>
               </div>
             </div>
