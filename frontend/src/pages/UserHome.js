@@ -10,7 +10,7 @@ const UserHome = () => {
 
     useEffect(() => {
         const fetchUsers = async () => {
-            const response = await fetch('http://localhost:8080//users')
+            const response = await fetch('http://localhost:8080/users')
             const json = await response.json()
 
             if (response.ok) {
@@ -29,6 +29,7 @@ const UserHome = () => {
                     <UserDetails key={user._id} user={user}/>
                ))} 
             </div> 
+            <UserForm/>
         </div>
     )
 }

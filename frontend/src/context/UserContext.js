@@ -1,33 +1,39 @@
-import { createContext, useReducer } from 'react'
+import React, { createContext, useReducer, useEffect } from 'react';
 
-export const UsersContext = createContext()
+export const UsersContext = createContext();
 
-//this is just to keep the local state
+// Reducer function to manage state updates
 export const usersReducer = (state, action) => {
     switch (action.type) {
         case 'SET_USERS':
             return {
+                ...state,
                 users: action.payload
-            }
+            };
         case 'CREATE_USER':
             return {
+                ...state,
                 users: [action.payload, ...state.users]
-            }
+            };
         default:
-            return state
+            return state;
     }
-}
+};
 
 export const UsersContextProvider = ({ children }) => {
+    // Initialize state using useReducer
     const [state, dispatch] = useReducer(usersReducer, {
-        users: null //initial value of the state
-    })
+        users: null // Initial value of the state
+    });
 
-    dispatch({type: 'SET_USERES', payload: [{}, {}]})
+    useEffect(() => {
+        // Dispatch initial action to set users only once when component mounts
+        dispatch({ type: 'SET_USERS', payload: [] });
+    }, []); // Empty dependency array ensures this effect runs only once
 
     return (
-        <UsersContext.Provider value={{...state, dispatch}}>
-            { children }
+        <UsersContext.Provider value={{ ...state, dispatch }}>
+            {children}
         </UsersContext.Provider>
-    )
-}
+    );
+};

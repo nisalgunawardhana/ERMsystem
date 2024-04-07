@@ -19,6 +19,9 @@ app.use((req, res, next) => {
 const userRoutes = require('./routes/userRoutes')
 app.use('/userRoutes', userRoutes)
 
+const user = require('./routes/user')
+app.use('/user', user)
+
 //connect to DB
 mongoose.connect(process.env.MONGODB_URL)
     .then(() => {   
