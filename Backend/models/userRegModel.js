@@ -35,22 +35,22 @@ const userSchema = new Schema({
     
     isCashier: {
         type: Boolean,
-        default: fault
+        default: false,
     },
 
     isStaffManager: {
         type: Boolean,
-        default: fault
+        default: false,
     },
 
     isStaffManager: {
         type: Boolean,
-        default: fault
+        default: false,
     },
 
     isCashier: {
         type: Boolean,
-        default: fault
+        default: false,
     },
     /*,
 
