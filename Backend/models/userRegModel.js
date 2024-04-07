@@ -35,34 +35,46 @@ const userSchema = new Schema({
     
     isCashier: {
         type: Boolean,
+
         default: false,
+
     },
 
     isStaffManager: {
         type: Boolean,
+
         default: false,
+
+
     },
 
     isTrainingCoordinator: {
         type: Boolean,
+
         default: false,
+
     },
 
     isFinancialManager: {
         type: Boolean,
+
         default: false,
+
     },
 
     isLogisticManager: {
         type: Boolean,
+
         default: false,
+
     },
 
     isAdmin: {
         type: Boolean,
+
         default: false,
-    }
-});
+
+},});
 
 //static signup method
 userSchema.statics.signup = async function (first_name, last_name, email, password, userRole) {

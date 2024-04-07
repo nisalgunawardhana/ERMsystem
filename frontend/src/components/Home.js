@@ -7,6 +7,7 @@ function Home() {
       <div className="card mb-1" style={{ margin: '50px'}}>
         <div className="card-body">
           <h5 className="card-title">All Departments</h5>
+          <br></br>
           <div className="row">
             <div className="col-md-4">
               <div className="card mb-3" style={{ background: `linear-gradient(to right, rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8), rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8))`, color: 'white', borderRadius: '20px' }}>

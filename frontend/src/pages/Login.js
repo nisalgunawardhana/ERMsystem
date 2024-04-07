@@ -19,6 +19,7 @@ const Login = () => {
   };
 
   return (
+
     <div style={{ display: "flex", height: "80vh" }}>
       {/* Right side: Form */}
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "40vh" }}>
@@ -44,6 +45,7 @@ const Login = () => {
             {error && <div className="error">{error}</div>}
           </form>
         </div>
+
       </div>
     </div>
   );

@@ -13,6 +13,9 @@ const Navbar = () => {
   return (
     <header>
       <div className="container">
+        <Link to="/">
+          <h1>Diyana Fashion</h1>
+        </Link>
         <nav>
           {user && (
             <div>
