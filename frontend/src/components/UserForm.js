@@ -7,9 +7,16 @@ const UserForm = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+
+        const user = {first_name, last_name, email, password}
+
+        const response = await fetch('')
+    }
     return(
-        <form className="create">
-            <h3>Add New User</h3>
+        <form className="create" onSubmit={handleSubmit}>
+            <h3>Add New System User</h3>
 
             <label>First Name : </label>
             <input 

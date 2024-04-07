@@ -26,7 +26,7 @@ export const UsersContextProvider = ({ children }) => {
     dispatch({type: 'SET_USERES', payload: [{}, {}]})
 
     return (
-        <UsersContext.Provider value={{state, dispatch}}>
+        <UsersContext.Provider value={{...state, dispatch}}>
             { children }
         </UsersContext.Provider>
     )
