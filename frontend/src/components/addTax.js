@@ -12,7 +12,7 @@ function AddTax({ EPF, ETF }) {
     const [Due_date, setDue] = useState();
     const [Date_created, setCreated] = useState();
     const [Status, setStatus] = useState();
-    const [Total_tax, setTotal] = useState("");
+    const [Final_profit, setFinal] = useState("");
     const navigate = useNavigate();
     const { epfetf } = useParams();
 
@@ -50,7 +50,7 @@ function AddTax({ EPF, ETF }) {
     const sendData = (e) => {
         e.preventDefault();
 
-        const totTax = (parseFloat(EPF_ETF) + parseFloat(totalProfit)).toFixed(2);
+        const totTax = (parseFloat(totalProfit).toFixed(2) - Income_tax);
 
         const newTax = {
             Tax_ID,
@@ -60,8 +60,7 @@ function AddTax({ EPF, ETF }) {
             Due_date,
             Date_created,
             Status,
-            EPF_ETF: EPF_ETF,
-            Total_tax: totTax
+            Final_profit: totTax
         };
 
         axios.post("http://localhost:8080/tax/add", newTax)
@@ -75,7 +74,7 @@ function AddTax({ EPF, ETF }) {
                 setCreated(0);
                 setStatus("");
                 setEpf("");
-                setTotal("");
+                setProfit("");
                 navigate(`/tax/get/${Tax_ID}`);
             })
             .catch((err) => {
@@ -138,16 +137,10 @@ function AddTax({ EPF, ETF }) {
                                 <input type="text" className="form-control" id="profit" value={Status} onChange={(e) => setStatus(e.target.value)} />
                             </div>
                             <div className="mb-3">
-                                <label htmlFor="date" className="form-label">
-                                    <i className="bi bi-calendar2 me-2"></i>EPF/ETF
-                                </label>
-                                <input type="text" className="form-control" id="date" value={parseFloat(EPF_ETF).toFixed(2)} onChange={(e) => setEpf(e.target.value)} />
-                            </div>
-                            <div className="mb-3">
                                 <label htmlFor="desc" className="form-label">
-                                    <i className="bi bi-chat-dots me-2"></i>Total Tax
+                                    <i className="bi bi-chat-dots me-2"></i>Final Profit
                                 </label>
-                                <input type="text" className="form-control" id="desc" value={(parseFloat(EPF_ETF) + parseFloat(totalProfit)).toFixed(2)} onChange={(e) => setTotal(e.target.value)} rows={5} />
+                                <input type="text" className="form-control" id="desc" value={(parseFloat(totalProfit)).toFixed(2) - Income_tax} onChange={(e) => setFinal(e.target.value)}/>
                             </div>
                         </div>
                     </div>

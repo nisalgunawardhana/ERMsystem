@@ -26,6 +26,10 @@ const otherSchema = new Schema({
         type : Number,
         required: true
     },
+    EPF_ETF: {
+        type : Number,
+        required: true
+    },
     Monthly_profit:{
         type: Number,
         required: true
