@@ -1,12 +1,38 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
+import axios from 'axios'
+import Layout from "./Layout";
 
 function Home() {
+
+  const getData = async() => {
+    try {
+      const response = await axios.post("/api/user/get-user-info-by-id", {}, {
+        headers : {
+          Authorization : "Bearer " + localStorage.getItem('token'),
+
+        },
+      })
+      
+    } catch (error) {
+      
+    }
+  }
+
+  useEffect(() => {
+    getData()
+  },[])
+
+
   return (
-    
-      <div className="card mb-1" style={{ margin: '50px'}}>
+    <Layout>
+
+      {/*<div className="card mb-1" style={{ margin: '20px'}}>*/}
+      <div className="departments" style={{ padding: '20px' }}>
         <div className="card-body">
-          <h5 className="card-title">All Departments</h5>
+        <h3 className="card-title" style={{textAlign: "center"}}>All Departments</h3>
+        <br></br>
+        <br></br>
           <div className="row">
             <div className="col-md-4">
               <div className="card mb-3" style={{ background: `linear-gradient(to right, rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8), rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8))`, color: 'white', borderRadius: '20px' }}>
@@ -36,7 +62,7 @@ function Home() {
               <div className="card mb-3" style={{ background: `linear-gradient(to right, rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8), rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8))`, color: 'white', borderRadius: '20px' }}>
                 <div className="card-body">
                   <h5 className="card-title">Employee</h5>
-                  <Link to={`/employee`} className="btn btn-primary" style={{ color: '#000' }}>Go to Employee</Link>
+                  <Link to={`/employee`} className="btn btn-primary" style={{ color: '#fff' }}>Go to Employee</Link>
                 </div>
               </div>
             </div>
@@ -75,8 +101,10 @@ function Home() {
           </div>
         </div>
       </div>
-    
-  );
+
+    </Layout>
+      
+  )
 }
 
 export default Home;

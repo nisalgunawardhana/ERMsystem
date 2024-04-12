@@ -1,56 +1,50 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+const mongoose = require ('mongoose')
 
-const systemUserSchema = new Schema({
-
-    empId: {
-        type : Number,
-        required: true,
-        unique: true
-    },
-    
-    first_name:{
+const userSchema = new mongoose.Schema({
+    first_name: {
         type: String,
         required: true
     },
-
     last_name: {
         type: String,
         required: true
     },
-    
-    nic:{
+    email: {
         type: String,
-        required: true,
-        unique: true
-    },
-
-    username:{
-        type: String,
-        required: true,
-        unique: true
-    },
-
-    password:{
-        type: String,
-        required: true,
-        minlength: 8,
-        //password encryption
-    },
-
-    userRole: {
-        type: String,
-        required: true,
-        unique: true
-    },
-
-    isActive:{   
-        type : Boolean,
         required: true
-    }
+    },
+    password: {
+        type: String,
+        required: true
+    },
+    isCashier: {
+        type: Boolean,
+        default: false,
+    },
+    isFinanceManager: {
+        type: Boolean,
+        default: false,
+    },
+    isLogisticManager: {
+        type: Boolean,
+        default: false,
+    },
+    isStaffManager: {
+        type: Boolean,
+        default: false,
+    },
+    isTrainingCoordinator: {
+        type: Boolean,
+        default: false,
+    },
+    isAdmin: {
+        type: Boolean,
+        default: false,
+    },
+}, {
+    timestamps: true
+})
 
-}, {timestamps: true})
+const userModel = mongoose.model('users2', userSchema)
 
-
-const SystemUser = mongoose.model("SystemUser", systemUserSchema);
-module.exports = SystemUser;
+module.exports = userModel
