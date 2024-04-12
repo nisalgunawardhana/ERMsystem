@@ -55,7 +55,7 @@ function Login() {
 
                     <Button className='primary-button my-1' htmlType='submit'>LOGIN</Button>
 
-                    <Link to='/register' className='anchor mt-1'>CLICK HERE TO REGISTER</Link>
+                    <Link to='/register' className='anchor mt-1'>CLICK HERE TO REGISTER FOR ATTENDANCE</Link>
                 </Form>
                 </div>
             </div>

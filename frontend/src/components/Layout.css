@@ -129,4 +129,8 @@
     padding-left: 18px;
 }
 
-
+/*
+.close-popover .ant-popover-inner-content {
+    max-width: 50px !important; 
+}
+*/

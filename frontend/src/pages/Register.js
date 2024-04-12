@@ -17,7 +17,7 @@ function Register() {
             dispatch(hideLoading())
             if (response.data.success) {
                 toast.success(response.data.message)
-                toast("Redirecting to login page")
+                toast("Redirecting to Admin Dashboard")
                 navigate("/login")
             } else {
                 toast.error(response.data.message)
@@ -30,6 +30,7 @@ function Register() {
 
     return (
         <div className='register-container'>
+            {/*register page background image*/}
             <div className='register-background'>
                 <img src={registerImage} alt='Register Image'/>   
             </div>
@@ -55,7 +56,7 @@ function Register() {
                     </Form.Item>
 
                     <Button className='primary-button my-1' htmlType='submit'>Create User</Button>
-
+                
                     <Link to='/login' className='anchor mt-1'>CLICK HERE TO LOGIN</Link>
                 </Form>
                 </div>

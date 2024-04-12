@@ -4,7 +4,8 @@ const User = require("../models/userModel")
 const bcrypt = require('bcrypt')
 const jwt = require("jsonwebtoken")
 const authMiddleware = require("../middlewares/authMiddleware")
-//register
+
+//register - CREATE
 router.post('/register', async(req, res) => {
     try{
         const userExists = await User.findOne({ email: req.body.email })
@@ -28,7 +29,8 @@ router.post('/register', async(req, res) => {
     }
 })
 
-//login
+
+//login - VERIFICATION
 router.post('/login', async(req, res) => {
     try{
         const user = await User.findOne({ email: req.body.email })
@@ -58,6 +60,8 @@ router.post('/login', async(req, res) => {
     }
 })
 
+
+//READ BY USER ID
 router.post('/get-user-info-by-id', authMiddleware, async(req, res) => {
     try {
         const user = await User.findOne({ _id: req.body.userId })
@@ -82,5 +86,41 @@ router.post('/get-user-info-by-id', authMiddleware, async(req, res) => {
             .send({ message: "Error getting user info", success: false, error })
     }
 })
+
+
+// UPDATE - Update user information (chatgpt)
+router.put('/update-user/:userId', authMiddleware, async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const updatedUser = await User.findByIdAndUpdate(userId, req.body, { new: true });
+        if (!updatedUser) {
+            return res.status(404).send({ message: "User not found", success: false });
+        }
+        // Omitting password from the response
+        updatedUser.password = undefined;
+        res.status(200).send({ message: "User updated successfully", success: true, data: updatedUser });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ message: "Error updating user", success: false, error });
+    }
+});
+
+
+// DELETE - Delete user by user ID (chatgpt)
+router.delete('/delete-user/:userId', authMiddleware, async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const deletedUser = await User.findByIdAndDelete(userId);
+        if (!deletedUser) {
+            return res.status(404).send({ message: "User not found", success: false });
+        }
+        // Omitting password from the response
+        deletedUser.password = undefined;
+        res.status(200).send({ message: "User deleted successfully", success: true, data: deletedUser });
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ message: "Error deleting user", success: false, error });
+    }
+});
 
 module.exports = router

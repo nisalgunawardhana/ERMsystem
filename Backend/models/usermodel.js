@@ -17,6 +17,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    isAdmin: {
+        type: Boolean,
+        default: false,
+    },
     isCashier: {
         type: Boolean,
         default: false,
@@ -34,10 +38,6 @@ const userSchema = new mongoose.Schema({
         default: false,
     },
     isTrainingCoordinator: {
-        type: Boolean,
-        default: false,
-    },
-    isAdmin: {
         type: Boolean,
         default: false,
     },

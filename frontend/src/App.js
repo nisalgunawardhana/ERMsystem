@@ -72,7 +72,7 @@ function App() {
           <Route path="/login" element={<PublicRoute><Login/></PublicRoute>}/>
           <Route path="/register" element={<PublicRoute><Register/></PublicRoute>}/>
           <Route path="/" element={<ProtectedRoute><Home/></ProtectedRoute>}/>
-          
+
           <Route path="/otherExpense/add" element={<AddOther/>}/>
           <Route path="/otherExpense" element={<AllOther/>}/>
           <Route path="/otherExpense/update/:id" element={<UpdateOther/>}/>
