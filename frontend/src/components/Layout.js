@@ -346,7 +346,7 @@ const renderChildren = () => {
                         )}
                         {/*name*/}
                         <div className="d-flex align-items-center px-5">
-                            <Link className="anchor" to='/profile'>{user?.first_name}</Link>
+                            <Link className="anchor" to='/profile'>{user?.first_name} {user?.last_name}</Link>
                         </div>
                     </div>
                     <div className="body">
