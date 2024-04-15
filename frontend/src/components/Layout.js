@@ -30,6 +30,7 @@ function Layout({children}) {
         userRole = 'default role';
     }
 
+    //Menus of each user role
     //1. admin
     const adminMenu = [
         {
@@ -99,7 +100,7 @@ function Layout({children}) {
         },
         {
             name: 'Dashboard',
-            path: '/Dashboard',
+            path: '/finance',
             icon: 'ri-line-chart-line'
         },
         {
@@ -133,40 +134,13 @@ function Layout({children}) {
         },
         {
             name: 'Stock',
+            path: '/stock',
             icon: 'ri-archive-line',
-            subMenu: [
-                {
-                    name: 'A',
-                    path: '/stock/A',
-                    icon: 'ri-task-line'
-                },
-                {
-                    name: 'B',
-                    path: '/stock/B',
-                    icon: 'ri-task-line'
-                },
-                {
-                    name: 'C',
-                    path: '/stock/C',
-                    icon: 'ri-task-line'
-                }
-            ]
         },
         {
             name: 'Supplier',
-            icon: 'ri-truck-line',
-            subMenu: [
-                {
-                    name: 'Add Supplier',
-                    path: '/addSupplier',
-                    icon: 'ri-add-circle-line'
-                },
-                {
-                    name: 'Purchase Orders',
-                    path: '/purchaseOrders',
-                    icon: 'ri-file-list-line'
-                }
-            ]
+            path: '/supplier',
+            icon: 'ri-truck-line', 
         }
     ];
     
@@ -274,18 +248,16 @@ function Layout({children}) {
     };
 
     // Conditionally render children based on user role
-const renderChildren = () => {
-    if (userRole === 'default role') {
-        return null; // Return nothing if user role is default
-    }
-    return children; // Return children if user role is not default
-};
+    const renderChildren = () => {
+        if (userRole === 'default role') {
+            return null; // Return nothing if user role is default
+        }
+        return children; // Return children if user role is not default
+    };
 
     //popover for the close icon
     const popoverContent = (
-        <div>
-            
-        </div>
+        <div> </div>
     );
 
     return (
@@ -349,6 +321,8 @@ const renderChildren = () => {
                             <Link className="anchor" to='/profile'>{user?.first_name} {user?.last_name}</Link>
                         </div>
                     </div>
+
+                    {/*body*/}
                     <div className="body">
                     {renderChildren()}
                     </div>

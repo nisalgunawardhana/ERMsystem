@@ -38,6 +38,8 @@ import { useSelector } from "react-redux";
 import PublicRoute from './components/PublicRoute';
 import { Toaster } from 'react-hot-toast'
 import ProtectedRoute from './components/ProtectedRoute';
+import SystemUsers from './pages/SystemUsers';
+
 
 function App() {
   const {loading} = useSelector(state => state.alerts);
@@ -72,6 +74,7 @@ function App() {
           <Route path="/login" element={<PublicRoute><Login/></PublicRoute>}/>
           <Route path="/register" element={<PublicRoute><Register/></PublicRoute>}/>
           <Route path="/" element={<ProtectedRoute><Home/></ProtectedRoute>}/>
+          <Route path="/users" element={<ProtectedRoute><SystemUsers/></ProtectedRoute>}/>
 
           <Route path="/otherExpense/add" element={<AddOther/>}/>
           <Route path="/otherExpense" element={<AllOther/>}/>
