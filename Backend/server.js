@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 require('dotenv').config();
 const cors = require("cors");
 const app = express();
-
+//app.use(express.json())
 const PORT = process.env.PORT || 8080;
 
 app.use(cors());
@@ -23,9 +23,8 @@ connection.once("open", () => {
     console.log("MongoDB connection successful");
 });
 
-
+//other expenses
 const expenseRouter = require("./routes/expenseroutes.js");
-
 app.use("/otherExpense", expenseRouter);
 
 //Billing func
@@ -68,20 +67,16 @@ app.use("/purchaseOrder", purchaseOrderRouter);
 const requestForQuotationRouter = require("./routes/rfqroutes.js");
 app.use("/rfq", requestForQuotationRouter);
 
-//system user function
-const userRouter = require("./routes/userRoutes.js");
-app.use("/systemUser", userRouter);
-
-//login and signup
-const userRoutes = require("./routes/user.js");
-app.use('/user', userRoutes);
-
 //customer
 const customer = require("./routes/customerroute.js");
 app.use("/customer", customer);
 
 const discounts = require("./routes/discounttoute.js");
 app.use("/discounts", discounts);
+
+//user management
+const userRoute = require("./routes/userRoute.js");
+app.use("/api/user", userRoute);
 
 app.listen(PORT, () => {
     console.log(`Server is up and running on: ${PORT}`);
