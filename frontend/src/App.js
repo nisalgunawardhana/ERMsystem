@@ -2,7 +2,6 @@ import './App.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 
-
 import Header from './components/Header';
 import Home from './components/Home';
 import AddOther from './components/AddOther';
@@ -39,7 +38,7 @@ import PublicRoute from './components/PublicRoute';
 import { Toaster } from 'react-hot-toast'
 import ProtectedRoute from './components/ProtectedRoute';
 import SystemUsers from './pages/SystemUsers';
-
+import Notes from './pages/Notes';
 
 function App() {
   const {loading} = useSelector(state => state.alerts);
@@ -53,6 +52,7 @@ function App() {
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
   };
+  
   return (
     <BrowserRouter>
       {/* spinner */}
@@ -72,9 +72,10 @@ function App() {
         <Routes>
 
           <Route path="/login" element={<PublicRoute><Login/></PublicRoute>}/>
-          <Route path="/register" element={<PublicRoute><Register/></PublicRoute>}/>
+          <Route path="/register" element={<ProtectedRoute><Register/></ProtectedRoute>}/>
           <Route path="/" element={<ProtectedRoute><Home/></ProtectedRoute>}/>
           <Route path="/users" element={<ProtectedRoute><SystemUsers/></ProtectedRoute>}/>
+          <Route path="/notes" element={<ProtectedRoute><Notes/></ProtectedRoute>}/>
 
           <Route path="/otherExpense/add" element={<AddOther/>}/>
           <Route path="/otherExpense" element={<AllOther/>}/>
