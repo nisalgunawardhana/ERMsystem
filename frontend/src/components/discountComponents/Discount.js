@@ -3,6 +3,8 @@ import axios from 'axios';
 import './Discount.css';
 import Layout from '../Layout';
 import { Toaster, toast } from 'react-hot-toast';
+import { Modal, Button } from 'react-bootstrap';
+
 
 
 
@@ -21,6 +23,8 @@ export default function Discounts() {
     const [selectAll, setSelectAll] = useState(false);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [deleteItemId, setDeleteItemId] = useState(null);
+    const [showDeleteAllConfirmation, setShowDeleteAllConfirmation] = useState(false);
+
 
 
 
@@ -171,6 +175,58 @@ export default function Discounts() {
         discount.Rule_name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
+
+       // Function to handle opening delete all confirmation modal
+const handleOpenDeleteAllConfirmation = () => {
+    setShowDeleteAllConfirmation(true);
+};
+
+// Function to close delete all confirmation modal
+const handleCloseDeleteAllConfirmation = () => {
+    setShowDeleteAllConfirmation(false);
+};
+
+// Function to delete all selected bills
+// Function to delete all selected discounts
+const handleDeleteAllSelected = () => {
+    // Show toaster message before initiating delete
+    toast.promise(
+        // Promise to delete all selected discounts
+        new Promise((resolve, reject) => {
+            // Perform delete operation
+            const selectedDiscounts = discounts.filter(d => d.selected).map(d => d._id);
+            // Check if any discounts are selected
+            if (selectedDiscounts.length > 0) {
+                // Delete all selected discounts
+                Promise.all(selectedDiscounts.map(id => axios.delete(`http://localhost:8080/discounts/delete/${id}`)))
+                    .then(() => {
+                        resolve("Discount rules deleted successfully!");
+                        setDiscounts(prevDiscounts => prevDiscounts.filter(d => !d.selected));
+                    })
+                    .catch((err) => {
+                        reject(err.message);
+                    });
+            } else {
+                // If no discounts are selected, reject with a message
+                reject("No discount rules selected for deletion.");
+            }
+        }),
+        // Toast options
+        {
+            loading: 'Deleting...',
+            success: (msg) => {
+                handleCloseDeleteAllConfirmation(); // Close confirmation modal
+                return msg; // Show success message
+            },
+            error: (err) => {
+                handleCloseDeleteAllConfirmation(); // Close confirmation modal
+                return err; // Show error message
+            }
+        }
+    );
+};
+
+
     return (
         <Layout>
             <Toaster />
@@ -238,7 +294,7 @@ export default function Discounts() {
                         <button onClick={handleSelectAll} className="btn btn-secondary" style={{ margin: '0 5px' }}>
                             {selectAll ? 'Unselect All' : 'Select All'}
                         </button>
-                        <button className="btn btn-dark" onClick={handleDeleteSelected} style={{ margin: '0 5px' }}>Delete Selected</button>
+                        <button className="btn btn-danger" onClick={handleOpenDeleteAllConfirmation} style={{ margin: '0 5px' }}>Delete All Selected</button>
                     </div>
                 </div>
 
@@ -378,6 +434,17 @@ export default function Discounts() {
                         </div>
                     </div>
                 </div>
+
+                <Modal show={showDeleteAllConfirmation} onHide={handleCloseDeleteAllConfirmation}>
+    <Modal.Header closeButton>
+        <Modal.Title>Confirm Delete All</Modal.Title>
+    </Modal.Header>
+    <Modal.Body>Are you sure you want to delete all selected bills?</Modal.Body>
+    <Modal.Footer>
+        <Button variant="secondary" onClick={handleCloseDeleteAllConfirmation}>Cancel</Button>
+        <Button variant="danger" onClick={handleDeleteAllSelected}>Delete All</Button>
+    </Modal.Footer>
+</Modal>
 
 
                 {/* Discounts table */}
