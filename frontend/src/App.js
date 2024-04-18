@@ -77,29 +77,28 @@ function App() {
           <Route path="/users" element={<ProtectedRoute><SystemUsers/></ProtectedRoute>}/>
           <Route path="/notes" element={<ProtectedRoute><Notes/></ProtectedRoute>}/>
 
-          <Route path="/otherExpense/add" element={<AddOther/>}/>
-          <Route path="/otherExpense" element={<AllOther/>}/>
-          <Route path="/otherExpense/update/:id" element={<UpdateOther/>}/>
-          <Route path="/finance" element={<FinanceDash/>}/>
-          <Route path="/profit/:month" element={<AddProfit/>}/>
-          <Route path="/profit/get/:id" element={<ProfitDetails/>}/>
-          <Route path="/profit/update/:id" element={<EditProfit/>}/>
-          <Route path="/tax/get/:id" element={<TaxDetails/>}/>
-          <Route path="/tax/:epfetf" element={<AddTax/>}/>
-          <Route path="/supplier" element={<Supplier/>}/>
-          <Route path='/purchaseOrder' element={<PurchaseOrder/>}/>
-          <Route path="/supplier/add" element={<AddSupplier/>}/>
-          <Route path="/supplier/update/:id" element={<UpdateSupplier/>}/>
-          <Route path="/purchaseOrder/add" element={<AddPurchaseOrder/>}/>
-          <Route path="/rfq" element={<RFQ/>}/>
-          <Route path="/Customer" element={<CustomerR/>}/>
-          <Route path="/Customer/update/:id" element={<UpdateCustomer/>}/>
-          <Route path="/trainee" element={<Trainees/>}/>
-          <Route path="/bill" element={<Bill/>}/>
-          <Route path="/bill/CreateBill" element={<CreateBill/>}/>
-          <Route path="/bill/update/:id" element={<UpdateBill/>}/>
-          <Route path="/bill/discounts" element={<Discounts/>} />
-          <Route path="/employee" element={<Employees/>}/>
+          <Route path="/otherExpense" element={<ProtectedRoute><AllOther/></ProtectedRoute>}/>
+          <Route path="/otherExpense/update/:id" element={<ProtectedRoute><UpdateOther/></ProtectedRoute>}/>
+          <Route path="/finance" element={<ProtectedRoute><FinanceDash/></ProtectedRoute>}/>
+          <Route path="/profit/:month" element={<ProtectedRoute><AddProfit/></ProtectedRoute>}/>
+          <Route path="/profit/get/:id" element={<ProtectedRoute><ProfitDetails/></ProtectedRoute>}/>
+          <Route path="/profit/update/:id" element={<ProtectedRoute><EditProfit/></ProtectedRoute>}/>
+          <Route path="/tax/get/:id" element={<ProtectedRoute><TaxDetails/></ProtectedRoute>}/>
+          <Route path="/tax/:epfetf" element={<ProtectedRoute><AddTax/></ProtectedRoute>}/>
+          <Route path="/supplier" element={<ProtectedRoute><Supplier/></ProtectedRoute>}/>
+          <Route path='/purchaseOrder' element={<ProtectedRoute><PurchaseOrder/></ProtectedRoute>}/>
+          <Route path="/supplier/add" element={<ProtectedRoute><AddSupplier/></ProtectedRoute>}/>
+          <Route path="/supplier/update/:id" element={<ProtectedRoute><UpdateSupplier/></ProtectedRoute>}/>
+          <Route path="/purchaseOrder/add" element={<ProtectedRoute><AddPurchaseOrder/></ProtectedRoute>}/>
+          <Route path="/rfq" element={<ProtectedRoute><RFQ/></ProtectedRoute>}/>
+          <Route path="/Customer" element={<ProtectedRoute><CustomerR/></ProtectedRoute>}/>
+          <Route path="/Customer/update/:id" element={<ProtectedRoute><UpdateCustomer/></ProtectedRoute>}/>
+          <Route path="/trainee" element={<ProtectedRoute><Trainees/></ProtectedRoute>}/>
+          <Route path="/bill" element={<ProtectedRoute><Bill/></ProtectedRoute>}/>
+          <Route path="/bill/CreateBill" element={<ProtectedRoute><CreateBill/></ProtectedRoute>}/>
+          <Route path="/bill/update/:id" element={<ProtectedRoute><UpdateBill/></ProtectedRoute>}/>
+          <Route path="/bill/discounts" element={<ProtectedRoute><Discounts/></ProtectedRoute>} />
+          <Route path="/employee" element={<ProtectedRoute><Employees/></ProtectedRoute>}/>
 
         </Routes>  
       

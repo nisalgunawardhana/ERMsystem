@@ -6,6 +6,8 @@ const jwt = require("jsonwebtoken")
 const authMiddleware = require("../middlewares/authMiddleware")
 const Note = require('../models/noteModel');
 
+
+//--system users--
 //register - CREATE
 router.post('/register', async(req, res) => {
     try{
@@ -29,7 +31,6 @@ router.post('/register', async(req, res) => {
         res.status(500).send({ message: "Error creating user", success: false, error })
     }
 })
-
 
 //login - VERIFICATION
 router.post('/login', async(req, res) => {
@@ -60,7 +61,6 @@ router.post('/login', async(req, res) => {
             .send({ message: "Error logging in", success: false, error })
     }
 })
-
 
 //READ BY USER ID
 router.post('/get-user-info-by-id', authMiddleware, async(req, res) => {
@@ -98,10 +98,49 @@ router.get('/', async (req, res) => {
     }
 });
 
+// Route to delete a user
+router.delete('/delete/:id', async (req, res) => {
+    try {
+        await User.findByIdAndDelete(req.params.id);
+        res.json({ message: 'User deleted' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
 
-//notes
+// Update a user by ID
+router.put('/update/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const updatedUserData = req.body;
+        const updatedUser = await User.findByIdAndUpdate(id, updatedUserData, { new: true });
+        if (!updatedUser) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        res.status(200).json(updatedUser);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error updating user", error });
+    }
+});
 
-// Route to get all notes
+// Route to delete multiple users
+router.delete('/delete-multiple', async (req, res) => {
+    try {
+        const { userIds } = req.body;
+        await User.deleteMany({ _id: { $in: userIds } });
+        res.json({ message: 'Selected users deleted successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error deleting selected users", error });
+    }
+});
+
+
+
+
+//--notes--
+// to get all notes
 router.get('/read-all', async (req, res) => {
     try {
         const notes = await Note.find();
@@ -111,7 +150,7 @@ router.get('/read-all', async (req, res) => {
     }
 });
 
-// Route to create a new notes
+// to create a new notes
 router.post('/add', async (req, res) => {
     const note = new Note({
         note_no: req.body.note_no,
@@ -127,12 +166,12 @@ router.post('/add', async (req, res) => {
     }
 });
 
-// Route to get a single note by ID
+// to get a single note by ID
 router.get('/read-one/:id', getNote, (req, res) => {
     res.json(res.note);
 });
 
-// Route to update a note
+// update a note
 router.patch('/update/:id', getNote, async (req, res) => {
     if (req.body.note_no != null) {
         res.task.note_no = req.body.note_no;
@@ -152,7 +191,7 @@ router.patch('/update/:id', getNote, async (req, res) => {
     }
 });
 
-// Route to delete a task
+// to delete a note
 router.delete('/delete/:id', getNote, async (req, res) => {
     try {
         await res.note.remove();
