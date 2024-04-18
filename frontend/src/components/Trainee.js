@@ -71,7 +71,7 @@ export default function Trainee() {
             ...prevState,
             [name]: value
         }));
-    }
+        }
 
     function handleMeetingChange(e) {
         const { name, value } = e.target;

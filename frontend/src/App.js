@@ -93,7 +93,7 @@ function App() {
           <Route path="/rfq" element={<RFQ/>}/>
           <Route path="/Customer" element={<CustomerR/>}/>
           <Route path="/Customer/update/:id" element={<UpdateCustomer/>}/>
-          <Route path="/trainee" element={<Trainees/>}/>
+          <Route path="/trainee" element={<ProtectedRoute><Trainees/></ProtectedRoute>}/>
           <Route path="/bill" element={<Bill/>}/>
           <Route path="/bill/CreateBill" element={<CreateBill/>}/>
           <Route path="/bill/update/:id" element={<UpdateBill/>}/>
