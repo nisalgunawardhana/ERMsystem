@@ -6,7 +6,7 @@ import { toast } from "react-hot-toast"
 import axios from "axios"
 import { useDispatch } from "react-redux"
 import { hideLoading, showLoading } from '../redux/alertsSlice';
-import './Login.css'
+
 
 function Login() {
     const dispatch = useDispatch();

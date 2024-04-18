@@ -7,12 +7,28 @@ import { toast } from "react-hot-toast"
 import { useDispatch } from "react-redux"
 import { showLoading, hideLoading } from '../redux/alertsSlice';
 import '../User.css'
+import Layout from '../components/Layout';
 
 function Register() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const onFinish = async(values) => {
+        //to make sure all the fields are filled
+        if (!values.first_name) {
+            toast.error('Enter the first name');
+            return;
+        } else if (!values.last_name) {
+            toast.error('Enter the last name');
+            return;
+        } else if (!values.email) {
+            toast.error('Enter the email');
+            return;
+        } else if (!values.password) {
+            toast.error('Enter a password');
+            return;
+        }
+
         try {
             dispatch(showLoading())
             const response = await axios.post('/api/user/register', values)
@@ -20,7 +36,7 @@ function Register() {
             if (response.data.success) {
                 toast.success(response.data.message)
                 toast("Redirecting to Admin Dashboard")
-                navigate("/login")
+                navigate("/users")
             } else {
                 toast.error(response.data.message)
             }
@@ -31,7 +47,9 @@ function Register() {
     }
 
     return (
-        <div className='register-container'>
+        <Layout>
+
+<div className='register-container'>
             <div className='register-background'>
                 <img src={registerImage} alt='Register Image'/>   
             </div>
@@ -40,9 +58,9 @@ function Register() {
             <div className='authentication'>
                 <div className='authentication-form card p-4'>
                 <h1 className='card-topic'>New System User</h1>
-                <hr/>
+                
                 <Form layout='vertical' onFinish={onFinish}> 
-                    <Form.Item required label='First Name' name='first_name' rules={[{required : true}]}>
+                    <Form.Item required label='First Name' name='first_name' >
                         <Input placeholder='First Name'/>
                     </Form.Item> 
                         
@@ -65,6 +83,9 @@ function Register() {
                 </div>
             </div>
         </div>
+
+        </Layout>
+        
     )
 }
 
