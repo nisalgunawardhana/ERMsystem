@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from "axios";
 import { Link } from "react-router-dom";
 import BillPreviewModal from './Billpmodel';
+import Layout from '../Layout';
 
 export default function Bills() {
 
@@ -13,9 +14,6 @@ export default function Bills() {
     const [selectAll, setSelectAll] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const billsPerPage = 10;
-
-
-
 
     useEffect(() => {
         function getbill() {
@@ -178,6 +176,7 @@ export default function Bills() {
 
 
     return (
+        <Layout>
 
         <div className="container">
 
@@ -325,7 +324,8 @@ export default function Bills() {
             )}
 
         </div>
-
+        
+        </Layout>
 
 
 
