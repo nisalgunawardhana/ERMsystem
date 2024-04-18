@@ -23,6 +23,9 @@ connection.once("open", () => {
     console.log("MongoDB connection successful");
 });
 
+app.listen(PORT, () => {
+    console.log(`Server is up and running on: ${PORT}`);
+});
 
 const expenseRouter = require("./routes/expenseroutes.js");
 
@@ -89,7 +92,3 @@ app.use("/discounts", discounts);
 
 const Attendance = require("./routes/attendanceroute.js");
 app.use("/Attendance", Attendance);
-
-app.listen(PORT, () => {
-    console.log(`Server is up and running on: ${PORT}`);
-});

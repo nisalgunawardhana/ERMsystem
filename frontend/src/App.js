@@ -11,6 +11,7 @@ import ProfitDetails from './components/viewProfit';
 import EditProfit from './components/editProfit';
 import TaxDetails from './components/viewTax';
 import AddTax from './components/addTax';
+import UpdateTax from './components/updateTax';
 import UpdateOther from './components/UpdateOther';
 import Supplier from './components/supplier';
 import PurchaseOrder from './components/purchaseOrders';
@@ -57,7 +58,8 @@ function App() {
         <Route path="/profit/get/:id" element={<ProfitDetails/>}/>
         <Route path="/profit/update/:id" element={<EditProfit/>}/>
         <Route path="/tax/get/:id" element={<TaxDetails/>}/>
-        <Route path="/tax/:epfetf" element={<AddTax/>}/>
+        <Route path="/tax/add" element={<AddTax/>}/>
+        <Route path="/tax/update/:id" element={<UpdateTax/>}/>
         <Route path="/supplier" element={<Supplier/>}/>
         <Route path='/purchaseOrder' element={<PurchaseOrder/>}/>
         <Route path="/supplier/add" element={<AddSupplier/>}/>
@@ -75,6 +77,7 @@ function App() {
          <Route path="/attendance" element={<Attendance/>}/>
 
       </Routes>  
+      
     </div>
   </div>
   </BrowserRouter>

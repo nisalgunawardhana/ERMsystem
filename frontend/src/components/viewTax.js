@@ -4,28 +4,18 @@ import { useParams, Link } from 'react-router-dom';
 
 function TaxDetails() {
     const { id } = useParams();
-    const [mon, setMon] = useState(null);
     const [tax, setTax] = useState(null);
-    const [Tax_income, setTaxableIncome] = useState(null);
+    const [Income_tax, setIncomeTax] = useState(0);
+    const [Rate, setRate] = useState();
     const [profit, setProfit] = useState(null);
-    const [totalSalary, setTotalSalary] = useState(0);
-    const [searchMonth, setSearchMonth] = useState('');
+    const [totalProfit, setTotalProfit] = useState(0);
     const [searchResult, setSearchResult] = useState(null);
-    const [displayedData, setDisplayedData] = useState(null);
 
     useEffect(() => {
         axios.get(`http://localhost:8080/tax/get/${id}`)
             .then((res) => {
                 setTax(res.data.tax);
-                setDisplayedData(res.data.tax); // Set the initial displayed data
-                setMon(res.data.profit.Month);
-            })
-            .catch((err) => {
-                console.error(err);
-            });
-        axios.get(`http://localhost:8080/profit/get/${id}`)
-            .then((res) => {
-                setProfit(res.data.profit);
+                setRate(res.data.tax.Rate);
             })
             .catch((err) => {
                 console.error(err);
@@ -52,7 +42,6 @@ function TaxDetails() {
         const handleBackButton = () => {
             // Reset search result when navigating back
             setSearchResult(null);
-            setDisplayedData(profit); // Set the displayed data back to the original profit data
         };
 
         window.addEventListener('popstate', handleBackButton);
@@ -136,8 +125,8 @@ function TaxDetails() {
                                 <td>${searchResult ? new Date(searchResult[0].Due_date).toLocaleDateString() : new Date(tax.Due_date).toLocaleDateString()}</td>
                             </tr>
                             <tr>
-                                <td>Date Created</td>
-                                <td>${searchResult ? new Date(searchResult[0].Date_created).toLocaleDateString() : new Date(tax.Date_created).toLocaleDateString()}</td>
+                                <td>Date Modified</td>
+                                <td>${searchResult ? new Date(searchResult[0].Date_modified).toLocaleDateString() : new Date(tax.Date_modified).toLocaleDateString()}</td>
                             </tr>
                             <tr>
                                 <td>Payment Status</td>
@@ -175,48 +164,19 @@ function TaxDetails() {
 
     const [month, setMonth] = useState({ Month: '' });
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setMonth(prevState => ({ ...prevState, [name]: value }));
-    };
-
     const submit = (e) => {
         e.preventDefault();
-        const epfetf = EPF + ETF;
         // Redirect to the page where total amount is fetched for the entered month
-        window.location.href = `/tax/${epfetf}`;
+        window.location.href = `/tax/add`;
     };
 
     const [totalAmount, setTotalAmount] = useState(0);
-    const [totalOther, setTotalOther] = useState(0);
-    const [totalSupp, setTotalSupp] = useState(0);
 
     useEffect(() => {
         const currentMonth = getCurrentMonth();
         axios.get(`http://localhost:8080/profit/${currentMonth}`)
             .then((res) => {
                 setTotalAmount(res.data.totalAmount);
-            })
-            .catch((err) => {
-                console.error(err);
-            });
-        axios.get(`http://localhost:8080/profit/other/${currentMonth}`)
-            .then((res) => {
-                setTotalOther(res.data.totalOther);
-            })
-            .catch((err) => {
-                console.error(err);
-            });
-        axios.get(`http://localhost:8080/profit/supplier/${currentMonth}`)
-            .then((res) => {
-                setTotalSupp(res.data.totalSupp);
-            })
-            .catch((err) => {
-                console.error(err);
-            });
-        axios.get(`http://localhost:8080/profit/salary/${currentMonth}`)
-            .then((res) => {
-                setTotalSalary(res.data.totalSupp);
             })
             .catch((err) => {
                 console.error(err);
@@ -236,15 +196,7 @@ function TaxDetails() {
         fetchData();
     }, []);
 
-    const TotalProfit = profit ? profit.reduce((acc, curr) => acc + parseFloat(curr.Monthly_profit), 0) : 0;
-
-    const [selectedMonth, setSelectedMonth] = useState('');
     const [selectedYear, setSelectedYear] = useState('');
-
-    const monthsOptions = Array.from({ length: 12 }, (_, index) => {
-        const month = new Date(null, index + 1, null).toLocaleDateString('en', { month: 'long' });
-        return <option key={index} value={month}>{month}</option>;
-    });
 
     // Generate options for years (current year and the last 5 years)
     const currentYear = new Date().getFullYear();
@@ -253,42 +205,14 @@ function TaxDetails() {
         return <option key={index} value={year}>{year}</option>;
     });
 
-    const year = searchResult ? new Date(searchResult[0]?.Date_created).getFullYear() : new Date(tax?.Date_created).getFullYear();
+    const year = searchResult ? new Date(searchResult[0]?.Date_modified).getFullYear() : new Date(tax?.Date_modified).getFullYear();
 
-    const [EPF, setEPF] = useState(0);
-    const [ETF, setETF] = useState(0);
-    const [salary, setSalary] = useState('');
-    const [isCalculating, setIsCalculating] = useState(false);
-    let TotEtf = 0;
-
-    const calculateEPFETF = async () => {
-        setIsCalculating(true);
-        try {
-            // Assuming salary is entered in the form
-            if (!totalAmount) {
-                throw new Error('Please enter the salary.');
-            }
-
-            // Calculate EPF (10% of salary) and ETF (3% of salary)
-            const EPF = (parseInt(totalAmount) * 20) / 100;
-            const ETF = (parseInt(totalAmount) * 3) / 100;
-            TotEtf = parseFloat(TotEtf).toFixed(2) + parseFloat(ETF).toFixed(2);
-
-            setEPF(EPF);
-            setETF(ETF);
-        } catch (error) {
-            console.error('Error calculating EPF and ETF:', error);
-        } finally {
-            setIsCalculating(false);
-        }
-    };
-
-    // Assuming you have a variable `endDateString` containing the value of the "Date created" field
+    //convert date to readable format
     let endDateString = null;
-    if (searchResult && searchResult[0] && searchResult[0].Date_created) {
-        endDateString = new Date(searchResult[0].Date_created);
-    } else if (tax && tax.Date_created) {
-        endDateString = new Date(tax.Date_created);
+    if (searchResult && searchResult[0] && searchResult[0].Date_modified) {
+        endDateString = new Date(searchResult[0].Date_modified);
+    } else if (tax && tax.Date_modified) {
+        endDateString = new Date(tax.Date_modified);
     }
 
     // Function to format the date as "1st Jan 2024"
@@ -335,6 +259,7 @@ function TaxDetails() {
         return previousYear;
     };
 
+    //navigate to profit log
     const getCurrentMonthProfitId = async () => {
         try {
             let currentMonth = getCurrentMonth();
@@ -345,7 +270,7 @@ function TaxDetails() {
             if (profit.length > 0) {
                 // Filter profit records based on date_created column
                 const currentYearProfit = profit.find(item => {
-                    const dateCreated = new Date(item.Date_created);
+                    const dateCreated = new Date(item.Date_modified);
                     return dateCreated.getFullYear() === currentYear;
                 });
 
@@ -364,7 +289,7 @@ function TaxDetails() {
             if (profit.length > 0) {
                 // Filter profit records based on date_created column
                 const currentYearProfit = profit.find(item => {
-                    const dateCreated = new Date(item.Date_created);
+                    const dateCreated = new Date(item.Date_modified);
                     return dateCreated.getFullYear() === currentYear;
                 });
 
@@ -393,6 +318,7 @@ function TaxDetails() {
         }
     };
 
+    //navigate to tax doc
     const getCurrentTaxId = async () => {
         try {
             let currentYear = getCurrentYear();
@@ -402,7 +328,7 @@ function TaxDetails() {
             if (tax.length > 0) {
                 // Filter tax records based on date_created column
                 const currentYearTax = tax.find(item => {
-                    const dateCreated = new Date(item.Date_created);
+                    const dateCreated = new Date(item.Date_modified);
                     return dateCreated.getFullYear() === currentYear;
                 });
 
@@ -420,7 +346,7 @@ function TaxDetails() {
             if (tax.length > 0) {
                 // Filter tax records based on date_created column
                 const previousYearTax = tax.find(item => {
-                    const dateCreated = new Date(item.Date_created);
+                    const dateCreated = new Date(item.Date_modified);
                     return dateCreated.getFullYear() === previousYear;
                 });
 
@@ -449,232 +375,251 @@ function TaxDetails() {
         }
     };
 
+    useEffect(() => {
+        let currentYear = getCurrentYear();
+        axios.get(`http://localhost:8080/tax/profit/${currentYear}`)
+            .then((res) => {
+                setTotalProfit(res.data.totalProfit);
+            })
+            .catch((err) => {
+                console.error(err);
+            });
+        const incomeTax = (totalProfit * Rate) / 100;
+        setIncomeTax(incomeTax.toFixed(2));
+    });
+
     return (
-        <div style={{ marginTop: '20px' }}>
-            <div className="container-fluid" style={{ marginTop: '40px', width: '1260px' }}>
-                <ul class="nav nav-tabs mb-3" id="myTab0" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <Link
-                            className="nav-link"
-                            id="contact-tab0"
-                            to="/otherExpense"
-                            role="tab"
-                            aria-controls="contact"
-                            aria-selected="false"
-                        >
-                            Dashboard
-                        </Link>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button
-                            data-mdb-tab-init
-                            class="nav-link"
-                            id="profile-tab0"
-                            type="button"
-                            role="tab"
-                            aria-controls="profile"
-                            aria-selected="false"
-                            onClick={handleClick}
-                        >
-                            Profit Log
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <Link
-                            className="nav-link"
-                            id="contact-tab0"
-                            to="/otherExpense"
-                            role="tab"
-                            aria-controls="contact"
-                            aria-selected="false"
-                        >
-                            <i className="bi bi-wallet"></i> Other Expenses
-                        </Link>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button
-                            data-mdb-tab-init
-                            class="nav-link active"
-                            id="contact-tab0"
-                            data-mdb-target="#contact0"
-                            type="button"
-                            role="tab"
-                            aria-controls="contact"
-                            aria-selected="false"
-                            onClick={handleClickTax}
-                            style={{ borderBottom: '2px solid #007bff', borderTop: 'none' }}
-                        >
-                            Tax Document
-                        </button>
-                    </li>
-                </ul>
-                {/*Breadcrumb*/}
-                <nav aria-label="breadcrumb" style={{ marginLeft: '10px' }}>
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/">Home</a></li>
-                        <li class="breadcrumb-item"><a href="/finance">Finance Dashboard</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Tax Document</li>
-                    </ol>
-                </nav>
-                {/* Main Content */}
-                <div className="container-fluid" style={{ marginTop: '40px' }}>
-                    <div className="row">
-                        <div className="col-md-4">
-                            <label htmlFor="year">Year:</label>
-                            <select id="year" className="form-control" value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)}>
-                                <option value="">Select Year</option>
-                                {yearsOptions}
-                            </select>
-                        </div>
-                        <div className="col-md-4 align-self-end">
-                            <button className="btn btn-primary" onClick={handleSearch} onKeyDown={handleKeyDown}>Search</button>
+        <div className="container">
+            <ul class="nav nav-tabs mb-3" id="myTab0" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <Link
+                        className="nav-link"
+                        id="contact-tab0"
+                        to="/finance"
+                        role="tab"
+                        aria-controls="contact"
+                        aria-selected="false"
+                    >
+                        Dashboard
+                    </Link>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button
+                        data-mdb-tab-init
+                        class="nav-link"
+                        id="profile-tab0"
+                        type="button"
+                        role="tab"
+                        aria-controls="profile"
+                        aria-selected="false"
+                        onClick={handleClick}
+                    >
+                        Profit Log
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <Link
+                        className="nav-link"
+                        id="contact-tab0"
+                        to="/otherExpense"
+                        role="tab"
+                        aria-controls="contact"
+                        aria-selected="false"
+                    >
+                        Other Expenses
+                    </Link>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button
+                        data-mdb-tab-init
+                        class="nav-link active"
+                        id="contact-tab0"
+                        data-mdb-target="#contact0"
+                        type="button"
+                        role="tab"
+                        aria-controls="contact"
+                        aria-selected="false"
+                        onClick={handleClickTax}
+                        style={{ borderBottom: '2px solid #007bff', borderTop: 'none' }}
+                    >
+                        <i className="bi bi-file-earmark"></i> Tax Document
+                    </button>
+                </li>
+            </ul>
+            {/*Breadcrumb for tax doc*/}
+            <nav aria-label="breadcrumb" style={{ marginLeft: '10px' }}>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item"><a href="/finance">Finance Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Tax Document</li>
+                </ol>
+            </nav>
+            {/* Main Content */}
+            <div className="row mb-2" style={{ marginTop: '35px' }}>
+                <h2 className="text-left mb-4" style={{ marginTop: '15px' }}>Annual Tax Details</h2>
+                {/* Generate tax Report */}
+                <div className="col-lg-6 col-md-12 mb-3">
+                    <div className="card" style={{ height: '160px' }}>
+                        <div className="card-body">
+                            <h5 className="card-title">Generate Annual Tax Report</h5>
+                            <p className="card-text">Click the button below to generate a report for the annual tax report.</p>
+                            <button className="btn btn-primary mb-3" onClick={handleReportGeneration} style={{ marginTop: '10px', width: '200px' }}> Generate Report</button>
                         </div>
                     </div>
+                </div>
 
-                    <div className="row" style={{ marginTop: '40px' }}>
-                        {/* Generate Monthly Profit Report Card */}
-                        <div className="col-md-6">
-                            <div className="card" style={{ height: '160px' }}>
-                                <div className="card-body">
-                                    <h5 className="card-title">Generate Monthly Profit Report</h5>
-                                    <p className="card-text">Click the button below to generate a report for the monthly profit.</p>
-                                    <button className="btn btn-primary" onClick={handleReportGeneration} style={{ marginTop: '10px' }}> Generate Report</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Add Profit Card */}
-                        <div className="col-md-6">
-                            <div className="card" style={{ height: '160px' }}>
-                                <div className="card-body">
-                                    <form onSubmit={submit}>
-                                        <h5>Add New Tax Document</h5>
-                                        <p className="card-text">You can create a tax document to keep track of the tax details.</p>
-                                        <div className="row mb-3">
-                                            <div className="col">
-                                                <div className="btn-group">
-                                                    <button type="submit" className="btn btn-primary" style={{ marginTop: '20px' }}>Add Tax Document</button>
-                                                </div>
-                                            </div>
+                {/* Button to add new tax doc */}
+                <div className="col-lg-6 col-md-12 mb-3">
+                    <div className="card" style={{ height: '160px' }}>
+                        <div className="card-body">
+                            <form onSubmit={submit}>
+                                <h5>Add New Tax Document</h5>
+                                <p className="card-text">You can create a tax document to keep track of the tax details.</p>
+                                <div className="row mb-3">
+                                    <div className="col">
+                                        <div className="btn-group">
+                                            <button type="submit" className="btn btn-primary mb-3" style={{ marginTop: '10px',width: '200px' }}>Add Tax Document</button>
                                         </div>
-                                    </form>
+                                    </div>
                                 </div>
-                            </div>
+                            </form>
                         </div>
                     </div>
+                </div>
+            </div>
 
-                    <h2 className="mb-4" style={{ marginTop: '60px' }}><i className="fas fa-chart-line"></i> Tax Document {(searchResult || tax) && `- ${year}`}</h2>
-                    <p className="text-muted">Explore the detailed breakdown of your profits, including sales income, expenses,<br></br> and monthly profit, to gain insights into your financial performance.</p>
+            {/* Search bar for tax doc */}
+            <div className="container-fluid" style={{ marginTop: '25px' }}>
+                <div className="row">
+                    <div className="col-md-4">
+                        <label htmlFor="year">Year:</label>
+                        <select id="year" className="form-control" value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)}>
+                            <option value="">Select Year</option>
+                            {yearsOptions}
+                        </select>
+                    </div>
+                    <div className="col-md-4 align-self-end">
+                        <button className="btn btn-primary" onClick={handleSearch} onKeyDown={handleKeyDown}>Search</button>
+                    </div>
+                </div>
 
-                    {/* Display profit details for searched month */}
-                    {(searchResult || tax) && (
-                        <div className="row">
-                            {/* Left Column for Profit Details */}
-                            <div className="col-md-6">
-                                <div className="card" style={{ marginTop: '25px', marginBottom: '25px' }}>
-                                    <div className="card-body">
-                                        <h4 className="mb-3">Valid Period: January 1, {year} - {endDateFormatted}</h4>
-                                        <table className="table">
-                                            <tbody>
-                                                <tr>
-                                                    <th scope="row"><i className="bi bi-file-earmark-text"></i>&nbsp;&nbsp; Tax Doc ID:</th>
-                                                    <td>{searchResult ? searchResult[0].Tax_ID : tax.Tax_ID}</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row"><i className="bi bi-cash"></i>&nbsp;&nbsp; Taxable Income:</th>
-                                                    <td>Rs.{searchResult ? searchResult[0].Taxable_income : tax.Taxable_income}</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row"><i className="bi bi-percent"></i>&nbsp;&nbsp; Tax Rate:</th>
-                                                    <td>{searchResult ? searchResult[0].Rate : tax.Rate}%</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row"><i className="bi bi-currency-dollar"></i>&nbsp;&nbsp; Income Tax:</th>
-                                                    <td>Rs.{searchResult ? searchResult[0].Income_tax : tax.Income_tax}</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row"><i className="bi bi-calendar"></i>&nbsp;&nbsp; Due Date:</th>
-                                                    <td>{searchResult ? new Date(searchResult[0].Due_date).toLocaleDateString() : new Date(tax.Due_date).toLocaleDateString()}</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row"><i className="bi bi-clock"></i>&nbsp;&nbsp; Date created:</th>
-                                                    <td>{searchResult ? new Date(searchResult[0].Date_created).toLocaleDateString() : new Date(tax.Date_created).toLocaleDateString()}</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row"><i className="bi bi-check-circle"></i>&nbsp;&nbsp; Payment status:</th>
-                                                    <td>{searchResult ? searchResult[0].Status : tax.Status}</td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row"><i className="bi bi-info-circle"></i>&nbsp;&nbsp; Final profit:</th>
-                                                    <td>Rs.{searchResult ? searchResult[0].Final_profit : tax.Final_profit}</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                <div className="container mt-3" style={{ marginTop: '30px' }}>
+                    <h2 className="mb-4" style={{ marginTop: '30px' }}><i className="fas fa-chart-line"></i> Tax Document {(searchResult || tax) && `- ${year}`}</h2>
+                    <p className="text-muted">Explore the detailed breakdown of your profits, including sales income, expenses, and monthly profit, to gain insights into your financial performance.</p>
 
-                                        <div class="button-container">
-                                            <button onclick="window.print()" class="btn btn-primary" style={{ marginLeft: '180px', width: '160px' }}>Edit</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Right Column for Cards */}
-                            <div className="col-md-6" style={{ marginTop: '-155px', marginLeft: '0px' }}>
-                                <div className="row mb-4">
-                                    <div className="col-md-6 mb-3">
-                                        <div className="card h-100">
-                                            <div className="card-body d-flex justify-content-between align-items-center">
-                                                <div>
-                                                    <h4 className="card-title mb-0">{searchResult ? new Date(searchResult[0].Due_date).toLocaleDateString() : new Date(tax.Due_date).toLocaleDateString()}</h4>
-                                                    <p className="card-text">Due Date</p>
-                                                </div>
-                                                <i className="bi bi-calendar h1 text-primary"></i>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div className="col-md-6 mb-3">
-                                        <div className="card h-100">
-                                            <div className="card-body d-flex justify-content-between align-items-center">
-                                                <div>
-                                                    <h4 className="card-title mb-0">Rs.{searchResult ? searchResult[0].Total_tax : tax.Total_tax}</h4>
-                                                    <p className="card-text">Total Tax Payable</p>
-                                                </div>
-                                                <i className="bi bi-info-circle h1 text-success"></i>
-                                            </div>
-
-                                        </div>
-                                    </div>
-
-                                    <div className="col-md-12 mb-3">
-                                        <div className="card" style={{ marginTop: '70px' }}>
+                    {/* Summary of tax details */}
+                    {tax && (
+                        <div className="row justify-content-center">
+                            <div className="row">
+                                <div className="col-lg-4 col-md-6 mb-3">
+                                    <div className="card" style={{ background: 'linear-gradient(to right, rgba(0, 123, 255, 0.8), rgba(255, 0, 123, 0.8))', color: '#fff', minWidth: '250px' }}>
+                                        <div className="card-body d-flex justify-content-between align-items-center">
                                             <div className="card-body">
-                                                <h5 className="card-title">EPF & ETF Calculator</h5>
-                                                <div className="mb-3">
-                                                    <label htmlFor="salary" className="form-label">Salary for current month</label>
-                                                    <input type="number" className="form-control" id="salary" value={totalAmount} onChange={(e) => setSalary(e.target.value)} />
-                                                </div>
-                                                <button className="btn btn-primary" onClick={calculateEPFETF} disabled={isCalculating}>
-                                                    {isCalculating ? 'Calculating...' : 'Calculate'}
-                                                </button>
-                                                <div className="mt-3">
-                                                    {EPF !== 0 && (
-                                                        <div>
-                                                            <h5 className="mb-3"><strong>EPF:</strong> Rs. {EPF}</h5>
-                                                            <h5 className="mb-0"><strong>ETF:</strong> Rs. {ETF}</h5>
-                                                        </div>
-                                                    )}
-                                                </div>
+                                                <h2 className="card-title">{new Date(tax.Due_date).toLocaleDateString()}</h2>
+                                                <p className="card-text" style={{ marginTop: '35px' }}>Due Date</p>
+                                            </div>
+                                            <i className="bi bi-calendar h1"></i>
+                                        </div>
+                                        <div className="card-footer bg-transparent border-top-0">
+                                            <div className="progress" style={{ height: '10px', marginTop: '-25px' }}>
+                                                <div className="progress-bar" role="progressbar" style={{ backgroundColor: '#b2beb5', width: '50%' }} aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="col-lg-4 col-md-6 mb-3">
+                                    <div className="card" style={{ background: 'linear-gradient(to right, rgba(0, 123, 255, 0.8), rgba(255, 0, 123, 0.8))', color: '#fff', minWidth: '250px' }}>
+                                        <div className="card-body d-flex justify-content-between align-items-center">
+                                            <div className="card-body">
+                                                <h2 className="card-title">Rs.{Income_tax}</h2>
+                                                <p className="card-text" style={{ marginTop: '35px' }}>Tax Payable</p>
+                                            </div>
+                                            <i className="bi bi-info-circle h1"></i>
+                                        </div>
+                                        <div className="card-footer bg-transparent border-top-0">
+                                            <div className="progress" style={{ height: '10px', marginTop: '-25px' }}>
+                                                <div className="progress-bar" role="progressbar" style={{ backgroundColor: '#b2beb5', width: '75%' }} aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="col-lg-4 col-md-6 mb-3">
+                                    <div className="card" style={{ background: 'linear-gradient(to right, rgba(0, 123, 255, 0.8), rgba(255, 0, 123, 0.8))', color: '#fff', minWidth: '250px' }}>
+                                        <div className="card-body d-flex justify-content-between align-items-center">
+                                            <div className="card-body">
+                                                <h2 className="card-title">Rs.{(totalProfit - Income_tax).toFixed(2)}</h2>
+                                                <p className="card-text" style={{ marginTop: '35px' }}>Final Profit</p>
+                                            </div>
+                                            <i className="bi bi-cash h1"></i>
+                                        </div>
+                                        <div className="card-footer bg-transparent border-top-0">
+                                            <div className="progress" style={{ height: '10px', marginTop: '-25px' }}>
+                                                <div className="progress-bar" role="progressbar" style={{ backgroundColor: '#b2beb5', width: '90%' }} aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     )}
                 </div>
+
+                {/* Display tax details for searched year */}
+                {(searchResult || tax) && (
+                    <div className="row">
+                        {/* Left Column for tax Details */}
+                        <div className="col-md-12">
+                            <div className="card" style={{ marginBottom: '40px' }}>
+                                <div className="card-body">
+                                    <h4 className="mb-3">Valid Period: January 1, {year} - {endDateFormatted}</h4>
+                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginTop: '30px' }}>
+                                        <div className="custom-card col-md-4" style={{ padding: '20px', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', backgroundColor: '#ffffff' }}>
+                                            <div style={{ fontWeight: 'bold' }}><i className="bi bi-file-earmark-text"></i> Tax Doc ID:</div>
+                                            <div style={{ fontStyle: 'italic' }}>{searchResult ? searchResult[0].Tax_ID : tax.Tax_ID}</div>
+                                        </div>
+                                        <div className="custom-card col-md-4" style={{ padding: '20px', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', backgroundColor: '#ffffff' }}>
+                                            <div style={{ fontWeight: 'bold' }}><i className="bi bi-cash"></i> Taxable Income:</div>
+                                            <div style={{ fontStyle: 'italic' }}>Rs.{searchResult ? searchResult[0].Taxable_income.toFixed(2) : tax.Taxable_income.toFixed(2)}</div>
+                                        </div>
+                                        <div className="custom-card col-md-3" style={{ padding: '20px', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', backgroundColor: '#ffffff' }}>
+                                            <div style={{ fontWeight: 'bold' }}><i className="bi bi-cash-coin"></i> Tax Rate:</div>
+                                            <div style={{ fontStyle: 'italic' }}>{searchResult ? searchResult[0].Rate : tax.Rate}%</div>
+                                        </div>
+                                        <div className="custom-card col-md-4" style={{ padding: '20px', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', backgroundColor: '#ffffff' }}>
+                                            <div style={{ fontWeight: 'bold' }}><i className="bi bi-currency-dollar"></i> Income Tax:</div>
+                                            <div style={{ fontStyle: 'italic' }}>Rs.{searchResult ? searchResult[0].Income_tax.toFixed(2) : tax.Income_tax.toFixed(2)}</div>
+                                        </div>
+                                        <div className="custom-card col-md-4" style={{ padding: '20px', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', backgroundColor: '#ffffff' }}>
+                                            <div style={{ fontWeight: 'bold' }}><i className="bi bi-calendar"></i> Due Date:</div>
+                                            <div style={{ fontStyle: 'italic' }}>{searchResult ? new Date(searchResult[0].Due_date).toLocaleDateString() : new Date(tax.Due_date).toLocaleDateString()}</div>
+                                        </div>
+                                        <div className="custom-card col-md-3" style={{ padding: '20px', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', backgroundColor: '#ffffff' }}>
+                                            <div style={{ fontWeight: 'bold' }}><i className="bi bi-clock"></i> Date modified:</div>
+                                            <div style={{ fontStyle: 'italic' }}>{searchResult ? new Date(searchResult[0].Date_modified).toLocaleDateString() : new Date(tax.Date_modified).toLocaleDateString()}</div>
+                                        </div>
+                                        <div className="custom-card col-md-4" style={{ padding: '20px', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', backgroundColor: '#ffffff' }}>
+                                            <div style={{ fontWeight: 'bold' }}><i className="bi bi-check-circle"></i> Payment status:</div>
+                                            <div style={{ fontStyle: 'italic' }}>{searchResult ? searchResult[0].Status : tax.Status}</div>
+                                        </div>
+                                        <div className="custom-card col-md-4" style={{ padding: '20px', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', backgroundColor: '#ffffff' }}>
+                                            <div style={{ fontWeight: 'bold' }}><i className="bi bi-info-circle"></i> Final profit:</div>
+                                            <div style={{ fontStyle: 'italic' }}>Rs.{searchResult ? searchResult[0].Final_profit.toFixed(2) : tax.Final_profit.toFixed(2)}</div>
+                                        </div>
+                                    </div>
+                                    <div className="button-container text-center" style={{ marginTop: '25px'}}>
+                                        <Link to={`/tax/update/${tax.Tax_ID}`} className="btn btn-primary me-2" style={{ width: '160px' }}>Edit</Link>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
+
     );
 }
 
