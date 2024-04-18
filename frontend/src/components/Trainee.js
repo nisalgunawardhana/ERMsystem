@@ -127,10 +127,28 @@ export default function Trainee() {
 
     function toggleForm() {
         setShowForm(prevState => !prevState);
+        setselectedTraineeId(null); // Reset selected trainee ID
+        setFormData({  // Reset form data
+            trainee_id: '',
+            trainee_name: '',
+            trainee_email: '',
+            trainee_gender: '',
+            trainee_contact: '',
+            trainee_rating: ''
+        });
     }
-
+    
     function toggleMeetingForm() {
         setShowMeetingForm(prevState => !prevState);
+        setSelectedMeetingId(null);
+        setMeetingFormData({
+            meeting_id: '',
+            meeting_name: '',
+            meeting_start: '',
+            meeting_end: '',
+            meeting_date: '',
+            meeting_location: ''
+        });
     }
 
     function editMeeting(meeting) {
