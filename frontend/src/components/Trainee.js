@@ -434,10 +434,11 @@ export default function Trainee() {
                                                 <div className="text-center my-auto">
                                                     <h4 className="card-title">{trainee.trainee_name}</h4>
                                                     <br></br>
-                                                    <p className="card-text">Email: {trainee.trainee_email}</p>
-                                                    <p className="card-text">Contact No: {trainee.trainee_contact}</p>
-                                                    <p className="card-text">Gender: {trainee.trainee_gender}</p>
-                                                    <p className="card-text">Ratings: {trainee.trainee_rating}</p>
+                                                    <p className="card-text">ID :  <strong>{trainee.trainee_id}</strong></p>
+                                                    <p className="card-text">Email :  <strong>{trainee.trainee_email}</strong></p>
+                                                    <p className="card-text">Contact No :  <strong>{trainee.trainee_contact}</strong></p>
+                                                    <p className="card-text">Gender :  <strong>{trainee.trainee_gender}</strong></p>
+                                                    <p className="card-text">Ratings :  <strong>{trainee.trainee_rating}</strong></p>
                                                     <div>
                                                         <button onClick={() => editTrainee(trainee)} className="btn btn-primary" style={{ margin: '0 5px' }} >Update</button>
                                                         <button onClick={() => handleDeleteTrainee(trainee._id)} className="btn btn-danger" style={{ margin: '0 5px' }} >Delete</button>
