@@ -46,9 +46,12 @@ function UpdateCustomer() {
 
   return (
     <div className="custom-form-container">
+      <div className="d-flex justify-content-end mb-3">
+        <Button variant="secondary" onClick={() => navigate('/customer')}>Back</Button>
+      </div>
       <h2>Update Customer</h2>
       <Form onSubmit={handleSubmit}>
-      <Form.Group controlId="customerId">
+        <Form.Group controlId="customerId">
           <Form.Label>Customer ID</Form.Label>
           <Form.Control
             type="text"
@@ -56,7 +59,7 @@ function UpdateCustomer() {
             value={customer.customer_id}
             onChange={handleChange}
           />
-          </Form.Group>
+        </Form.Group>
         <Form.Group controlId="customerName">
           <Form.Label>Customer Name</Form.Label>
           <Form.Control
@@ -82,6 +85,7 @@ function UpdateCustomer() {
             name="point"
             value={customer.point}
             onChange={handleChange}
+            readOnly
           />
         </Form.Group>
         <Form.Group controlId="gender">

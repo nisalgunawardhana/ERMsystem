@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Employee.css';
+import Layout from '../Layout';
 
 export default function Employees() {
     const [employees, setEmployees] = useState([]);
@@ -15,6 +16,7 @@ export default function Employees() {
     const [contact, setContact] = useState('');
     const [email, setEmail] = useState('');
     const [error, setError] = useState('');
+
 
     useEffect(() => {
         axios.get('http://localhost:8080/employee/')
@@ -185,6 +187,7 @@ export default function Employees() {
     
 
     return (
+
         <div className="container">
             <h3 fonrweight="blod">Employee Management</h3>
 

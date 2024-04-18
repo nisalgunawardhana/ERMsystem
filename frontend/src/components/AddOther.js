@@ -41,7 +41,7 @@ function AddOther() {
     };
 
     return (
-        <div class="container" style={{marginTop: '20px'}}>
+        <div class="container" style={{marginTop: '120px'}}>
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card border-light shadow-sm">
@@ -79,8 +79,10 @@ function AddOther() {
                                     <input type="text" class="form-control" name="cost" id="cost" placeholder="Amount of expense" onChange={(e) => setCost(e.target.value)} required />
                                 </div>
                             </div>
-                            <div class="col-12" style={{marginLeft: '640px'}}>
-                                <button class="btn btn-primary btn-lg btn-block" type="submit">Add Expense</button>
+                            <div className="col">
+                                <div className="btn-group" style={{marginLeft: '340px'}}>
+                                    <button type="submit" className="btn btn-primary me-5 rounded">Add Expense</button>
+                                </div>
                             </div>
                         </div>
                     </form>

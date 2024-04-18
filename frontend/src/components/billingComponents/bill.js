@@ -187,45 +187,78 @@ export default function Bills() {
                     <li class="breadcrumb-item active" aria-current="page">Bills</li>
                 </ol>
             </nav>
+            <div className="d-flex flex-wrap align-items-center">
+                <h2 className="flex-grow-1">Bills</h2>
+                        
+                    </div>
 
-            <h3>Bills</h3>
-            
-            <div className="row">
-                <div className="col-md-4">
-                    <div className="card border-success mb-3">
-                        <div className="card-body">
-                            <h5 className="card-title">Total Amount</h5>
-                            <p className="card-text">Rs.{totalAmount.toFixed(2)}</p>
-                            <Link to="/bill/CreateBill" className="btn btn-success">Create New Bill</Link>
+            <div class="container">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-6 mb-3">
+                            <div class="card l-bg-cherry">
+                                <div class="card-statistic-3 p-4">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="col-8">
+                                            <h2 class="d-flex align-items-center mb-5">
+                                                Rs.{totalAmount.toFixed(2)}
+                                            </h2>
+                                            <h5 class="card-title" style={{ marginTop: '25px' ,marginBottom: '18px' }}>Total sales</h5>
+                                        </div>
+                                        <i className="bi bi-cash-coin h1"></i>
+                                    </div>
+                                    <div class="progress mt-1 " data-height="8" style={{ height: '8px' }}>
+                                        <div class="progress-bar l-bg-cyan" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '25%' }}></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 mb-3">
+                            <div class="card l-bg-green-dark">
+                                <div class="card-statistic-3 p-4">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="col-8">
+                                            <h3 class="d-flex align-items-center mb-5">
+                                                Discount Rules
+                                            </h3>
+                                            <h5 class="card-title" style={{ marginTop: '25px' }}><Link to="/bill/discounts" className="btn btn-dark">Manage Discount Rule</Link></h5>
+                                        </div>
+                                        <i className="bi bi-percent h1"></i>
+                                    </div>
+                                    <div class="progress mt-1 " data-height="8" style={{ height: '8px' }}>
+                                        <div class="progress-bar l-bg-orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '25%' }}></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 mb-3">
+                            <div class="card l-bg-orange-dark">
+                                <div class="card-statistic-3 p-4">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="col-8">
+                                            <h3 class="d-flex align-items-center mb-5">
+                                                Bill Reports
+                                            </h3>
+                                            <h5 class="card-title" style={{ marginTop: '25px' }}><button onClick={generateReport} className="btn btn-dark">Generate Report</button></h5>
+                                        </div>
+                                        <i className="bi bi-bar-chart h1"></i>
 
+                                    </div>
+                                    <div class="progress mt-1 " data-height="8" style={{ height: '8px' }}>
+                                        <div class="progress-bar l-bg-cyan" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '25%' }}></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div className="col-md-4">
-                    <div className="card mb-3" style={{ background: `linear-gradient(to right, rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8), rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8))`, color: 'white', borderRadius: '20px' }}>
-                        <div className="card-body">
-                            <h5 className="card-title">Create Discount Rule</h5>
-                            <p className="card-text">Make New Discount Rule</p>
-                            <Link to="/bill/discounts" className="btn btn-dark">Manage Discount Rule</Link>
-                        </div>
-                    </div>
-                </div>
-                <div className="col-md-4">
-                    <div className="card mb-3" style={{ background: `linear-gradient(to right, rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8), rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8))`, color: 'white', borderRadius: '20px' }}>
-                        <div className="card-body">
-                            <h5 className="card-title">Generate Reports</h5>
-                            <p className="card-text">Generate and download sales reports.</p>
-                            <button onClick={generateReport} className="btn btn-dark">Generate Report</button>
-                            <div className="progress-bar bg-light" role="progressbar" style={{ width: '75%' }} aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </div>
-                </div>
-           
-            </div>
 
             <br />
 
-            <h4>All Bills</h4>
+            <div className="d-flex flex-wrap align-items-center">
+                <h2 style={{ marginRight: '25px' }}> All Bills</h2>
+                        {/* Add expense button */}
+                        <Link to="/bill/CreateBill" className="btn btn-success">Create New Bill</Link>
+                    </div>
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <div className="flex-grow-1">
                     <input type="text" className="form-control" placeholder="Search by Customer ID" value={searchQuery} onChange={handleSearch} />

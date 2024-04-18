@@ -1,32 +1,27 @@
 import React from 'react'
 import { Form, Input, Button } from 'antd';
 import { Link, useNavigate } from 'react-router-dom'
-import loginImage from '../images/login.jpg'
-import { toast } from "react-hot-toast"
+import registerImage from '../images/register.jpg'
 import axios from "axios"
+import { toast } from "react-hot-toast"
 import { useDispatch } from "react-redux"
-import { hideLoading, showLoading } from '../redux/alertsSlice';
-import './Login.css'
+import { showLoading, hideLoading } from '../redux/alertsSlice';
 
-function Login() {
+function Register() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const onFinish = async(values) => {
         try {
             dispatch(showLoading())
-            const response = await axios.post('/api/user/login', values)
+            const response = await axios.post('/api/user/register', values)
             dispatch(hideLoading())
-
             if (response.data.success) {
                 toast.success(response.data.message)
-                toast("Redirecting to Homepage")
-                //putting the information gettting from the backend to the local storage
-                localStorage.setItem("token", response.data.data)
-                navigate("/")
+                toast("Redirecting to Admin Dashboard")
+                navigate("/login")
             } else {
                 toast.error(response.data.message)
             }
-
         } catch (error) {
             dispatch(hideLoading())
             toast.error('Something went wrong')
@@ -34,17 +29,24 @@ function Login() {
     }
 
     return (
-        <div className='login-container'>
-            <div className='login-background'>
-                <img src={loginImage} alt='Login Image'/>   
+        <div className='register-container'>
+            {/*register page background image*/}
+            <div className='register-background'>
+                <img src={registerImage} alt='Register Image'/>   
             </div>
 
             <div className='authentication'>
                 <div className='authentication-form card p-4'>
-                
-                <h1 className='card-topic'>Welcome Back!</h1>
-                <br></br>
+                <h1 className='card-topic'>New System User</h1>
                 <Form layout='vertical' onFinish={onFinish}>
+                    <Form.Item label='First Name' name='first_name'>
+                        <Input placeholder='First Name'/>
+                    </Form.Item>
+                    
+                    <Form.Item label='Last Name' name='last_name'>
+                        <Input placeholder='Last Name'/>
+                    </Form.Item>
+
                     <Form.Item label='Email' name='email'>
                         <Input placeholder='Email'/>
                     </Form.Item>
@@ -53,9 +55,9 @@ function Login() {
                         <Input placeholder='Password' type='password'/>
                     </Form.Item>
 
-                    <Button className='primary-button my-1' htmlType='submit'>LOGIN</Button>
-
-                    <Link to='/register' className='anchor mt-1'>CLICK HERE TO REGISTER FOR ATTENDANCE</Link>
+                    <Button className='primary-button my-1' htmlType='submit'>Create User</Button>
+                
+                    <Link to='/login' className='anchor mt-1'>CLICK HERE TO LOGIN</Link>
                 </Form>
                 </div>
             </div>
@@ -63,4 +65,4 @@ function Login() {
     )
 }
 
-export default Login
+export default Register
