@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import axios from 'axios'
 import { useSelector } from "react-redux";
 import Layout from "./Layout";
+import "../User.css";
 
 function Home() {
   const { user } = useSelector((state) => state.user);

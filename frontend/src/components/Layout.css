@@ -84,7 +84,6 @@
     background-color: white;
     border-radius: 5px;
     box-shadow: 0 0 2px rgb(128, 128, 128);
-    height: 85vh;
     width: 100%;
     padding: 15px;
     margin-top: 12px;
@@ -137,5 +136,6 @@
 
 .page-title {
     font-size: 25px;
-    color: black;
+    color: rgba(0, 0, 0, 0.744);
+    padding: 6px;
 }

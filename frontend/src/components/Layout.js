@@ -40,17 +40,17 @@ function Layout({children}) {
         },
         {
             name: 'Dashboard',
-            path: '/adminDashboard',
+            path: '/users',
             icon: 'ri-user-settings-line'
         },
         {
             name: 'Add User',
-            path: '/signup',
+            path: '/register',
             icon: 'ri-add-circle-line'
         },
         {
-            name: 'Tasks',
-            path: '/tasks',
+            name: 'Notes',
+            path: '/notes',
             icon: 'ri-task-line'
         },
     ];

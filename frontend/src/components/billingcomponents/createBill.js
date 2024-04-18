@@ -3,6 +3,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Layout from '../Layout';
 
 function CreateBill() {
   const [customer_id, setCustomerId] = useState("");
@@ -268,6 +269,7 @@ function CreateBill() {
   };
 
   return (
+    <Layout>
 
     <div className="container-fluid">
       <div className="row">
@@ -415,6 +417,8 @@ function CreateBill() {
       <br></br>
       <br></br>
     </div>
+  </Layout>
+  
   );
 }
 
