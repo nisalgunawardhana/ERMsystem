@@ -222,7 +222,7 @@ export default function Bills() {
                                             </h3>
                                             <h5 class="card-title" style={{ marginTop: '25px' }}><Link to="/bill/discounts" className="btn btn-dark">Manage Discount Rule</Link></h5>
                                         </div>
-                                        <i className="bi bi-cash h1"></i>
+                                        <i className="bi bi-percent h1"></i>
                                     </div>
                                     <div class="progress mt-1 " data-height="8" style={{ height: '8px' }}>
                                         <div class="progress-bar l-bg-orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '25%' }}></div>
@@ -240,7 +240,8 @@ export default function Bills() {
                                             </h3>
                                             <h5 class="card-title" style={{ marginTop: '25px' }}><button onClick={generateReport} className="btn btn-dark">Generate Report</button></h5>
                                         </div>
-                                        <i className="bi bi-currency-dollar h1"></i>
+                                        <i className="bi bi-bar-chart h1"></i>
+
                                     </div>
                                     <div class="progress mt-1 " data-height="8" style={{ height: '8px' }}>
                                         <div class="progress-bar l-bg-cyan" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '25%' }}></div>
