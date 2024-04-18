@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Layout from './Layout';
 
 export default function Trainee() {
     const [meetings, setMeetings] = useState([]);
@@ -233,7 +234,8 @@ export default function Trainee() {
 
 
     return (
-        <div className="container">
+        <Layout>
+            <div className="container">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/">Home</a></li>
@@ -456,5 +458,7 @@ export default function Trainee() {
             <br></br>
             <br></br>
         </div>
+        </Layout>
+        
     );
 }
