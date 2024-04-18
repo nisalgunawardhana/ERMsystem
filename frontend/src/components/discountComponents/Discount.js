@@ -214,7 +214,7 @@ export default function Discounts() {
                                             <h3 class="d-flex align-items-center mb-5">
                                                 Discount Rules
                                             </h3>
-                                            <h5 class="card-title" style={{ marginTop: '25px' }}><button onClick={handleOpenAddModal} className="btn btn-dark">Add New Discount Rule</button></h5>
+                                            <h5 class="card-title" style={{ marginTop: '25px' }}><button onClick={handleOpenAddModal} className="btn btn-dark"><i class="bi bi-plus-circle-fill me-2"></i>Add New Discount Rule</button></h5>
                                         </div>
                                         <i className="bi bi-percent h1"></i>
                                     </div>
@@ -385,23 +385,23 @@ export default function Discounts() {
                     <thead className="table-dark">
                         <tr>
                             <th>#</th>
-                            <th>Rule Name</th>
-                            <th>Create Date</th>
-                            <th>Discount Percentage</th>
-                            <th>Rule Condition</th>
-                            <th>Action</th>
+                            <th style={{ textAlign: 'center' }}>Rule Name</th>
+                            <th style={{ textAlign: 'center' }}>Create Date</th>
+                            <th style={{ textAlign: 'center' }}>Discount Percentage</th>
+                            <th style={{ textAlign: 'center' }}>Rule Condition</th>
+                            <th style={{ textAlign: 'center' }}>Action</th>
                             <th style={{ textAlign: 'center' }}>Select</th>
                         </tr>
                     </thead>
                     <tbody>
                         {filteredDiscounts.map((discount, index) => (
                             <tr key={discount._id}>
-                                <td>{index + 1}</td>
-                                <td>{discount.Rule_name}</td>
-                                <td>{discount.Create_date}</td>
-                                <td>{discount.Discount_presentage}</td>
-                                <td>{discount.rule_con}</td>
-                                <td>
+                                <td style={{ textAlign: 'center' }}>{index + 1}</td>
+                                <td style={{ textAlign: 'center' }}>{discount.Rule_name}</td>
+                                <td style={{ textAlign: 'center' }}>{discount.Create_date}</td>
+                                <td style={{ textAlign: 'center' }}>{discount.Discount_presentage}</td>
+                                <td style={{ textAlign: 'center' }}>{discount.rule_con}</td>
+                                <td style={{ textAlign: 'center' }}>
                                     <button className="btn btn-primary" onClick={() => handleOpenUpdateModal(discount)} style={{ margin: '0 5px' }}>Update</button>
                                     <button onClick={() => handleDeleteDiscount(discount._id)} className="btn btn-danger ml-2" style={{ margin: '0 5px' }}>Delete</button>
                                 </td>
