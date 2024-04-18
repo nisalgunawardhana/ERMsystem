@@ -3,6 +3,8 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import BillPreviewModal from './Billpmodel';
 import Layout from '../Layout';
+import { Modal, Button } from 'react-bootstrap';
+import { Toaster, toast } from 'react-hot-toast';
 
 export default function Bills() {
 
@@ -14,6 +16,9 @@ export default function Bills() {
     const [selectAll, setSelectAll] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const billsPerPage = 10;
+    const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+    const [deleteItemId, setDeleteItemId] = useState(null);
+    const [showDeleteAllConfirmation, setShowDeleteAllConfirmation] = useState(false);
 
     useEffect(() => {
         function getbill() {
@@ -38,16 +43,26 @@ export default function Bills() {
         getTotalAmount();
     }, [])
 
-    const handleDelete = (id) => {
-        axios.delete(`http://localhost:8080/bills/delete/${id}`)
-            .then(() => {
-                // Reload the page after deletion
-                window.location.reload();
-            })
-            .catch((err) => {
-                alert(err.message);
-            });
-    };
+    const handleOpenDeleteConfirmation = (id) => {
+    setDeleteItemId(id);
+    setShowDeleteConfirmation(true);
+};
+
+const handleCloseDeleteConfirmation = () => {
+    setShowDeleteConfirmation(false);
+};
+
+const handleDelete = (id) => {
+    axios.delete(`http://localhost:8080/bills/delete/${id}`)
+        .then(() => {
+            setShowDeleteConfirmation(false);
+            setbill(prevBill => prevBill.filter(b => b._id !== id));
+            toast.success("Bill deleted successfully!");
+        })
+        .catch((err) => {
+            alert(err.message);
+        });
+};
 
     const generateReport = () => {
         const printWindow = window.open("", "_blank", "width=600,height=600");
@@ -174,6 +189,56 @@ export default function Bills() {
         }
     };
 
+    // Function to handle opening delete all confirmation modal
+const handleOpenDeleteAllConfirmation = () => {
+    setShowDeleteAllConfirmation(true);
+};
+
+// Function to close delete all confirmation modal
+const handleCloseDeleteAllConfirmation = () => {
+    setShowDeleteAllConfirmation(false);
+};
+
+// Function to delete all selected bills
+const handleDeleteAllSelected = () => {
+    // Show toaster message before initiating delete
+    toast.promise(
+        // Promise to delete all selected bills
+        new Promise((resolve, reject) => {
+            // Perform delete operation
+            const selectedBills = bill.filter(b => b.selected).map(b => b._id);
+            // Check if any bills are selected
+            if (selectedBills.length > 0) {
+                // Delete all selected bills
+                Promise.all(selectedBills.map(id => axios.delete(`http://localhost:8080/bills/delete/${id}`)))
+                    .then(() => {
+                        resolve("Bills deleted successfully!");
+                        setbill(prevBills => prevBills.filter(b => !b.selected));
+                    })
+                    .catch((err) => {
+                        reject(err.message);
+                    });
+            } else {
+                // If no bills are selected, reject with a message
+                reject("No bills selected for deletion.");
+            }
+        }),
+        // Toast options
+        {
+            loading: 'Deleting...',
+            success: (msg) => {
+                handleCloseDeleteAllConfirmation(); // Close confirmation modal
+                return msg; // Show success message
+            },
+            error: (err) => {
+                handleCloseDeleteAllConfirmation(); // Close confirmation modal
+                return err; // Show error message
+            }
+        }
+    );
+};
+
+
 
     return (
         <Layout>
@@ -256,7 +321,7 @@ export default function Bills() {
             <div className="d-flex flex-wrap align-items-center">
                 <h2 style={{ marginRight: '25px' }}> All Bills</h2>
                         {/* Add expense button */}
-                        <Link to="/bill/CreateBill" className="btn btn-success">Create New Bill</Link>
+                        <Link to="/bill/CreateBill" className="btn btn-success"><i class="bi bi-plus-circle-fill me-2"></i>Create New Bill</Link>
                     </div>
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <div className="flex-grow-1">
@@ -266,7 +331,7 @@ export default function Bills() {
                     <button onClick={handleSelectAll} className="btn btn-secondary" style={{ margin: '0 5px' }}>
                         {selectAll ? 'Unselect All' : 'Select All'}
                     </button>
-                    <button className="btn btn-dark" onClick={handleDeleteSelected} style={{ margin: '0 5px' }}>Delete Selected</button>
+                    <button className="btn btn-dark" onClick={handleOpenDeleteAllConfirmation} style={{ margin: '0 5px' }}>Delete All Selected</button>
                 </div>
             </div>
 
@@ -274,13 +339,14 @@ export default function Bills() {
             <table className="table">
                 <thead class="table-dark">
                     <tr >
-                        <th style={{ textAlign: 'center' }}>Select</th>
+                        
                         <th >#</th>
                         <th >Customer ID</th>
                         <th>Billing Date</th>
                         <th style={{ textAlign: 'center' }}>Items</th>
                         <th>Total Amount</th>
                         <th style={{ textAlign: 'center' }}>Action</th>
+                        <th style={{ textAlign: 'center' }}>Select</th>
 
 
                     </tr>
@@ -288,7 +354,7 @@ export default function Bills() {
                 <tbody>
                     {currentBills.map((bills, index) => (
                         <tr key={bills._id}>
-                            <td style={{ textAlign: 'center' }}><input type="checkbox" checked={bills.selected || false} onChange={() => handleSelectBill(bills._id)} /></td>
+                            
                             <td>{index + 1}</td>
                             <td>{bills.customer_id}</td>
                             <td>{formatDate(bills.billing_date)}</td>
@@ -306,10 +372,11 @@ export default function Bills() {
                             <td>{bills.total_amount.toFixed(2)}</td>
                             <td style={{ textAlign: 'center' }}>
                                 <Link to={`/bill/update/${bills._id}`} className="btn btn-primary" style={{ margin: '0 5px' }}>Update</Link>
-                                <button onClick={() => handleDelete(bills._id)} className="btn btn-danger" style={{ margin: '0 5px' }}>Delete</button>
+                                <button onClick={() => handleOpenDeleteConfirmation(bills._id)} className="btn btn-danger" style={{ margin: '0 5px' }}>Delete</button>
                                 <button onClick={() => handlePreview(bills)} className="btn btn-dark" style={{ margin: '0 5px' }}>Preview</button>
 
                             </td>
+                            <td style={{ textAlign: 'center' }}><input type="checkbox" checked={bills.selected || false} onChange={() => handleSelectBill(bills._id)} /></td>
                         </tr>
                     ))}
                 </tbody>
@@ -355,6 +422,29 @@ export default function Bills() {
                     bill={selectedBill}
                 />
             )}
+
+            {/* Delete confirmation modal */}
+                <Modal show={showDeleteConfirmation} onHide={handleCloseDeleteConfirmation}>
+    <Modal.Header closeButton>
+        <Modal.Title>Confirm Delete</Modal.Title>
+    </Modal.Header>
+    <Modal.Body>Are you sure you want to delete this bill?</Modal.Body>
+    <Modal.Footer>
+        <Button variant="secondary" onClick={handleCloseDeleteConfirmation}>Cancel</Button>
+        <Button variant="danger" onClick={() => handleDelete(deleteItemId)}>Delete</Button>
+    </Modal.Footer>
+</Modal>
+
+<Modal show={showDeleteAllConfirmation} onHide={handleCloseDeleteAllConfirmation}>
+    <Modal.Header closeButton>
+        <Modal.Title>Confirm Delete All</Modal.Title>
+    </Modal.Header>
+    <Modal.Body>Are you sure you want to delete all selected bills?</Modal.Body>
+    <Modal.Footer>
+        <Button variant="secondary" onClick={handleCloseDeleteAllConfirmation}>Cancel</Button>
+        <Button variant="danger" onClick={handleDeleteAllSelected}>Delete All</Button>
+    </Modal.Footer>
+</Modal>
 
         </div>
         

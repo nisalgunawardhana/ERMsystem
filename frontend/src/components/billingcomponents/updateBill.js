@@ -4,6 +4,8 @@ import { useParams } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { useNavigate } from "react-router-dom";
+import Layout from '../Layout';
+
 
 function UpdateBill() {
   const { id } = useParams();
@@ -87,6 +89,7 @@ function UpdateBill() {
   };
 
   return (
+    <Layout>
     <div className="container-fluid">
       <div className="row">
         <div className="col-md-6">
@@ -142,7 +145,7 @@ function UpdateBill() {
       <br></br>
       <br></br>
     </div>
-
+</Layout>
 
   );
 }
