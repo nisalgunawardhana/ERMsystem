@@ -477,6 +477,5 @@ export default function Trainee() {
             <br></br>
         </div>
         </Layout>
-        
     );
 }
