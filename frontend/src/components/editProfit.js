@@ -19,6 +19,7 @@ function EditProfit() {
     const [Date_created, setDate] = useState("");
     const [Description, setDesc] = useState("");
     const [editedDate, setEditedDate] = useState(null);
+    const [Rate, setRate] = useState("");
     const navigate = useNavigate();
 
     const [Profit, setProfit] = useState({
@@ -83,6 +84,16 @@ function EditProfit() {
         axios.get(`http://localhost:8080/profit/salaries/${currentMonthName}`)
             .then((res) => {
                 setTotalSalary(res.data.totalSalary);
+            })
+            .catch((err) => {
+                console.error(err);
+            });
+    });
+
+    useEffect(() => {
+        axios.get(`http://localhost:8080/profit/fetch/taxRate`)
+            .then((res) => {
+                setRate(res.data.taxRate);
             })
             .catch((err) => {
                 console.error(err);
@@ -220,7 +231,7 @@ function EditProfit() {
                                             <label htmlFor="sales" className="form-label">
                                                 <i className="bi bi-currency-dollar me-2"></i>Sales income
                                             </label>
-                                            <input type="text" className="form-control" id="sales" name="Sales_income" value={totalAmount.toFixed(2)} onChange={handleChanges} readOnly />
+                                            <input type="text" className="form-control" id="sales" name="Sales_income" value={totalAmount} onChange={handleChanges} readOnly />
                                         </div>
                                         <div className="mb-3">
                                             <label htmlFor="supplier" className="form-label">
@@ -248,7 +259,7 @@ function EditProfit() {
                                             </label>
                                             <div className="row">
                                                 <div className="col-md-9">
-                                                    <input type="text" className="form-control" id="epfetf" name="EPF_ETF" value={total.toFixed(2)} onChange={handleChanges} readOnly />
+                                                    <input type="text" className="form-control" id="epfetf" name="EPF_ETF" value={total} onChange={handleChanges} readOnly />
                                                 </div>
                                                 <div className="col-md-3">
                                                     <button type="button" className="btn btn-primary" onClick={handleShow}>Add</button>
@@ -257,9 +268,9 @@ function EditProfit() {
                                         </div>
                                         <div className="mb-3">
                                             <label htmlFor="profit" className="form-label">
-                                                <i className="bi bi-cash me-2"></i>Monthly Profit
+                                                <i className="bi bi-cash me-2"></i>Monthly Profit [Income tax rate: {Rate}%]
                                             </label>
-                                            <input type="text" className="form-control" id="profit" name="Monthly_profit" value={profit.toFixed(2)} onChange={handleChanges} readOnly />
+                                            <input type="text" className="form-control" id="profit" name="Monthly_profit" value={(profit - (profit * Rate /100)).toFixed(2)} onChange={handleChanges} readOnly />
                                         </div>
                                         <div className="mb-3">
                                             <label htmlFor="date" className="form-label">

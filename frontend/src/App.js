@@ -1,8 +1,7 @@
-import './App.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 
-
+import './App.css';
 import Header from './components/Header';
 import Home from './components/Home';
 import AddOther from './components/AddOther';
@@ -39,6 +38,7 @@ import PublicRoute from './components/PublicRoute';
 import { Toaster } from 'react-hot-toast'
 import ProtectedRoute from './components/ProtectedRoute';
 import SystemUsers from './pages/SystemUsers';
+import UpdateTax from "./components/updateTax";
 
 
 function App() {
@@ -85,6 +85,7 @@ function App() {
           <Route path="/profit/update/:id" element={<EditProfit/>}/>
           <Route path="/tax/get/:id" element={<TaxDetails/>}/>
           <Route path="/tax/:epfetf" element={<AddTax/>}/>
+          <Route path="/tax/update/:id" element={<UpdateTax/>}/>
           <Route path="/supplier" element={<Supplier/>}/>
           <Route path='/purchaseOrder' element={<PurchaseOrder/>}/>
           <Route path="/supplier/add" element={<AddSupplier/>}/>

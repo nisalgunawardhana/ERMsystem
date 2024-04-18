@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { Modal, Button, Pagination } from 'react-bootstrap';
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function AllOther() {
 
@@ -248,6 +249,10 @@ export default function AllOther() {
             if (res.status === 200) {
                 await axios.post("http://localhost:8080/otherExpense/add", expenseData);
                 setIsOpen(false);
+                setTimeout(() => {
+                    // Display success toast message
+                    toast.success('Expense added successfully!');
+                }, 2000);
                 setExpenseData({
                     Expense_id: '',
                     Date: expenseData.Date,
@@ -257,14 +262,16 @@ export default function AllOther() {
                 });
                 const response = await axios.get("http://localhost:8080/otherExpense/");
                 setOther(response.data);
-                setShowSuccessMessage(true);
             }
         } catch (error) {
             if (error.response && error.response.status === 400) {
                 const confirmAdd = window.confirm("Expense already exists. Do you still want to add it?");
                 if (confirmAdd) {
                     await axios.post("http://localhost:8080/otherExpense/add", expenseData);
-                    alert("Expense added successfully.");
+                    setTimeout(() => {
+                        // Display success toast message
+                        toast.success('Expense added successfully!');
+                    }, 2000);
                     setIsOpen(false);
                     setExpenseData({
                         Expense_id: '',
@@ -343,7 +350,10 @@ export default function AllOther() {
         try {
             await axios.delete(`http://localhost:8080/otherExpense/delete/${expenseToDelete}`);
             setShowDeletePrompt(false);
-            alert("Expense deleted successfully.");
+            setTimeout(() => {
+                // Display success toast message
+                toast.success('Expense deleted successfully!');
+            }, 2000);
             // Update the state to reflect the deletion
             setOther(other.filter(expense => expense._id !== expenseToDelete));
         } catch (error) {
@@ -351,7 +361,6 @@ export default function AllOther() {
             alert("Error deleting expense. Please try again later.");
         }
         setShowDeletePrompt(false);
-        setShowDeleteMessage(true);
     };
 
     const cancelDelete = () => {
@@ -622,29 +631,6 @@ export default function AllOther() {
         }
     };
 
-    const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-    const [showDeleteMessage, setShowDeleteMessage] = useState(false);
-
-    useEffect(() => {
-        // Automatically hide the success message after 3 seconds
-        const timer = setTimeout(() => {
-            setShowSuccessMessage(false);
-        }, 2000);
-
-        // Clear the timer when the component unmounts or when showSuccessMessage changes
-        return () => clearTimeout(timer);
-    }, [showSuccessMessage]);
-
-    useEffect(() => {
-        // Automatically hide the success message after 3 seconds
-        const timer = setTimeout(() => {
-            setShowDeleteMessage(false);
-        }, 2000);
-
-        // Clear the timer when the component unmounts or when showSuccessMessage changes
-        return () => clearTimeout(timer);
-    }, [showDeleteMessage]);
-
     return (
         <div className="container" >
             <ul class="nav nav-tabs mb-3" id="myTab0" role="tablist">
@@ -710,37 +696,8 @@ export default function AllOther() {
                     <li class="breadcrumb-item"><a href="/finance">Finance Dashboard</a></li>
                     <li class="breadcrumb-item active" aria-current="page">Other Expenses</li>
                 </ol>
-                
-                    {showSuccessMessage && (
-                        <div className="align-items-center" style={{
-                            backgroundColor: 'green',
-                            color: 'white',
-                            padding: '10px',
-                            borderRadius: '5px',
-                            boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.2)',
-                            maxWidth: '400px',
-                            marginLeft: '500px',
-                            marginTop: '-40px',
-                            textAlign: 'center'
-                            }}>
-                            <span style={{ fontWeight: 'bold' }}>Expense added successfully!</span>
-                        </div>
-                    )}
-                    {showDeleteMessage && (
-                        <div className="align-items-center" style={{
-                            backgroundColor: 'red',
-                            color: 'white',
-                            padding: '10px',
-                            borderRadius: '5px',
-                            boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.2)',
-                            maxWidth: '400px',
-                            marginLeft: '500px',
-                            marginTop: '-40px',
-                            textAlign: 'center'
-                            }}>
-                            <span style={{ fontWeight: 'bold' }}>Expense deleted successfully!</span>
-                        </div>
-                    )}
+
+                <Toaster />
             </nav>
 
             <div className="row mb-2" style={{ marginTop: '40px' }}>
@@ -793,9 +750,9 @@ export default function AllOther() {
                 </div>
                 <div className="container mt-3">
                     <div className="row justify-content-center">
-                        <div className="col-md-4">
+                        <div className="col-lg-4 col-md-6 mb-3">
                             {/* Current year Total amount of expenses*/}
-                            <div className="card mb-3" style={{ background: 'linear-gradient(to right, rgba(0, 123, 255, 0.8), rgba(255, 0, 123, 0.8))', color: '#fff' }}>
+                            <div className="card mb-3" style={{ background: 'linear-gradient(to right, #493240, #f09)', color: '#fff' }}>
                                 <div className="card-body d-flex justify-content-between align-items-center">
                                     <div className="card-body">
                                         <h2 className="card-title">Rs.{total}</h2>
@@ -811,14 +768,14 @@ export default function AllOther() {
                             </div>
                         </div>
                         {/*Current month expenses amount*/}
-                        <div className="col-md-4">
-                            <div className="card mb-3" style={{ background: 'linear-gradient(to right, rgba(0, 123, 255, 0.8), rgba(255, 0, 123, 0.8))', color: '#fff' }}>
+                        <div className="col-lg-4 col-md-6 mb-3">
+                            <div className="card mb-3" style={{ background: 'linear-gradient(to right, #0a504a, #38ef7d)', color: '#fff' }}>
                                 <div className="card-body d-flex justify-content-between align-items-center">
                                     <div className="card-body">
                                         <h2 className="card-title">Rs.{totalMonth}</h2>
                                         <p className="card-text" style={{ marginTop: '35px' }}>Current Month Expenses</p>
                                     </div>
-                                    <i className="bi bi-cash h1" style={{ marginTop: '-20px', marginRight: '20px', fontSize: '3.5rem' }}></i>
+                                    <i className="bi bi-calendar3 h1" style={{ marginTop: '-20px', marginRight: '20px', fontSize: '2.5rem' }}></i>
                                 </div>
                                 <div className="card-footer bg-transparent border-top-0">
                                     <div className="progress" style={{ height: '10px', marginBottom: '20px', width: '80%', marginLeft: '10px', marginTop: '-25px' }}>
@@ -828,14 +785,14 @@ export default function AllOther() {
                             </div>
                         </div>
                         {/*Average monthly expense amount*/}
-                        <div className="col-md-4">
-                            <div className="card mb-3" style={{ background: 'linear-gradient(to right, rgba(0, 123, 255, 0.8), rgba(255, 0, 123, 0.8))', color: '#fff' }}>
+                        <div className="col-lg-4 col-md-6 mb-3">
+                            <div className="card mb-3" style={{ background: 'linear-gradient(to right, #a86008, #ffba56)', color: '#fff' }}>
                                 <div className="card-body d-flex justify-content-between align-items-center">
                                     <div className="card-body">
                                         <h2 className="card-title">Rs.{average}</h2>
                                         <p className="card-text" style={{ marginTop: '35px' }}>Average Monthly Expenses</p>
                                     </div>
-                                    <i className="bi bi-cash h1" style={{ marginTop: '-20px', marginRight: '20px', fontSize: '3.5rem' }}></i>
+                                    <i className="bi bi-graph-up" style={{ marginTop: '-20px', marginRight: '20px', fontSize: '2.5rem' }}></i>
                                 </div>
                                 <div className="card-footer bg-transparent border-top-0">
                                     <div className="progress" style={{ height: '10px', marginBottom: '20px', width: '90%', marginLeft: '10px', marginTop: '-25px' }}>
@@ -982,3 +939,4 @@ export default function AllOther() {
         </div>
     )
 }
+/*linear-gradient(to right, rgba(0, 123, 255, 0.8), rgba(255, 0, 123, 0.8))*/

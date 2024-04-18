@@ -3,6 +3,7 @@ const bills = require("../models/billlingmodel");
 const otherexpenses = require("../models/expensemodel");
 const pos = require("../models/purchaseOrdermodel");
 const salary = require("../models/salary");
+const tax = require("../models/tax");
 let Profit = require("../models/profit");
 
 //route for adding profit log
@@ -616,6 +617,36 @@ router.route("/getId/latest").get(async (req, res) => {
   } catch (error) {
     console.error("Error fetching next Profit ID:", error);
     res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.get('/fetch/taxRate', async (req, res) => {
+  try {
+      const currentYear = new Date().getFullYear();
+      const currentMonth = new Date().getMonth(); // Month is zero-based
+      
+      // Determine the start and end years based on the current date
+      const startYear = currentMonth >= 3 ? currentYear : currentYear - 1;
+
+      // Get the start and end dates for the period from April 1st to March 31st
+      const startDate = new Date(startYear, 3, 1); // April 1st
+      const endDate = new Date(startYear + 1, 2, 31, 23, 59, 59); // March 31st of the next year
+
+      // Fetch tax collection data for the specified period
+      const Tax = await tax.find({
+          Date_modified: {
+              $gte: startDate,
+              $lte: endDate
+          }
+      });
+
+      // Extract the tax rate from the first tax collection entry (assuming there's only one rate for the period)
+      const taxRate = Tax.length > 0 ? Tax[0].Rate : null;
+
+      res.json({ taxRate });
+  } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Server Error' });
   }
 });
 

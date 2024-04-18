@@ -128,20 +128,39 @@ router.route("/get/:id").get(async (req, res) => {
   router.route('/profit/:year').get(async (req, res) => {
     try {
         const currentYear = parseInt(req.params.year);
-        const profits = await Profit.find();
+        const currentMonth = (new Date()).getMonth() + 1; // Months are zero-based
+        const startMonth = 4; // April is the 4th month
+        const endMonth = 3; // March is the 3rd month
+        let startYear, endYear;
+
+        // Determine the start and end years based on the current date
+        if (currentMonth >= startMonth) {
+            // Current month is April or later, so the start year is the current year
+            startYear = currentYear;
+            endYear = currentYear + 1;
+        } else {
+            // Current month is before April, so the start year is the previous year
+            startYear = currentYear - 1;
+            endYear = currentYear;
+        }
+
+        // Adjust the start and end dates accordingly
+        const startDate = new Date(startYear, startMonth - 1, 1); // Months are zero-based
+        const endDate = new Date(endYear, endMonth, 0); // Last day of March
+
+        // Fetch profits within the specified period
+        const profits = await Profit.find({
+            Date_modified: {
+                $gte: startDate,
+                $lte: endDate
+            }
+        });
 
         let totalProfit = 0;
 
-        // Iterate through profits and sum up the monthly profit for the current year
+        // Sum up the monthly profit for the fetched profits
         profits.forEach((profit) => {
-            // Extract the year from the Date_created field
-            const dateCreated = new Date(profit.Date_modified);
-            const profitYear = dateCreated.getFullYear();
-
-            // Check if the profit was created in the current year
-            if (profitYear === currentYear) {
-                totalProfit += profit.Monthly_profit;
-            }
+            totalProfit += profit.Monthly_profit;
         });
 
         res.json({ totalProfit });
