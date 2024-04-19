@@ -24,6 +24,7 @@ export default function Discounts() {
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [deleteItemId, setDeleteItemId] = useState(null);
     const [showDeleteAllConfirmation, setShowDeleteAllConfirmation] = useState(false);
+     const [currentDateTime, setCurrentDateTime] = useState('');
 
 
 
@@ -46,6 +47,14 @@ export default function Discounts() {
             .catch((err) => {
                 setError(err.message);
             });
+
+             const intervalId = setInterval(() => {
+            const now = new Date();
+            setCurrentDateTime(now.toLocaleString());
+        }, 1000);
+
+        // Cleanup interval
+        return () => clearInterval(intervalId);
     }, []);
 
     // Function to handle delete discount
@@ -233,12 +242,22 @@ const handleDeleteAllSelected = () => {
 
 
             <div className="container">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/dashboard/cashier">Cashier Dashboard</a></li>
+                <div className="row">
+        {/* Breadcrumb navigation */}
+        <nav className="col-md-6" aria-label="breadcrumb">
+            <ol className="breadcrumb">
+                <li class="breadcrumb-item"><a href="/dashboard/cashier">Cashier Dashboard</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Discount Rule</li>
-                    </ol>
-                </nav>
+            </ol>
+        </nav>
+        {/* Current Date and Time */}
+        <div className="col-md-6 text-md-end mb-3">
+                        <div className="date-time">
+                            <span className="date">{currentDateTime.split(',')[0]}</span>
+                            <span className="time"> | {currentDateTime.split(',')[1]}</span>
+                        </div>
+                    </div>
+    </div>
                 <h4>Manage Discount Rules</h4>
 
                 <div class="container">
