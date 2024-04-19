@@ -1,21 +1,16 @@
 /* global Chart */
-
+import './finance.css';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import Layout from './Layout';
 
 const FinanceDash = () => {
 
     const [otherExpenses, setOtherExpenses] = useState([]);
     const [profit, setProfit] = useState([]);
-    const [tax, setTax] = useState([]);
-    const [monthlyProfit, setMonthlyProfit] = useState(0);
-    const [monthlySales, setMonthlySales] = useState(0);
-    const [monthlyExpenses, setMonthlyExpenses] = useState(0);
-    const [averageMonthlyProfit, setAverageMonthlyProfit] = useState(0);
+    const monthlyProfit = useState(0);
     const [profitLastYear, setProfitLastYear] = useState([]);
-
 
     useEffect(() => {
         const fetchData = async () => {
@@ -168,15 +163,6 @@ const FinanceDash = () => {
         };
     }, [otherExpenses, monthlyProfit]);
 
-    useEffect(() => {
-        // Calculate current monthly profit, sales, expenses, and average monthly profit here
-        // For demonstration, I'm setting dummy values
-        setMonthlyProfit(5000);
-        setMonthlySales(10000);
-        setMonthlyExpenses(3000);
-        setAverageMonthlyProfit(4500);
-    }, []);
-
     const [month, setMonth] = useState({ Month: '' });
 
     const handleChange = (e) => {
@@ -232,7 +218,7 @@ const FinanceDash = () => {
             if (profit.length > 0) {
                 // Filter profit records based on date_created column
                 const currentYearProfit = profit.find(item => {
-                    const dateCreated = new Date(item.Date_created);
+                    const dateCreated = new Date(item.Date_modified);
                     return dateCreated.getFullYear() === currentYear;
                 });
 
@@ -251,7 +237,7 @@ const FinanceDash = () => {
             if (profit.length > 0) {
                 // Filter profit records based on date_created column
                 const currentYearProfit = profit.find(item => {
-                    const dateCreated = new Date(item.Date_created);
+                    const dateCreated = new Date(item.Date_modified);
                     return dateCreated.getFullYear() === currentYear;
                 });
 
@@ -285,38 +271,38 @@ const FinanceDash = () => {
             let currentYear = getCurrentYear();
             let response = await axios.get(`http://localhost:8080/tax/search/${currentYear}`);
             let tax = response.data;
-    
+
             if (tax.length > 0) {
                 // Filter tax records based on date_created column
                 const currentYearTax = tax.find(item => {
-                    const dateCreated = new Date(item.Date_created);
+                    const dateCreated = new Date(item.Date_modified);
                     return dateCreated.getFullYear() === currentYear;
                 });
-    
+
                 if (currentYearTax) {
                     // Assuming the first tax record for the current year is the relevant one
                     return currentYearTax.Tax_ID;
                 }
             }
-    
+
             // If there's no tax record for the current year, try fetching the tax details for the previous year
             let previousYear = getPreviousYear();
             response = await axios.get(`http://localhost:8080/tax/search/${previousYear}`);
             tax = response.data;
-    
+
             if (tax.length > 0) {
                 // Filter tax records based on date_created column
                 const previousYearTax = tax.find(item => {
-                    const dateCreated = new Date(item.Date_created);
+                    const dateCreated = new Date(item.Date_modified);
                     return dateCreated.getFullYear() === previousYear;
                 });
-    
+
                 if (previousYearTax) {
                     // Assuming the first tax record for the previous year is the relevant one
                     return previousYearTax.Tax_ID;
                 }
             }
-    
+
             // If there's no tax record for the previous year as well, or if it's not related to the current year, return null
             window.location.href = `/tax/get/T#`;
             return null;
@@ -325,7 +311,7 @@ const FinanceDash = () => {
             return null;
         }
     };
-    
+
     const handleClickTax = async () => {
         const taxId = await getCurrentTaxId();
         if (taxId) {
@@ -336,10 +322,216 @@ const FinanceDash = () => {
         }
     };
 
+    const fixedCardColor = `linear-gradient(to right, rgba(0, 123, 255, 0.8), rgba(255, 0, 123, 0.8))`;
+
     return (
-        <div className="container-fluid" style={{ backgroundColor: '#f2f2f2', marginTop: '-40px' }}>
-            <div className="row">
-                <nav className="col-md-2 d-none d-md-block bg-dark sidebar position-fixed" style={{ height: '1400px', overflowY: 'auto' }}>
+        <Layout>
+        <div className="container">
+                <nav aria-label="breadcrumb mb-3" style={{ marginTop: '20px' }}>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Finance Dashboard</li>
+                    </ol>
+                </nav>
+                <h2 className="text-left mb-4" >Finance Dashboard</h2>
+                <div class="container">
+                    <div class="row mt-4">
+                        <div class="col-lg-4 col-md-6 mb-3">
+                            <div class="card l-bg-cherry">
+                                <div class="card-statistic-3 p-4">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="col-8">
+                                            <h2 class="d-flex align-items-center mb-5">
+                                                Rs.{TotalProfit.toFixed(2)}
+                                            </h2>
+                                            <h5 class="card-title" style={{ marginTop: '25px' }}>Total Profit</h5>
+                                        </div>
+                                        <i className="bi bi-cash-coin h1"></i>
+                                    </div>
+                                    <div class="progress mt-1 " data-height="8" style={{ height: '8px' }}>
+                                        <div class="progress-bar l-bg-cyan" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '25%' }}></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 mb-3">
+                            <div class="card l-bg-green-dark">
+                                <div class="card-statistic-3 p-4">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="col-8">
+                                            <h2 class="d-flex align-items-center mb-5">
+                                                Rs.{TotalSales.toFixed(2)}
+                                            </h2>
+                                            <h5 class="card-title" style={{ marginTop: '25px' }}>Total Sales</h5>
+                                        </div>
+                                        <i className="bi bi-cart4 h1"></i>
+                                    </div>
+                                    <div class="progress mt-1" data-height="8" style={{ height: '8px' }}>
+                                        <div class="progress-bar l-bg-orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '25%' }}></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 mb-3">
+                            <div class="card l-bg-orange-dark">
+                                <div class="card-statistic-3 p-4">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="col-8">
+                                            <h2 class="d-flex align-items-center mb-5">
+                                                Rs.{TotalExpenses.toFixed(2)}
+                                            </h2>
+                                            <h5 class="card-title" style={{ marginTop: '25px' }}>Total Expenses</h5>
+                                        </div>
+                                        <i className="bi bi-currency-dollar h1"></i>
+                                    </div>
+                                    <div class="progress mt-1 " data-height="8" style={{ height: '8px' }}>
+                                        <div class="progress-bar l-bg-cyan" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '25%' }}></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="mt-2">
+                    <div className="row">
+                        <div className="col-lg-8 col-md-12 mb-3">
+                            <div className="card" style={{ borderRadius: '20px' }}>
+                                <div className="card-body">
+                                    <h5 className="card-title">Sales vs Expenses</h5>
+                                    <canvas id="canvas-1"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-lg-4 col-md-12 mb-3">
+                            <div className="row">
+                                <div className="card" style={{ borderRadius: '20px' }}>
+                                    <div className="card-body">
+                                        <form onSubmit={submit}>
+                                            <div className="mb-3">
+                                                <h6>Create Monthly profit log in order to analyze sales vs expenses</h6>
+                                                <div className="row mb-3" style={{ marginTop: '15px' }}>
+                                                    <div className="col-md-4">
+                                                        <label htmlFor="Month" className="form-label">Select Month</label>
+                                                    </div>
+                                                    <div className="col-md-8">
+                                                        <select className="form-select" id="Month" name="Month" value={month.Month} onChange={handleChange}>
+                                                            <option value="">Select Month</option>
+                                                            <option value="January">January</option>
+                                                            <option value="February">February</option>
+                                                            <option value="March">March</option>
+                                                            <option value="April">April</option>
+                                                            <option value="May">May</option>
+                                                            <option value="June">June</option>
+                                                            <option value="July">July</option>
+                                                            <option value="August">August</option>
+                                                            <option value="September">September</option>
+                                                            <option value="October">October</option>
+                                                            <option value="November">November</option>
+                                                            <option value="December">December</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="row mb-2">
+                                                <div className="col">
+                                                    <div className="btn-group">
+                                                        <button type="submit" className="btn btn-primary" style={{ width: '200px', marginTop: '10px' }}>Add Profit</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="row" style={{ marginTop: '0px' }}>
+                                <div className="card mb-3" style={{ borderRadius: '20px' }}>
+                                    <div className="card-body">
+                                        <h5 className="card-title">Other Expenses</h5>
+                                        <p className="card-text">Add your repairing, transportational and constructional expenses.</p>
+                                        <Link to={`/otherExpense`} className="btn btn-primary me-2" style={{ width: '200px' }}>Add</Link>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="row-md-4" style={{ marginTop: '40px', marginBottom: '40px' }}>
+                        <div className="card" style={{ borderRadius: '20px' }}>
+                            <div className="card-body">
+                                <h5 className="card-title">Annual Profit breakdown</h5>
+                                <canvas id="canvas-2"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        </Layout>
+
+    );
+}
+
+export default FinanceDash;
+
+/* 
+
+<div className="mt-5">
+                    <div className="row justify-content-center">
+                        <div className="col-md-3">
+                            <div className="card mb-3" style={{ background: fixedCardColor, color: 'white', borderRadius: '20px' }}>
+                                <div className="card-body text-center">
+                                    <h3 className="card-title">Rs.{TotalProfit.toFixed(2)}</h3>
+                                    <p className="card-text">Total Profit</p>
+                                </div>
+                                <div className="card-footer bg-transparent border-top-0">
+                                    <div className="progress" style={{ height: '8px' }}>
+                                        <div className="progress-bar bg-light" role="progressbar" style={{ width: '50%' }} aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-md-3">
+                            <div className="card mb-3" style={{ background: fixedCardColor, color: 'white', borderRadius: '20px' }}>
+                                <div className="card-body text-center">
+                                    <h3 className="card-title">Rs.{TotalLastYear.toFixed(2)}</h3>
+                                    <p className="card-text">Total Profit(last year)</p>
+                                </div>
+                                <div className="card-footer bg-transparent border-top-0">
+                                    <div className="progress" style={{ height: '8px' }}>
+                                        <div className="progress-bar bg-light" role="progressbar" style={{ width: '75%' }} aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-md-3">
+                            <div className="card mb-3" style={{ background: fixedCardColor, color: 'white', borderRadius: '20px' }}>
+                                <div className="card-body text-center">
+                                    <h3 className="card-title">Rs.{TotalSales.toFixed(2)}</h3>
+                                    <p className="card-text">Total Sales</p>
+                                </div>
+                                <div className="card-footer bg-transparent border-top-0">
+                                    <div className="progress" style={{ height: '8px' }}>
+                                        <div className="progress-bar bg-light" role="progressbar" style={{ width: '30%' }} aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-md-3">
+                            <div className="card mb-3" style={{ background: fixedCardColor, color: 'white', borderRadius: '20px' }}>
+                                <div className="card-body text-center">
+                                    <h3 className="card-title">Rs.{TotalExpenses.toFixed(2)}</h3>
+                                    <p className="card-text">Total Expenses</p>
+                                </div>
+                                <div className="card-footer bg-transparent border-top-0">
+                                    <div className="progress" style={{ height: '8px' }}>
+                                        <div className="progress-bar bg-light" role="progressbar" style={{ width: '60%' }} aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+<nav className="col-md-2 d-none d-md-block bg-dark sidebar position-fixed" style={{ height: '1400px', overflowY: 'auto' }}>
                     <div className="sidebar-sticky">
                         <ul className="nav flex-column" style={{ marginTop: '40px' }}>
                             <li className="nav-item">
@@ -365,132 +557,7 @@ const FinanceDash = () => {
                     </div>
                 </nav>
 
-                <main role="main" className="col-md-9 ml-sm-auto col-lg-10 px-4" style={{ marginLeft: '250px' }}>
-                    <h2 className="text-left mb-4" style={{ marginTop: '20px' }}>Dashboard</h2>
-                    <div className="container mt-5">
-                        <div className="row justify-content-center">
-                            <div className="col-md-3">
-                                <div className="card mb-3" style={{ background: `linear-gradient(to right, rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8), rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8))`, color: 'white', borderRadius: '20px' }}>
-                                    <div className="card-body text-center">
-                                        <h5 className="card-title">Total Profit</h5>
-                                        <p className="card-text">Rs.{TotalProfit.toFixed(2)}</p>
-                                    </div>
-                                    <div className="card-footer bg-transparent border-top-0">
-                                        <div className="progress" style={{ height: '8px' }}>
-                                            <div className="progress-bar bg-light" role="progressbar" style={{ width: '50%' }} aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-md-3">
-                                <div className="card mb-3" style={{ background: `linear-gradient(to right, rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8), rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8))`, color: 'white', borderRadius: '20px' }}>
-                                    <div className="card-body text-center">
-                                        <h5 className="card-title">Total Profit(last year)</h5>
-                                        <p className="card-text">Rs.{TotalLastYear.toFixed(2)}</p>
-                                    </div>
-                                    <div className="card-footer bg-transparent border-top-0">
-                                        <div className="progress" style={{ height: '8px' }}>
-                                            <div className="progress-bar bg-light" role="progressbar" style={{ width: '75%' }} aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-md-3">
-                                <div className="card mb-3" style={{ background: `linear-gradient(to right, rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8), rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8))`, color: 'white', borderRadius: '20px' }}>
-                                    <div className="card-body text-center">
-                                        <h5 className="card-title">Total Sales</h5>
-                                        <p className="card-text">Rs.{TotalSales.toFixed(2)}</p>
-                                    </div>
-                                    <div className="card-footer bg-transparent border-top-0">
-                                        <div className="progress" style={{ height: '8px' }}>
-                                            <div className="progress-bar bg-light" role="progressbar" style={{ width: '30%' }} aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-md-3">
-                                <div className="card mb-3" style={{ background: `linear-gradient(to right, rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8), rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8))`, color: 'white', borderRadius: '20px' }}>
-                                    <div className="card-body text-center">
-                                        <h5 className="card-title">Total Expenses</h5>
-                                        <p className="card-text">Rs.{TotalExpenses.toFixed(2)}</p>
-                                    </div>
-                                    <div className="card-footer bg-transparent border-top-0">
-                                        <div className="progress" style={{ height: '8px' }}>
-                                            <div className="progress-bar bg-light" role="progressbar" style={{ width: '60%' }} aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="container-fluid mt-5">
-                                <div className="row">
-                                    <div className="col-md-7">
-                                        <div className="card" style={{ borderRadius: '20px' }}>
-                                            <div className="card-body">
-                                                <h5 className="card-title">Sales vs Expenses</h5>
-                                                <canvas id="canvas-1"></canvas>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="col-md-5">
-                                        <div className="row">
-                                            <div className="card" style={{ borderRadius: '20px' }}>
-                                                <div className="card-body">
-                                                    <form onSubmit={submit}>
-                                                        <div className="mb-3">
-                                                            <h6>Create Monthly profit log in order to analyze sales vs expenses</h6>
-                                                            <div className="row mb-3" style={{ marginTop: '15px' }}>
-                                                                <div className="col-md-4">
-                                                                    <label htmlFor="Month" className="form-label">Enter Month</label>
-                                                                </div>
-                                                                <div className="col-md-8">
-                                                                    <input type="text" className="form-control" id="Month" name="Month" value={month.Month} onChange={handleChange} />
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div className="row mb-3">
-                                                            <div className="col">
-                                                                <div className="btn-group">
-                                                                    <button type="submit" className="btn btn-primary" style={{ width: '200px', marginTop: '10px' }}>Add Profit</button>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="row" style={{ marginTop: '20px' }}>
-                                            <div className="card mb-3" style={{ borderRadius: '20px' }}>
-                                                <div className="card-body">
-                                                    <h5 className="card-title">Other Expenses</h5>
-                                                    <p className="card-text">Add your repairing, transportational and constructional expenses.</p>
-                                                    <Link to={`/otherExpense/add`} className="btn btn-primary me-2" style={{ width: '200px' }}>Add</Link>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="row-md-4" style={{ marginTop: '40px', marginBottom: '40px' }}>
-                                    <div className="card" style={{ borderRadius: '20px' }}>
-                                        <div className="card-body">
-                                            <h5 className="card-title">Monthly Profit</h5>
-                                            <canvas id="canvas-2"></canvas>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </main>
-            </div>
-        </div>
-
-
-    );
-}
-
-export default FinanceDash;
-
-/* global Chart */
+                global Chart */
 /*
 import React, { useEffect } from 'react';
 
@@ -603,6 +670,7 @@ const ChartDisplay = () => {
             </div>
             
         </div>
+        
     );
 }
 

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button, Table, Modal, Row, Col, Card } from "react-bootstrap";
 import axios from "axios";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
+import { Pagination } from "react-bootstrap"; // Import Pagination component
+import Layout from './Layout'
 
 const CustomerR = () => {
     const [customers, setCustomers] = useState([]);
@@ -13,14 +15,20 @@ const CustomerR = () => {
         customer_name: "",
         email: "",
         point: "",
-        gender: "male" // Default to male
+        gender: "Male" // Default to Male
     });
     const [customerToDelete, setCustomerToDelete] = useState(null);
     const [showDeleteCustomerPrompt, setShowDeleteCustomerPrompt] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1); // Define currentPage state
+    const customersPerPage = 6; // Define customersPerPage state
 
     useEffect(() => {
         fetchCustomers();
     }, []);
+
+    useEffect(() => {
+        setFilteredCustomers(customers);
+    }, [customers]);
 
     const fetchCustomers = async () => {
         try {
@@ -30,6 +38,14 @@ const CustomerR = () => {
             console.error("Error fetching customers:", error);
         }
     };
+
+    const paginate = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+
+    const indexOfLastCustomer = currentPage * customersPerPage;
+    const indexOfFirstCustomer = indexOfLastCustomer - customersPerPage;
+    const currentCustomers = filteredCustomers.slice(indexOfFirstCustomer, indexOfLastCustomer);
 
     const handleSearch = (e) => {
         const query = e.target.value.toLowerCase();
@@ -64,20 +80,20 @@ const CustomerR = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const { customer_id, customer_name, email, point, gender } = customerData;
-            if (!customer_id || !customer_name || !email || !point || !gender) {
+            const { customer_id, customer_name, email, gender } = customerData;
+            if (!customer_id || !customer_name || !email || !gender) {
                 console.error("All fields are required");
                 return;
             }
-            await axios.post("http://localhost:8080/customer/add", { customer_id, customer_name, email, point, gender });
+            await axios.post("http://localhost:8080/customer/add", { customer_id, customer_name, email, point:0, gender });
             setShowModal(false);
             fetchCustomers();
             setCustomerData({
                 customer_id: "",
                 customer_name: "",
                 email: "",
-                point: "",
-                gender: "male" // Reset gender to male after adding
+                point:0,
+                gender: "Male" // Reset gender to Male after adding
             });
         } catch (error) {
             console.error("Error adding customer:", error);
@@ -100,8 +116,6 @@ const CustomerR = () => {
             });
         }
     };
-    
-    
 
     const handleGenerateReport = () => {
         const printWindow = window.open("", "_blank", "width=600,height=600");
@@ -140,7 +154,7 @@ const CustomerR = () => {
                                 <th>Customer ID</th>
                                 <th>Customer Name</th>
                                 <th>Email</th>
-                                <th>Point</th>
+                                <th>Points</th>
                                 <th>Gender</th>
                             </tr>
                         </thead>
@@ -156,105 +170,140 @@ const CustomerR = () => {
                             `).join('')}
                         </tbody>
                     </table>
-                    <div class="back-button">
-                        <button onclick="window.close()" class="btn btn-secondary">Back</button>
+                    <div class="button-container">
+                        <button onclick="window.print()" class="btn btn-primary">Print</button>
+                        <button onclick="downloadCustomerReport()" class="btn btn-primary">Download PDF</button>
+                        <button onclick="window.close()" class="btn btn-secondary">Close</button>
                     </div>
                 </body>
             </html>
         `);
         printWindow.document.close();
-        printWindow.print();
+
+        printWindow.downloadCustomerReport = () => {
+            const pdfContent = printWindow.document.documentElement.outerHTML;
+            const pdfBlob = new Blob([pdfContent], { type: "application/pdf" });
+            const pdfUrl = URL.createObjectURL(pdfBlob);
+            const a = document.createElement("a");
+            a.href = pdfUrl;
+            a.download = "customer_report.pdf";
+            a.click();
+            URL.revokeObjectURL(pdfUrl);
+            printWindow.close();
+        };
     };
-    
+
+
+    const handleDeleteAllPoints = async () => {
+        try {
+            const isConfirmed = window.confirm("Are you sure you want to delete all loyalty points?");
+            if (isConfirmed) {
+                // Proceed with deleting loyalty points
+                console.log("Deleting all loyalty points...");
+            }
+            await axios.delete("http://localhost:8080/customer/delete-all-points");
+            fetchCustomers(); // Refresh the customer list
+            alert("All customer loyalty points deleted successfully.");
+        } catch (error) {
+            console.error("Error deleting all customer loyalty points:", error);
+            alert("Error deleting all customer loyalty points. Please try again later.");
+        }
+    };
+
 
     return (
+        <Layout>
         <div className="container">
             <h1>Customer Management</h1>
             <Row className="mb-3">
                 <Col>
-                    <Card>
+                    <Card className="h-100 bg-primary text-white">
                         <Card.Body>
                             <Card.Title>Generate Report</Card.Title>
                             <Card.Text>
                                 Generate a report about all customer details and loyalty points.
                             </Card.Text>
-                            <Button variant="primary" onClick={handleGenerateReport}>Generate Report</Button>
+                            <Button variant="light" onClick={handleGenerateReport}>Generate Report</Button>
                         </Card.Body>
                     </Card>
                 </Col>
                 <Col>
-                    <Card>
+                    <Card className="h-100 bg-danger text-white">
                         <Card.Body>
                             <Card.Title>Add Customer</Card.Title>
                             <Card.Text>
                                 Add a new customer to the database.
                             </Card.Text>
-                            <Button variant="success" onClick={() => setShowModal(true)}>Add Customer</Button>
+                            <Button variant="light" onClick={() => setShowModal(true)}>Add Customer</Button>
+                        </Card.Body>
+                    </Card>
+                </Col>
+                <Col>
+                    <Card className="h-100 bg-warning text-white">
+                        <Card.Body>
+                            <Card.Title>Delete All Points</Card.Title>
+                            <Card.Text>
+                                Delete all customer loyalty points.
+                            </Card.Text>
+                            <Button variant="light" onClick={handleDeleteAllPoints}>Delete All Points</Button>
                         </Card.Body>
                     </Card>
                 </Col>
             </Row>
+
             <div className="mb-3">
                 <input
                     type="text"
                     className="form-control"
                     placeholder="Search by Customer ID"
                     value={searchQuery}
-                    onChange={handleSearch}
+                    onChange={(e) => {
+                        setSearchQuery(e.target.value);
+                        const query = e.target.value.toLowerCase();
+                        const filtered = customers.filter((customer) =>
+                            customer.customer_id.toLowerCase().includes(query)
+                        );
+                        setFilteredCustomers(filtered);
+                    }}
                 />
             </div>
-            <Table striped bordered hover>
-                <thead>
-                    <tr>
-                        <th>Customer ID</th>
-                        <th>Customer Name</th>
-                        <th>Email</th>
-                        <th>Point</th>
-                        <th>Gender</th>
-                        <th colSpan="2">Action</th> {/* Spanning two columns for Edit and Delete buttons */}
-                    </tr>
-                </thead>
-                <tbody>
-                    {searchQuery === ""
-                        ? customers.map((customer) => (
-                            <tr key={customer._id}>
-                                <td>{customer.customer_id}</td>
-                                <td>{customer.customer_name}</td>
-                                <td>{customer.email}</td>
-                                <td>{customer.point}</td>
-                                <td>{customer.gender}</td>
-                                <td>
-                                <Link to={`/customer/update/${customer.customer_id}`} className="btn btn-primary">Update</Link>
-                                </td>
-                                <td>
-                                    <Button
-                                        variant="danger"
-                                        onClick={() =>
-                                            handleDelete(customer.customer_id)
-                                        }
-                                    >
-                                        Delete
-                                    </Button>
-                                </td>
-                            </tr>
-                        ))
-                        : filteredCustomers.map((customer) => (
-                            <tr key={customer._id}>
-                                <td>{customer.customer_id}</td>
-                                <td>{customer.customer_name}</td>
-                                <td>{customer.email}</td>
-                                <td>{customer.point}</td>
-                                <td>{customer.gender}</td>
-                                <td>
-                                    <Button variant="primary">Edit</Button>
-                                </td>
-                                <td>
-                                    <Button variant="danger" onClick={() => handleDelete(customer.customer_id)}>Delete</Button>
-                                </td>
-                            </tr>
+            <div className="container">
+                <div className="row">
+                    {currentCustomers.map(customer => (
+                        <div key={customer._id} className="col-md-4 mb-4">
+                            <div className="card">
+                                <div className="card-body">
+                                    <h5 className="card-title">Customer ID: {customer.customer_id}</h5>
+                                    <p className="card-text">Name: {customer.customer_name}</p>
+                                    <p className="card-text">Email: {customer.email}</p>
+                                    <p className="card-text">Point: {customer.point}</p>
+                                    <p className="card-text">Gender: {customer.gender}</p>
+                                    <div className="btn-group">
+                                        <Link to={`/customer/update/${customer.customer_id}`} className="btn btn-primary me-2">
+                                            <i className="bi bi-pencil-fill"></i> Update
+                                        </Link>
+                                        <button className="btn btn-danger" onClick={() => handleDelete(customer.customer_id)}>
+                                            <i className="bi bi-trash-fill"></i> Delete
+                                        </button>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+                <div className="d-flex justify-content-center">
+                    <Pagination>
+                        <Pagination.Prev onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1} />
+                        {[...Array(Math.ceil(filteredCustomers.length / customersPerPage)).keys()].map(number => (
+                            <Pagination.Item key={number + 1} onClick={() => paginate(number + 1)} active={number + 1 === currentPage}>
+                                {number + 1}
+                            </Pagination.Item>
                         ))}
-                </tbody>
-            </Table>
+                        <Pagination.Next onClick={() => paginate(currentPage + 1)} disabled={currentPage === Math.ceil(filteredCustomers.length / customersPerPage)} />
+                    </Pagination>
+                </div>
+            </div>
             <Modal show={showModal} onHide={() => setShowModal(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>Add Customer</Modal.Title>
@@ -295,6 +344,7 @@ const CustomerR = () => {
                                 name="point"
                                 onChange={handleChange}
                                 value={customerData.point}
+                                readOnly
                             />
                         </Form.Group>
                         <Form.Group controlId="gender">
@@ -307,7 +357,7 @@ const CustomerR = () => {
                             >
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
-                                <option value="other">Other</option>
+                                <option value="Other">Other</option>
                             </Form.Control>
                         </Form.Group>
                         <Button variant="primary" type="submit">
@@ -329,6 +379,7 @@ const CustomerR = () => {
                 </Modal.Footer>
             </Modal>
         </div>
+        </Layout>
     );
 };
 
