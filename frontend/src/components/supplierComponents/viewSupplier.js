@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams, Link, Navigate } from "react-router-dom";
 import axios from "axios";
 import { Button, Row, Col, Collapse } from "react-bootstrap";
-import { jsPDF } from "jspdf";
+// import { jsPDF } from "jspdf";
 import './supplier.css';
 
 
@@ -67,64 +67,64 @@ function ViewSupplier() {
     
 
     //DOWNLOAD SUPPLIER
-    const printPdfSupplier = () => {
-        const doc = new jsPDF();
+    // const printPdfSupplier = () => {
+    //     const doc = new jsPDF();
     
-        doc.setLineWidth(0.5); 
-        doc.rect(5, 5, 200, 280); 
+    //     doc.setLineWidth(0.5); 
+    //     doc.rect(5, 5, 200, 280); 
 
-        doc.setFontSize(16);
-        doc.text('Supplier Details', 10, 20);
+    //     doc.setFontSize(16);
+    //     doc.text('Supplier Details', 10, 20);
     
-        doc.setFontSize(12);
-        doc.text(`Supplier ID: ${supplier.supplier_id}`, 10, 30);
-        doc.text(`Supplier Name: ${supplier.supplier_name}`, 10, 40);
-        doc.text(`Address: ${supplier.address}`, 10, 50);
-        doc.text(`Contact: ${supplier.contact}`, 10, 60);
-        doc.text(`Email: ${supplier.email}`, 10, 70);
+    //     doc.setFontSize(12);
+    //     doc.text(`Supplier ID: ${supplier.supplier_id}`, 10, 30);
+    //     doc.text(`Supplier Name: ${supplier.supplier_name}`, 10, 40);
+    //     doc.text(`Address: ${supplier.address}`, 10, 50);
+    //     doc.text(`Contact: ${supplier.contact}`, 10, 60);
+    //     doc.text(`Email: ${supplier.email}`, 10, 70);
     
-        doc.setFontSize(14);
-        doc.text('Bank Details', 10, 85);
+    //     doc.setFontSize(14);
+    //     doc.text('Bank Details', 10, 85);
 
-        doc.setFontSize(12);
-        doc.text(`Bank: ${supplier.bank_details.bank}`, 10, 95);
-        doc.text(`Branch: ${supplier.bank_details.branch}`, 10, 105);
-        doc.text(`Account Number: ${supplier.bank_details.acc_no}`, 10, 115);
-        doc.text(`Payment Terms: ${supplier.bank_details.payment_terms}`, 10, 125);
-        doc.text(`Payment Method: ${supplier.bank_details.payment_method}`, 10, 135);
+    //     doc.setFontSize(12);
+    //     doc.text(`Bank: ${supplier.bank_details.bank}`, 10, 95);
+    //     doc.text(`Branch: ${supplier.bank_details.branch}`, 10, 105);
+    //     doc.text(`Account Number: ${supplier.bank_details.acc_no}`, 10, 115);
+    //     doc.text(`Payment Terms: ${supplier.bank_details.payment_terms}`, 10, 125);
+    //     doc.text(`Payment Method: ${supplier.bank_details.payment_method}`, 10, 135);
     
-        doc.setFillColor(200, 200, 200); 
-        doc.rect(10, 155, 190, 10, 'F'); 
-        doc.setTextColor(0); 
-        doc.text('Product Name', 15, 160);
-        doc.text('Unit Price', 65, 160);
+    //     doc.setFillColor(200, 200, 200); 
+    //     doc.rect(10, 155, 190, 10, 'F'); 
+    //     doc.setTextColor(0); 
+    //     doc.text('Product Name', 15, 160);
+    //     doc.text('Unit Price', 65, 160);
 
-        doc.setFontSize(12);
-        doc.text(`Products of ${supplier.supplier_name} supplier product types dl nh`, 10, 150);
+    //     doc.setFontSize(12);
+    //     doc.text(`Products of ${supplier.supplier_name} supplier product types dl nh`, 10, 150);
 
-        let y = 170;
-        supplier.product_items.forEach((item) => {
-            doc.text(item.product_name, 15, y);
-            doc.text(item.unit_price.toString(), 65, y);
-            y += 10; 
-        });
+    //     let y = 170;
+    //     supplier.product_items.forEach((item) => {
+    //         doc.text(item.product_name, 15, y);
+    //         doc.text(item.unit_price.toString(), 65, y);
+    //         y += 10; 
+    //     });
     
-        doc.setFontSize(11); 
-        doc.text('Supplier Performance', 10, y + 10);
+    //     doc.setFontSize(11); 
+    //     doc.text('Supplier Performance', 10, y + 10);
 
-        doc.setFontSize(12);
-        doc.text(`Quality: ${supplier.sup_performance.quality}`, 15, y + 20);
-        doc.text(`Delivery Time: ${supplier.sup_performance.delivery_time}`, 15, y + 30);
+    //     doc.setFontSize(12);
+    //     doc.text(`Quality: ${supplier.sup_performance.quality}`, 15, y + 20);
+    //     doc.text(`Delivery Time: ${supplier.sup_performance.delivery_time}`, 15, y + 30);
 
-        doc.setFontSize(11); 
-        doc.text('Contract Details', 10, y + 50);
+    //     doc.setFontSize(11); 
+    //     doc.text('Contract Details', 10, y + 50);
 
-        doc.setFontSize(12);
-        doc.text(`Start Date: ${supplier.contract.start_date}`, 10, y + 60);
-        doc.text(`End Date: ${supplier.contract.end_date}`, 10, y + 70);
+    //     doc.setFontSize(12);
+    //     doc.text(`Start Date: ${supplier.contract.start_date}`, 10, y + 60);
+    //     doc.text(`End Date: ${supplier.contract.end_date}`, 10, y + 70);
     
-        doc.save(`Supplier_Details_${supplier.supplier_id}.pdf`);
-    };
+    //     doc.save(`Supplier_Details_${supplier.supplier_id}.pdf`);
+    // };
     
 
     return(
@@ -253,9 +253,12 @@ function ViewSupplier() {
                 <Button variant="danger" id="up-btn" className="me-1 " onClick={() => handleDeleteSupplier(supplier._id)} >
                     <i className="bi bi-trash"></i> Delete
                 </Button>
-                <Button variant="info" id="up-btn"  onClick={printPdfSupplier}>
+                <Button variant="info" id="up-btn" >
                         <i className="bi bi-download me-2"></i> Download
                 </Button>
+                {/* <Button variant="info" id="up-btn"  onClick={printPdfSupplier}>
+                        <i className="bi bi-download me-2"></i> Download
+                </Button> */}
             </div>
             
         </div>

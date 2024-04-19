@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import axios from 'axios';
 import {Button, Row, Col, Card} from 'react-bootstrap'
 import './supplier.css';
-import {jsPDF} from 'jspdf';
+// import {jsPDF} from 'jspdf';
 
 function ViewPO() {
 
@@ -310,63 +310,63 @@ function ViewPO() {
     };
 
     //PRINT AS A PDF
-    const printPdfPO = () => {
-        const doc = new jsPDF();
+    // const printPdfPO = () => {
+    //     const doc = new jsPDF();
     
-        // Add a border around the entire content
-        doc.setLineWidth(0.5); // Set border width
-        doc.rect(5, 5, 200, 280); // x, y, width, height
+    //     // Add a border around the entire content
+    //     doc.setLineWidth(0.5); // Set border width
+    //     doc.rect(5, 5, 200, 280); // x, y, width, height
     
-        doc.setFontSize(16);
-        doc.text('Purchase Order', 10, 20);
+    //     doc.setFontSize(16);
+    //     doc.text('Purchase Order', 10, 20);
     
-        doc.setFontSize(12);
-        doc.text(`Purchase Order ID: ${purchaseOrder.purchaseOrder_id}`, 10, 30);
-        doc.text(`Mongo DB ID: ${purchaseOrder._id}`, 10, 40);
-        doc.text(`Supplier ID: ${purchaseOrder.supplier_id}`, 10, 50);
-        doc.text(`Supplier Name: ${purchaseOrder.supplier_name}`, 10, 60);
+    //     doc.setFontSize(12);
+    //     doc.text(`Purchase Order ID: ${purchaseOrder.purchaseOrder_id}`, 10, 30);
+    //     doc.text(`Mongo DB ID: ${purchaseOrder._id}`, 10, 40);
+    //     doc.text(`Supplier ID: ${purchaseOrder.supplier_id}`, 10, 50);
+    //     doc.text(`Supplier Name: ${purchaseOrder.supplier_name}`, 10, 60);
 
-        doc.text(`Order Date: ${purchaseOrder.order_date}`, 20, 75);
-        doc.text(`Delivery Date: ${purchaseOrder.deliver_date}`, 90, 75);
+    //     doc.text(`Order Date: ${purchaseOrder.order_date}`, 20, 75);
+    //     doc.text(`Delivery Date: ${purchaseOrder.deliver_date}`, 90, 75);
     
-        doc.text(`Delivery Method: ${purchaseOrder.delivery_information.delivery_method}`, 10, 90);
-        doc.text(`Delivery Costs: ${purchaseOrder.delivery_information.delivery_costs}`, 10, 100);
+    //     doc.text(`Delivery Method: ${purchaseOrder.delivery_information.delivery_method}`, 10, 90);
+    //     doc.text(`Delivery Costs: ${purchaseOrder.delivery_information.delivery_costs}`, 10, 100);
     
-        doc.text(`Payment Terms: ${purchaseOrder.payment_information.payment_terms}`, 10, 115);
-        doc.text(`Payment Method: ${purchaseOrder.payment_information.payment_method}`, 10, 125);
+    //     doc.text(`Payment Terms: ${purchaseOrder.payment_information.payment_terms}`, 10, 115);
+    //     doc.text(`Payment Method: ${purchaseOrder.payment_information.payment_method}`, 10, 125);
     
-        // Draw table headers
-        doc.setFillColor(200, 200, 200); // Set header background color
-        doc.rect(10, 140, 190, 10, 'F'); // Draw header rectangle
-        doc.setTextColor(0); // Reset text color
-        doc.text('Item Name', 15, 145);
-        doc.text('Unit Price', 65, 145);
-        doc.text('Quantity', 95, 145);
-        doc.text('Description', 125, 145);
-        doc.text('Total Price', 165, 145);
+    //     // Draw table headers
+    //     doc.setFillColor(200, 200, 200); // Set header background color
+    //     doc.rect(10, 140, 190, 10, 'F'); // Draw header rectangle
+    //     doc.setTextColor(0); // Reset text color
+    //     doc.text('Item Name', 15, 145);
+    //     doc.text('Unit Price', 65, 145);
+    //     doc.text('Quantity', 95, 145);
+    //     doc.text('Description', 125, 145);
+    //     doc.text('Total Price', 165, 145);
     
-        // Draw table rows
-        let y = 155;
-        purchaseOrder.order_items.forEach((item) => {
-            doc.text(item.item_name, 15, y);
-            doc.text(item.unit_price.toString(), 65, y);
-            doc.text(item.quantity.toString(), 95, y);
-            doc.text(item.description, 125, y);
-            doc.text(item.total_price.toString(), 165, y);
-            y += 10; // Adjust Y-coordinate for next row
-        });
+    //     // Draw table rows
+    //     let y = 155;
+    //     purchaseOrder.order_items.forEach((item) => {
+    //         doc.text(item.item_name, 15, y);
+    //         doc.text(item.unit_price.toString(), 65, y);
+    //         doc.text(item.quantity.toString(), 95, y);
+    //         doc.text(item.description, 125, y);
+    //         doc.text(item.total_price.toString(), 165, y);
+    //         y += 10; // Adjust Y-coordinate for next row
+    //     });
     
-        doc.setFontSize(16); // Set the font size to 16 for the total order amount
-        doc.text(`Total Order Amount: ${purchaseOrder.total_order_amount}`, 10, y + 10);
+    //     doc.setFontSize(16); // Set the font size to 16 for the total order amount
+    //     doc.text(`Total Order Amount: ${purchaseOrder.total_order_amount}`, 10, y + 10);
 
-        doc.setFontSize(12);
-        doc.text(`Order Status: ${purchaseOrder.order_status}`, 10, y + 30);
-        doc.text(`Payment Status: ${purchaseOrder.payment_status}`, 80, y + 30);
-        doc.text(`Additional Information: ${purchaseOrder.additional_infomation}`, 10, y + 40);
+    //     doc.setFontSize(12);
+    //     doc.text(`Order Status: ${purchaseOrder.order_status}`, 10, y + 30);
+    //     doc.text(`Payment Status: ${purchaseOrder.payment_status}`, 80, y + 30);
+    //     doc.text(`Additional Information: ${purchaseOrder.additional_infomation}`, 10, y + 40);
     
-        // Save the PDF with a meaningful filename
-        doc.save(`Purchase_Order_${purchaseOrder.purchaseOrder_id}.pdf`);
-    };
+    //     // Save the PDF with a meaningful filename
+    //     doc.save(`Purchase_Order_${purchaseOrder.purchaseOrder_id}.pdf`);
+    // };
     
 
     //INVOICE UPLOAD - NOT WORKING
@@ -395,7 +395,8 @@ function ViewPO() {
                                 <Button className="back-btn" variant="secondary" ><i className="bi bi-arrow-left me-2"></i><span>Back</span></Button>
                             </Link>
 
-                            <Button className="ms-2 text-white " variant="info" onClick={printPdfPO} id="up-btn" ><i className="bi bi-filetype-pdf me-2"></i>Download Purchase Order</Button>
+                            {/* <Button className="ms-2 text-white " variant="info" onClick={printPdfPO} id="up-btn" ><i className="bi bi-filetype-pdf me-2"></i>Download Purchase Order</Button> */}
+                            <Button className="ms-2 text-white " variant="info" id="up-btn" ><i className="bi bi-filetype-pdf me-2"></i>Download Purchase Order</Button>
                         </div>
 
                         <div className="mt-4 pe-4 shadow-lg rounded"> 
