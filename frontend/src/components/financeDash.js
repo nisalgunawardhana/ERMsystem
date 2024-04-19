@@ -3,6 +3,7 @@ import './finance.css';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import Layout from './Layout';
 
 const FinanceDash = () => {
 
@@ -324,6 +325,7 @@ const FinanceDash = () => {
     const fixedCardColor = `linear-gradient(to right, rgba(0, 123, 255, 0.8), rgba(255, 0, 123, 0.8))`;
 
     return (
+        <Layout>
         <div className="container align-items-center">
             <ul class="nav nav-tabs mb-3" id="myTab0" role="tablist">
                 <li class="nav-item" role="presentation">
@@ -524,6 +526,7 @@ const FinanceDash = () => {
 
             </main>
         </div>
+        </Layout>
 
     );
 }
@@ -728,6 +731,7 @@ const ChartDisplay = () => {
             </div>
             
         </div>
+        
     );
 }
 

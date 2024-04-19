@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { Link } from "react-router-dom";
+import Layout from './Layout';
 
 function ProfitDetails() {
     const { id } = useParams();
@@ -422,6 +423,7 @@ function ProfitDetails() {
     };
 
     return (
+        <Layout>
             <div className="container">
                 <ul class="nav nav-tabs mb-3" id="myTab0" role="tablist">
                     <li class="nav-item" role="presentation">
@@ -621,7 +623,7 @@ function ProfitDetails() {
                                 </div>
                             </div>
                             <div className="col-lg-3 col-md-6 mb-3">
-                                <div className="card" style={{ background: 'linear-gradient(to right, #007bff, #6c757d)', color: '#fff' }}>
+                                <div className="card" style={{ background: 'linear-gradient(to right, #6c757d, #007bff)', color: '#fff' }}>
                                     <div className="card-body d-flex justify-content-between align-items-center">
                                         <div>
                                             <h3 className="card-title">{(totalSupp + totalSalary + totalOther + profit.EPF_ETF).toFixed(2)}</h3>
@@ -701,8 +703,8 @@ function ProfitDetails() {
 
                 )}
 
-
             </div>
+            </Layout>
     );
 }
 

@@ -3,6 +3,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { Modal, Button, Pagination } from 'react-bootstrap';
 import toast, { Toaster } from 'react-hot-toast';
+import Layout from './Layout';
 
 export default function AllOther() {
 
@@ -632,6 +633,7 @@ export default function AllOther() {
     };
 
     return (
+        <Layout>
         <div className="container" >
             <ul class="nav nav-tabs mb-3" id="myTab0" role="tablist">
                 <li class="nav-item" role="presentation">
@@ -937,6 +939,7 @@ export default function AllOther() {
                 </Modal.Body>
             </Modal>
         </div>
+        </Layout>
     )
 }
 /*linear-gradient(to right, rgba(0, 123, 255, 0.8), rgba(255, 0, 123, 0.8))*/

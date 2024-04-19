@@ -3,6 +3,7 @@ import axios from "axios";
 import { useParams, useNavigate } from 'react-router-dom';
 import { Modal } from 'react-bootstrap';
 import toast, { Toaster } from 'react-hot-toast';
+import Layout from './Layout';
 
 function AddProfit() {
     const [totalAmount, setTotalAmount] = useState(0);
@@ -181,7 +182,8 @@ function AddProfit() {
     }, []); // Run only once after the component mount
 
     return (
-        <div className="container" style={{ marginTop: '80px' }}>
+        <Layout>
+        <div className="container" style={{ marginTop: '10px' }}>
             <div className="row justify-content-center">
                 <div className="col-lg-8">
                     <form onSubmit={sendData}>
@@ -322,6 +324,7 @@ function AddProfit() {
                 </div>
             </div>
         </div>
+        </Layout>
     );
 }
 

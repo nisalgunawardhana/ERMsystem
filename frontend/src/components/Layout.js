@@ -3,6 +3,8 @@ import './Layout.css';
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux" ;
 import { Popover, Space } from 'antd';
+import axios from 'axios';
+import {Button} from 'react-bootstrap';
 
 function Layout({children}) {
     const [collapsed, setCollapsed] = useState(false);
@@ -105,12 +107,12 @@ function Layout({children}) {
         },
         {
             name: 'Profit Log',
-            path: '/signup',
+            path: `/profit/get/profitlog`,
             icon: 'ri-currency-line'
         },
         {
             name: 'Other Expenses',
-            path: '/profile',
+            path: '/otherExpense',
             icon: 'ri-coins-line'
         },
         {

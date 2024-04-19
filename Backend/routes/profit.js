@@ -189,6 +189,71 @@ router.route("/update/:id").put(async (req, res) => {
   })
 })
 
+//route to get profit log for latest month
+router.route("/get/profitlog").get(async (req, res) => {
+  const currentDate = new Date();
+  let currentMonth = currentDate.getMonth() + 1; // Adding 1 because getMonth() returns zero-based index
+  let currentYear = currentDate.getFullYear();
+
+  try {
+    // Try to find profit details for the current month and year
+    let profit = await Profit.aggregate([
+      {
+        $project: {
+          month: { $month: "$Date_modified" },
+          year: { $year: "$Date_modified" },
+          profit: "$$ROOT"
+        }
+      },
+      {
+        $match: {
+          month: currentMonth,
+          year: currentYear
+        }
+      },
+      { $sort: { "profit.Date_modified": -1 } },
+      { $limit: 1 }
+    ]);
+
+    // If profit details for the current month and year are not found, try the previous month
+    if (profit.length === 0 && currentMonth > 1) {
+      currentMonth--; // Decrement month
+    } else if (profit.length === 0 && currentMonth === 1) {
+      currentMonth = 12; // Set month to December
+      currentYear--; // Decrement year
+    }
+
+    // Try to find profit details for the previous month
+    profit = await Profit.aggregate([
+      {
+        $project: {
+          month: { $month: "$Date_modified" },
+          year: { $year: "$Date_modified" },
+          profit: "$$ROOT"
+        }
+      },
+      {
+        $match: {
+          month: currentMonth,
+          year: currentYear
+        }
+      },
+      { $sort: { "profit.Date_modified": -1 } },
+      { $limit: 1 }
+    ]);
+
+    if (profit.length > 0) {
+      res.status(200).send({ status: "Profit details fetched", profit: profit[0].profit });
+    } else {
+      res.status(404).send({ status: "Profit not found" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ status: "Error with getting Profit details" });
+  }
+});
+
+//route to fetch newly added profit log
 router.route("/get/:id").get(async (req, res) => {
   let profitId = req.params.id;
   try {

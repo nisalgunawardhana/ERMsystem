@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
+import Layout from './Layout';
 
 function TaxDetails() {
     const { id } = useParams();
@@ -389,6 +390,7 @@ function TaxDetails() {
     });
 
     return (
+        <Layout>
         <div className="container">
             <ul class="nav nav-tabs mb-3" id="myTab0" role="tablist">
                 <li class="nav-item" role="presentation">
@@ -618,7 +620,7 @@ function TaxDetails() {
                 )}
             </div>
         </div>
-
+        </Layout>
     );
 }
 

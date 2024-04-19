@@ -94,7 +94,7 @@ router.route("/update/:id").put(async (req,res)=>{
     })
 });
 
-//route to get desired tax doc
+//route to get latest tax doc
 router.route("/get/:id").get(async (req, res) => {
     let taxId = req.params.id;
     try {
@@ -109,6 +109,39 @@ router.route("/get/:id").get(async (req, res) => {
         res.status(500).send({ status: "Error with getting tax details" });
     }
   });
+
+  //route to get latest tax doc
+  router.route("/get/taxdoc").get(async (req, res) => {
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentYearStart = new Date(currentYear, 3 - 1, 1); // 1st April of the current year
+    const lastYearStart = new Date(currentYear - 1, 3 - 1, 1); // 1st April of the last year
+    const currentYearEnd = new Date(currentYear + 1, 3 - 1, 0); // 31st March of the next year
+    const lastYearEnd = new Date(currentYear, 3 - 1, 0); // 31st March of the current year
+  
+    try {
+      // Try to find tax details for the current year's period
+      let tax = await Tax.findOne({
+        Date_modified: { $gte: currentYearStart, $lte: currentYearEnd }
+      });
+  
+      // If tax details for the current year's period are not found, try the last year's period
+      if (!tax) {
+        tax = await Tax.findOne({
+          Date_modified: { $gte: lastYearStart, $lte: lastYearEnd }
+        });
+      }
+  
+      if (tax) {
+        res.status(200).send({ status: "Tax details fetched", tax });
+      } else {
+        res.status(404).send({ status: "Tax not found" });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ status: "Error with getting tax details" });
+    }
+  });  
 
   router.route("/searchtax/:month").get((req, res) => {
     const { month } = req.params;
