@@ -10,6 +10,8 @@ const CashierDashboard = () => {
     const [error, setError] = useState('');
     const [totalAmount, setTotalAmount] = useState(0);
     const [totalCus, setTotalCus] = useState(0);
+    const [currentDateTime, setCurrentDateTime] = useState('');
+
 
 
     useEffect(() => {
@@ -34,7 +36,16 @@ const CashierDashboard = () => {
             .catch((err) => {
                 setError(err.message);
             });
+
+             const intervalId = setInterval(() => {
+            const now = new Date();
+            setCurrentDateTime(now.toLocaleString());
+        }, 1000);
+
+        // Cleanup interval
+        return () => clearInterval(intervalId);
     }, []);
+    
 
 
 
@@ -42,11 +53,22 @@ const CashierDashboard = () => {
         <Layout>
             <div className="container">
                 {/* Breadcrumb navigation */}
-                <nav aria-label="breadcrumb mb-3" style={{ marginTop: '20px' }}>
-                    <ol className="breadcrumb">
-                        <li className="breadcrumb-item active" aria-current="page">Cashier Dashboard</li>
-                    </ol>
-                </nav>
+                
+                <div className="row">
+        {/* Breadcrumb navigation */}
+        <nav className="col-md-6" aria-label="breadcrumb">
+            <ol className="breadcrumb">
+                <li className="breadcrumb-item active" aria-current="page">Cashier Dashboard</li>
+            </ol>
+        </nav>
+        {/* Current Date and Time */}
+        <div className="col-md-6 text-md-end mb-3">
+                        <div className="date-time">
+                            <span className="date">{currentDateTime.split(',')[0]}</span>
+                            <span className="time"> | {currentDateTime.split(',')[1]}</span>
+                        </div>
+                    </div>
+    </div>
                 {/* Page title */}
                 <h2 className="text-left mb-4">Cashier Dashboard</h2>
                 {/* Total sales card */}

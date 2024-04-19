@@ -6,6 +6,7 @@ import Layout from '../Layout';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { Toaster, toast } from 'react-hot-toast';
 
+
 export default function Bills() {
 
     const [bill, setbill] = useState([]);
@@ -23,6 +24,7 @@ export default function Bills() {
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [showModal, setShowModal] = useState(false);
+     const [currentDateTime, setCurrentDateTime] = useState('');
     // Define a state to control the visibility of the report modal
     const [showReportModal, setShowReportModal] = useState(false);
 
@@ -51,6 +53,14 @@ export default function Bills() {
 
         getbill();
         getTotalAmount();
+
+         const intervalId = setInterval(() => {
+            const now = new Date();
+            setCurrentDateTime(now.toLocaleString());
+        }, 1000);
+
+        // Cleanup interval
+        return () => clearInterval(intervalId);
     }, [])
 
     const handleOpenDeleteConfirmation = (id) => {
@@ -339,12 +349,22 @@ export default function Bills() {
 
             <div className="container">
 
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/dashboard/cashier">Cashier Dashboard</a></li>
+                <div className="row">
+        {/* Breadcrumb navigation */}
+        <nav className="col-md-6" aria-label="breadcrumb">
+            <ol className="breadcrumb">
+                <li class="breadcrumb-item"><a href="/dashboard/cashier">Cashier Dashboard</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Billing</li>
-                    </ol>
-                </nav>
+            </ol>
+        </nav>
+        {/* Current Date and Time */}
+        <div className="col-md-6 text-md-end mb-3">
+                        <div className="date-time">
+                            <span className="date">{currentDateTime.split(',')[0]}</span>
+                            <span className="time"> | {currentDateTime.split(',')[1]}</span>
+                        </div>
+                    </div>
+    </div>
                 <div className="d-flex flex-wrap align-items-center">
                     <h2 className="flex-grow-1">Bills</h2>
 
@@ -397,7 +417,7 @@ export default function Bills() {
                 <div className="d-flex flex-wrap align-items-center">
                     <h2 style={{ marginRight: '25px' }}> All Bills</h2>
                     {/* Add expense button */}
-                    <Link to="/bill/CreateBill" className="btn btn-success"><i class="bi bi-plus-circle-fill me-2"></i>Create New Bill</Link>
+                    <Link to="/dashboard/cashier/bill/CreateBill" className="btn btn-success"><i class="bi bi-plus-circle-fill me-2"></i>Create New Bill</Link>
                 </div>
                 <div className="d-flex justify-content-between align-items-center mb-3">
                     <div className="flex-grow-1">
