@@ -1,50 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import './Layout.css';
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch  } from "react-redux" ;
+import { useSelector } from "react-redux" ;
 import { Popover, Space } from 'antd';
-import axios from "axios";
-import { setUser } from '../redux/userSlice';
-
+import axios from 'axios';
+import {Button} from 'react-bootstrap';
 
 function Layout({children}) {
     const [collapsed, setCollapsed] = useState(false);
     const { user } = useSelector((state) => state.user);
     const location = useLocation();
     const navigate = useNavigate();
-    const dispatch = useDispatch();
-
-   /* const handleLogout = () => {
-        // Show a confirmation message before logging out
-        if (window.confirm("Are you sure you want to logout?")) {
-            localStorage.clear();
-            navigate('/login');
-        }
-    };*/
-
-    const handleLogout = () => {
-        localStorage.clear();
-        dispatch(setUser(null)); // Clear user state in Redux store
-        navigate('/login');
-    };
-    const getData = async () => {
-        try {
-            const response = await axios.post('/api/employee/get-user-info-by-id', {} , {
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token')
-                },
-            });
-            console.log(response.data);
-        } catch (error) {
-            console.log(error);
-        }
-    };
     
-
-    useEffect(() => {
-        getData();
-    }, []);     
-
     // Determine user's role based on boolean flags
     let userRole;
 
@@ -140,12 +107,12 @@ function Layout({children}) {
         },
         {
             name: 'Profit Log',
-            path: '/signup',
+            path: `/profit/get/profitlog`,
             icon: 'ri-currency-line'
         },
         {
             name: 'Other Expenses',
-            path: '/profile',
+            path: '/otherExpense',
             icon: 'ri-coins-line'
         },
         {
@@ -274,6 +241,14 @@ function Layout({children}) {
             break;
     }
 
+    const handleLogout = () => {
+        // Show a confirmation message before logging out
+        if (window.confirm("Are you sure you want to logout?")) {
+            localStorage.clear();
+            navigate('/login');
+        }
+    };
+
     // Conditionally render children based on user role
     const renderChildren = () => {
         if (userRole === 'default role') {
@@ -292,7 +267,6 @@ function Layout({children}) {
             <div className="d-flex layout"> 
                 {/* sidebar */}
                 <div className={`${collapsed ? 'collapsed-sidebar' : 'sidebar'}`}>
-                    
                     <div className="sidebar-header">
                         <div className={`${collapsed ? 'collapsed-sidebar-shopname' : 'sidebar-shopname'}`}>
                             Diyana Fashion 
@@ -312,22 +286,16 @@ function Layout({children}) {
                                 </div>
                             );
                         })}
-
-                        {/*logout option*/}
-                        <div className="logout">
-                            <div 
-                                className={`d-flex menu-item`} 
-                                onClick={handleLogout}
-                            >
-                                <i className="ri-logout-circle-r-line"></i>
-                                {!collapsed && <Link to='/login'>Logout</Link>}
-                            </div>  
-                        </div>
-
+                        <div 
+                            className={`d-flex menu-item`} 
+                            onClick={handleLogout}
+                        >
+                            <i className="ri-logout-circle-r-line"></i>
+                            {!collapsed && <Link to='/login'>Logout</Link>}
+                        </div>    
                     </div>
                 </div>
-                
-                <div className="content">
+                <div className="content" style={{ marginLeft: collapsed ? '83px' : '255px' }}>
                     <div className="header">
                         {/*icon change from close button to menu icon*/}
                         {collapsed ? (

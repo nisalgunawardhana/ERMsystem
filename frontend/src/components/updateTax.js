@@ -20,6 +20,7 @@ function UpdateTax() {
     const [Description, setDesc] = useState("");
     const [currentDate, setCurrentDate] = useState('');
     const [totalProfit, setTotalProfit] = useState(0);
+    const [rateError, setRateError] = useState('');
     const navigate = useNavigate();
 
     const [Tax, setTax] = useState({
@@ -82,6 +83,17 @@ function UpdateTax() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        const rateRegex = /^[0-9]+(\.[0-9]{1,2})?$/; // Only integers or double values allowed (up to 2 decimal places)
+
+            // Validate input for "Cost" field
+            if (!rateRegex.test(Tax.Rate)) {
+                // If the input is invalid, update the error message
+                setRateError('Invalid input. Only numerical values allowed (up to 2 decimal places).');
+                return;
+            } else {
+                setRateError(''); // Clear any existing error
+            }
 
         const newTax = {
             Tax_ID: Tax.Tax_ID,
@@ -150,6 +162,7 @@ function UpdateTax() {
                                                 <i className="bi bi-currency-dollar me-2"></i>Rate
                                             </label>
                                             <input type="text" className="form-control" id="sales" name='Rate' value={Tax.Rate} onChange={handleChanges} />
+                                            {rateError && <div className="text-danger">{rateError}</div>}
                                         </div>
                                         <div className="mb-3">
                                             <label htmlFor="supplier" className="form-label">
@@ -188,7 +201,7 @@ function UpdateTax() {
                                 <div className="row">
                                     <div className="col">
                                         <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-                                            <button type="submit" className="btn btn-primary me-5 rounded">Submit</button>
+                                            <button type="submit" className="btn btn-primary me-5 rounded">Update Tax Details</button>
                                         </div>
                                     </div>
                                 </div>

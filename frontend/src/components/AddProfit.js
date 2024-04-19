@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from 'react-router-dom';
 import { Modal } from 'react-bootstrap';
+import toast, { Toaster } from 'react-hot-toast';
+import Layout from './Layout';
 
 function AddProfit() {
     const [totalAmount, setTotalAmount] = useState(0);
@@ -21,6 +23,7 @@ function AddProfit() {
     const [Monthly_profit, setProfit] = useState(0);
     const [Date_modified, setDate] = useState("");
     const [Description, setDesc] = useState("");
+    const [Rate, setRate] = useState("");
     const navigate = useNavigate();
     const { month } = useParams();
 
@@ -55,6 +58,16 @@ function AddProfit() {
                 console.error(err);
             });
     }, [month]);
+
+    useEffect(() => {
+        axios.get(`http://localhost:8080/profit/fetch/taxRate`)
+            .then((res) => {
+                setRate(res.data.taxRate);
+            })
+            .catch((err) => {
+                console.error(err);
+            });
+    });
 
     const fetchLatestId = async () => {
         try {
@@ -97,7 +110,10 @@ function AddProfit() {
             // If the profit log doesn't exist, add it
             const res = await axios.post("http://localhost:8080/profit/add", newProfit);
             if (res.status === 200) {
-                alert("Profit details Added");
+                setTimeout(() => {
+                    // Display success toast message
+                    toast.success('Profit log added successfully!');
+                }, 2000);
                 setID("");
                 setMonth("");
                 setIncome(0);
@@ -129,6 +145,10 @@ function AddProfit() {
             .then((res) => {
                 setTotalEPF(res.data.totalEPF);
                 setTotalETF(res.data.totalETF);
+                setTimeout(() => {
+                    // Display success toast message
+                    toast.success('EPF/ETF added successfully!');
+                }, 2000);
             })
             .catch((err) => {
                 console.error(err);
@@ -162,7 +182,8 @@ function AddProfit() {
     }, []); // Run only once after the component mount
 
     return (
-        <div className="container" style={{ marginTop: '80px' }}>
+        <Layout>
+        <div className="container" style={{ marginTop: '10px' }}>
             <div className="row justify-content-center">
                 <div className="col-lg-8">
                     <form onSubmit={sendData}>
@@ -224,9 +245,9 @@ function AddProfit() {
                                         </div>
                                         <div className="mb-3">
                                             <label htmlFor="profit" className="form-label">
-                                                <i className="bi bi-cash me-2"></i>Monthly Profit
+                                                <i className="bi bi-cash me-2"></i>Monthly Profit [Income tax rate: {Rate}%]
                                             </label>
-                                            <input type="text" className="form-control" id="profit" value={(totalAmount - (totalOther + totalSupp + totalSalary)).toFixed(2)} onChange={(e) => setProfit(e.target.value)} readOnly/>
+                                            <input type="text" className="form-control" id="profit" value={((totalAmount - (totalOther + totalSupp + totalSalary)) - ((totalAmount - (totalOther + totalSupp + totalSalary)) * Rate / 100.0)).toFixed(2)} onChange={(e) => setProfit(e.target.value)} readOnly/>
                                         </div>
                                         <div className="mb-3">
                                             <label htmlFor="date" className="form-label">
@@ -252,6 +273,7 @@ function AddProfit() {
                             </div>
                         </div>
                     </form>
+                    <Toaster />
                     <div className="modal-backdrop" style={{ display: isOpen ? 'block' : 'none', backdropFilter: isOpen ? 'blur(5px)' : 'none' }}></div>
                     <Modal show={isOpen} onHide={handleClose} style={{ marginTop: '60px' }}>
                         <Modal.Header closeButton>
@@ -302,6 +324,7 @@ function AddProfit() {
                 </div>
             </div>
         </div>
+        </Layout>
     );
 }
 
