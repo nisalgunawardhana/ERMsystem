@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import Layout from './Layout'
 
 function UpdateCustomer() {
   const { id } = useParams();
@@ -45,6 +46,7 @@ function UpdateCustomer() {
   };
 
   return (
+    <Layout>
     <div className="custom-form-container">
       <div className="d-flex justify-content-end mb-3">
         <Button variant="secondary" onClick={() => navigate('/customer')}>Back</Button>
@@ -106,6 +108,7 @@ function UpdateCustomer() {
         </Button>
       </Form>
     </div>
+    </Layout>
   );
 }
 

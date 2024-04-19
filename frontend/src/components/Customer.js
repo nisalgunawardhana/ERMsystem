@@ -3,6 +3,7 @@ import { Form, Button, Table, Modal, Row, Col, Card } from "react-bootstrap";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { Pagination } from "react-bootstrap"; // Import Pagination component
+import Layout from './Layout'
 
 const CustomerR = () => {
     const [customers, setCustomers] = useState([]);
@@ -211,6 +212,7 @@ const CustomerR = () => {
 
 
     return (
+        <Layout>
         <div className="container">
             <h1>Customer Management</h1>
             <Row className="mb-3">
@@ -377,6 +379,7 @@ const CustomerR = () => {
                 </Modal.Footer>
             </Modal>
         </div>
+        </Layout>
     );
 };
 
