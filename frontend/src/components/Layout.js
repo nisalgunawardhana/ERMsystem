@@ -57,26 +57,26 @@ function Layout({children}) {
 
     //2. cashier
     const cashierMenu = [
-        {
-            name: 'Home',
-            path: '/',
+        
+         {
+            name: ' Dashboard',
+            path: '/cd',
             icon: 'ri-home-4-line'
         },
         {
             name: 'Billing',
             path: '/bill',
-            icon: 'ri-user-settings-line'
+            icon: 'ri-file-list-line'
         },
         {
-            name: 'Discount Rule',
+            name: 'Discount Rules',
             icon: 'ri-file-list-line',
             path: '/bill/discounts',
         },
         {
-            name: 'Customer',
+            name: 'Customer Management',
             icon: 'ri-group-line',
             path: '/customer',
-
         }
     ];
     

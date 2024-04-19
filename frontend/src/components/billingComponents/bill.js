@@ -196,10 +196,6 @@ export default function Bills() {
     };
 
 
-
-
-
-
     const handlePreview = (selectedBill) => {
         setSelectedBill(selectedBill);
         setShowPreviewModal(true);
@@ -434,8 +430,11 @@ export default function Bills() {
                 </div>
 
 
-                <table className="table">
-                    <thead class="table-dark">
+                <div className="card">
+                    <div className="card-body">
+                        <h5 className="card-title">Recent Sales</h5>
+                        <table className="table">
+                    <thead>
                         <tr >
 
                             <th >#</th>
@@ -478,7 +477,9 @@ export default function Bills() {
                             </tr>
                         ))}
                     </tbody>
-                </table>
+                   </table>
+                    </div>
+                </div>
                 <div class="container text-center">
                     <div class="row">
                         <div class="col">
@@ -588,7 +589,7 @@ export default function Bills() {
                         <Button variant="secondary" onClick={closeReportModal}>Close</Button>
                         <Button variant="primary" onClick={printReport}>Print</Button>
                     </Modal.Footer>
-                </Modal>;
+                </Modal>
 
 
             </div>

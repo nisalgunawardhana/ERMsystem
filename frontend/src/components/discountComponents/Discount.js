@@ -448,8 +448,11 @@ const handleDeleteAllSelected = () => {
 
 
                 {/* Discounts table */}
-                <table className="table">
-                    <thead className="table-dark">
+               <div className="card">
+                    <div className="card-body">
+                        <h5 className="card-title">Recent Sales</h5>
+                        <table className="table">
+                    <thead >
                         <tr>
                             <th>#</th>
                             <th style={{ textAlign: 'center' }}>Rule Name</th>
@@ -478,7 +481,9 @@ const handleDeleteAllSelected = () => {
                             </tr>
                         ))}
                     </tbody>
-                </table>
+                 </table>
+                    </div>
+                </div>
             </div>
 
         </Layout>

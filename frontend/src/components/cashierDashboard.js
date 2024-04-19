@@ -1,0 +1,139 @@
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
+import Layout from './Layout';
+
+const CashierDashboard = () => {
+    // State variables to hold data
+    const [salesData, setSalesData] = useState([]);
+    const [totalSales, setTotalSales] = useState(0);
+    const [error, setError] = useState('');
+    const [totalAmount, setTotalAmount] = useState(0);
+
+
+    useEffect(() => {
+
+        // Fetch total amount
+        axios.get("http://localhost:8080/profit/get/bills/total")
+            .then((res) => {
+                setTotalAmount(res.data.totalAmount);
+            })
+            .catch((err) => {
+                setError(err.message);
+            });
+    }, []);
+
+
+
+    return (
+        <Layout>
+            <div className="container">
+                {/* Breadcrumb navigation */}
+                <nav aria-label="breadcrumb mb-3" style={{ marginTop: '20px' }}>
+                    <ol className="breadcrumb">
+                        <li className="breadcrumb-item"><Link to="/">Home</Link></li>
+                        <li className="breadcrumb-item active" aria-current="page">Cashier Dashboard</li>
+                    </ol>
+                </nav>
+                {/* Page title */}
+                <h2 className="text-left mb-4">Cashier Dashboard</h2>
+                {/* Total sales card */}
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 mb-3">
+                        <div class="card l-bg-cherry">
+                            <div class="card-statistic-3 p-4">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="col-8">
+                                        <h2 class="d-flex align-items-center mb-5">
+                                            Rs.{totalAmount.toFixed(2)}
+                                        </h2>
+                                        <h5 class="card-title" style={{ marginTop: '25px', marginBottom: '18px' }}>Total sales</h5>
+                                    </div>
+                                    <i className="bi bi-cash-coin h1"></i>
+                                </div>
+                                <div class="progress mt-1 " data-height="8" style={{ height: '8px' }}>
+                                    <div class="progress-bar l-bg-cyan" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '25%' }}></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 mb-3">
+                        <div class="card l-bg-green-dark">
+                            <div class="card-statistic-3 p-4">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="col-8">
+                                        <h1 class="d-flex align-items-center mb-5">
+                                            10
+                                        </h1>
+                                        <h5 class="card-title" style={{ marginTop: '25px' }}>Total Customers</h5>
+                                    </div>
+                                    <i className="bi bi-percent h1"></i>
+                                </div>
+                                <div class="progress mt-1 " data-height="8" style={{ height: '8px' }}>
+                                    <div class="progress-bar l-bg-orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '25%' }}></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h2 className="text-left mb-4">Instant Links</h2>
+
+                <div class="container">
+                    <div class="row row-cols-1 row-cols-md-4 g-4">
+                        <div class="col">
+                        <a href="/bill/CreateBill" className="card-link" style={{ textDecoration: 'none', color: 'inherit' }}>
+                            <div class="card h-100 text-center">
+                                <div class="card-body">
+                                    <i class="bi bi-file-earmark-plus fs-1 mb-3"></i>
+                                    <h5 class="card-title fs-5 mb-3">Create Bill</h5>
+                                    <p class="card-text fs-6">Create Bill here</p>
+                                </div>
+                            </div>
+                            </a>
+                        </div>
+                        <div class="col">
+                        <a href="/customer" className="card-link" style={{ textDecoration: 'none', color: 'inherit' }}>
+                            <div class="card h-100 text-center">
+                                <div class="card-body">
+                                    <i class="bi bi-person-plus fs-1 mb-3"></i>
+                                    <h5 class="card-title fs-5 mb-3">Manage Customer</h5>
+                                    <p class="card-text fs-6">Manage Customer here!</p>
+                                </div>
+                            </div>
+                            </a>
+                        </div>
+                        <div class="col">
+                        <a href="./bill/discounts" className="card-link" style={{ textDecoration: 'none', color: 'inherit' }}>
+                            <div class="card h-100 text-center">
+                                <div class="card-body">
+                                    <i class="bi bi-cash-coin fs-1 mb-3"></i>
+                                    <h5 class="card-title fs-5 mb-3">Manage Discount Rule</h5>
+                                    <p class="card-text fs-6">Manage discount rule here!</p>
+                                </div>
+                            </div>
+                            </a>
+                        </div>
+                        <div class="col">
+                        <a href="your_link_here" className="card-link" style={{ textDecoration: 'none', color: 'inherit' }}>
+                            <div class="card h-100 text-center">
+                                <div class="card-body">
+                                    <i class="bi bi-moon fs-1 mb-3"></i>
+                                    <h5 class="card-title fs-5 mb-3">Card 4</h5>
+                                    <p class="card-text fs-6">Click me!</p>
+                                </div>
+                            </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+            </div>
+        </Layout>
+    );
+};
+
+export default CashierDashboard;

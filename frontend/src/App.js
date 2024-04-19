@@ -40,6 +40,7 @@ import { Toaster } from 'react-hot-toast'
 import ProtectedRoute from './components/ProtectedRoute';
 import SystemUsers from './pages/SystemUsers';
 import Notes from './pages/Notes';
+import CashierDashboard from './components/cashierDashboard';
 
 function App() {
   const {loading} = useSelector(state => state.alerts);
@@ -101,6 +102,7 @@ function App() {
           <Route path="/bill/update/:id" element={<ProtectedRoute><UpdateBill/></ProtectedRoute>}/>
           <Route path="/bill/discounts" element={<ProtectedRoute><Discounts/></ProtectedRoute>} />
           <Route path="/employee" element={<ProtectedRoute><Employees/></ProtectedRoute>}/>
+          <Route path="/cd" element={<ProtectedRoute><CashierDashboard/></ProtectedRoute>}/>
 
         </Routes>  
       
