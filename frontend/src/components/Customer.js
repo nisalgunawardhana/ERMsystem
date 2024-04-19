@@ -219,33 +219,31 @@ const CustomerR = () => {
                 <Col>
                     <Card className="h-100 bg-primary text-white">
                         <Card.Body>
-                            <Card.Title>Generate Report</Card.Title>
-                            <Card.Text>
-                                Generate a report about all customer details and loyalty points.
-                            </Card.Text>
-                            <Button variant="light" onClick={handleGenerateReport}>Generate Report</Button>
+                            <Card.Title style={{ fontSize: '1.75rem' }}>Customer Report</Card.Title>
+                            
+                            <Button variant="light" style={{ backgroundColor: 'black', color: 'white' }} onClick={handleGenerateReport}>Generate Report</Button>
                         </Card.Body>
                     </Card>
                 </Col>
                 <Col>
                     <Card className="h-100 bg-danger text-white">
                         <Card.Body>
-                            <Card.Title>Add Customer</Card.Title>
+                            <Card.Title style={{ fontSize: '1.75rem' }}>Add Customer</Card.Title>
                             <Card.Text>
                                 Add a new customer to the database.
                             </Card.Text>
-                            <Button variant="light" onClick={() => setShowModal(true)}>Add Customer</Button>
+                            <Button variant="light" style={{ backgroundColor: 'black', color: 'white' }} onClick={() => setShowModal(true)}>Add Customer</Button>
                         </Card.Body>
                     </Card>
                 </Col>
                 <Col>
                     <Card className="h-100 bg-warning text-white">
                         <Card.Body>
-                            <Card.Title>Delete All Points</Card.Title>
+                            <Card.Title style={{ fontSize: '1.75rem' }}>Delete All Points</Card.Title>
                             <Card.Text>
                                 Delete all customer loyalty points.
                             </Card.Text>
-                            <Button variant="light" onClick={handleDeleteAllPoints}>Delete All Points</Button>
+                            <Button variant="light" style={{ backgroundColor: 'black', color: 'white' }} onClick={handleDeleteAllPoints}>Delete All Points</Button>
                         </Card.Body>
                     </Card>
                 </Col>
