@@ -60,18 +60,18 @@ function Layout({children}) {
         
          {
             name: ' Dashboard',
-            path: '/cd',
+            path: '/cashier_dashboard',
             icon: 'ri-home-4-line'
         },
         {
             name: 'Billing',
-            path: '/bill',
+            path: '/billing',
             icon: 'ri-file-list-line'
         },
         {
             name: 'Discount Rules',
             icon: 'ri-file-list-line',
-            path: '/bill/discounts',
+            path: '/discounts',
         },
         {
             name: 'Customer Management',

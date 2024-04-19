@@ -97,12 +97,12 @@ function App() {
           <Route path="/Customer" element={<ProtectedRoute><CustomerR/></ProtectedRoute>}/>
           <Route path="/Customer/update/:id" element={<ProtectedRoute><UpdateCustomer/></ProtectedRoute>}/>
           <Route path="/trainee" element={<ProtectedRoute><Trainees/></ProtectedRoute>}/>
-          <Route path="/bill" element={<ProtectedRoute><Bill/></ProtectedRoute>}/>
-          <Route path="/bill/CreateBill" element={<ProtectedRoute><CreateBill/></ProtectedRoute>}/>
-          <Route path="/bill/update/:id" element={<ProtectedRoute><UpdateBill/></ProtectedRoute>}/>
-          <Route path="/bill/discounts" element={<ProtectedRoute><Discounts/></ProtectedRoute>} />
+          <Route path="/dashboard/cashier/billing" element={<ProtectedRoute><Bill/></ProtectedRoute>}/>
+          <Route path="/dashboard/cashier/bill/CreateBill" element={<ProtectedRoute><CreateBill/></ProtectedRoute>}/>
+          <Route path="/dashboard/cashier/bill/update/:id" element={<ProtectedRoute><UpdateBill/></ProtectedRoute>}/>
+          <Route path="/dashboard/cashier/discounts" element={<ProtectedRoute><Discounts/></ProtectedRoute>} />
+          <Route path="/dashboard/cashier" element={<ProtectedRoute><CashierDashboard/></ProtectedRoute>}/>
           <Route path="/employee" element={<ProtectedRoute><Employees/></ProtectedRoute>}/>
-          <Route path="/cd" element={<ProtectedRoute><CashierDashboard/></ProtectedRoute>}/>
 
         </Routes>  
       

@@ -9,6 +9,7 @@ const CashierDashboard = () => {
     const [totalSales, setTotalSales] = useState(0);
     const [error, setError] = useState('');
     const [totalAmount, setTotalAmount] = useState(0);
+    const [totalCus, setTotalCus] = useState(0);
 
 
     useEffect(() => {
@@ -17,6 +18,18 @@ const CashierDashboard = () => {
         axios.get("http://localhost:8080/profit/get/bills/total")
             .then((res) => {
                 setTotalAmount(res.data.totalAmount);
+            })
+            .catch((err) => {
+                setError(err.message);
+            });
+    }, []);
+
+    useEffect(() => {
+
+        // Fetch total amount
+        axios.get("http://localhost:8080/customer/count")
+            .then((res) => {
+                setTotalCus(res.data.totalCustomers);
             })
             .catch((err) => {
                 setError(err.message);
@@ -63,11 +76,12 @@ const CashierDashboard = () => {
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="col-8">
                                         <h1 class="d-flex align-items-center mb-5">
-                                            10
+                                            {totalCus}
                                         </h1>
                                         <h5 class="card-title" style={{ marginTop: '25px' }}>Total Customers</h5>
                                     </div>
-                                    <i className="bi bi-percent h1"></i>
+                                   <i class="bi bi-person fs-1 mb-3"></i>
+
                                 </div>
                                 <div class="progress mt-1 " data-height="8" style={{ height: '8px' }}>
                                     <div class="progress-bar l-bg-orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '25%' }}></div>
@@ -115,12 +129,12 @@ const CashierDashboard = () => {
                             </a>
                         </div>
                         <div class="col">
-                        <a href="your_link_here" className="card-link" style={{ textDecoration: 'none', color: 'inherit' }}>
+                        <a href="/billing" className="card-link" style={{ textDecoration: 'none', color: 'inherit' }}>
                             <div class="card h-100 text-center">
                                 <div class="card-body">
                                     <i class="bi bi-moon fs-1 mb-3"></i>
-                                    <h5 class="card-title fs-5 mb-3">Card 4</h5>
-                                    <p class="card-text fs-6">Click me!</p>
+                                    <h5 class="card-title fs-5 mb-3">Manage Bills</h5>
+                                    <p class="card-text fs-6">Manage Bills Here!</p>
                                 </div>
                             </div>
                             </a>
