@@ -292,6 +292,7 @@ function Layout({children}) {
             <div className="d-flex layout"> 
                 {/* sidebar */}
                 <div className={`${collapsed ? 'collapsed-sidebar' : 'sidebar'}`}>
+                    
                     <div className="sidebar-header">
                         <div className={`${collapsed ? 'collapsed-sidebar-shopname' : 'sidebar-shopname'}`}>
                             Diyana Fashion 
@@ -311,15 +312,21 @@ function Layout({children}) {
                                 </div>
                             );
                         })}
-                        <div 
-                            className={`d-flex menu-item`} 
-                            onClick={handleLogout}
-                        >
-                            <i className="ri-logout-circle-r-line"></i>
-                            {!collapsed && <Link to='/login'>Logout</Link>}
-                        </div>    
+
+                        {/*logout option*/}
+                        <div className="logout">
+                            <div 
+                                className={`d-flex menu-item`} 
+                                onClick={handleLogout}
+                            >
+                                <i className="ri-logout-circle-r-line"></i>
+                                {!collapsed && <Link to='/login'>Logout</Link>}
+                            </div>  
+                        </div>
+
                     </div>
                 </div>
+                
                 <div className="content">
                     <div className="header">
                         {/*icon change from close button to menu icon*/}
