@@ -3,6 +3,8 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Layout from '../Layout';
+
 
 function CreateBill() {
   const [customer_id, setCustomerId] = useState("");
@@ -15,6 +17,7 @@ function CreateBill() {
   const [discount, setDiscount] = useState(0);
   const navigate = useNavigate();
   const [discountRules, setDiscountRules] = useState([]);
+  const [discountAmount, setDiscountAmount] = useState(0);
 
 
   useEffect(() => {
@@ -49,7 +52,7 @@ function CreateBill() {
     discountRules.forEach(rule => {
       if (totalAmount >= rule.rule_con) {
         // Accumulate the discount instead of overwriting
-        applicableDiscount += (totalAmount * rule.Discount_presentage) / 100;
+        applicableDiscount += (totalAmount * rule.Discount_presentage / 100);
       }
     });
     return applicableDiscount;
@@ -84,7 +87,8 @@ function CreateBill() {
       const total = items.reduce((acc, curr) => acc + (curr.price * curr.quantity), 0);
       const loyaltyPointsDiscount = discount;
       const applicableDiscount = calculateApplicableDiscount(discountRules, total);
-      setTotalAmount(total - applicableDiscount - total * loyaltyPointsDiscount/ 100);
+      setTotalAmount(total - applicableDiscount - (total * loyaltyPointsDiscount/ 100));
+      setDiscountAmount(applicableDiscount);
     };
     calculateTotal();
   }, [items, discount, discountRules]);
@@ -129,7 +133,7 @@ function CreateBill() {
       .get(`http://localhost:8080/customer/calculate-loyalty-points/${customer_id}`)
       .then((response) => {
         const { loyaltyPoints } = response.data;
-        alert(`Points Added: ${loyaltyPoints}`);
+        console.log(`Points Added: ${loyaltyPoints}`);
       })
       .catch((err) => {
         console.error("Error while submitting form:", err);
@@ -146,6 +150,7 @@ function CreateBill() {
         setBillingDate("");
         setItems([]);
         setTotalAmount(0);
+        setDiscountAmount(0);
         handlePrint(newBill);
         navigate("/bill/");
       })
@@ -268,6 +273,7 @@ function CreateBill() {
   };
 
   return (
+    <Layout>
 
     <div className="container-fluid">
       <div className="row">
@@ -334,21 +340,24 @@ function CreateBill() {
               <br /><br />
 
               <div>
-                <h4>Items:</h4>
-                <ul>
-                  {items.map((item, index) => (
-                    <li key={index}>
-                      {item.code} - Rs{item.price} x {item.quantity}{" "}
-                      <button type="button" onClick={() => removeItem(index)}>Remove</button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+  <h4>Items:</h4>
+  <ul className="list-group">
+    {items.map((item, index) => (
+      <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
+        <div>
+          <span>{item.code} - Rs{item.price} x {item.quantity}</span>
+        </div>
+        <button className="btn btn-danger" onClick={() => removeItem(index)}>Remove</button>
+      </li>
+    ))}
+  </ul>
+</div>
 
 
-              <p>Discount: Rs{calculateApplicableDiscount(discountRules, totalAmount).toFixed(2)}</p>
-              <p>Loyalty points Discount: Rs{discount}</p>
-              <h3>Total Amount: Rs{totalAmount}</h3>
+
+              <p>Discount: Rs{discountAmount.toFixed(2)}</p>
+              <p>Loyalty points Discount:{discount.toFixed(2)}</p>
+              <h3>Total Amount: Rs{totalAmount.toFixed(2)}</h3>
 
 
               <div className="submit-btn-container">
@@ -415,6 +424,8 @@ function CreateBill() {
       <br></br>
       <br></br>
     </div>
+  </Layout>
+  
   );
 }
 

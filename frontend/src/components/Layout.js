@@ -3,6 +3,8 @@ import './Layout.css';
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux" ;
 import { Popover, Space } from 'antd';
+import axios from 'axios';
+import {Button} from 'react-bootstrap';
 
 function Layout({children}) {
     const [collapsed, setCollapsed] = useState(false);
@@ -40,17 +42,17 @@ function Layout({children}) {
         },
         {
             name: 'Dashboard',
-            path: '/adminDashboard',
+            path: '/users',
             icon: 'ri-user-settings-line'
         },
         {
             name: 'Add User',
-            path: '/signup',
+            path: '/register',
             icon: 'ri-add-circle-line'
         },
         {
-            name: 'Tasks',
-            path: '/tasks',
+            name: 'Notes',
+            path: '/notes',
             icon: 'ri-task-line'
         },
     ];
@@ -105,12 +107,12 @@ function Layout({children}) {
         },
         {
             name: 'Profit Log',
-            path: '/signup',
+            path: `/profit/get/profitlog`,
             icon: 'ri-currency-line'
         },
         {
             name: 'Other Expenses',
-            path: '/profile',
+            path: '/otherExpense',
             icon: 'ri-coins-line'
         },
         {
@@ -293,7 +295,7 @@ function Layout({children}) {
                         </div>    
                     </div>
                 </div>
-                <div className="content">
+                <div className="content" style={{ marginLeft: collapsed ? '83px' : '255px' }}>
                     <div className="header">
                         {/*icon change from close button to menu icon*/}
                         {collapsed ? (
