@@ -241,7 +241,11 @@ function SystemUsers() {
                 <br/>
 
                 <div className="col-md-4">
-                    <div className="card mb-3" style={{ background: `linear-gradient(to right, rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8), rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8))`, color: 'white', borderRadius: '20px' }}>
+                    <div className="card mb-3" 
+                        style={{ background: `#ff5f0f`, 
+                        color: 'white', 
+                        borderRadius: '20px' }}>
+
                         <div className="card-body">
                             <h5 className="card-title">Generate Reports</h5>
                             <p className="card-text">Generate and download sales reports.</p>

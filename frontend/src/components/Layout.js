@@ -286,13 +286,18 @@ function Layout({children}) {
                                 </div>
                             );
                         })}
-                        <div 
-                            className={`d-flex menu-item`} 
-                            onClick={handleLogout}
-                        >
-                            <i className="ri-logout-circle-r-line"></i>
-                            {!collapsed && <Link to='/login'>Logout</Link>}
-                        </div>    
+
+                        {/*logout*/}
+                        <div className="logout">
+                            <div 
+                                className={`d-flex menu-item`} 
+                                onClick={handleLogout}
+                            >
+                                <i className="ri-logout-circle-r-line"></i>
+                                {!collapsed && <Link to='/login'>Logout</Link>}
+                            </div>  
+                        </div> 
+
                     </div>
                 </div>
                 <div className="content" style={{ marginLeft: collapsed ? '83px' : '255px' }}>
