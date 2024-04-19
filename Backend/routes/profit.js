@@ -3,6 +3,7 @@ const bills = require("../models/billlingmodel");
 const otherexpenses = require("../models/expensemodel");
 const pos = require("../models/purchaseOrdermodel");
 const salary = require("../models/salary");
+const tax = require("../models/tax");
 let Profit = require("../models/profit");
 
 //route for adding profit log
@@ -188,6 +189,71 @@ router.route("/update/:id").put(async (req, res) => {
   })
 })
 
+//route to get profit log for latest month
+router.route("/get/profitlog").get(async (req, res) => {
+  const currentDate = new Date();
+  let currentMonth = currentDate.getMonth() + 1; // Adding 1 because getMonth() returns zero-based index
+  let currentYear = currentDate.getFullYear();
+
+  try {
+    // Try to find profit details for the current month and year
+    let profit = await Profit.aggregate([
+      {
+        $project: {
+          month: { $month: "$Date_modified" },
+          year: { $year: "$Date_modified" },
+          profit: "$$ROOT"
+        }
+      },
+      {
+        $match: {
+          month: currentMonth,
+          year: currentYear
+        }
+      },
+      { $sort: { "profit.Date_modified": -1 } },
+      { $limit: 1 }
+    ]);
+
+    // If profit details for the current month and year are not found, try the previous month
+    if (profit.length === 0 && currentMonth > 1) {
+      currentMonth--; // Decrement month
+    } else if (profit.length === 0 && currentMonth === 1) {
+      currentMonth = 12; // Set month to December
+      currentYear--; // Decrement year
+    }
+
+    // Try to find profit details for the previous month
+    profit = await Profit.aggregate([
+      {
+        $project: {
+          month: { $month: "$Date_modified" },
+          year: { $year: "$Date_modified" },
+          profit: "$$ROOT"
+        }
+      },
+      {
+        $match: {
+          month: currentMonth,
+          year: currentYear
+        }
+      },
+      { $sort: { "profit.Date_modified": -1 } },
+      { $limit: 1 }
+    ]);
+
+    if (profit.length > 0) {
+      res.status(200).send({ status: "Profit details fetched", profit: profit[0].profit });
+    } else {
+      res.status(404).send({ status: "Profit not found" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ status: "Error with getting Profit details" });
+  }
+});
+
+//route to fetch newly added profit log
 router.route("/get/:id").get(async (req, res) => {
   let profitId = req.params.id;
   try {
@@ -616,6 +682,36 @@ router.route("/getId/latest").get(async (req, res) => {
   } catch (error) {
     console.error("Error fetching next Profit ID:", error);
     res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.get('/fetch/taxRate', async (req, res) => {
+  try {
+      const currentYear = new Date().getFullYear();
+      const currentMonth = new Date().getMonth(); // Month is zero-based
+      
+      // Determine the start and end years based on the current date
+      const startYear = currentMonth >= 3 ? currentYear : currentYear - 1;
+
+      // Get the start and end dates for the period from April 1st to March 31st
+      const startDate = new Date(startYear, 3, 1); // April 1st
+      const endDate = new Date(startYear + 1, 2, 31, 23, 59, 59); // March 31st of the next year
+
+      // Fetch tax collection data for the specified period
+      const Tax = await tax.find({
+          Date_modified: {
+              $gte: startDate,
+              $lte: endDate
+          }
+      });
+
+      // Extract the tax rate from the first tax collection entry (assuming there's only one rate for the period)
+      const taxRate = Tax.length > 0 ? Tax[0].Rate : null;
+
+      res.json({ taxRate });
+  } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Server Error' });
   }
 });
 

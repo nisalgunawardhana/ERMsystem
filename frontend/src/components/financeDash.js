@@ -3,6 +3,7 @@ import './finance.css';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import Layout from './Layout';
 
 const FinanceDash = () => {
 
@@ -324,6 +325,7 @@ const FinanceDash = () => {
     const fixedCardColor = `linear-gradient(to right, rgba(0, 123, 255, 0.8), rgba(255, 0, 123, 0.8))`;
 
     return (
+        <Layout>
         <div className="container align-items-center">
             <ul class="nav nav-tabs mb-3" id="myTab0" role="tablist">
                 <li class="nav-item" role="presentation">
@@ -389,9 +391,9 @@ const FinanceDash = () => {
                         <li class="breadcrumb-item active" aria-current="page">Finance Dashboard</li>
                     </ol>
                 </nav>
-                <h2 className="text-left mb-5" >Finance Dashboard</h2>
+                <h2 className="text-left mb-4" >Finance Dashboard</h2>
                 <div class="container">
-                    <div class="row">
+                    <div class="row mt-4">
                         <div class="col-lg-4 col-md-6 mb-3">
                             <div class="card l-bg-cherry">
                                 <div class="card-statistic-3 p-4">
@@ -420,9 +422,9 @@ const FinanceDash = () => {
                                             </h2>
                                             <h5 class="card-title" style={{ marginTop: '25px' }}>Total Sales</h5>
                                         </div>
-                                        <i className="bi bi-cash h1"></i>
+                                        <i className="bi bi-cart4 h1"></i>
                                     </div>
-                                    <div class="progress mt-1 " data-height="8" style={{ height: '8px' }}>
+                                    <div class="progress mt-1" data-height="8" style={{ height: '8px' }}>
                                         <div class="progress-bar l-bg-orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '25%' }}></div>
                                     </div>
                                 </div>
@@ -448,7 +450,7 @@ const FinanceDash = () => {
                         </div>
                     </div>
                 </div>
-                <div className="mt-4">
+                <div className="mt-2">
                     <div className="row">
                         <div className="col-lg-8 col-md-12 mb-3">
                             <div className="card" style={{ borderRadius: '20px' }}>
@@ -524,6 +526,7 @@ const FinanceDash = () => {
 
             </main>
         </div>
+        </Layout>
 
     );
 }
@@ -728,6 +731,7 @@ const ChartDisplay = () => {
             </div>
             
         </div>
+        
     );
 }
 

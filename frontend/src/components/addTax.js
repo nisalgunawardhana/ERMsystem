@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from 'react-router-dom';
+import toast, { Toaster } from 'react-hot-toast';
 
 function AddTax({ EPF, ETF }) {
     const [totalProfit, setTotalProfit] = useState(0);
@@ -15,6 +16,7 @@ function AddTax({ EPF, ETF }) {
     const [Final_profit, setFinal] = useState(0);
     const [currentDate, setCurrentDate] = useState('');
     const [isValidTaxId, setIsValidTaxId] = useState(true);
+    const [rateError, setRateError] = useState('');
     const navigate = useNavigate();
     const { epfetf } = useParams();
 
@@ -63,6 +65,17 @@ function AddTax({ EPF, ETF }) {
     const sendData = async (e) => {
         e.preventDefault();
 
+        const rateRegex = /^[0-9]+(\.[0-9]{1,2})?$/; // Only integers or double values allowed (up to 2 decimal places)
+
+            // Validate input for "Cost" field
+            if (!rateRegex.test(Rate)) {
+                // If the input is invalid, update the error message
+                setRateError('Invalid input. Only numerical values allowed (up to 2 decimal places).');
+                return;
+            } else {
+                setRateError(''); // Clear any existing error
+            }
+
         const tot = (parseFloat(totalProfit).toFixed(2) - Income_tax);
 
         const newTax = {
@@ -89,7 +102,10 @@ function AddTax({ EPF, ETF }) {
             // If the profit log doesn't exist, add it
             const res = await axios.post("http://localhost:8080/tax/add", newTax);
             if (res.status === 200) {
-                alert("Tax details Added");
+                setTimeout(() => {
+                    // Display success toast message
+                    toast.success('Tax Document added successfully!');
+                }, 2000);
                 setID("");
                 setProfit("");
                 setRate(0);
@@ -186,7 +202,6 @@ function AddTax({ EPF, ETF }) {
         }
     };
 
-
     return (
         <div className="container" style={{ marginTop: '100px' }}>
             <div className="row justify-content-center">
@@ -221,6 +236,7 @@ function AddTax({ EPF, ETF }) {
                                                 setRate(e.target.value);
                                                 calculateIncomeTax(e.target.value);
                                             }} required />
+                                            {rateError && <div className="text-danger">{rateError}</div>}
                                         </div>
                                         <div className="mb-3">
                                             <label htmlFor="supplier" className="form-label">
@@ -259,13 +275,14 @@ function AddTax({ EPF, ETF }) {
                                 <div className="row">
                                     <div className="col">
                                         <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-                                            <button type="submit" className="btn btn-primary me-5 rounded">Submit</button>
+                                            <button type="submit" className="btn btn-primary me-5 rounded">Add Tax Details</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </form>
+                    <Toaster />
                 </div>
             </div>
         </div>
