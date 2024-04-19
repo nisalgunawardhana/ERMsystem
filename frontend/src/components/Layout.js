@@ -60,23 +60,23 @@ function Layout({children}) {
         
          {
             name: ' Dashboard',
-            path: '/cashier_dashboard',
+            path: '/dashboard/cashier',
             icon: 'ri-home-4-line'
         },
         {
             name: 'Billing',
-            path: '/billing',
+            path: '/dashboard/cashier/billing',
             icon: 'ri-file-list-line'
         },
         {
             name: 'Discount Rules',
-            icon: 'ri-file-list-line',
-            path: '/discounts',
+            icon: 'ri-price-tag-3-line me-2',
+            path: '/dashboard/cashier/discounts',
         },
         {
             name: 'Customer Management',
             icon: 'ri-group-line',
-            path: '/customer',
+            path: '/dashboard/cashier/customer',
         }
     ];
     

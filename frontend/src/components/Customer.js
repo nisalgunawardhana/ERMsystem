@@ -3,7 +3,7 @@ import { Form, Button, Table, Modal, Row, Col, Card } from "react-bootstrap";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { Pagination } from "react-bootstrap"; // Import Pagination component
-import Layout from './Layout'
+import Layout from './Layout';
 
 const CustomerR = () => {
     const [customers, setCustomers] = useState([]);
@@ -80,19 +80,19 @@ const CustomerR = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const { customer_id, customer_name, email, gender } = customerData;
-            if (!customer_id || !customer_name || !email || !gender) {
+            const { customer_id, customer_name, email, point, gender } = customerData;
+            if (!customer_id || !customer_name || !email || !point || !gender) {
                 console.error("All fields are required");
                 return;
             }
-            await axios.post("http://localhost:8080/customer/add", { customer_id, customer_name, email, point:0, gender });
+            await axios.post("http://localhost:8080/customer/add", { customer_id, customer_name, email, point, gender });
             setShowModal(false);
             fetchCustomers();
             setCustomerData({
                 customer_id: "",
                 customer_name: "",
                 email: "",
-                point:0,
+                point: "",
                 gender: "Male" // Reset gender to Male after adding
             });
         } catch (error) {
@@ -214,30 +214,44 @@ const CustomerR = () => {
     return (
         <Layout>
         <div className="container">
+            <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/dashboard/cashier">Cashier Dashboard</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Customer Management </li>
+                    </ol>
+                </nav>
             <h1>Customer Management</h1>
             <Row className="mb-3">
                 <Col>
                     <Card className="h-100 bg-primary text-white">
                         <Card.Body>
-                            <Card.Title style={{ fontSize: '1.75rem',marginTop: '5px' }}>Customer Report</Card.Title>
-                            
-                            <Button variant="light" style={{ backgroundColor: 'black', color: 'white',marginTop: '45px',fontSize: '1.15rem' }} onClick={handleGenerateReport}>Generate Report</Button>
+                            <Card.Title>Generate Report</Card.Title>
+                            <Card.Text>
+                                Generate a report about all customer details and loyalty points.
+                            </Card.Text>
+                            <Button variant="light" onClick={handleGenerateReport}>Generate Report</Button>
                         </Card.Body>
                     </Card>
                 </Col>
                 <Col>
                     <Card className="h-100 bg-danger text-white">
                         <Card.Body>
-                            <Card.Title style={{ fontSize: '1.75rem',marginTop: '5px' }}>Add Customer</Card.Title>
-                            <Button variant="light" style={{ backgroundColor: 'black', color: 'white',marginTop: '45px',fontSize: '1.15rem' }} onClick={() => setShowModal(true)}>Add Customer</Button>
+                            <Card.Title>Add Customer</Card.Title>
+                            <Card.Text>
+                                Add a new customer to the database.
+                            </Card.Text>
+                            <Button variant="light" onClick={() => setShowModal(true)}>Add Customer</Button>
                         </Card.Body>
                     </Card>
                 </Col>
                 <Col>
                     <Card className="h-100 bg-warning text-white">
                         <Card.Body>
-                            <Card.Title style={{ fontSize: '1.75rem',marginTop: '5px' }}>Delete All Points</Card.Title>
-                            <Button variant="light" style={{ backgroundColor: 'black', color: 'white',marginTop: '45px',fontSize: '1.15rem' }} onClick={handleDeleteAllPoints}>Delete All Points</Button>
+                            <Card.Title>Delete All Points</Card.Title>
+                            <Card.Text>
+                                Delete all customer loyalty points.
+                            </Card.Text>
+                            <Button variant="light" onClick={handleDeleteAllPoints}>Delete All Points</Button>
                         </Card.Body>
                     </Card>
                 </Col>
@@ -352,7 +366,7 @@ const CustomerR = () => {
                                 <option value="Other">Other</option>
                             </Form.Control>
                         </Form.Group>
-                        <Button variant="primary" type="submit">
+                        <Button variant="primary" type="submit" >
                             Add
                         </Button>
                     </Form>
@@ -371,6 +385,7 @@ const CustomerR = () => {
                 </Modal.Footer>
             </Modal>
         </div>
+
         </Layout>
     );
 };

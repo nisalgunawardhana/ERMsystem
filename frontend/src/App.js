@@ -94,8 +94,8 @@ function App() {
           <Route path="/supplier/update/:id" element={<ProtectedRoute><UpdateSupplier/></ProtectedRoute>}/>
           <Route path="/purchaseOrder/add" element={<ProtectedRoute><AddPurchaseOrder/></ProtectedRoute>}/>
           <Route path="/rfq" element={<ProtectedRoute><RFQ/></ProtectedRoute>}/>
-          <Route path="/Customer" element={<ProtectedRoute><CustomerR/></ProtectedRoute>}/>
-          <Route path="/Customer/update/:id" element={<ProtectedRoute><UpdateCustomer/></ProtectedRoute>}/>
+          <Route path="/dashboard/cashier/Customer" element={<ProtectedRoute><CustomerR/></ProtectedRoute>}/>
+          <Route path="/dashboard/cashier/Customer/update/:id" element={<ProtectedRoute><UpdateCustomer/></ProtectedRoute>}/>
           <Route path="/trainee" element={<ProtectedRoute><Trainees/></ProtectedRoute>}/>
           <Route path="/dashboard/cashier/billing" element={<ProtectedRoute><Bill/></ProtectedRoute>}/>
           <Route path="/dashboard/cashier/bill/CreateBill" element={<ProtectedRoute><CreateBill/></ProtectedRoute>}/>

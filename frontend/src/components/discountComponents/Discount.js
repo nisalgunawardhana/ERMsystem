@@ -235,8 +235,7 @@ const handleDeleteAllSelected = () => {
             <div className="container">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/">Home</a></li>
-                        <li class="breadcrumb-item"><a href="/bill">Bills</a></li>
+                        <li class="breadcrumb-item"><a href="/dashboard/cashier">Cashier Dashboard</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Discount Rule</li>
                     </ol>
                 </nav>

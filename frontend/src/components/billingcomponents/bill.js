@@ -341,8 +341,8 @@ export default function Bills() {
 
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/">Home</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Bills</li>
+                        <li class="breadcrumb-item"><a href="/dashboard/cashier">Cashier Dashboard</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Billing</li>
                     </ol>
                 </nav>
                 <div className="d-flex flex-wrap align-items-center">
@@ -352,7 +352,7 @@ export default function Bills() {
 
                 <div class="container">
                     <div class="row">
-                        <div class="col-lg-4 col-md-6 mb-3">
+                        <div class="col-lg-6 col-md-6 mb-3">
                             <div class="card l-bg-cherry">
                                 <div class="card-statistic-3 p-4">
                                     <div class="d-flex justify-content-between align-items-center">
@@ -370,26 +370,8 @@ export default function Bills() {
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-4 col-md-6 mb-3">
+                        <div class="col-lg-6 col-md-6 mb-3">
                             <div class="card l-bg-green-dark">
-                                <div class="card-statistic-3 p-4">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="col-8">
-                                            <h3 class="d-flex align-items-center mb-5">
-                                                Discount Rules
-                                            </h3>
-                                            <h5 class="card-title" style={{ marginTop: '25px' }}><Link to="/bill/discounts" className="btn btn-dark">Manage Discount Rule</Link></h5>
-                                        </div>
-                                        <i className="bi bi-percent h1"></i>
-                                    </div>
-                                    <div class="progress mt-1 " data-height="8" style={{ height: '8px' }}>
-                                        <div class="progress-bar l-bg-orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '25%' }}></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6 mb-3">
-                            <div class="card l-bg-orange-dark">
                                 <div class="card-statistic-3 p-4">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="col-8">
@@ -399,14 +381,14 @@ export default function Bills() {
                                             <h5 class="card-title" style={{ marginTop: '25px' }}><button onClick={generateReport} className="btn btn-dark">Generate Report</button></h5>
                                         </div>
                                         <i className="bi bi-bar-chart h1"></i>
-
                                     </div>
                                     <div class="progress mt-1 " data-height="8" style={{ height: '8px' }}>
-                                        <div class="progress-bar l-bg-cyan" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '25%' }}></div>
+                                        <div class="progress-bar l-bg-orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '25%' }}></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        
                     </div>
                 </div>
 
@@ -432,7 +414,7 @@ export default function Bills() {
 
                 <div className="card">
                     <div className="card-body">
-                        <h5 className="card-title">Recent Sales</h5>
+                        
                         <table className="table">
                     <thead>
                         <tr >
@@ -484,11 +466,11 @@ export default function Bills() {
                     <div class="row">
                         <div class="col">
                             <nav aria-label="breadcrumb">
-                                <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="/">Home</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">Bills</li>
-                                </ol>
-                            </nav>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/dashboard/cashier">Cashier Dashboard</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Billing</li>
+                    </ol>
+                </nav>
                         </div>
                         <div class="col">
 

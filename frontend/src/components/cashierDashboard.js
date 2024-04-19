@@ -44,7 +44,6 @@ const CashierDashboard = () => {
                 {/* Breadcrumb navigation */}
                 <nav aria-label="breadcrumb mb-3" style={{ marginTop: '20px' }}>
                     <ol className="breadcrumb">
-                        <li className="breadcrumb-item"><Link to="/">Home</Link></li>
                         <li className="breadcrumb-item active" aria-current="page">Cashier Dashboard</li>
                     </ol>
                 </nav>
@@ -96,7 +95,7 @@ const CashierDashboard = () => {
                 <div class="container">
                     <div class="row row-cols-1 row-cols-md-4 g-4">
                         <div class="col">
-                        <a href="/bill/CreateBill" className="card-link" style={{ textDecoration: 'none', color: 'inherit' }}>
+                        <a href="/dashboard/cashier/bill/CreateBill" className="card-link" style={{ textDecoration: 'none', color: 'inherit' }}>
                             <div class="card h-100 text-center">
                                 <div class="card-body">
                                     <i class="bi bi-file-earmark-plus fs-1 mb-3"></i>
@@ -118,7 +117,7 @@ const CashierDashboard = () => {
                             </a>
                         </div>
                         <div class="col">
-                        <a href="./bill/discounts" className="card-link" style={{ textDecoration: 'none', color: 'inherit' }}>
+                        <a href="/dashboard/cashier/discounts" className="card-link" style={{ textDecoration: 'none', color: 'inherit' }}>
                             <div class="card h-100 text-center">
                                 <div class="card-body">
                                     <i class="bi bi-cash-coin fs-1 mb-3"></i>
@@ -129,7 +128,7 @@ const CashierDashboard = () => {
                             </a>
                         </div>
                         <div class="col">
-                        <a href="/billing" className="card-link" style={{ textDecoration: 'none', color: 'inherit' }}>
+                        <a href="/dashboard/cashier/billing" className="card-link" style={{ textDecoration: 'none', color: 'inherit' }}>
                             <div class="card h-100 text-center">
                                 <div class="card-body">
                                     <i class="bi bi-moon fs-1 mb-3"></i>
