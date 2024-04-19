@@ -3,8 +3,6 @@ import './Layout.css';
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux" ;
 import { Popover, Space } from 'antd';
-import axios from 'axios';
-import {Button} from 'react-bootstrap';
 
 function Layout({children}) {
     const [collapsed, setCollapsed] = useState(false);
@@ -117,7 +115,7 @@ function Layout({children}) {
         },
         {
             name: 'Tax Document',
-            path: '/profile',
+            path: '/tax/get/taxdoc',
             icon: 'ri-article-line'
         },
     ];
