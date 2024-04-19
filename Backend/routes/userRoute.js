@@ -4,6 +4,7 @@ const User = require("../models/userModel")
 const bcrypt = require('bcrypt')
 const jwt = require("jsonwebtoken")
 const authMiddleware = require("../middlewares/authMiddleware")
+const Note = require('../models/noteModel');
 
 //register - CREATE
 router.post('/register', async(req, res) => {
@@ -87,40 +88,95 @@ router.post('/get-user-info-by-id', authMiddleware, async(req, res) => {
     }
 })
 
-
-// UPDATE - Update user information (chatgpt)
-router.put('/update-user/:userId', authMiddleware, async (req, res) => {
+// Route to get all users
+router.get('/', async (req, res) => {
     try {
-        const { userId } = req.params;
-        const updatedUser = await User.findByIdAndUpdate(userId, req.body, { new: true });
-        if (!updatedUser) {
-            return res.status(404).send({ message: "User not found", success: false });
-        }
-        // Omitting password from the response
-        updatedUser.password = undefined;
-        res.status(200).send({ message: "User updated successfully", success: true, data: updatedUser });
+        const users = await User.find();
+        res.json(users);
     } catch (error) {
-        console.log(error);
-        res.status(500).send({ message: "Error updating user", success: false, error });
+        res.status(500).json({ message: error.message });
     }
 });
 
 
-// DELETE - Delete user by user ID (chatgpt)
-router.delete('/delete-user/:userId', authMiddleware, async (req, res) => {
+//notes
+
+// Route to get all notes
+router.get('/read-all', async (req, res) => {
     try {
-        const { userId } = req.params;
-        const deletedUser = await User.findByIdAndDelete(userId);
-        if (!deletedUser) {
-            return res.status(404).send({ message: "User not found", success: false });
-        }
-        // Omitting password from the response
-        deletedUser.password = undefined;
-        res.status(200).send({ message: "User deleted successfully", success: true, data: deletedUser });
+        const notes = await Note.find();
+        res.json(tasks);
     } catch (error) {
-        console.log(error);
-        res.status(500).send({ message: "Error deleting user", success: false, error });
+        res.status(500).json({ message: error.message });
     }
 });
 
-module.exports = router
+// Route to create a new notes
+router.post('/add', async (req, res) => {
+    const note = new Note({
+        note_no: req.body.note_no,
+        note_title: req.body.note_title,
+        note_description: req.body.note_description
+    });
+
+    try {
+        const newNote = await note.save();
+        res.status(201).json(newNote);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
+// Route to get a single note by ID
+router.get('/read-one/:id', getNote, (req, res) => {
+    res.json(res.note);
+});
+
+// Route to update a note
+router.patch('/update/:id', getNote, async (req, res) => {
+    if (req.body.note_no != null) {
+        res.task.note_no = req.body.note_no;
+    }
+    if (req.body.note_title != null) {
+        res.task.note_title = req.body.note_title;
+    }
+    if (req.body.note_description != null) {
+        res.task.note_description = req.body.note_description;
+    }
+
+    try {
+        const updatedNote = await res.note.save();
+        res.json(updatedNote);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
+// Route to delete a task
+router.delete('/delete/:id', getNote, async (req, res) => {
+    try {
+        await res.note.remove();
+        res.json({ message: 'Note deleted' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Middleware function to get a single note by ID
+async function getNote(req, res, next) {
+    let note;
+    try {
+        note = await Note.findById(req.params.id);
+        if (note == null) {
+            return res.status(404).json({ message: 'Note not found' });
+        }
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+
+    res.note = note;
+    next();
+}
+
+module.exports = router;
+  
