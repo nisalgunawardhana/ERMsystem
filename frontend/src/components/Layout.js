@@ -295,7 +295,7 @@ function Layout({children}) {
                         </div>    
                     </div>
                 </div>
-                <div className="content">
+                <div className="content" style={{ marginLeft: collapsed ? '83px' : '255px' }}>
                     <div className="header">
                         {/*icon change from close button to menu icon*/}
                         {collapsed ? (
