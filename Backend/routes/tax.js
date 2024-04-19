@@ -95,23 +95,7 @@ router.route("/update/:id").put(async (req,res)=>{
 });
 
 //route to get latest tax doc
-router.route("/get/:id").get(async (req, res) => {
-    let taxId = req.params.id;
-    try {
-        const tax = await Tax.findOne({ Tax_ID: taxId });
-        if (tax) {
-            res.status(200).send({ status: "Tax details fetched", tax });
-        } else {
-            res.status(404).send({ status: "Tax not found" });
-        }
-    } catch (error) {
-        console.error(error);
-        res.status(500).send({ status: "Error with getting tax details" });
-    }
-  });
-
-  //route to get latest tax doc
-  router.route("/get/taxdoc").get(async (req, res) => {
+router.route("/get/taxdoc").get(async (req, res) => {
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
     const currentYearStart = new Date(currentYear, 3 - 1, 1); // 1st April of the current year
@@ -155,6 +139,22 @@ router.route("/get/:id").get(async (req, res) => {
             console.log(err);
             res.status(500).json({ error: "Error fetching profit details" });
         });
+  });
+
+//route to get latest tax doc
+router.route("/get/:id").get(async (req, res) => {
+    let taxId = req.params.id;
+    try {
+        const tax = await Tax.findOne({ Tax_ID: taxId });
+        if (tax) {
+            res.status(200).send({ status: "Tax details fetched", tax });
+        } else {
+            res.status(404).send({ status: "Tax not found" });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ status: "Error with getting tax details" });
+    }
   });
 
   //get total profit for current year

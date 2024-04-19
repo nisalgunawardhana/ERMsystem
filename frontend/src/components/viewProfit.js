@@ -425,63 +425,6 @@ function ProfitDetails() {
     return (
         <Layout>
             <div className="container">
-                <ul class="nav nav-tabs mb-3" id="myTab0" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <Link
-                            className="nav-link"
-                            id="contact-tab0"
-                            to="/finance"
-                            role="tab"
-                            aria-controls="contact"
-                            aria-selected="false"
-                        >
-                            Dashboard
-                        </Link>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button
-                            data-mdb-tab-init
-                            class="nav-link active"
-                            id="profile-tab0"
-                            type="button"
-                            role="tab"
-                            aria-controls="profile"
-                            aria-selected="false"
-                            onClick={handleClick}
-                            style={{ borderBottom: '2px solid #007bff', borderTop: 'none' }}
-                        >
-                            <i className="bi bi-cash"></i> Profit Log
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <Link
-                            className="nav-link"
-                            id="contact-tab0"
-                            to="/otherExpense"
-                            role="tab"
-                            aria-controls="contact"
-                            aria-selected="false"
-                        >
-                            Other Expenses
-                        </Link>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button
-                            data-mdb-tab-init
-                            class="nav-link"
-                            id="contact-tab0"
-                            data-mdb-target="#contact0"
-                            type="button"
-                            role="tab"
-                            aria-controls="contact"
-                            aria-selected="false"
-                            onClick={handleClickTax}
-                        >
-                            Tax Document
-                        </button>
-                    </li>
-                </ul>
-
                 {/* Breadcrumb for profit log */}
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
@@ -709,3 +652,62 @@ function ProfitDetails() {
 }
 
 export default ProfitDetails;
+
+/*
+<ul class="nav nav-tabs mb-3" id="myTab0" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <Link
+                            className="nav-link"
+                            id="contact-tab0"
+                            to="/finance"
+                            role="tab"
+                            aria-controls="contact"
+                            aria-selected="false"
+                        >
+                            Dashboard
+                        </Link>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button
+                            data-mdb-tab-init
+                            class="nav-link active"
+                            id="profile-tab0"
+                            type="button"
+                            role="tab"
+                            aria-controls="profile"
+                            aria-selected="false"
+                            onClick={handleClick}
+                            style={{ borderBottom: '2px solid #007bff', borderTop: 'none' }}
+                        >
+                            <i className="bi bi-cash"></i> Profit Log
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <Link
+                            className="nav-link"
+                            id="contact-tab0"
+                            to="/otherExpense"
+                            role="tab"
+                            aria-controls="contact"
+                            aria-selected="false"
+                        >
+                            Other Expenses
+                        </Link>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button
+                            data-mdb-tab-init
+                            class="nav-link"
+                            id="contact-tab0"
+                            data-mdb-target="#contact0"
+                            type="button"
+                            role="tab"
+                            aria-controls="contact"
+                            aria-selected="false"
+                            onClick={handleClickTax}
+                        >
+                            Tax Document
+                        </button>
+                    </li>
+                </ul>
+                */

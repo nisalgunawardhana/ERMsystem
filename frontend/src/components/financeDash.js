@@ -326,65 +326,7 @@ const FinanceDash = () => {
 
     return (
         <Layout>
-        <div className="container align-items-center">
-            <ul class="nav nav-tabs mb-3" id="myTab0" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button
-                        data-mdb-tab-init
-                        class="nav-link active"
-                        id="home-tab0"
-                        type="button"
-                        role="tab"
-                        aria-controls="home"
-                        aria-selected="true"
-                        style={{ borderBottom: '2px solid #007bff', borderTop: 'none' }}
-                    >
-                        <i className="bi bi-pie-chart me-2"></i> Dashboard
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button
-                        data-mdb-tab-init
-                        class="nav-link"
-                        id="profile-tab0"
-                        type="button"
-                        role="tab"
-                        aria-controls="profile"
-                        aria-selected="false"
-                        onClick={handleClick}
-                    >
-                        Profit Log
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <Link
-                        className="nav-link"
-                        id="contact-tab0"
-                        to="/otherExpense"
-                        role="tab"
-                        aria-controls="contact"
-                        aria-selected="false"
-                    >
-                        Other Expenses
-                    </Link>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button
-                        data-mdb-tab-init
-                        class="nav-link"
-                        id="contact-tab0"
-                        data-mdb-target="#contact0"
-                        type="button"
-                        role="tab"
-                        aria-controls="contact"
-                        aria-selected="false"
-                        onClick={handleClickTax}
-                    >
-                        Tax Document
-                    </button>
-                </li>
-            </ul>
-            <main role="main" className="px-4">
+        <div className="container">
                 <nav aria-label="breadcrumb mb-3" style={{ marginTop: '20px' }}>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="/">Home</a></li>
@@ -522,9 +464,6 @@ const FinanceDash = () => {
                         </div>
                     </div>
                 </div>
-
-
-            </main>
         </div>
         </Layout>
 

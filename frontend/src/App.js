@@ -86,7 +86,7 @@ function App() {
           <Route path="/profit/update/:id" element={<ProtectedRoute><EditProfit/></ProtectedRoute>}/>
           <Route path="/tax/get/:id" element={<ProtectedRoute><TaxDetails/></ProtectedRoute>}/>
           <Route path="/tax/:epfetf" element={<ProtectedRoute><AddTax/></ProtectedRoute>}/>
-          <Route path="/tax/:epfetf" element={<ProtectedRoute><UpdateTax/></ProtectedRoute>}/>
+          <Route path="/tax/update/:id" element={<ProtectedRoute><UpdateTax/></ProtectedRoute>}/>
           <Route path="/supplier" element={<ProtectedRoute><Supplier/></ProtectedRoute>}/>
           <Route path='/purchaseOrder' element={<ProtectedRoute><PurchaseOrder/></ProtectedRoute>}/>
           <Route path="/supplier/add" element={<ProtectedRoute><AddSupplier/></ProtectedRoute>}/>

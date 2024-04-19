@@ -3,8 +3,6 @@ import './Layout.css';
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux" ;
 import { Popover, Space } from 'antd';
-import axios from 'axios';
-import {Button} from 'react-bootstrap';
 
 function Layout({children}) {
     const [collapsed, setCollapsed] = useState(false);
@@ -65,31 +63,20 @@ function Layout({children}) {
             icon: 'ri-home-4-line'
         },
         {
-            name: 'Dashboard',
-            path: '/adminDashboard',
+            name: 'Billing',
+            path: '/bill',
             icon: 'ri-user-settings-line'
         },
         {
-            name: 'Billing',
+            name: 'Discount Rule',
             icon: 'ri-file-list-line',
-            subMenu: [
-                {
-                    name: 'Create Bill',
-                    path: '/createBill',
-                    icon: 'ri-add-circle-line'
-                }
-            ]
+            path: '/bill/discounts',
         },
         {
             name: 'Customer',
             icon: 'ri-group-line',
-            subMenu: [
-                {
-                    name: 'Add Customer',
-                    path: '/addCustomer',
-                    icon: 'ri-add-circle-line'
-                }
-            ]
+            path: '/customer',
+
         }
     ];
     
@@ -117,7 +104,7 @@ function Layout({children}) {
         },
         {
             name: 'Tax Document',
-            path: '/profile',
+            path: '/tax/get/taxdoc',
             icon: 'ri-article-line'
         },
     ];
