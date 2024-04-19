@@ -130,46 +130,55 @@ function ViewSupplier() {
     return(
         <div className="container-fluid p-3 bg mb-5">
 
-            <div className="ms-4">
-                <div className="fw-light">Supplier Details</div>
-                <h3>Supplier {supplier.supplier_name}</h3>
+            
+                    <div className="ms-4">
+                        <div>
+                            <div className="fw-light">Supplier Details</div>
+                            <h1>Supplier {supplier.supplier_name}</h1>
+                        </div>
+                    </div>
+            <Row>
+                <Col>   
 
-                <div>
-                    <Link to="/supplier">
-                        <Button className="back-btn me-2" variant="secondary" ><i className="bi bi-arrow-left me-2"></i><span>Back</span></Button>
-                    </Link>
-                    <Link to="/rfq"><Button id="up-btn" variant="success"><i className="bi bi-shop me-2"></i>Call new Suppliers?</Button></Link>
-                </div>
-            </div>
-
-
-            <div className="mb-3 p-5 rounded-3 text-center container w-50 card-shadow-1" >
-                
-                <div >
-                    <p className="fw-light fs-1 ">{supplier.supplier_name}</p>
-                    <p >Supplier ID: {supplier.supplier_id}</p>
-                    <div className=" fs-5">{supplier.address}</div>
-                    <div className="  fs-5">{supplier.email}</div>
-                    <div className=" fs-5">Contact Number: {supplier.contact}</div>
-                </div>
-                
-
-                <div>
-                    <div className="fs-6 fw-light mt-4">Supplier seling products</div>
-                    <div className="fs-5">Product Types: {supplier.product_types.join(', ')}</div>
-                </div>
-            </div>
+                        {/* <div>
+                            <Link to="/supplier">
+                                <Button className="back-btn me-2" variant="secondary" ><i className="bi bi-arrow-left me-2"></i><span>Back</span></Button>
+                            </Link>
+                            <Link to="/rfq"><Button id="up-btn" variant="success"><i className="bi bi-shop me-2"></i>Call new Suppliers?</Button></Link>
+                        </div> */}
 
 
-            <Row className=" mt-3">
-                <Col>
-                    <div className="p-3 rounded card-shadow-1" >
+                    <div className="row mb-3 ms-2  pb-4 pe-5 pt-4 container " >
+                        
+                        <div >
+                            <p className="fw-light fs-5">Supplier ID: {supplier.supplier_id}</p>
+                            <div className=" fs-5">{supplier.address}</div>
+                            <div className="  fs-5">{supplier.email}</div>
+                            <div className=" fs-5">Contact Number: {supplier.contact}</div>
+                        </div>
+                        
+
+                        <div>
+                            <div className="fs-6 fw-light mt-4">Supplier seling products</div>
+                            <div className="fs-5">Product Types: {supplier.product_types.join(', ')}</div>
+                        </div>
+
+                        <div className="mt-3">
+                            <Link to="/supplier">
+                                <Button className="back-btn me-2" variant="secondary" ><i className="bi bi-arrow-left me-2"></i><span>Back</span></Button>
+                            </Link>
+                        </div>
+                    </div>
+
+                    
+
+                    <div className="p-4 rounded card-shadow-1" >
                         <h4 className="fw-light mb-4">More Details of <span className="fw-semibold">{supplier.supplier_name}</span></h4>
 
                         <div>
                             <h5>Product Items</h5>
-                            <div className="d-flex justify-content-center">
-                                <table className=" table mt-3">
+                            <div className="d-flex bg-secondary mt-4 justify-content-center">
+                                <table className=" table p-3 mt-3 ">
                                     <thead>
                                         <tr>
                                             <th scope="col">#</th>
@@ -190,31 +199,33 @@ function ViewSupplier() {
                             </div>
                         </div>
 
-                        <h5 className="mt-4">
-                            Bank details 
-                            <Button
-                            className="ms-3 side-btn collapsed"
-                            onClick={() => setOpenBankDetails(!openBankDetails)}
-                            aria-controls="bank-details-collapse"
-                            aria-expanded={openBankDetails}
-                            variant="link">
-                            <span>{openBankDetails ? "Hide " : "View "}Bank details<i className="bi bi-bank"></i></span>
-                            </Button>
-                        </h5>
+                        <div className="">
+                            <h5 className="mt-4">
+                                Bank details 
+                                <Button
+                                className="ms-3 side-btn collapsed"
+                                onClick={() => setOpenBankDetails(!openBankDetails)}
+                                aria-controls="bank-details-collapse"
+                                aria-expanded={openBankDetails}
+                                variant="success">
+                                <span>{openBankDetails ? "Hide " : "View "}Bank details<i className="bi bi-bank"></i></span>
+                                </Button>
+                            </h5>
 
-                        <Collapse in={openBankDetails}>
-                            <div id="bank-details-collapse" className="w-75 p-3 rounded text-white">
-                                <div>{supplier.bank_details.bank}</div>
-                                <div>{supplier.bank_details.acc_no}</div>
-                                <div>{supplier.bank_details.branch}</div>
-                                <div>{supplier.bank_details.bank}</div>
-                            </div>
-                        </Collapse>
+                            <Collapse in={openBankDetails}>
+                                <div id="bank-details-collapse" className="w-75 p-3 rounded">
+                                    <div>{supplier.bank_details.bank}</div>
+                                    <div>{supplier.bank_details.acc_no}</div>
+                                    <div>{supplier.bank_details.branch}</div>
+                                    <div>{supplier.bank_details.bank}</div>
+                                </div>
+                            </Collapse>
 
-                        <div className="mt-4 fw-semibold">Payment Terms</div>
-                        <div>{supplier.bank_details.payment_terms}</div>
-                        <div className="fw-semibold">Payment Method</div>
-                        <div>{supplier.bank_details.payment_method}</div>
+                            <div className="mt-4 fw-semibold">Payment Terms</div>
+                            <div>{supplier.bank_details.payment_terms}</div>
+                            <div className="fw-semibold">Payment Method</div>
+                            <div>{supplier.bank_details.payment_method}</div>
+                        </div>
 
                         <div>
                             <h5 className=" my-3">Contract Details</h5>
@@ -227,10 +238,11 @@ function ViewSupplier() {
                 </Col>
                 <Col>
                     <div className="p-3 rounded-2  card-shadow-1 ">
-                        <h4 className="mb-4 fw-light ">Supplier Performance</h4>
+                        <h3 className="mb-3 fw-light ">Supplier Performance</h3>
                     </div>
                 </Col>
             </Row>
+                    
 
             <div className="mt-4">
                 <Link to={`/supplier/update/${supplier._id}`} >

@@ -3,6 +3,7 @@ import { useNavigate, Link, useParams } from "react-router-dom";
 import { Button, Form, Row, Col, ToggleButton, ButtonGroup} from "react-bootstrap";
 import axios from "axios";
 
+
 function AddSupplierPerformance() {
 
     
@@ -121,7 +122,9 @@ function AddSupplierPerformance() {
         e.preventDefault();
         const updatedPurchaseOrder = {
             ...purchaseOrder,
-            leadTime: leadTime // Include the lead time in the updated purchase order
+            leadTime: leadTime, 
+            qualityOfGoods: calculateQualityOfGoods(), // Calculate quality of goods
+            quantityAccuracy: calculateQuantityAccuracy(),
         };
         axios.put(`http://localhost:8080/purchaseOrder/update/${id}`, updatedPurchaseOrder)
             .then(() => {
@@ -182,7 +185,7 @@ function AddSupplierPerformance() {
     //CALCULATE QUANTITY ACCURACY
     const calculateQuantityAccuracy = () => {
         const totalOrderItems = calculateTotalQuantity();
-        const actualItemsPercentage = ((totalOrderItems - noofActualItems) / totalOrderItems) * 100
+        const actualItemsPercentage = ((noofActualItems) / totalOrderItems) * 100
         return actualItemsPercentage;
     }
 
@@ -197,7 +200,6 @@ function AddSupplierPerformance() {
         { name: 'Average', value: 'Average' },
         { name: 'Poor', value: 'Poor' }
     ];
-
 
     //FETCH SUPPLIER BY EQUAL SUPPLIER_ID
     useEffect(() => {
@@ -269,7 +271,7 @@ function AddSupplierPerformance() {
                     </div>
                 </Col>
                 <Col>
-                    <div className="p-2 mt-3 border border-secondary rounded">
+                    <div className="p-2 my-3 border border-secondary rounded card-shadow-1">
                         <h3 className="text-center">Supplier Performance<br></br><span className="fw-light fs-5 ">based on purchase order {purchaseOrder.purchaseOrder_id}</span></h3>
 
                         <div className="d-flex justify-content-center">
@@ -300,8 +302,7 @@ function AddSupplierPerformance() {
                                     <div className="p-3 bg-warning">Lead Time: {calculateLeadTime()} days</div>                               
 
 
-
-                                    <Form.Group controlId="numberOfErrors" className="mt-2">
+                                    <Form.Group controlId="noofDamages" className="mt-2">
                                         <Form.Label>Number of damaged items:</Form.Label>
                                         <Form.Control
                                             type="text"
@@ -311,14 +312,11 @@ function AddSupplierPerformance() {
                                         />
                                     </Form.Group>
 
-
                                     <div className="mt-3">
                                         <p>Total Number of Order Items: {calculateTotalQuantity()}</p>
                                         <p>Number of Damaged Items: {noofDamages}</p>
                                         <p><b>Quality of Goods: {calculateQualityOfGoods()}%</b></p>
                                     </div>
-
-
 
                                     <Form.Group controlId="noofActualItems" className="mt-3">
                                         <Form.Label>No of items that were really delivered</Form.Label>
@@ -331,6 +329,7 @@ function AddSupplierPerformance() {
                                     </Form.Group>
 
                                     <p><b>Quantity Accuracy: {calculateQuantityAccuracy()}%</b></p>
+
 
                                     <Form.Group controlId="responsiveness">
                                     <Form.Label>Responsiveness:</Form.Label><br></br>
@@ -413,26 +412,63 @@ function AddSupplierPerformance() {
                                         />
                                     </Form.Group>
 
-                                    <Form.Group controlId="overallSatisfaction" className="mt-2">
-                                        <Form.Label>Overall Satisfaction</Form.Label><br />
-                                        <ButtonGroup className="btn-group">
-                                            {satisfactionOptions.map((option, idx) => (
-                                                <ToggleButton
-                                                    key={idx}
-                                                    id={`satisfaction-${idx}`}
-                                                    type="radio"
-                                                    variant="secondary"
-                                                    name="overallSatisfaction"
-                                                    value={option.value}
-                                                    checked={overallSatisfaction === option.value}
-                                                    onChange={() => handleChangeSatisfaction(option.value)}
-                                                    className="btn-check"
-                                                >
-                                                    {option.name}
-                                                </ToggleButton>
-                                            ))}
-                                        </ButtonGroup>
-                                    </Form.Group>
+                                    <Form.Group controlId="overallSatisfaction">
+                                    <Form.Label>overallSatisfaction:</Form.Label><br></br>
+                                    <div className="btn-group">
+                                        <input
+                                            type="radio"
+                                            id="satisfaction-excellent"
+                                            name="overallSatisfaction"
+                                            value="Excellent"
+                                            checked={purchaseOrder.overallSatisfaction === "Excellent"}
+                                            onChange={handleChange}
+                                            className="btn-check"
+                                        />
+                                        <label className="btn btn-secondary" htmlFor="satisfaction-excellent">
+                                            Excellent
+                                        </label>
+
+                                        <input
+                                            type="radio"
+                                            id="satisfaction-good"
+                                            name="overallSatisfaction"
+                                            value="Good"
+                                            checked={purchaseOrder.overallSatisfaction === "Good"}
+                                            onChange={handleChange}
+                                            className="btn-check"
+                                        />
+                                        <label className="btn btn-secondary" htmlFor="satisfaction-good">
+                                            Good
+                                        </label>
+
+                                        <input
+                                            type="radio"
+                                            id="satisfaction-average"
+                                            name="overallSatisfaction"
+                                            value="Average"
+                                            checked={purchaseOrder.overallSatisfaction === "Average"}
+                                            onChange={handleChange}
+                                            className="btn-check"
+                                        />
+                                        <label className="btn btn-secondary" htmlFor="satisfaction-average">
+                                            Average
+                                        </label>
+
+                                        <input
+                                            type="radio"
+                                            id="satisfaction-poor"
+                                            name="overallSatisfaction"
+                                            value="Poor"
+                                            checked={purchaseOrder.overallSatisfaction=== "Poor"}
+                                            onChange={handleChange}
+                                            className="btn-check"
+                                        />
+                                        <label className="btn btn-secondary" htmlFor="satisfaction-poor">
+                                            Poor
+                                        </label>
+                                    </div>
+                                </Form.Group>
+
 
                                     <div className="mb-5 d-flex flex-column align-items-center justify-content-center">
                                         <Button className="mt-4 col-md-4" variant="primary" type="submit">Update Purchase Order</Button>
