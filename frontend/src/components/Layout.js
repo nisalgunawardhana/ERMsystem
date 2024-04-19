@@ -63,31 +63,20 @@ function Layout({children}) {
             icon: 'ri-home-4-line'
         },
         {
-            name: 'Dashboard',
-            path: '/adminDashboard',
+            name: 'Billing',
+            path: '/bill',
             icon: 'ri-user-settings-line'
         },
         {
-            name: 'Billing',
+            name: 'Discount Rule',
             icon: 'ri-file-list-line',
-            subMenu: [
-                {
-                    name: 'Create Bill',
-                    path: '/createBill',
-                    icon: 'ri-add-circle-line'
-                }
-            ]
+            path: '/bill/discounts',
         },
         {
             name: 'Customer',
             icon: 'ri-group-line',
-            subMenu: [
-                {
-                    name: 'Add Customer',
-                    path: '/addCustomer',
-                    icon: 'ri-add-circle-line'
-                }
-            ]
+            path: '/customer',
+
         }
     ];
     
