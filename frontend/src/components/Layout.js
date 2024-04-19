@@ -62,36 +62,24 @@ function Layout({children}) {
     //2. cashier
     const cashierMenu = [
         {
-            name: 'Home',
-            path: '/',
+            name: ' Dashboard',
+            path: '/dashboard/cashier',
             icon: 'ri-home-4-line'
         },
         {
-            name: 'Dashboard',
-            path: '/adminDashboard',
-            icon: 'ri-user-settings-line'
-        },
-        {
             name: 'Billing',
-            icon: 'ri-file-list-line',
-            subMenu: [
-                {
-                    name: 'Create Bill',
-                    path: '/createBill',
-                    icon: 'ri-add-circle-line'
-                }
-            ]
+            path: '/dashboard/cashier/billing',
+            icon: 'ri-file-list-line'
         },
         {
-            name: 'Customer',
+            name: 'Discount Rules',
+            icon: 'ri-price-tag-3-line me-2',
+            path: '/dashboard/cashier/discounts',
+        },
+        {
+            name: 'Customer Management',
             icon: 'ri-group-line',
-            subMenu: [
-                {
-                    name: 'Add Customer',
-                    path: '/addCustomer',
-                    icon: 'ri-add-circle-line'
-                }
-            ]
+            path: '/dashboard/cashier/customer',
         }
     ];
     
