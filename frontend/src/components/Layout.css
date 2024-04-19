@@ -4,7 +4,7 @@
 }
 
 .sidebar {
-    background-color: white;
+    background-color: #080a3c;
     border-top-right-radius: 18px;
     border-bottom-right-radius: 15px;
     box-shadow: 0 0 5px gray;
@@ -15,7 +15,7 @@
 }
 
 .collapsed-sidebar {
-    background-color: rgba(0, 0, 0, 0.101);
+    background-color: #080a3c;
     border-top-right-radius: 18px;
     border-bottom-right-radius: 15px;
     box-shadow: 0 0 5px gray;
@@ -31,7 +31,7 @@
     font-family: EB Garamond, sans-serif;
     font-weight: bold;  
     font-size: 20px; 
-    color: #0F2167;
+    color: white;
     padding-left: 8px;
 }
 
@@ -55,7 +55,7 @@
 
 .collapsed-sidebar .active-menu-item {
     color: rgb(0, 0, 0);
-    background-color:#96EFFF;
+    background-color:#ff5f0f;
     padding: 5px;
     border-radius: 30px;
 }
@@ -87,6 +87,7 @@
     width: 100%;
     padding: 15px;
     margin-top: 12px;
+    min-height: 85vh;
 }
 
 .menu {
@@ -94,13 +95,13 @@
 }
 
 .menu-item {
-    color: black;
+    color: white;
     margin-top: 30px;
 }
 
 /* link name */
 .menu-item a{
-    color: black;
+    color: white;
     text-decoration: none;
     font-size: 18px;
     padding-left: 15px;
@@ -108,7 +109,7 @@
 
 /* icons */
 .menu-item i {
-    color: black;
+    color: white;
     font-size: 22px;
     margin: 0 10px;
 }
@@ -116,7 +117,7 @@
 /* color change of the menu item to show the particular current page */
 .active-menu-item {
     color: rgb(0, 0, 0);
-    background-color:#96EFFF;
+    background-color:#ff5f0f;
     padding: 10px;
     border-radius: 30px;
 }

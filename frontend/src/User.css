@@ -158,3 +158,11 @@ to {
   transform: rotate(360deg);
 }
 }
+
+/* search */
+.search-container input[type="text"] {
+  width: 500px; 
+  padding-left: 30px;
+}
+
+

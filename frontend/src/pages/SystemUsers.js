@@ -7,20 +7,13 @@ import '../User.css';
 
 function SystemUsers() {
     const [users, setUsers] = useState([]);
-
-    //selecting users
     const [selectedUserIds, setSelectedUserIds] = useState([]);
-
-    //updating user
     const [showUpdateModal, setShowUpdateModal] = useState(false);
     const [userDataToUpdate, setUserDataToUpdate] = useState({});
-
-    //deleting a user
     const [showDeletePrompt, setShowDeletePrompt] = useState(false);
     const [userToDelete, setUserToDelete] = useState(null);
-
-    //search filter
-    const [searchQuery, setSearchQuery] = useState("");
+    const [searchQuery, setSearchQuery] = useState('');
+    const [selectAll, setSelectAll] = useState(false);
 
     useEffect(() => {
         // Fetch users data when the component mounts
@@ -57,15 +50,56 @@ function SystemUsers() {
                 };
             });
 
-            // Filter users based on search query
-            const filteredUsers = updatedUsers.filter(user => {
-            const fullName = `${user.first_name} ${user.last_name}`.toLowerCase();
-            return fullName.includes(searchQuery.toLowerCase());
-            });
-
             setUsers(updatedUsers);
         } catch (error) {
             console.error("Error fetching users:", error);
+        }
+    };
+
+    // Handler for selecting individual user
+    const handleCheckboxChange = (userId) => {
+        setSelectedUserIds(prevSelectedUserIds => {
+            if (prevSelectedUserIds.includes(userId)) {
+                return prevSelectedUserIds.filter(id => id !== userId);
+            } else {
+                return [...prevSelectedUserIds, userId];
+            }
+        });
+    };
+
+    // Handler for selecting all users
+    const handleSelectAll = () => {
+        if (selectAll) {
+            setSelectedUserIds([]);
+        } else {
+            const allUserIds = users.map(user => user._id);
+            setSelectedUserIds(allUserIds);
+        }
+        setSelectAll(!selectAll);
+    };
+
+    // Handler for clearing selected users
+    const handleClearSelection = () => {
+        setSelectedUserIds([]);
+        setSelectAll(false);
+    };
+
+    // Delete selected users
+    const handleDeleteSelected = async () => {
+        // Check if there are selected users
+    if (selectedUserIds.length === 0) {
+        // If no users are selected, show a message and return
+        toast.error("No users selected");
+        return;
+    }
+
+        try {
+            await axios.delete("/api/users/delete-multiple", { data: { userIds: selectedUserIds } });
+            toast.success("Selected users deleted successfully");
+            fetchUsers();
+        } catch (error) {
+            console.error("Error deleting selected users:", error);
+            toast.error("Error deleting selected users");
         }
     };
 
@@ -124,66 +158,45 @@ function SystemUsers() {
         setShowDeletePrompt(false);
     };
 
-    // Handler for selecting a checkbox
-    const handleCheckboxChange = (userId) => {
-        setSelectedUserIds(prevSelectedUserIds => {
-            if (prevSelectedUserIds.includes(userId)) {
-                return prevSelectedUserIds.filter(id => id !== userId);
-            } else {
-                return [...prevSelectedUserIds, userId];
-            }
-        });
+    //search
+    const handleSearch = (e) => {
+        const query = e.target.value;
+        setSearchQuery(query);
     };
+    const filteredUsers = users.filter(user =>
+        user.first_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.last_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.userRole.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
-    // Handler for clearing selected checkboxes
-    const handleClearSelection = async () => {
-        try {
-            // Send a DELETE request to the backend to delete selected users
-            await axios.delete("/api/users/delete-multiple", { data: { userIds: selectedUserIds } });
-            
-            // Clear the selectedUserIds state in the frontend
-            setSelectedUserIds([]);
-            
-            // toast message for successful deletion
-            toast.success("Selected users were cleared successfully");
-            
-            // Fetch updated list of users
-            fetchUsers();
-        } catch (error) {
-            console.error("Error deleting selected users:", error);
-            toast.error("Error deleting selected users");
-        }
-    };
     
-    const handleSearch = () => {
-        // Fetch users based on the search query
-        fetchUsers();
-    };
-    
-
-
     return (
         <Layout>
             <div className="system-users p-2">
                 <h2>System Users</h2>
                 <hr />
+                <br/>
+                <div className="button-group mb-3 d-flex align-items-center">
+                   
+                    {/* search */}
+                    <div className="search-container col-md-8">
+                        <input
+                            type="text"
+                            placeholder="Search user by Name, Email, or Role"
+                            value={searchQuery}
+                            onChange={handleSearch}
+                        />
+                    </div>
 
-            <div className="search-container">
-            <input
-                type="text"
-                placeholder="Search user by Name"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}/>
-            <button onClick={handleSearch}>Search</button>
-            </div>
-
-
-
-                <div className="button-group mb-2">
-                    {selectedUserIds.length > 0 && (
-                        <Button variant="danger" onClick={handleClearSelection}>Clear Selection</Button>
-                    )}
+                    <Button variant="danger" onClick={handleDeleteSelected}>Delete Selected</Button>
+                    <Button variant="dark" onClick={handleSelectAll} style={{ marginLeft: '10px' }}>
+                        {selectAll ? 'Deselect All' : 'Select All'}
+                    </Button>
+                    <Button variant="dark" onClick={handleClearSelection} style={{ marginLeft: '10px' }}>Clear Selection</Button>
+                
                 </div>
+                <br/>
 
                 <Table striped bordered hover>
                     <thead>
@@ -198,7 +211,7 @@ function SystemUsers() {
                         </tr>
                     </thead>
                     <tbody>
-                        {users.map((user, index) => (
+                    {filteredUsers.map((user, index) => (
                             <tr key={user._id}>
                                 <td><input type="checkbox" 
                                     checked={selectedUserIds.includes(user._id)} 
@@ -227,22 +240,22 @@ function SystemUsers() {
                 </Modal.Header>
                 <Modal.Body>
                     {/* Update User Form */}
-                    <Form onSubmit={handleUpdateSubmit}>
+                    <Form className="update p-2" onSubmit={handleUpdateSubmit}>
                         <Form.Group controlId="first_name">
                             <Form.Label>First Name</Form.Label>
                             <Form.Control type="text" name="first_name" value={userDataToUpdate.first_name} onChange={handleInputChange} />
                         </Form.Group>
-                        <Form.Group controlId="last_name">
+                        <Form.Group controlId="last_name" style={{ marginTop: '15px' }}>
                             <Form.Label>Last Name</Form.Label>
                             <Form.Control type="text" name="last_name" value={userDataToUpdate.last_name} onChange={handleInputChange} />
                         </Form.Group>
-                        <Form.Group controlId="email">
+                        <Form.Group controlId="email" style={{ marginTop: '15px' }}>
                             <Form.Label>Email</Form.Label>
                             <Form.Control type="email" name="email" value={userDataToUpdate.email} onChange={handleInputChange} />
                         </Form.Group>
-                        {/* Additional form fields for user role, etc. */}
-                        {/* Add more Form.Group for additional fields */}
-                        <Button variant="primary" type="submit">Update</Button>
+
+                       <Button variant="primary" type="submit" style={{ marginTop: '20px' }}>Update</Button>
+
                     </Form>
                 </Modal.Body>
             </Modal>
