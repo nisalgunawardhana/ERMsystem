@@ -11,12 +11,7 @@ import EditProfit from './components/editProfit';
 import TaxDetails from './components/viewTax';
 import AddTax from './components/addTax';
 import UpdateOther from './components/UpdateOther';
-import Supplier from './components/supplier';
-import PurchaseOrder from './components/purchaseOrders';
-import AddSupplier from './components/addSupplier';
-import AddPurchaseOrder from './components/addPurchaseOrder';
-import UpdateSupplier from './components/updateSupplier';
-import RFQ from './components/rfq';
+
 import CustomerR from './components/Customer';
 import UpdateCustomer from './components/UpdateCustomer';
 import Trainees from'./components/Trainee';
@@ -27,8 +22,18 @@ import UpdateBill from './components/billingComponents/updateBill';
 //discount
 import Discounts from './components/discountComponents/Discount';
 import Employees from './components/employeeComponent/employee';
-
-
+//supplier
+import Supplier from './components/supplierComponents/supplier';
+import PurchaseOrder from './components/supplierComponents/purchaseOrders';
+import AddSupplier from './components/supplierComponents/addSupplier';
+import AddPurchaseOrder from './components/supplierComponents/addPurchaseOrder';
+import UpdateSupplier from './components/supplierComponents/updateSupplier';
+import UpdatePurchaseOrder from './components/supplierComponents/updatePO';
+import ViewPO from './components/supplierComponents/viewPOs';
+import ViewSupplier from './components/supplierComponents/viewSupplier';
+import RFQ from './components/supplierComponents/rfq';
+import AddRFQss from './components/supplierComponents/addRFQ';
+import AddSupplierPerformance from './components/supplierComponents/supPerformance';
 
 
 
@@ -56,8 +61,13 @@ function App() {
         <Route path='/purchaseOrder' element={<PurchaseOrder/>}/>
         <Route path="/supplier/add" element={<AddSupplier/>}/>
         <Route path="/supplier/update/:id" element={<UpdateSupplier/>}/>
+        <Route path="/supplier/get/:id" element={<ViewSupplier/>}/>
         <Route path="/purchaseOrder/add" element={<AddPurchaseOrder/>}/>
+        <Route path="/purchaseOrder/update/:id" element={<UpdatePurchaseOrder/>}/>
+        <Route path="/purchaseOrder/get/:id" element={<ViewPO/>}/>
         <Route path="/rfq" element={<RFQ/>}/>
+        <Route path="/rfq/add" element={<AddRFQss/>}/>
+        <Route path="/purchaseOrder/addPerformance/:id" element={<AddSupplierPerformance/>}/>
         <Route path="/Customer" element={<CustomerR/>}/>
         <Route path="/Customer/update/:id" element={<UpdateCustomer/>}/>
         <Route path="/trainee" element={<Trainees/>}/>

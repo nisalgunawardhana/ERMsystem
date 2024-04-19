@@ -64,6 +64,10 @@ app.use("/supplier", supplierRouter);
 const purchaseOrderRouter = require("./routes/purchaseOrderroutes.js");
 app.use("/purchaseOrder", purchaseOrderRouter);
 
+//supplier performance func
+// const SupPerformanceRouter = require("./routes/superformanceroutes.js");
+// app.use("/supPerformance", SupPerformanceRouter);
+
 //Requests For Quotations(RFQ) func
 const requestForQuotationRouter = require("./routes/rfqroutes.js");
 app.use("/rfq", requestForQuotationRouter);

@@ -36,3 +36,38 @@
     /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     background: linear-gradient(to right, rgba(132, 250, 176, 1), rgba(143, 211, 244, 1))
     }
+
+
+    .custom-button {
+        position: relative;
+      }
+      
+      .custom-button i {
+        transition: transform 0.3s ease;
+      }
+      
+      .edit-button:hover i {
+        transform: translateY(-5px);
+      }
+      
+      .delete-button:hover i {
+        transform: translateY(-5px);
+      }
+      
+
+      .custom-bg-color {
+        background-color: lightblue; /* You can replace 'lightblue' with any color you prefer */
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+

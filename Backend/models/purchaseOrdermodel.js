@@ -73,7 +73,54 @@ const PurchaseOrderSchema = new Schema({
     payment_status:{
         type:String,
         required: true
+    },
+
+    payment_date: {
+        type: Date,
+        required: true
+    },
+
+    sup_deliver_date: {
+        type: Date,
+        required: true
+    },
+
+    leadTime: {
+        type: Number,
+        required: true
+    },
+
+    qualityOfGoods: {
+        type: Number,
+        required: true
+    },
+
+    quantityAccuracy: {
+        type: Number,
+        required: true
+    },
+
+    responsiveness: {
+        type: String,
+        required: true
+    },
+
+    costEffectiveness: {
+        type: String,
+        required: true
+    }, 
+
+    additional: {
+        type: String,
+        required: true
+    }, 
+
+    overallSatisfaction: {
+        type: String,
+        required: true
     }
+
+
 
 })
 

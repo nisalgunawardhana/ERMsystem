@@ -34,7 +34,7 @@ router.route("/add").post((req,res)=>{
     }).catch((err)=>{
         console.log(err);
     })
-})
+});
 
 
 //READ
@@ -44,7 +44,7 @@ router.route("/").get((req,res)=>{
     }).catch((err)=>{
         console.log(err)
     })
-})
+});
 
 
 //UPDATE
@@ -98,5 +98,25 @@ router.route("/get/:id").get(async (req,res) => {
         res.status(500).send({status: "Error with getting supplier detials", error: err.message});
     })
 })
+
+
+//GET ALL SUPPLIER NAMES DROPDOWN
+router.route("/names").get((req, res) => {
+    suppliers.find({}, 'supplier_name').then((supplierNames) => {
+        res.json(supplierNames);
+    }).catch((err) => {
+        console.log(err);
+        res.status(500).json({ error: "Error fetching supplier names" });
+    });
+});
+
+
+//GET SUPPLIER BY NAME
+router.route("/getByName/:name").get(async (req,res)=>{
+    const supplierName = req.params.name;
+    const supplier = await suppliers.findOne({supplier_name: supplierName});
+    res.json({supplier});
+});
+
 
 module.exports = router;
