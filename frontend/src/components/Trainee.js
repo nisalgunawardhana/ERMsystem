@@ -1,3 +1,4 @@
+/*global Chart*/
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Layout from './Layout';
@@ -26,6 +27,7 @@ export default function Trainee() {
     });
     const [selectedMeetingId, setSelectedMeetingId] = useState(null);
     const [selectedTraineeId, setselectedTraineeId] = useState(null);
+    const [dailyAverageRatings, setDailyAverageRatings] = useState({});
 
     useEffect(() => {
         axios.get('http://localhost:8080/meetings/')
@@ -39,11 +41,26 @@ export default function Trainee() {
         axios.get('http://localhost:8080/trainees/')
             .then(res => {
                 setTrainees(res.data);
+                calculateDailyAverageRatings(res.data);
             })
             .catch(err => {
                 console.error('Error fetching trainees:', err);
             });
     }, []);
+
+    useEffect(() => {
+        axios.get('http://localhost:8080/trainees/')
+            .then(res => {
+                setTrainees(res.data);
+                calculateDailyAverageRatings(res.data);
+            })
+            .catch(err => {
+                console.error('Error fetching trainees:', err);
+                // Handle error (e.g., show error message)
+            });
+    }, []);
+
+    
 
     function handleDelete(id) {
         axios.delete(`http://localhost:8080/meetings/delete/${id}`)
@@ -249,7 +266,94 @@ export default function Trainee() {
         trainee.trainee_name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-   
+    // Function to calculate daily average ratings
+    const calculateDailyAverageRatings = (traineesData) => {
+        const dailyRatings = {};
+        traineesData.forEach(trainee => {
+            const date = new Date(trainee.createdAt).toLocaleDateString(); // Assuming trainee data has a createdAt field
+            if (!dailyRatings[date]) {
+                dailyRatings[date] = {
+                    totalRatings: 0,
+                    numberOfTrainees: 0
+                };
+            }
+            dailyRatings[date].totalRatings += parseFloat(trainee.trainee_rating);
+            dailyRatings[date].numberOfTrainees++;
+        });
+
+        const dailyAverage = {};
+        for (const date in dailyRatings) {
+            dailyAverage[date] = dailyRatings[date].totalRatings / dailyRatings[date].numberOfTrainees;
+        }
+
+        setDailyAverageRatings(dailyAverage);
+        console.log('Daily Average Ratings:', dailyAverage);
+    };
+
+    // Prepare data for Chart.js
+    const chartData = {
+        labels: Object.keys(dailyAverageRatings), // Dates as labels
+        datasets: [
+            {
+                label: 'Average Ratings',
+                data: Object.values(dailyAverageRatings), // Average ratings as data points
+                fill: false,
+                backgroundColor: 'rgba(75,192,192,0.2)',
+                borderColor: 'rgba(75,192,192,1)',
+                borderWidth: 2
+            }
+        ]
+    };
+
+    useEffect(() => {
+        let lineChart = null;
+
+        // Function to create or update the line chart
+        const createOrUpdateLineChart = () => {
+            // If a previous Chart instance exists, destroy it
+            if (lineChart) {
+                lineChart.destroy();
+            }
+
+            // Extracting data for the chart
+            const dates = Object.keys(dailyAverageRatings);
+            const dailyAverages = Object.values(dailyAverageRatings);
+
+            // Create the line chart
+            lineChart = new Chart(document.getElementById('canvas-1'), {
+                type: 'line',
+                data: {
+                    labels: dates, // Use dates as labels
+                    datasets: [
+                        {
+                            label: 'Daily Average Ratings',
+                            data: dailyAverages, // Use daily averages as data
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderWidth: 1
+                        },
+                        // Add other datasets if needed
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        };
+
+        createOrUpdateLineChart();
+        // Cleanup function to destroy the charts when the component unmounts
+        return () => {
+            if (lineChart) {
+                lineChart.destroy();
+            }
+        };
+    }, [dailyAverageRatings]);
 
     return (
         <Layout>
@@ -296,6 +400,9 @@ export default function Trainee() {
                         </div>
                     </div>
                 </div>
+                <br></br>
+
+                <canvas id="canvas-1"></canvas>
                 <br></br>
 
                 {showForm && (
