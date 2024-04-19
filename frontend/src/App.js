@@ -98,6 +98,11 @@ function App() {
           <Route path="/supplier/update/:id" element={<ProtectedRoute><UpdateSupplier/></ProtectedRoute>}/>
           <Route path="/purchaseOrder/add" element={<ProtectedRoute><AddPurchaseOrder/></ProtectedRoute>}/>
           <Route path="/rfq" element={<ProtectedRoute><RFQ/></ProtectedRoute>}/>
+          <Route path="/rfq/add" element={<ProtectedRoute><AddRFQss/></ProtectedRoute>}/>
+          <Route path="/purchaseOrder/update/:id" element={<ProtectedRoute><UpdatePurchaseOrder/></ProtectedRoute>}/>
+          <Route path="/purchaseOrder/get/:id" element={<ProtectedRoute><ViewPO/></ProtectedRoute>}/>
+          <Route path="/purchaseOrder/addPerformance//:id" element={<ProtectedRoute><AddSupplierPerformance/></ProtectedRoute>}/>
+          <Route path="/supplier/get/:id" element={<ProtectedRoute><ViewSupplier/></ProtectedRoute>}/>
           <Route path="/Customer" element={<ProtectedRoute><CustomerR/></ProtectedRoute>}/>
           <Route path="/Customer/update/:id" element={<ProtectedRoute><UpdateCustomer/></ProtectedRoute>}/>
           <Route path="/trainee" element={<ProtectedRoute><Trainees/></ProtectedRoute>}/>
