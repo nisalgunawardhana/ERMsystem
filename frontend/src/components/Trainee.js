@@ -71,7 +71,7 @@ export default function Trainee() {
             ...prevState,
             [name]: value
         }));
-        }
+    }
 
     function handleMeetingChange(e) {
         const { name, value } = e.target;
@@ -137,7 +137,7 @@ export default function Trainee() {
             trainee_rating: ''
         });
     }
-    
+
     function toggleMeetingForm() {
         setShowMeetingForm(prevState => !prevState);
         setSelectedMeetingId(null);
@@ -249,233 +249,233 @@ export default function Trainee() {
         trainee.trainee_name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-
+   
 
     return (
         <Layout>
             <div className="container">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="/">Home</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Trainee</li>
-                </ol>
-            </nav>
-            <h1>Trainee Management</h1>
-            <br></br>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Trainee</li>
+                    </ol>
+                </nav>
+                <h1>Trainee Management</h1>
+                <br></br>
 
-            <div className="row mb-4">
-                <div className="col-md-4">
-                    <div className="card">
-                        <div className="card-body">
-                            <h4 className="card-title">Total Trainees</h4>
-                            <div className="text-center my-auto">
-                                <h1 className="card-text">{trainees.length}</h1>
+                <div className="row mb-4">
+                    <div className="col-md-4">
+                        <div className="card">
+                            <div className="card-body">
+                                <h4 className="card-title">Total Trainees</h4>
+                                <div className="text-center my-auto">
+                                    <h1 className="card-text">{trainees.length}</h1>
+                                </div>
+                                <button onClick={toggleForm} className="btn btn-success">Add New Trainee</button>
                             </div>
-                            <button onClick={toggleForm} className="btn btn-success">Add New Trainee</button>
                         </div>
                     </div>
-                </div>
-                <div className="col-md-4">
-                    <div className="card">
-                        <div className="card-body">
-                            <h4 className="card-title">Total Sessions</h4>
-                            <div className="text-center my-auto">
-                                <h1 className="card-text">{meetings.length}</h1>
+                    <div className="col-md-4">
+                        <div className="card">
+                            <div className="card-body">
+                                <h4 className="card-title">Total Sessions</h4>
+                                <div className="text-center my-auto">
+                                    <h1 className="card-text">{meetings.length}</h1>
+                                </div>
+                                <button onClick={toggleMeetingForm} className="btn btn-success">Add New Session</button>
                             </div>
-                            <button onClick={toggleMeetingForm} className="btn btn-success">Add New Session</button>
+                        </div>
+                    </div>
+                    <div className="col-md-4">
+                        <div className="card">
+                            <div className="card-body">
+                                <h4 className="card-title">Generate Report</h4>
+                                <p className="card-text">Generate a summary of trainee performance.</p>
+                                <button onClick={generateReport} className="btn btn-primary">Generate Report</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div className="col-md-4">
-                    <div className="card">
-                        <div className="card-body">
-                            <h4 className="card-title">Generate Report</h4>
-                            <p className="card-text">Generate a summary of trainee performance.</p>
-                            <button onClick={generateReport} className="btn btn-primary">Generate Report</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <br></br>
+                <br></br>
 
-            {showForm && (
-                <div className="modal" style={{ display: 'block' }}>
-                    <div className="modal-dialog">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title">Add New Trainee</h5>
-                                <button type="button" className="btn-close" onClick={toggleForm}></button>
-                            </div>
-                            <div className="modal-body">
-                                <form onSubmit={handleTraineeSubmit}>
-                                    <div className="mb-3">
-                                        <label className="form-label">Trainee ID</label>
-                                        <input type="text" className="form-control" name="trainee_id" value={formData.trainee_id} onChange={handleChange} required />
-                                    </div>
-                                    <div className="mb-3">
-                                        <label className="form-label">Name</label>
-                                        <input type="text" className="form-control" name="trainee_name" value={formData.trainee_name} onChange={handleChange} required />
-                                    </div>
-                                    <div className="mb-3">
-                                        <label className="form-label">Email</label>
-                                        <input type="email" className="form-control" name="trainee_email" value={formData.trainee_email} onChange={handleChange} required />
-                                    </div>
-                                    <div className="mb-3">
-                                        <label className="form-label">Gender</label>
-                                        <select className="form-select" name="trainee_gender" value={formData.trainee_gender} onChange={handleChange} required>
-                                            <option value="">Select Gender</option>
-                                            <option value="male">Male</option>
-                                            <option value="female">Female</option>
-                                        </select>
-                                    </div>
-                                    <div className="mb-3">
-                                        <label className="form-label">Contact No</label>
-                                        <input type="text" className="form-control" name="trainee_contact" value={formData.trainee_contact} onChange={handleChange} required />
-                                    </div>
-                                    <div className="mb-3">
-                                        <label className="form-label">Ratings</label>
-                                        <input type="number" className="form-control" name="trainee_rating" value={formData.trainee_rating} onChange={handleChange} required />
-                                    </div>
-                                    <button type="submit" className="btn btn-primary">{selectedTraineeId ? 'Update' : 'Submit'}</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {showMeetingForm && (
-                <div className="modal" style={{ display: 'block' }}>
-                    <div className="modal-dialog">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title">{selectedMeetingId ? 'Update' : 'Add'} Meeting</h5>
-                                <button type="button" className="btn-close" onClick={toggleMeetingForm}></button>
-                            </div>
-                            <div className="modal-body">
-                                <form onSubmit={handleMeetingSubmit}>
-                                    <div className="mb-3">
-                                        <label className="form-label">Meeting ID</label>
-                                        <input type="text" className="form-control" name="meeting_id" value={meetingFormData.meeting_id} onChange={handleMeetingChange} required />
-                                    </div>
-                                    <div className="mb-3">
-                                        <label className="form-label">Name</label>
-                                        <input type="text" className="form-control" name="meeting_name" value={meetingFormData.meeting_name} onChange={handleMeetingChange} required />
-                                    </div>
-                                    <div className="mb-3">
-                                        <label className="form-label">Start Time</label>
-                                        <input type="number" step="0.01" className="form-control" name="meeting_start" value={meetingFormData.meeting_start} onChange={handleMeetingChange} required />
-                                    </div>
-                                    <div className="mb-3">
-                                        <label className="form-label">End Time</label>
-                                        <input type="number" step="0.01" className="form-control" name="meeting_end" value={meetingFormData.meeting_end} onChange={handleMeetingChange} required />
-                                    </div>
-                                    <div className="mb-3">
-                                        <label className="form-label">Date</label>
-                                        <input type="date" className="form-control" name="meeting_date" value={meetingFormData.meeting_date} onChange={handleMeetingChange} required />
-                                    </div>
-                                    <div className="mb-3">
-                                        <label className="form-label">Location</label>
-                                        <input type="text" className="form-control" name="meeting_location" value={meetingFormData.meeting_location} onChange={handleMeetingChange} required />
-                                    </div>
-                                    <button type="submit" className="btn btn-primary">{selectedMeetingId ? 'Update' : 'Submit'}</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            <div className="row">
-                <div className="col-md-12">
-                    <div className="card">
-                        <div className="card-body">
-                            <h4 className="card-title">Scheduled Meetings</h4>
-                            <br></br>
-                            <div className="table-responsive">
-                                <table className="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Meeting ID</th>
-                                            <th>Name</th>
-                                            <th>Start Time</th>
-                                            <th>End Time</th>
-                                            <th>Date</th>
-                                            <th>Location</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {meetings.map(meeting => (
-                                            <tr key={meeting.meeting_id}>
-                                                <td>{meeting.meeting_id}</td>
-                                                <td>{meeting.meeting_name}</td>
-                                                <td>{parseFloat(meeting.meeting_start).toFixed(2)}</td>
-                                                <td>{parseFloat(meeting.meeting_end).toFixed(2)}</td>
-                                                <td>{meeting.meeting_date}</td>
-                                                <td>{meeting.meeting_location}</td>
-                                                <td>
-                                                    <button onClick={() => editMeeting(meeting)} className="btn btn-primary" style={{ margin: '0 5px' }} >Update</button>
-                                                    <button onClick={() => handleDelete(meeting._id)} className="btn btn-danger" style={{ margin: '0 5px' }} >Delete</button>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <br></br>
-
-            <div className="row mt-4">
-                <div className="col-md-12">
-                    <div className="card">
-                        <div className="card-body">
-                            <div className="d-flex justify-content-between align-items-center">
-                                <h4 className="card-title">Trainees' Details</h4>
-                                <div className="col-sm-4">
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        placeholder="Search by Trainee Name"
-                                        value={searchTerm}
-                                        onChange={(e) => setSearchTerm(e.target.value)}
-                                    />
+                {showForm && (
+                    <div className="modal" style={{ display: 'block' }}>
+                        <div className="modal-dialog">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title">Add New Trainee</h5>
+                                    <button type="button" className="btn-close" onClick={toggleForm}></button>
+                                </div>
+                                <div className="modal-body">
+                                    <form onSubmit={handleTraineeSubmit}>
+                                        <div className="mb-3">
+                                            <label className="form-label">Trainee ID</label>
+                                            <input type="text" className="form-control" name="trainee_id" value={formData.trainee_id} onChange={handleChange} required />
+                                        </div>
+                                        <div className="mb-3">
+                                            <label className="form-label">Name</label>
+                                            <input type="text" className="form-control" name="trainee_name" value={formData.trainee_name} onChange={handleChange} required />
+                                        </div>
+                                        <div className="mb-3">
+                                            <label className="form-label">Email</label>
+                                            <input type="email" className="form-control" name="trainee_email" value={formData.trainee_email} onChange={handleChange} required />
+                                        </div>
+                                        <div className="mb-3">
+                                            <label className="form-label">Gender</label>
+                                            <select className="form-select" name="trainee_gender" value={formData.trainee_gender} onChange={handleChange} required>
+                                                <option value="">Select Gender</option>
+                                                <option value="male">Male</option>
+                                                <option value="female">Female</option>
+                                            </select>
+                                        </div>
+                                        <div className="mb-3">
+                                            <label className="form-label">Contact No</label>
+                                            <input type="text" className="form-control" name="trainee_contact" value={formData.trainee_contact} onChange={handleChange} required />
+                                        </div>
+                                        <div className="mb-3">
+                                            <label className="form-label">Ratings</label>
+                                            <input type="number" className="form-control" name="trainee_rating" value={formData.trainee_rating} onChange={handleChange} required />
+                                        </div>
+                                        <button type="submit" className="btn btn-primary">{selectedTraineeId ? 'Update' : 'Submit'}</button>
+                                    </form>
                                 </div>
                             </div>
-                            <br></br>
-                            <div className="row row-cols-1 row-cols-md-2 g-4">
-                                {filteredTrainees.map(trainee => (
-                                    <div key={trainee._id} className="col-md-4">
-                                        <div className="card">
-                                            <div className="card-body">
-                                                <div className="text-center my-auto">
-                                                    <h4 className="card-title">{trainee.trainee_name}</h4>
-                                                    <br></br>
-                                                    <p className="card-text">ID :  <strong>{trainee.trainee_id}</strong></p>
-                                                    <p className="card-text">Email :  <strong>{trainee.trainee_email}</strong></p>
-                                                    <p className="card-text">Contact No :  <strong>{trainee.trainee_contact}</strong></p>
-                                                    <p className="card-text">Gender :  <strong>{trainee.trainee_gender}</strong></p>
-                                                    <p className="card-text">Ratings :  <strong>{trainee.trainee_rating}</strong></p>
-                                                    <div>
-                                                        <button onClick={() => editTrainee(trainee)} className="btn btn-primary" style={{ margin: '0 5px' }} >Update</button>
-                                                        <button onClick={() => handleDeleteTrainee(trainee._id)} className="btn btn-danger" style={{ margin: '0 5px' }} >Delete</button>
+                        </div>
+                    </div>
+                )}
+
+                {showMeetingForm && (
+                    <div className="modal" style={{ display: 'block' }}>
+                        <div className="modal-dialog">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title">{selectedMeetingId ? 'Update' : 'Add'} Meeting</h5>
+                                    <button type="button" className="btn-close" onClick={toggleMeetingForm}></button>
+                                </div>
+                                <div className="modal-body">
+                                    <form onSubmit={handleMeetingSubmit}>
+                                        <div className="mb-3">
+                                            <label className="form-label">Meeting ID</label>
+                                            <input type="text" className="form-control" name="meeting_id" value={meetingFormData.meeting_id} onChange={handleMeetingChange} required />
+                                        </div>
+                                        <div className="mb-3">
+                                            <label className="form-label">Name</label>
+                                            <input type="text" className="form-control" name="meeting_name" value={meetingFormData.meeting_name} onChange={handleMeetingChange} required />
+                                        </div>
+                                        <div className="mb-3">
+                                            <label className="form-label">Start Time</label>
+                                            <input type="number" step="0.01" className="form-control" name="meeting_start" value={meetingFormData.meeting_start} onChange={handleMeetingChange} required />
+                                        </div>
+                                        <div className="mb-3">
+                                            <label className="form-label">End Time</label>
+                                            <input type="number" step="0.01" className="form-control" name="meeting_end" value={meetingFormData.meeting_end} onChange={handleMeetingChange} required />
+                                        </div>
+                                        <div className="mb-3">
+                                            <label className="form-label">Date</label>
+                                            <input type="date" className="form-control" name="meeting_date" value={meetingFormData.meeting_date} onChange={handleMeetingChange} required />
+                                        </div>
+                                        <div className="mb-3">
+                                            <label className="form-label">Location</label>
+                                            <input type="text" className="form-control" name="meeting_location" value={meetingFormData.meeting_location} onChange={handleMeetingChange} required />
+                                        </div>
+                                        <button type="submit" className="btn btn-primary">{selectedMeetingId ? 'Update' : 'Submit'}</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                <div className="row">
+                    <div className="col-md-12">
+                        <div className="card">
+                            <div className="card-body">
+                                <h4 className="card-title">Scheduled Meetings</h4>
+                                <br></br>
+                                <div className="table-responsive">
+                                    <table className="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Meeting ID</th>
+                                                <th>Name</th>
+                                                <th>Start Time</th>
+                                                <th>End Time</th>
+                                                <th>Date</th>
+                                                <th>Location</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {meetings.map(meeting => (
+                                                <tr key={meeting.meeting_id}>
+                                                    <td>{meeting.meeting_id}</td>
+                                                    <td>{meeting.meeting_name}</td>
+                                                    <td>{parseFloat(meeting.meeting_start).toFixed(2)}</td>
+                                                    <td>{parseFloat(meeting.meeting_end).toFixed(2)}</td>
+                                                    <td>{meeting.meeting_date}</td>
+                                                    <td>{meeting.meeting_location}</td>
+                                                    <td>
+                                                        <button onClick={() => editMeeting(meeting)} className="btn btn-primary" style={{ margin: '0 5px' }} >Update</button>
+                                                        <button onClick={() => handleDelete(meeting._id)} className="btn btn-danger" style={{ margin: '0 5px' }} >Delete</button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br></br>
+
+                <div className="row mt-4">
+                    <div className="col-md-12">
+                        <div className="card">
+                            <div className="card-body">
+                                <div className="d-flex justify-content-between align-items-center">
+                                    <h4 className="card-title">Trainees' Details</h4>
+                                    <div className="col-sm-4">
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            placeholder="Search by Trainee Name"
+                                            value={searchTerm}
+                                            onChange={(e) => setSearchTerm(e.target.value)}
+                                        />
+                                    </div>
+                                </div>
+                                <br></br>
+                                <div className="row row-cols-1 row-cols-md-2 g-4">
+                                    {filteredTrainees.map(trainee => (
+                                        <div key={trainee._id} className="col-md-4">
+                                            <div className="card">
+                                                <div className="card-body">
+                                                    <div className="text-center my-auto">
+                                                        <h4 className="card-title">{trainee.trainee_name}</h4>
+                                                        <br></br>
+                                                        <p className="card-text">ID :  <strong>{trainee.trainee_id}</strong></p>
+                                                        <p className="card-text">Email :  <strong>{trainee.trainee_email}</strong></p>
+                                                        <p className="card-text">Contact No :  <strong>{trainee.trainee_contact}</strong></p>
+                                                        <p className="card-text">Gender :  <strong>{trainee.trainee_gender}</strong></p>
+                                                        <p className="card-text">Ratings :  <strong>{trainee.trainee_rating}</strong></p>
+                                                        <div>
+                                                            <button onClick={() => editTrainee(trainee)} className="btn btn-primary" style={{ margin: '0 5px' }} >Update</button>
+                                                            <button onClick={() => handleDeleteTrainee(trainee._id)} className="btn btn-danger" style={{ margin: '0 5px' }} >Delete</button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <br></br>
+                <br></br>
             </div>
-            <br></br>
-            <br></br>
-        </div>
         </Layout>
     );
 }
