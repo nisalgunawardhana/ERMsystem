@@ -1,12 +1,12 @@
 import React from 'react'
 import { Form, Input, Button } from 'antd';
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import loginImage from '../images/login.jpg'
 import { toast } from "react-hot-toast"
 import axios from "axios"
 import { useDispatch } from "react-redux"
 import { hideLoading, showLoading } from '../redux/alertsSlice';
-import './Login.css'
+
 
 function Login() {
     const dispatch = useDispatch();
@@ -54,8 +54,6 @@ function Login() {
                     </Form.Item>
 
                     <Button className='primary-button my-1' htmlType='submit'>LOGIN</Button>
-
-                    <Link to='/register' className='anchor mt-1'>CLICK HERE TO REGISTER FOR ATTENDANCE</Link>
                 </Form>
                 </div>
             </div>

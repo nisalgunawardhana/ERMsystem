@@ -4,6 +4,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 
 export default function UpdateOther() {
     const { id } = useParams(); // Get the expense ID from the URL params
+    const [costError, setCostError] = useState('');
     const navigate = useNavigate();
 
     const [expense, setExpense] = useState({
@@ -50,6 +51,18 @@ export default function UpdateOther() {
     //function to submit updated details
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        const costRegex = /^[0-9]+(\.[0-9]{1,2})?$/; // Only integers or double values allowed (up to 2 decimal places)
+
+            // Validate input for "Cost" field
+            if (!costRegex.test(expense.Cost)) {
+                // If the input is invalid, update the error message
+                setCostError('Invalid input. Only numerical values allowed (up to 2 decimal places).');
+                return;
+            } else {
+                setCostError(''); // Clear any existing error
+            }
+
         // Send updated expense data to the backend
         axios.put(`http://localhost:8080/otherExpense/update/${id}`, expense)
             .then((res) => {
@@ -216,61 +229,61 @@ export default function UpdateOther() {
     return (
         <div className="container" style={{ marginTop: '80px', marginBottom: '40px' }}>
             <ul class="nav nav-tabs mb-3" id="myTab0" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <Link
-                            className="nav-link"
-                            id="contact-tab0"
-                            to="/otherExpense"
-                            role="tab"
-                            aria-controls="contact"
-                            aria-selected="false"
-                        >
-                            Dashboard
-                        </Link>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button
-                            data-mdb-tab-init
-                            class="nav-link"
-                            id="profile-tab0"
-                            type="button"
-                            role="tab"
-                            aria-controls="profile"
-                            aria-selected="false"
-                            onClick={handleClick}
-                        >
-                            Profit Log
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <Link
-                            className="nav-link active"
-                            id="contact-tab0"
-                            to="/otherExpense"
-                            role="tab"
-                            aria-controls="contact"
-                            aria-selected="false"
-                            style={{ borderBottom: '2px solid #007bff', borderTop: 'none' }}
-                        >
-                            <i className="bi bi-wallet"></i> Other Expenses
-                        </Link>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button
-                            data-mdb-tab-init
-                            class="nav-link"
-                            id="contact-tab0"
-                            data-mdb-target="#contact0"
-                            type="button"
-                            role="tab"
-                            aria-controls="contact"
-                            aria-selected="false"
-                            onClick={handleClickTax}
-                        >
-                            Tax Document
-                        </button>
-                    </li>
-                </ul>
+                <li class="nav-item" role="presentation">
+                    <Link
+                        className="nav-link"
+                        id="contact-tab0"
+                        to="/otherExpense"
+                        role="tab"
+                        aria-controls="contact"
+                        aria-selected="false"
+                    >
+                        Dashboard
+                    </Link>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button
+                        data-mdb-tab-init
+                        class="nav-link"
+                        id="profile-tab0"
+                        type="button"
+                        role="tab"
+                        aria-controls="profile"
+                        aria-selected="false"
+                        onClick={handleClick}
+                    >
+                        Profit Log
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <Link
+                        className="nav-link active"
+                        id="contact-tab0"
+                        to="/otherExpense"
+                        role="tab"
+                        aria-controls="contact"
+                        aria-selected="false"
+                        style={{ borderBottom: '2px solid #007bff', borderTop: 'none' }}
+                    >
+                        <i className="bi bi-wallet"></i> Other Expenses
+                    </Link>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button
+                        data-mdb-tab-init
+                        class="nav-link"
+                        id="contact-tab0"
+                        data-mdb-target="#contact0"
+                        type="button"
+                        role="tab"
+                        aria-controls="contact"
+                        aria-selected="false"
+                        onClick={handleClickTax}
+                    >
+                        Tax Document
+                    </button>
+                </li>
+            </ul>
             {/*Breadcrumb*/}
             <nav aria-label="breadcrumb" style={{ marginTop: '20px' }}>
                 <ol class="breadcrumb">
@@ -284,14 +297,8 @@ export default function UpdateOther() {
                 <div className="col-md-6">
                     <div className="card">
                         <div className="card-body">
-                            <div className="d-flex justify-content-between align-items-center mb-5">
-                                {/* Back Button */}
-                                <button className="btn btn-link d-flex align-items-center" onClick={handleBack}>
-                                    <span className="rounded-circle border border-dark p-2 d-flex justify-content-center align-items-center" style={{ width: '40px', height: '40px', borderColor: '#343a40' }}>
-                                        <i className="bi bi-arrow-left fs-4 text-dark"></i>
-                                    </span>
-                                </button>
-                                <h2 className="card-title text-center mb-0" style={{ marginRight: '180px' }}>Update Expense</h2>
+                            <div className="col text-center mb-4">
+                                <h2 className="card-title text-center">Expense Details</h2>
                             </div>
                             {/*Form to Update Expense*/}
                             <form onSubmit={handleSubmit}>
@@ -302,10 +309,14 @@ export default function UpdateOther() {
                                     <input type="text" className="form-control" id="Expense_id" name="Expense_id" value={expense.Expense_id} onChange={handleChange} readOnly />
                                 </div>
                                 <div className="mb-3">
-                                    <label htmlFor="Type" className="form-label">
-                                        <i className="bi bi-cash me-2"></i>Type
-                                    </label>
-                                    <input type="text" className="form-control" id="Type" name="Type" value={expense.Type} onChange={handleChange} />
+                                    <label htmlFor="type" className="form-label"><i class="bi bi-chat-left-text"></i>  Type of Expense</label>
+                                    <select className="form-select" id="Type" name="Type" value={expense.Type} onChange={handleChange} required>
+                                        <option value="">Select Type</option>
+                                        <option value="Transportation">Transportation</option>
+                                        <option value="Construction">Construction</option>
+                                        <option value="Repair">Repair</option>
+                                        <option value="Utilities">Utilities</option>
+                                    </select>
                                 </div>
                                 <div className="mb-3">
                                     <label htmlFor="Date" className="form-label">
@@ -317,15 +328,15 @@ export default function UpdateOther() {
                                     <label htmlFor="Status" className="form-label">
                                         <i className="bi bi-bar-chart me-2"></i>Status
                                     </label>
-                                    <input type="text" className="form-control" id="Status" name="Status" value={expense.Status} onChange={handleChange} />
+                                    <input type="text" className="form-control" id="Status" name="Status" value={expense.Status} onChange={handleChange} required/>
                                 </div>
                                 <div className="mb-3">
                                     <label htmlFor="Cost" className="form-label">
-                                        <i className="bi bi-currency-dollar me-2"></i>Cost(Rs.)
+                                        <i className="bi bi-currency-dollar me-2"></i>Amount(Rs.)
                                     </label>
-                                    <input type="text" className="form-control" id="Cost" name="Cost" value={expense.Cost} onChange={handleChange} />
+                                    <input type="text" className="form-control" id="Cost" name="Cost" value={expense.Cost} onChange={handleChange} required/>
                                 </div>
-
+                                {costError && <div className="text-danger mb-2">{costError}</div>}
                                 <div className="row mb-3">
                                     <div className="col">
                                         <div className="btn-group" style={{ marginLeft: '220px' }}>
