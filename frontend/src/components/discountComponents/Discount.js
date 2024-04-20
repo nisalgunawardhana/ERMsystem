@@ -261,44 +261,45 @@ const handleDeleteAllSelected = () => {
                 <h4>Manage Discount Rules</h4>
 
                 <div class="container">
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6 mb-3">
-                            <div class="card l-bg-cherry">
-                                <div class="card-statistic-3 p-4">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="col-8">
-                                            <h2 class="d-flex align-items-center mb-5">
-                                                Rs.{totalAmount.toFixed(2)}
-                                            </h2>
-                                            <h5 class="card-title" style={{ marginTop: '25px', marginBottom: '18px' }}>Total sales</h5>
-                                        </div>
-                                        <i className="bi bi-cash-coin h1"></i>
-                                    </div>
-                                    <div class="progress mt-1 " data-height="8" style={{ height: '8px' }}>
-                                        <div class="progress-bar l-bg-cyan" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '25%' }}></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-6 mb-3">
-                            <div class="card l-bg-green-dark">
-                                <div class="card-statistic-3 p-4">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="col-8">
-                                            <h3 class="d-flex align-items-center mb-5">
-                                                Discount Rules
-                                            </h3>
-                                            <h5 class="card-title" style={{ marginTop: '25px' }}><button onClick={handleOpenAddModal} className="btn btn-dark"><i class="bi bi-plus-circle-fill me-2"></i>Add New Discount Rule</button></h5>
-                                        </div>
-                                        <i className="bi bi-percent h1"></i>
-                                    </div>
-                                    <div class="progress mt-1 " data-height="8" style={{ height: '8px' }}>
-                                        <div class="progress-bar l-bg-orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '25%' }}></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                   <div className="row">
+    <div className="col-lg-6 col-md-6 mb-3">
+        <div className="card shadow" style={{ backgroundColor: 'white' }}>
+            <div className="card-statistic-3 p-4">
+                <div className="d-flex justify-content-between align-items-center">
+                    <div className="col-8">
+                        <h2 className="d-flex align-items-center mb-5">
+                            Rs.{totalAmount.toFixed(2)}
+                        </h2>
+                        <h5 className="card-title" style={{ marginTop: '25px', marginBottom: '18px' }}>Total sales</h5>
                     </div>
+                    <i className="bi bi-cash-coin h1"></i>
+                </div>
+                <div className="progress mt-1" data-height="8" style={{ height: '8px' }}>
+                    <div className="progress-bar bg-orange" role="progressbar" data-width="75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style={{ width: '75%', backgroundColor: 'orange' }}></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div className="col-lg-6 col-md-6 mb-3">
+        <div className="card shadow" style={{ backgroundColor: 'white' }}>
+            <div className="card-statistic-3 p-4">
+                <div className="d-flex justify-content-between align-items-center">
+                    <div className="col-8">
+                        <h3 className="d-flex align-items-center mb-5">
+                            Add New Discount Rule
+                        </h3>
+                        <h5 class="card-title" style={{ marginTop: '25px' }}><button onClick={handleOpenAddModal} className="btn btn-dark"><i class="bi bi-plus-circle-fill me-2"></i>Add New Discount Rule</button></h5>
+                    </div>
+                    <i className="bi bi-bar-chart h1"></i>
+                </div>
+                <div className="progress mt-1" data-height="8" style={{ height: '8px' }}>
+                    <div className="progress-bar bg-orange" role="progressbar" data-width="75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style={{ width: '75%', backgroundColor: 'orange' }}></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
                 </div>
 
                 <h4>All Discount Rules</h4>
@@ -309,10 +310,10 @@ const handleDeleteAllSelected = () => {
                         <input type="text" className="form-control" placeholder="Search by Customer ID" value={searchQuery} onChange={handleSearch} />
                     </div>
                     <div>
-                        <button onClick={handleSelectAll} className="btn btn-secondary" style={{ margin: '0 5px' }}>
+                        <button onClick={handleSelectAll} className="btn btn-outline-secondary" style={{ margin: '0 5px' }}>
                             {selectAll ? 'Unselect All' : 'Select All'}
                         </button>
-                        <button className="btn btn-danger" onClick={handleOpenDeleteAllConfirmation} style={{ margin: '0 5px' }}>Delete All Selected</button>
+                        <button className="btn btn-outline-danger" onClick={handleOpenDeleteAllConfirmation} style={{ margin: '0 5px' }}>Delete All Selected</button>
                     </div>
                 </div>
 
@@ -490,8 +491,8 @@ const handleDeleteAllSelected = () => {
                                 <td style={{ textAlign: 'center' }}>{discount.Discount_presentage}</td>
                                 <td style={{ textAlign: 'center' }}>{discount.rule_con}</td>
                                 <td style={{ textAlign: 'center' }}>
-                                    <button className="btn btn-primary" onClick={() => handleOpenUpdateModal(discount)} style={{ margin: '0 5px' }}>Update</button>
-                                    <button onClick={() => handleDeleteDiscount(discount._id)} className="btn btn-danger ml-2" style={{ margin: '0 5px' }}>Delete</button>
+                                    <button className="btn btn-outline-primary" onClick={() => handleOpenUpdateModal(discount)} style={{ margin: '0 5px' }}>Update</button>
+                                    <button onClick={() => handleDeleteDiscount(discount._id)} className="btn btn-outline-danger" style={{ margin: '0 5px' }}>Delete</button>
                                 </td>
                                 <td style={{ textAlign: 'center' }}>
                                     <input type="checkbox" checked={discount.selected || false} onChange={() => handleSelectDiscount(discount._id)} />
