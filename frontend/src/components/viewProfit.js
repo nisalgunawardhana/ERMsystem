@@ -422,20 +422,118 @@ function ProfitDetails() {
         }
     };
 
+    const [dateTime, setDateTime] = useState(new Date());
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setDateTime(new Date());
+        }, 1000); // Update every second
+
+        // Cleanup function
+        return () => clearInterval(timer);
+    }, []);
+
+    // Format the date and time
+    const formattedDate = dateTime.toLocaleDateString();
+    const formattedTime = dateTime.toLocaleTimeString();
+
     return (
         <Layout>
             <div className="container">
-                {/* Breadcrumb for profit log */}
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/">Home</a></li>
-                        <li class="breadcrumb-item"><a href="/finance">Finance Dashboard</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Profit Log</li>
-                    </ol>
-                </nav>
-                <h2 className="text-left mb-4" style={{ marginTop: '30px' }}>Monthly Profit Details</h2>
+                <div className="row">
+                    <div className="col-md-8">
+                         {/* Breadcrumb for profit log */}
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                                <li class="breadcrumb-item"><a href="/finance">Finance Dashboard</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Profit Log</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div className="col-md-4 d-flex justify-content-end">
+                        <p>{formattedDate} | {formattedTime}</p>
+                    </div>
+                </div>
+                <h2 className="mb-4" style={{ marginTop: '25px' }}> Profit Log {(searchResult || profit) && `- ${searchResult ? searchResult[0].Month : profit.Month}`}</h2>
 
-                <div className="row" style={{ marginTop: '35px' }}>
+                {/* Search bar to search profit log */}
+                <div className="row" style={{ marginTop: '15px' }}>
+                    <div className="col-md-4">
+                        <select id="month" className="form-control" value={selectedMonth} onChange={(e) => setSelectedMonth(e.target.value)}>
+                            <option value="">Select Month</option>
+                            {monthsOptions}
+                        </select>
+                    </div>
+                    <div className="col-md-4">
+                        <select id="year" className="form-control" value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)}>
+                            <option value="">Select Year</option>
+                            {yearsOptions}
+                        </select>
+                    </div>
+                    <div className="col-md-4 align-self-end">
+                        <button className="btn btn-outline-primary" onClick={handleSearch} onKeyDown={handleKeyDown}><i className="ri-search-line"></i>   Search Profit Log</button>
+                    </div>
+                </div>
+
+                {/* Display summary of profit details current month */}
+                {profit && (
+                    <div className="container mt-5">
+                        <div className="row justify-content-center">
+                            <div className="col-lg-4 col-md-6 mb-3">
+                                <div className="card" style={{ background: 'white', color: '#fff' }}>
+                                    <div className="card-body d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h3 className="card-title" style={{ color: 'black' }}>{(totalAmount - (totalSupp + totalSalary + totalOther + profit.EPF_ETF)).toFixed(2)}</h3>
+                                            <p className="card-text" style={{ marginTop: '35px', color: 'black'  }}>Monthly Profit (Rs.)</p>
+                                        </div>
+                                        <i className="bi bi-currency-dollar h1" style={{ color: 'black' }}></i>
+                                    </div>
+                                    <div className="card-footer bg-transparent border-top-0">
+                                        <div class="progress" style={{ height: '10px', width: '85%', marginBottom: '20px', marginLeft: '20px', marginTop: '-5px' }}>
+                                            <div class="progress-bar" role="progressbar" style={{ backgroundColor: 'orange', width: '50%' }} aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-lg-4 col-md-6 mb-3">
+                                <div className="card" style={{ background: 'white', color: '#fff' }}>
+                                    <div className="card-body d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h3 className="card-title" style={{ color: 'black' }}>{totalAmount.toFixed(2)}</h3>
+                                            <p className="card-text" style={{ marginTop: '35px', color: 'black'  }}>Monthly Sales (Rs.)</p>
+                                        </div>
+                                        <i className="bi bi-cart4 h1" style={{ color: 'black' }}></i>
+                                    </div>
+                                    <div className="card-footer bg-transparent border-top-0">
+                                        <div class="progress" style={{ height: '10px', width: '85%', marginBottom: '20px', marginLeft: '20px', marginTop: '-5px' }}>
+                                            <div class="progress-bar" role="progressbar" style={{ backgroundColor: 'orange', width: '50%' }} aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-lg-4 col-md-6 mb-3">
+                                <div className="card" style={{ background: 'white', color: '#fff' }}>
+                                    <div className="card-body d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h3 className="card-title" style={{ color: 'black' }}>{(totalSupp + totalSalary + totalOther + profit.EPF_ETF).toFixed(2)}</h3>
+                                            <p className="card-text" style={{ marginTop: '35px', color: 'black'  }}>Monthly Expenses (Rs.)</p>
+                                        </div>
+                                        <i className="bi bi-credit-card h1" style={{ color: 'black' }}></i>
+                                    </div>
+                                    <div className="card-footer bg-transparent border-top-0">
+                                        <div class="progress" style={{ height: '10px', width: '85%', marginBottom: '20px', marginLeft: '20px', marginTop: '-5px' }}>
+                                            <div class="progress-bar" role="progressbar" style={{ backgroundColor: 'orange', width: '50%' }} aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                )}
+
+                <div className="row" style={{ marginTop: '5px' }}>
 
                     {/* Generate Monthly Profit Report*/}
                     <div className="col-lg-6 col-md-12 mb-3">
@@ -443,7 +541,7 @@ function ProfitDetails() {
                             <div className="card-body">
                                 <h5 className="card-title">Generate Monthly Profit Report</h5>
                                 <p className="card-text">Click the button below to generate a report for the monthly profit.</p>
-                                <button className="btn btn-primary text-center" onClick={handleReportGeneration} style={{ marginTop: '10px', width: '200px' }}> Generate Report</button>
+                                <button className="btn btn-outline-success text-center" onClick={handleReportGeneration} style={{ marginTop: '20px', width: '200px' }}><i className="ri-file-chart-line"></i>  Generate Report</button>
                             </div>
                         </div>
                     </div>
@@ -481,7 +579,7 @@ function ProfitDetails() {
                                     <div className="row mb-3">
                                         <div className="col">
                                             <div className="button-container d-flex justify-content-start align-items-center">
-                                                <button type="submit" className="btn btn-primary" style={{ width: '200px' }}>Add Profit</button>
+                                                <button type="submit" className="btn btn-outline-primary" style={{ width: '200px' }}><i className="ri-add-line"></i>  Add Profit</button>
                                             </div>
                                         </div>
                                     </div>
@@ -491,100 +589,6 @@ function ProfitDetails() {
                     </div>
                 </div>
 
-                {/* Search bar to search profit log */}
-                <div className="row" style={{ marginTop: '15px' }}>
-                    <div className="col-md-4">
-                        <select id="month" className="form-control" value={selectedMonth} onChange={(e) => setSelectedMonth(e.target.value)}>
-                            <option value="">Select Month</option>
-                            {monthsOptions}
-                        </select>
-                    </div>
-                    <div className="col-md-4">
-                        <select id="year" className="form-control" value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)}>
-                            <option value="">Select Year</option>
-                            {yearsOptions}
-                        </select>
-                    </div>
-                    <div className="col-md-4 align-self-end">
-                        <button className="btn btn-primary" onClick={handleSearch} onKeyDown={handleKeyDown}>Search Profit Log</button>
-                    </div>
-                </div>
-
-                <h2 className="mb-4" style={{ marginTop: '25px' }}><i className="fas fa-chart-line"></i> Profit Log {(searchResult || profit) && `- ${searchResult ? searchResult[0].Month : profit.Month}`}</h2>
-                <p className="text-muted">Explore the detailed breakdown of your profits, including sales income, expenses, and monthly profit, to gain insights into your financial performance.</p>
-
-                {/* Display summary of profit details current month */}
-                {profit && (
-                    <div className="container mt-3">
-                        <div className="row justify-content-center">
-                            <div className="col-lg-3 col-md-6 mb-3">
-                                <div className="card" style={{ background: 'linear-gradient(to right, #493240, #f09)', color: '#fff' }}>
-                                    <div className="card-body d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <h3 className="card-title">{(totalAmount - (totalSupp + totalSalary + totalOther + profit.EPF_ETF)).toFixed(2)}</h3>
-                                            <p className="card-text" style={{ marginTop: '25px' }}>Monthly Profit (Rs.)</p>
-                                        </div>
-                                        <i className="bi bi-currency-dollar h1"></i>
-                                    </div>
-                                    <div className="card-footer bg-transparent border-top-0">
-                                        <div class="progress" style={{ height: '10px', width: '85%', marginBottom: '20px', marginLeft: '20px', marginTop: '-5px' }}>
-                                            <div class="progress-bar" role="progressbar" style={{ backgroundColor: '#b2beb5', width: '60%' }} aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-lg-3 col-md-6 mb-3">
-                                <div className="card" style={{ background: 'linear-gradient(to right, #0a504a, #38ef7d)', color: '#fff' }}>
-                                    <div className="card-body d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <h3 className="card-title">{average.toFixed(2)}</h3>
-                                            <p className="card-text" style={{ marginTop: '25px' }}>Average Monthly Profit (Rs.)</p>
-                                        </div>
-                                        <i className="bi bi-calculator h1"></i>
-                                    </div>
-                                    <div className="card-footer bg-transparent border-top-0">
-                                        <div class="progress" style={{ height: '10px', width: '85%', marginBottom: '20px', marginLeft: '20px', marginTop: '-5px' }}>
-                                            <div class="progress-bar" role="progressbar" style={{ backgroundColor: '#b2beb5', width: '50%' }} aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-lg-3 col-md-6 mb-3">
-                                <div className="card" style={{ background: 'linear-gradient(to right, #a86008, #ffba56)', color: '#fff' }}>
-                                    <div className="card-body d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <h3 className="card-title">{totalAmount.toFixed(2)}</h3>
-                                            <p className="card-text" style={{ marginTop: '25px' }}>Monthly Sales (Rs.)</p>
-                                        </div>
-                                        <i className="bi bi-cart4 h1"></i>
-                                    </div>
-                                    <div className="card-footer bg-transparent border-top-0">
-                                        <div class="progress" style={{ height: '10px', width: '85%', marginBottom: '20px', marginLeft: '20px', marginTop: '-5px' }}>
-                                            <div class="progress-bar" role="progressbar" style={{ backgroundColor: '#b2beb5', width: '70%' }} aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-lg-3 col-md-6 mb-3">
-                                <div className="card" style={{ background: 'linear-gradient(to right, #6c757d, #007bff)', color: '#fff' }}>
-                                    <div className="card-body d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <h3 className="card-title">{(totalSupp + totalSalary + totalOther + profit.EPF_ETF).toFixed(2)}</h3>
-                                            <p className="card-text" style={{ marginTop: '25px' }}>Monthly Expenses (Rs.)</p>
-                                        </div>
-                                        <i className="bi bi-credit-card h1"></i>
-                                    </div>
-                                    <div className="card-footer bg-transparent border-top-0">
-                                        <div class="progress" style={{ height: '10px', width: '85%', marginBottom: '20px', marginLeft: '20px', marginTop: '-5px' }}>
-                                            <div class="progress-bar" role="progressbar" style={{ backgroundColor: '#b2beb5', width: '40%' }} aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                )}
                 {/* Display profit details for searched month or current month */}
                 {(searchResult || profit) && (
                     <div className="row">
@@ -636,7 +640,7 @@ function ProfitDetails() {
                                         </div>
                                     </div>
                                     <div className="button-container text-center" style={{ marginTop: '25px' }}>
-                                        <Link to={`/profit/update/${profit._id}`} className="btn btn-primary me-2" style={{ width: '160px' }}>Edit</Link>
+                                        <Link to={`/profit/update/${profit._id}`} className="btn btn-outline-primary me-2" style={{ width: '120px' }}><i className="ri-edit-line"></i>  Edit</Link>
                                     </div>
 
                                 </div>
@@ -647,7 +651,7 @@ function ProfitDetails() {
                 )}
 
             </div>
-            </Layout>
+        </Layout>
     );
 }
 
@@ -710,4 +714,20 @@ export default ProfitDetails;
                         </button>
                     </li>
                 </ul>
+                <div className="col-lg-3 col-md-6 mb-3">
+                                <div className="card" style={{ background: 'white', color: '#fff' }}>
+                                    <div className="card-body d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h3 className="card-title" style={{ color: 'black' }}>{average.toFixed(2)}</h3>
+                                            <p className="card-text" style={{ marginTop: '25px', color: 'black'  }}>Average Monthly Profit (Rs.)</p>
+                                        </div>
+                                        <i className="bi bi-calculator h1" style={{ color: 'black' }}></i>
+                                    </div>
+                                    <div className="card-footer bg-transparent border-top-0">
+                                        <div class="progress" style={{ height: '10px', width: '85%', marginBottom: '20px', marginLeft: '20px', marginTop: '-5px' }}>
+                                            <div class="progress-bar" role="progressbar" style={{ backgroundColor: 'orange', width: '50%' }} aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                 */

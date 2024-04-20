@@ -520,9 +520,27 @@ function monthToNumeric(month) {
   return monthMap[month];
 }
 
+//function to get monthly sales for billing system
 router.route("/get/bills/total").get(async (req, res) => {
   try {
+    // Get the current month and year
+    const currentMonth = new Date().getUTCMonth() + 1; // Months are zero-indexed, so add 1
+    const currentYear = new Date().getUTCFullYear();
+
+    // Construct the start and end dates for the current month
+    const startDate = new Date(Date.UTC(currentYear, currentMonth - 1, 1, 0, 0, 0)); // Start of the month
+    const endDate = new Date(Date.UTC(currentYear, currentMonth, 0, 23, 59, 59)); // End of the month
+
+    // Aggregate sales details for the current month
     const totalAmount = await bills.aggregate([
+      {
+        $match: {
+          billing_date: {
+            $gte: startDate,
+            $lte: endDate
+          }
+        }
+      },
       {
         $group: {
           _id: null,
@@ -530,7 +548,8 @@ router.route("/get/bills/total").get(async (req, res) => {
         }
       }
     ]);
-    res.json({ totalAmount: totalAmount[0].totalAmount });
+
+    res.json({ totalAmount: totalAmount.length > 0 ? totalAmount[0].totalAmount : 0 });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Internal server error" });
