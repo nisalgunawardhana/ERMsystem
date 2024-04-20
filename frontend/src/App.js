@@ -30,7 +30,7 @@ import Employees from './components/employeeComponent/employee';
 //login
 import Login from './pages/Login';
 //signup
-import Signup from './pages/Signup';
+import Signup from './pages/Register';
 //stock
 import StockManagement from './components/stockComponent/stock';
 import Clothes from './components/stockComponent/clothes';
