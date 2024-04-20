@@ -329,7 +329,7 @@ export default function Toys() {
                                 <td>{toys.quantity}</td>
                                 <td>{toys.alert_quantity}</td>
                                 <td>
-                                    <button className="btn btn-outline-primary" onClick={() => handleOpenUpdateModal(toys)}>Update</button>
+                                    <button className="btn btn-outline-primary me-2" onClick={() => handleOpenUpdateModal(toys)}>Update</button>
                                     <button onClick={() => handleDeleteToys(toys.item_code)} className="btn btn-outline-danger">Delete</button>
                                 </td>
                             </tr>
