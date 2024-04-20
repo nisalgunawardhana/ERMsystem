@@ -60,7 +60,7 @@ export default function Trainee() {
             });
     }, []);
 
-    
+
 
     function handleDelete(id) {
         axios.delete(`http://localhost:8080/meetings/delete/${id}`)
