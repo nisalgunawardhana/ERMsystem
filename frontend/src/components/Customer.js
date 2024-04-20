@@ -263,7 +263,7 @@ const CustomerR = () => {
                 <div className="d-flex justify-content-between align-items-center">
                     <div className="col-8">
                         <h3 className="d-flex align-items-center mb-5" style={{ color: 'black' }}>
-                            Generate Report
+                            Customer Report
                         </h3>
                         
                     </div>
@@ -292,8 +292,11 @@ const CustomerR = () => {
                 <Button className="btn btn-dark" onClick={() => setShowModal(true)}>Add Customer</Button>
                 <div className="progress mt-1" data-height="8" style={{ height: '8px' }}>
                     <div className="progress-bar bg-orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '75%', backgroundColor: 'orange' }}></div>
+                
                 </div>
+                
             </div>
+            
         </div>
     </Col>
     <Col>
@@ -306,8 +309,7 @@ const CustomerR = () => {
                         </h3>
                        
                     </div>
-                    <i className="bi bi-bar-chart h1"></i>
-                    
+                    <i className="bi bi-trash h1"></i>
                 </div>
                 <Button className="btn btn-dark" onClick={handleDeleteAllPoints}>Delete All Points</Button>
                 <div className="progress mt-1" data-height="8" style={{ height: '8px' }}>
@@ -349,7 +351,7 @@ const CustomerR = () => {
                                     <p className="card-text">Point: {customer.point}</p>
                                     <p className="card-text">Gender: {customer.gender}</p>
                                     <div className="btn-group">
-                                        <Link to={`/customer/update/${customer.customer_id}`} className="btn btn-outline-primary">
+                                        <Link to={`/customer/update/${customer.customer_id}`} className="btn btn-outline-primary  me-2">
                                             <i className="bi bi-pencil-fill"></i> Update
                                         </Link>
                                         <button className="btn btn-outline-danger" onClick={() => handleDelete(customer.customer_id)}>
