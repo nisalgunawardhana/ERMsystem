@@ -40,6 +40,7 @@ import { Toaster } from 'react-hot-toast'
 import ProtectedRoute from './components/ProtectedRoute';
 import SystemUsers from './pages/SystemUsers';
 import Notes from './pages/Notes';
+import CashierDashboard from './components/cashierDashboard';
 
 function App() {
   const {loading} = useSelector(state => state.alerts);
@@ -93,13 +94,14 @@ function App() {
           <Route path="/supplier/update/:id" element={<ProtectedRoute><UpdateSupplier/></ProtectedRoute>}/>
           <Route path="/purchaseOrder/add" element={<ProtectedRoute><AddPurchaseOrder/></ProtectedRoute>}/>
           <Route path="/rfq" element={<ProtectedRoute><RFQ/></ProtectedRoute>}/>
-          <Route path="/Customer" element={<ProtectedRoute><CustomerR/></ProtectedRoute>}/>
-          <Route path="/Customer/update/:id" element={<ProtectedRoute><UpdateCustomer/></ProtectedRoute>}/>
+          <Route path="/dashboard/cashier/Customer" element={<ProtectedRoute><CustomerR/></ProtectedRoute>}/>
+          <Route path="/dashboard/cashier/Customer/update/:id" element={<ProtectedRoute><UpdateCustomer/></ProtectedRoute>}/>
           <Route path="/trainee" element={<ProtectedRoute><Trainees/></ProtectedRoute>}/>
-          <Route path="/bill" element={<ProtectedRoute><Bill/></ProtectedRoute>}/>
-          <Route path="/bill/CreateBill" element={<ProtectedRoute><CreateBill/></ProtectedRoute>}/>
-          <Route path="/bill/update/:id" element={<ProtectedRoute><UpdateBill/></ProtectedRoute>}/>
-          <Route path="/bill/discounts" element={<ProtectedRoute><Discounts/></ProtectedRoute>} />
+          <Route path="/dashboard/cashier/billing" element={<ProtectedRoute><Bill/></ProtectedRoute>}/>
+          <Route path="/dashboard/cashier/billing/CreateBill" element={<ProtectedRoute><CreateBill/></ProtectedRoute>}/>
+          <Route path="/dashboard/cashier/billing/update/:id" element={<ProtectedRoute><UpdateBill/></ProtectedRoute>}/>
+          <Route path="/dashboard/cashier/discounts" element={<ProtectedRoute><Discounts/></ProtectedRoute>} />
+          <Route path="/dashboard/cashier" element={<ProtectedRoute><CashierDashboard/></ProtectedRoute>}/>
           <Route path="/employee" element={<ProtectedRoute><Employees/></ProtectedRoute>}/>
 
         </Routes>  

@@ -24,6 +24,7 @@ export default function Discounts() {
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [deleteItemId, setDeleteItemId] = useState(null);
     const [showDeleteAllConfirmation, setShowDeleteAllConfirmation] = useState(false);
+     const [currentDateTime, setCurrentDateTime] = useState('');
 
 
 
@@ -46,6 +47,14 @@ export default function Discounts() {
             .catch((err) => {
                 setError(err.message);
             });
+
+             const intervalId = setInterval(() => {
+            const now = new Date();
+            setCurrentDateTime(now.toLocaleString());
+        }, 1000);
+
+        // Cleanup interval
+        return () => clearInterval(intervalId);
     }, []);
 
     // Function to handle delete discount
@@ -233,54 +242,64 @@ const handleDeleteAllSelected = () => {
 
 
             <div className="container">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/">Home</a></li>
-                        <li class="breadcrumb-item"><a href="/bill">Bills</a></li>
+                <div className="row">
+        {/* Breadcrumb navigation */}
+        <nav className="col-md-6" aria-label="breadcrumb">
+            <ol className="breadcrumb">
+                <li class="breadcrumb-item"><a href="/dashboard/cashier">Cashier Dashboard</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Discount Rule</li>
-                    </ol>
-                </nav>
+            </ol>
+        </nav>
+        {/* Current Date and Time */}
+        <div className="col-md-6 text-md-end mb-3">
+                        <div className="date-time">
+                            <span className="date">{currentDateTime.split(',')[0]}</span>
+                            <span className="time"> | {currentDateTime.split(',')[1]}</span>
+                        </div>
+                    </div>
+    </div>
                 <h4>Manage Discount Rules</h4>
 
                 <div class="container">
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6 mb-3">
-                            <div class="card l-bg-cherry">
-                                <div class="card-statistic-3 p-4">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="col-8">
-                                            <h2 class="d-flex align-items-center mb-5">
-                                                Rs.{totalAmount.toFixed(2)}
-                                            </h2>
-                                            <h5 class="card-title" style={{ marginTop: '25px', marginBottom: '18px' }}>Total sales</h5>
-                                        </div>
-                                        <i className="bi bi-cash-coin h1"></i>
-                                    </div>
-                                    <div class="progress mt-1 " data-height="8" style={{ height: '8px' }}>
-                                        <div class="progress-bar l-bg-cyan" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '25%' }}></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-6 mb-3">
-                            <div class="card l-bg-green-dark">
-                                <div class="card-statistic-3 p-4">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="col-8">
-                                            <h3 class="d-flex align-items-center mb-5">
-                                                Discount Rules
-                                            </h3>
-                                            <h5 class="card-title" style={{ marginTop: '25px' }}><button onClick={handleOpenAddModal} className="btn btn-dark"><i class="bi bi-plus-circle-fill me-2"></i>Add New Discount Rule</button></h5>
-                                        </div>
-                                        <i className="bi bi-percent h1"></i>
-                                    </div>
-                                    <div class="progress mt-1 " data-height="8" style={{ height: '8px' }}>
-                                        <div class="progress-bar l-bg-orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '25%' }}></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                   <div className="row">
+    <div className="col-lg-6 col-md-6 mb-3">
+        <div className="card shadow" style={{ backgroundColor: 'white' }}>
+            <div className="card-statistic-3 p-4">
+                <div className="d-flex justify-content-between align-items-center">
+                    <div className="col-8">
+                        <h2 className="d-flex align-items-center mb-5">
+                            Rs.{totalAmount.toFixed(2)}
+                        </h2>
+                        <h5 className="card-title" style={{ marginTop: '25px', marginBottom: '18px' }}>Total sales</h5>
                     </div>
+                    <i className="bi bi-cash-coin h1"></i>
+                </div>
+                <div className="progress mt-1" data-height="8" style={{ height: '8px' }}>
+                    <div className="progress-bar bg-orange" role="progressbar" data-width="75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style={{ width: '75%', backgroundColor: 'orange' }}></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div className="col-lg-6 col-md-6 mb-3">
+        <div className="card shadow" style={{ backgroundColor: 'white' }}>
+            <div className="card-statistic-3 p-4">
+                <div className="d-flex justify-content-between align-items-center">
+                    <div className="col-8">
+                        <h3 className="d-flex align-items-center mb-5">
+                            Add New Discount Rule
+                        </h3>
+                        <h5 class="card-title" style={{ marginTop: '25px' }}><button onClick={handleOpenAddModal} className="btn btn-dark"><i class="bi bi-plus-circle-fill me-2"></i>Add New Discount Rule</button></h5>
+                    </div>
+                    <i className="bi bi-bar-chart h1"></i>
+                </div>
+                <div className="progress mt-1" data-height="8" style={{ height: '8px' }}>
+                    <div className="progress-bar bg-orange" role="progressbar" data-width="75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style={{ width: '75%', backgroundColor: 'orange' }}></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
                 </div>
 
                 <h4>All Discount Rules</h4>
@@ -291,10 +310,10 @@ const handleDeleteAllSelected = () => {
                         <input type="text" className="form-control" placeholder="Search by Customer ID" value={searchQuery} onChange={handleSearch} />
                     </div>
                     <div>
-                        <button onClick={handleSelectAll} className="btn btn-secondary" style={{ margin: '0 5px' }}>
+                        <button onClick={handleSelectAll} className="btn btn-outline-secondary" style={{ margin: '0 5px' }}>
                             {selectAll ? 'Unselect All' : 'Select All'}
                         </button>
-                        <button className="btn btn-danger" onClick={handleOpenDeleteAllConfirmation} style={{ margin: '0 5px' }}>Delete All Selected</button>
+                        <button className="btn btn-outline-danger" onClick={handleOpenDeleteAllConfirmation} style={{ margin: '0 5px' }}>Delete All Selected</button>
                     </div>
                 </div>
 
@@ -448,8 +467,11 @@ const handleDeleteAllSelected = () => {
 
 
                 {/* Discounts table */}
-                <table className="table">
-                    <thead className="table-dark">
+               <div className="card">
+                    <div className="card-body">
+                        <h5 className="card-title">Recent Sales</h5>
+                        <table className="table">
+                    <thead >
                         <tr>
                             <th>#</th>
                             <th style={{ textAlign: 'center' }}>Rule Name</th>
@@ -469,8 +491,8 @@ const handleDeleteAllSelected = () => {
                                 <td style={{ textAlign: 'center' }}>{discount.Discount_presentage}</td>
                                 <td style={{ textAlign: 'center' }}>{discount.rule_con}</td>
                                 <td style={{ textAlign: 'center' }}>
-                                    <button className="btn btn-primary" onClick={() => handleOpenUpdateModal(discount)} style={{ margin: '0 5px' }}>Update</button>
-                                    <button onClick={() => handleDeleteDiscount(discount._id)} className="btn btn-danger ml-2" style={{ margin: '0 5px' }}>Delete</button>
+                                    <button className="btn btn-outline-primary" onClick={() => handleOpenUpdateModal(discount)} style={{ margin: '0 5px' }}>Update</button>
+                                    <button onClick={() => handleDeleteDiscount(discount._id)} className="btn btn-outline-danger" style={{ margin: '0 5px' }}>Delete</button>
                                 </td>
                                 <td style={{ textAlign: 'center' }}>
                                     <input type="checkbox" checked={discount.selected || false} onChange={() => handleSelectDiscount(discount._id)} />
@@ -478,7 +500,9 @@ const handleDeleteAllSelected = () => {
                             </tr>
                         ))}
                     </tbody>
-                </table>
+                 </table>
+                    </div>
+                </div>
             </div>
 
         </Layout>
