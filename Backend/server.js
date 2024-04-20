@@ -77,6 +77,7 @@ app.use("/discounts", discounts);
 //user management
 const userRoute = require("./routes/userRoute.js");
 app.use("/api/user", userRoute);
+app.use("/api/users", userRoute);
 
 app.listen(PORT, () => {
     console.log(`Server is up and running on: ${PORT}`);

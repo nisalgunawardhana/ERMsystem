@@ -92,6 +92,16 @@ router.route("/delete-all-points").delete(async (req, res) => {
     }
 })
 
+router.route("/count").get(async (req, res) => {
+    try {
+        const totalCustomers = await customer.countDocuments();
+        res.json({ totalCustomers });
+    } catch (error) {
+        console.error("Error counting customers:", error);
+        res.status(500).json({ error: "Error counting customers" });
+    }
+});
+
 
 router.route("/:id").get((req, res) => {
     const customer_id = req.params.id;

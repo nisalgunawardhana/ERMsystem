@@ -4,7 +4,10 @@ const User = require("../models/userModel")
 const bcrypt = require('bcrypt')
 const jwt = require("jsonwebtoken")
 const authMiddleware = require("../middlewares/authMiddleware")
+const Note = require('../models/noteModel');
 
+
+//--system users--
 //register - CREATE
 router.post('/register', async(req, res) => {
     try{
@@ -29,7 +32,6 @@ router.post('/register', async(req, res) => {
     }
 })
 
-
 //login - VERIFICATION
 router.post('/login', async(req, res) => {
     try{
@@ -45,7 +47,7 @@ router.post('/login', async(req, res) => {
             .status(200)
             .send({ message: "Password is incorrect", success: false })
         } else {
-            const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+            const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
                 expiresIn: "1d"
             })
             res
@@ -59,7 +61,6 @@ router.post('/login', async(req, res) => {
             .send({ message: "Error logging in", success: false, error })
     }
 })
-
 
 //READ BY USER ID
 router.post('/get-user-info-by-id', authMiddleware, async(req, res) => {
@@ -87,40 +88,134 @@ router.post('/get-user-info-by-id', authMiddleware, async(req, res) => {
     }
 })
 
-
-// UPDATE - Update user information (chatgpt)
-router.put('/update-user/:userId', authMiddleware, async (req, res) => {
+// Route to get all users
+router.get('/', async (req, res) => {
     try {
-        const { userId } = req.params;
-        const updatedUser = await User.findByIdAndUpdate(userId, req.body, { new: true });
+        const users = await User.find();
+        res.json(users);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Route to delete a user
+router.delete('/delete/:id', async (req, res) => {
+    try {
+        await User.findByIdAndDelete(req.params.id);
+        res.json({ message: 'User deleted' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Update a user by ID
+router.put('/update/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const updatedUserData = req.body;
+        const updatedUser = await User.findByIdAndUpdate(id, updatedUserData, { new: true });
         if (!updatedUser) {
-            return res.status(404).send({ message: "User not found", success: false });
+            return res.status(404).json({ message: "User not found" });
         }
-        // Omitting password from the response
-        updatedUser.password = undefined;
-        res.status(200).send({ message: "User updated successfully", success: true, data: updatedUser });
+        res.status(200).json(updatedUser);
     } catch (error) {
-        console.log(error);
-        res.status(500).send({ message: "Error updating user", success: false, error });
+        console.error(error);
+        res.status(500).json({ message: "Error updating user", error });
     }
 });
 
-
-// DELETE - Delete user by user ID (chatgpt)
-router.delete('/delete-user/:userId', authMiddleware, async (req, res) => {
+// Route to delete multiple users
+router.delete('/delete-multiple', async (req, res) => {
     try {
-        const { userId } = req.params;
-        const deletedUser = await User.findByIdAndDelete(userId);
-        if (!deletedUser) {
-            return res.status(404).send({ message: "User not found", success: false });
-        }
-        // Omitting password from the response
-        deletedUser.password = undefined;
-        res.status(200).send({ message: "User deleted successfully", success: true, data: deletedUser });
+        const { userIds } = req.body;
+        await User.deleteMany({ _id: { $in: userIds } });
+        res.json({ message: 'Selected users deleted successfully' });
     } catch (error) {
-        console.log(error);
-        res.status(500).send({ message: "Error deleting user", success: false, error });
+        console.error(error);
+        res.status(500).json({ message: "Error deleting selected users", error });
     }
 });
 
-module.exports = router
+
+
+
+//--notes--
+// to get all notes
+router.get('/read-all', async (req, res) => {
+    try {
+        const notes = await Note.find();
+        res.json(tasks);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// to create a new notes
+router.post('/add', async (req, res) => {
+    const note = new Note({
+        note_no: req.body.note_no,
+        note_title: req.body.note_title,
+        note_description: req.body.note_description
+    });
+
+    try {
+        const newNote = await note.save();
+        res.status(201).json(newNote);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
+// to get a single note by ID
+router.get('/read-one/:id', getNote, (req, res) => {
+    res.json(res.note);
+});
+
+// update a note
+router.patch('/update/:id', getNote, async (req, res) => {
+    if (req.body.note_no != null) {
+        res.task.note_no = req.body.note_no;
+    }
+    if (req.body.note_title != null) {
+        res.task.note_title = req.body.note_title;
+    }
+    if (req.body.note_description != null) {
+        res.task.note_description = req.body.note_description;
+    }
+
+    try {
+        const updatedNote = await res.note.save();
+        res.json(updatedNote);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
+// to delete a note
+router.delete('/delete/:id', getNote, async (req, res) => {
+    try {
+        await res.note.remove();
+        res.json({ message: 'Note deleted' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Middleware function to get a single note by ID
+async function getNote(req, res, next) {
+    let note;
+    try {
+        note = await Note.findById(req.params.id);
+        if (note == null) {
+            return res.status(404).json({ message: 'Note not found' });
+        }
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+
+    res.note = note;
+    next();
+}
+
+module.exports = router;
+  

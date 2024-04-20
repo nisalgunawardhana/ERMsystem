@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
+import Layout from './Layout';
 
 function TaxDetails() {
     const { id } = useParams();
@@ -389,6 +390,7 @@ function TaxDetails() {
     });
 
     return (
+        <Layout>
         <div className="container">
             <ul class="nav nav-tabs mb-3" id="myTab0" role="tablist">
                 <li class="nav-item" role="presentation">
@@ -456,7 +458,7 @@ function TaxDetails() {
             </nav>
             {/* Main Content */}
             <div className="row mb-2" style={{ marginTop: '35px' }}>
-                <h2 className="text-left mb-4" style={{ marginTop: '15px' }}>Annual Tax Details</h2>
+                <h2 className="text-left mb-4" style={{ marginTop: '5px' }}>Annual Tax Details</h2>
                 {/* Generate tax Report */}
                 <div className="col-lg-6 col-md-12 mb-3">
                     <div className="card" style={{ height: '160px' }}>
@@ -489,17 +491,16 @@ function TaxDetails() {
             </div>
 
             {/* Search bar for tax doc */}
-            <div className="container-fluid" style={{ marginTop: '25px' }}>
+            <div className="container-fluid" style={{ marginTop: '15px' }}>
                 <div className="row">
                     <div className="col-md-4">
-                        <label htmlFor="year">Year:</label>
                         <select id="year" className="form-control" value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)}>
                             <option value="">Select Year</option>
                             {yearsOptions}
                         </select>
                     </div>
                     <div className="col-md-4 align-self-end">
-                        <button className="btn btn-primary" onClick={handleSearch} onKeyDown={handleKeyDown}>Search</button>
+                        <button className="btn btn-primary" onClick={handleSearch} onKeyDown={handleKeyDown}>Search Tax Document</button>
                     </div>
                 </div>
 
@@ -512,13 +513,13 @@ function TaxDetails() {
                         <div className="row justify-content-center">
                             <div className="row">
                                 <div className="col-lg-4 col-md-6 mb-3">
-                                    <div className="card" style={{ background: 'linear-gradient(to right, rgba(0, 123, 255, 0.8), rgba(255, 0, 123, 0.8))', color: '#fff', minWidth: '250px' }}>
+                                    <div className="card" style={{ background: 'linear-gradient(to right, #493240, #f09)', color: '#fff', minWidth: '250px' }}>
                                         <div className="card-body d-flex justify-content-between align-items-center">
                                             <div className="card-body">
                                                 <h2 className="card-title">{new Date(tax.Due_date).toLocaleDateString()}</h2>
                                                 <p className="card-text" style={{ marginTop: '35px' }}>Due Date</p>
                                             </div>
-                                            <i className="bi bi-calendar h1"></i>
+                                            <i className="bi bi-calendar h1" style={{ marginRight: '15px', fontSize: '2.5rem' }}></i>
                                         </div>
                                         <div className="card-footer bg-transparent border-top-0">
                                             <div className="progress" style={{ height: '10px', marginTop: '-25px' }}>
@@ -529,13 +530,13 @@ function TaxDetails() {
                                 </div>
 
                                 <div className="col-lg-4 col-md-6 mb-3">
-                                    <div className="card" style={{ background: 'linear-gradient(to right, rgba(0, 123, 255, 0.8), rgba(255, 0, 123, 0.8))', color: '#fff', minWidth: '250px' }}>
+                                    <div className="card" style={{ background: 'linear-gradient(to right, #0a504a, #38ef7d)', color: '#fff', minWidth: '250px' }}>
                                         <div className="card-body d-flex justify-content-between align-items-center">
                                             <div className="card-body">
                                                 <h2 className="card-title">Rs.{Income_tax}</h2>
                                                 <p className="card-text" style={{ marginTop: '35px' }}>Tax Payable</p>
                                             </div>
-                                            <i className="bi bi-info-circle h1"></i>
+                                            <i className="bi bi-file-earmark-text h1" style={{ marginRight: '15px', fontSize: '3.5rem' }}></i>
                                         </div>
                                         <div className="card-footer bg-transparent border-top-0">
                                             <div className="progress" style={{ height: '10px', marginTop: '-25px' }}>
@@ -546,13 +547,13 @@ function TaxDetails() {
                                 </div>
 
                                 <div className="col-lg-4 col-md-6 mb-3">
-                                    <div className="card" style={{ background: 'linear-gradient(to right, rgba(0, 123, 255, 0.8), rgba(255, 0, 123, 0.8))', color: '#fff', minWidth: '250px' }}>
+                                    <div className="card" style={{ background: 'linear-gradient(to right, #a86008, #ffba56)', color: '#fff', minWidth: '250px' }}>
                                         <div className="card-body d-flex justify-content-between align-items-center">
                                             <div className="card-body">
                                                 <h2 className="card-title">Rs.{(totalProfit - Income_tax).toFixed(2)}</h2>
                                                 <p className="card-text" style={{ marginTop: '35px' }}>Final Profit</p>
                                             </div>
-                                            <i className="bi bi-cash h1"></i>
+                                            <i className="bi bi-cash-stack h1" style={{ marginRight: '15px', fontSize: '3.5rem' }}></i>
                                         </div>
                                         <div className="card-footer bg-transparent border-top-0">
                                             <div className="progress" style={{ height: '10px', marginTop: '-25px' }}>
@@ -619,7 +620,7 @@ function TaxDetails() {
                 )}
             </div>
         </div>
-
+        </Layout>
     );
 }
 

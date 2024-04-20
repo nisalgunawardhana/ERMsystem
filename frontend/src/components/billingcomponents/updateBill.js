@@ -4,6 +4,8 @@ import { useParams } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { useNavigate } from "react-router-dom";
+import Layout from '../Layout';
+
 
 function UpdateBill() {
   const { id } = useParams();
@@ -87,62 +89,68 @@ function UpdateBill() {
   };
 
   return (
+    <Layout>
     <div className="container-fluid">
-      <div className="row">
-        <div className="col-md-6">
-          <div className="card">
-            <h2 style={{ textAlign: 'center' }} >Update Bill</h2>
-            <Form card-body border rounded p-4 style={{ margin: '30px' }}>
-              <Form.Group controlId="customerId">
-                <Form.Label>Customer ID</Form.Label>
-                <Form.Control type="text" value={customer_id} readOnly />
-              </Form.Group>
-              <Form.Group controlId="billingDate">
-                <Form.Label>Billing Date</Form.Label>
-                <Form.Control type="date" value={billing_date} readOnly />
-              </Form.Group>
-              <Form.Group controlId="items">
-                <Form.Label>Items</Form.Label>
-                {items.map((item, index) => (
-                  <div key={index}>
-                    <Form.Control type="text" placeholder="Product ID" value={item.product_id} readOnly />
-                    <Form.Control type="number" placeholder="Quantity" value={item.quantity} onChange={e => handleItemChange(index, 'quantity', e.target.value)} />
-                    <Form.Control type="number" placeholder="Unit Price" value={item.unit_price} onChange={e => handleItemChange(index, 'unit_price', e.target.value)} readOnly />
-                    <Button variant="danger" onClick={() => removeItem(index)}>Remove Item</Button>
-                  </div>
-                ))}
-
-              </Form.Group>
-              <Form.Group controlId="totalAmount">
-                <Form.Label>Total Amount</Form.Label>
-                <Form.Control type="number" value={total_amount} onChange={e => setTotalAmount(e.target.value)} />
-              </Form.Group>
-              <br></br>
-              <Button variant="primary" onClick={handleUpdate}>Update Bill</Button>
-            </Form>
-          </div>
+  <div className="row">
+    <div className="col-md-6">
+      <div className="card p-4">
+        <h2 className="text-center mb-4">Update Bill</h2>
+        <Form>
+          <Form.Group controlId="customerId">
+            <Form.Label><i class="bi bi-person-fill me-2"></i>Customer ID</Form.Label>
+            <Form.Control type="text" value={customer_id} readOnly />
+          </Form.Group>
+          <Form.Group controlId="billingDate">
+            <Form.Label><i class="bi bi-calendar-fill me-2"></i>Billing Date</Form.Label>
+            <Form.Control type="date" value={billing_date} readOnly />
+          </Form.Group>
+          <div>
+          <label><i class="bi bi-cart-fill me-2"></i>Items</label>
+          <ul className="list-group">
+            {items.map((item, index) => (
+              <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                  <strong>Product ID:</strong> {item.product_id}<br />
+                  <strong>Quantity:</strong> 
+                  <input type="number" value={item.quantity} onChange={e => handleItemChange(index, 'quantity', e.target.value)} />
+                  <br />
+                  <strong>Unit Price:</strong> {item.unit_price}
+                </div>
+                <button className="btn btn-danger" onClick={() => removeItem(index)}><i class="bi bi-trash-fill me-2"></i>Remove</button>
+              </li>
+              
+            ))}
+            <br></br>
+          </ul>
         </div>
-
-        <div className="col-md-6">
-          <div className="card">
-            <div className="card-body">
-              <h3 className="card-title">Instructions:</h3>
-              <p className="card-text">To create a new bill, please follow these steps:</p>
-              <ol>
-                <li><strong>Customer ID:</strong> Verify the customer's identification.</li>
-                <li><strong>Billing Date:</strong> Select the updated billing date from the calendar.</li>
-                <li><strong>Items:</strong> Review and modify the details of each item as necessary.</li>
-                <li><strong>Total Amount:</strong> Ensure the total amount accurately reflects the updated bill.</li>
-                <li>Click on the <strong>"Update Bill"</strong> button to save the changes.</li>
-              </ol>
-            </div>
-          </div>
-        </div>
+        <div></div>
+          <Form.Group controlId="totalAmount">
+            <Form.Label>Total Amount</Form.Label>
+            <Form.Control type="number" value={total_amount} onChange={e => setTotalAmount(e.target.value)} readOnly />
+          </Form.Group>
+          <Button variant="primary" onClick={handleUpdate}><i class="bi bi-pencil-fill me-2"></i>Update Bill</Button>
+        </Form>
       </div>
-      <br></br>
-      <br></br>
     </div>
 
+    <div className="col-md-6">
+      <div className="card p-4">
+        <h3 className="card-title">Instructions:</h3>
+        <p className="card-text">To create a new bill, please follow these steps:</p>
+        <ol>
+          <li><i class="bi bi-check-circle-fill text-success me-2"></i><strong>Customer ID:</strong> Verify the customer's identification.</li>
+          <li><i class="bi bi-check-circle-fill text-success me-2"></i><strong>Billing Date:</strong> Select the updated billing date from the calendar.</li>
+          <li><i class="bi bi-check-circle-fill text-success me-2"></i><strong>Items:</strong> Review and modify the details of each item as necessary.</li>
+          <li><i class="bi bi-check-circle-fill text-success me-2"></i><strong>Total Amount:</strong> Ensure the total amount accurately reflects the updated bill.</li>
+          <li><i class="bi bi-check-circle-fill text-success me-2"></i>Click on the <strong>"Update Bill"</strong> button to save the changes.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+</Layout>
 
   );
 }

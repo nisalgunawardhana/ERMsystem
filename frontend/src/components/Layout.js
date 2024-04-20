@@ -1,15 +1,19 @@
 import React, { useState } from "react";
 import './Layout.css';
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux" ;
+import { useSelector, useDispatch } from "react-redux" ;
 import { Popover, Space } from 'antd';
+import axios from 'axios';
+import {Button} from 'react-bootstrap';
+import { setUser } from '../redux/userSlice'; 
 
 function Layout({children}) {
     const [collapsed, setCollapsed] = useState(false);
     const { user } = useSelector((state) => state.user);
     const location = useLocation();
     const navigate = useNavigate();
-    
+    const dispatch = useDispatch();
+
     // Determine user's role based on boolean flags
     let userRole;
 
@@ -40,17 +44,17 @@ function Layout({children}) {
         },
         {
             name: 'Dashboard',
-            path: '/adminDashboard',
+            path: '/users',
             icon: 'ri-user-settings-line'
         },
         {
             name: 'Add User',
-            path: '/signup',
+            path: '/register',
             icon: 'ri-add-circle-line'
         },
         {
-            name: 'Tasks',
-            path: '/tasks',
+            name: 'Notes',
+            path: '/notes',
             icon: 'ri-task-line'
         },
     ];
@@ -58,36 +62,24 @@ function Layout({children}) {
     //2. cashier
     const cashierMenu = [
         {
-            name: 'Home',
-            path: '/',
+            name: ' Dashboard',
+            path: '/dashboard/cashier',
             icon: 'ri-home-4-line'
         },
         {
-            name: 'Dashboard',
-            path: '/adminDashboard',
-            icon: 'ri-user-settings-line'
-        },
-        {
             name: 'Billing',
-            icon: 'ri-file-list-line',
-            subMenu: [
-                {
-                    name: 'Create Bill',
-                    path: '/createBill',
-                    icon: 'ri-add-circle-line'
-                }
-            ]
+            path: '/dashboard/cashier/billing',
+            icon: 'ri-file-list-line'
         },
         {
-            name: 'Customer',
+            name: 'Discount Rules',
+            icon: 'ri-price-tag-3-line me-2',
+            path: '/dashboard/cashier/discounts',
+        },
+        {
+            name: 'Customer Management',
             icon: 'ri-group-line',
-            subMenu: [
-                {
-                    name: 'Add Customer',
-                    path: '/addCustomer',
-                    icon: 'ri-add-circle-line'
-                }
-            ]
+            path: '/dashboard/cashier/customer',
         }
     ];
     
@@ -105,12 +97,12 @@ function Layout({children}) {
         },
         {
             name: 'Profit Log',
-            path: '/signup',
+            path: `/profit/get/profitlog`,
             icon: 'ri-currency-line'
         },
         {
             name: 'Other Expenses',
-            path: '/profile',
+            path: '/otherExpense',
             icon: 'ri-coins-line'
         },
         {
@@ -241,11 +233,24 @@ function Layout({children}) {
 
     const handleLogout = () => {
         // Show a confirmation message before logging out
-        if (window.confirm("Are you sure you want to logout?")) {
-            localStorage.clear();
-            navigate('/login');
+        localStorage.clear();
+        dispatch(setUser(null)); // Clear user state in Redux store
+        navigate('/login');
+    };
+
+    const getData = async () => {
+        try {
+            const response = await axios.post('/api/users/get-employee-info-by-id', {} , {
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('token')
+                },
+            });
+            console.log(response.data);
+        } catch (error) {
+            console.log(error);
         }
     };
+
 
     // Conditionally render children based on user role
     const renderChildren = () => {
@@ -284,16 +289,21 @@ function Layout({children}) {
                                 </div>
                             );
                         })}
-                        <div 
-                            className={`d-flex menu-item`} 
-                            onClick={handleLogout}
-                        >
-                            <i className="ri-logout-circle-r-line"></i>
-                            {!collapsed && <Link to='/login'>Logout</Link>}
-                        </div>    
+
+                        {/*logout*/}
+                        <div className="logout">
+                            <div 
+                                className={`d-flex menu-item`} 
+                                onClick={handleLogout}
+                            >
+                                <i className="ri-logout-circle-r-line"></i>
+                                {!collapsed && <Link to='/login'>Logout</Link>}
+                            </div>  
+                        </div> 
+
                     </div>
                 </div>
-                <div className="content">
+                <div className="content" style={{ marginLeft: collapsed ? '83px' : '255px' }}>
                     <div className="header">
                         {/*icon change from close button to menu icon*/}
                         {collapsed ? (

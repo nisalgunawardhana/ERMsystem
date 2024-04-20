@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { Link } from "react-router-dom";
+import Layout from './Layout';
 
 function ProfitDetails() {
     const { id } = useParams();
@@ -9,6 +10,7 @@ function ProfitDetails() {
     const [searchResult, setSearchResult] = useState(null);
     const [totalSalary, setTotalSalary] = useState(0);
     const [average, setAverage] = useState(0);
+    const [Rate, setRate] = useState("");
 
     //fetch profit log
     useEffect(() => {
@@ -41,6 +43,16 @@ function ProfitDetails() {
         axios.get(`http://localhost:8080/profit/get/profit/average`)//fetch average monthly amount of expenses
             .then((res) => {
                 setAverage(res.data.averageMonthlyProfit);
+            })
+            .catch((err) => {
+                console.error(err);
+            });
+    });
+
+    useEffect(() => {
+        axios.get(`http://localhost:8080/profit/fetch/taxRate`)
+            .then((res) => {
+                setRate(res.data.taxRate);
             })
             .catch((err) => {
                 console.error(err);
@@ -411,65 +423,8 @@ function ProfitDetails() {
     };
 
     return (
-        <div style={{ marginTop: '20px' }}>
-            <div className="container-fluid" style={{ marginTop: '40px', paddingLeft: '105px', paddingRight: '60px' }}>
-                <ul class="nav nav-tabs mb-3" id="myTab0" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <Link
-                            className="nav-link"
-                            id="contact-tab0"
-                            to="/finance"
-                            role="tab"
-                            aria-controls="contact"
-                            aria-selected="false"
-                        >
-                            Dashboard
-                        </Link>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button
-                            data-mdb-tab-init
-                            class="nav-link active"
-                            id="profile-tab0"
-                            type="button"
-                            role="tab"
-                            aria-controls="profile"
-                            aria-selected="false"
-                            onClick={handleClick}
-                            style={{ borderBottom: '2px solid #007bff', borderTop: 'none' }}
-                        >
-                            <i className="bi bi-cash"></i> Profit Log
-                        </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <Link
-                            className="nav-link"
-                            id="contact-tab0"
-                            to="/otherExpense"
-                            role="tab"
-                            aria-controls="contact"
-                            aria-selected="false"
-                        >
-                            Other Expenses
-                        </Link>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button
-                            data-mdb-tab-init
-                            class="nav-link"
-                            id="contact-tab0"
-                            data-mdb-target="#contact0"
-                            type="button"
-                            role="tab"
-                            aria-controls="contact"
-                            aria-selected="false"
-                            onClick={handleClickTax}
-                        >
-                            Tax Document
-                        </button>
-                    </li>
-                </ul>
-
+        <Layout>
+            <div className="container">
                 {/* Breadcrumb for profit log */}
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
@@ -539,25 +494,23 @@ function ProfitDetails() {
                 {/* Search bar to search profit log */}
                 <div className="row" style={{ marginTop: '15px' }}>
                     <div className="col-md-4">
-                        <label htmlFor="month">Month:</label>
                         <select id="month" className="form-control" value={selectedMonth} onChange={(e) => setSelectedMonth(e.target.value)}>
                             <option value="">Select Month</option>
                             {monthsOptions}
                         </select>
                     </div>
                     <div className="col-md-4">
-                        <label htmlFor="year">Year:</label>
                         <select id="year" className="form-control" value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)}>
                             <option value="">Select Year</option>
                             {yearsOptions}
                         </select>
                     </div>
                     <div className="col-md-4 align-self-end">
-                        <button className="btn btn-primary" onClick={handleSearch} onKeyDown={handleKeyDown}>Search</button>
+                        <button className="btn btn-primary" onClick={handleSearch} onKeyDown={handleKeyDown}>Search Profit Log</button>
                     </div>
                 </div>
 
-                <h2 className="mb-4" style={{ marginTop: '20px' }}><i className="fas fa-chart-line"></i> Profit Log {(searchResult || profit) && `- ${searchResult ? searchResult[0].Month : profit.Month}`}</h2>
+                <h2 className="mb-4" style={{ marginTop: '25px' }}><i className="fas fa-chart-line"></i> Profit Log {(searchResult || profit) && `- ${searchResult ? searchResult[0].Month : profit.Month}`}</h2>
                 <p className="text-muted">Explore the detailed breakdown of your profits, including sales income, expenses, and monthly profit, to gain insights into your financial performance.</p>
 
                 {/* Display summary of profit details current month */}
@@ -565,13 +518,13 @@ function ProfitDetails() {
                     <div className="container mt-3">
                         <div className="row justify-content-center">
                             <div className="col-lg-3 col-md-6 mb-3">
-                                <div className="card" style={{ background: 'linear-gradient(to right, rgba(0, 123, 255, 0.8), rgba(255, 0, 123, 0.8))', color: '#fff' }}>
+                                <div className="card" style={{ background: 'linear-gradient(to right, #493240, #f09)', color: '#fff' }}>
                                     <div className="card-body d-flex justify-content-between align-items-center">
                                         <div>
                                             <h3 className="card-title">{(totalAmount - (totalSupp + totalSalary + totalOther + profit.EPF_ETF)).toFixed(2)}</h3>
                                             <p className="card-text" style={{ marginTop: '25px' }}>Monthly Profit (Rs.)</p>
                                         </div>
-                                        <i className="bi bi-cash h1"></i>
+                                        <i className="bi bi-currency-dollar h1"></i>
                                     </div>
                                     <div className="card-footer bg-transparent border-top-0">
                                         <div class="progress" style={{ height: '10px', width: '85%', marginBottom: '20px', marginLeft: '20px', marginTop: '-5px' }}>
@@ -581,13 +534,13 @@ function ProfitDetails() {
                                 </div>
                             </div>
                             <div className="col-lg-3 col-md-6 mb-3">
-                                <div className="card" style={{ background: 'linear-gradient(to right, rgba(0, 123, 255, 0.8), rgba(255, 0, 123, 0.8))', color: '#fff' }}>
+                                <div className="card" style={{ background: 'linear-gradient(to right, #0a504a, #38ef7d)', color: '#fff' }}>
                                     <div className="card-body d-flex justify-content-between align-items-center">
                                         <div>
                                             <h3 className="card-title">{average.toFixed(2)}</h3>
                                             <p className="card-text" style={{ marginTop: '25px' }}>Average Monthly Profit (Rs.)</p>
                                         </div>
-                                        <i className="bi bi-cash h1"></i>
+                                        <i className="bi bi-calculator h1"></i>
                                     </div>
                                     <div className="card-footer bg-transparent border-top-0">
                                         <div class="progress" style={{ height: '10px', width: '85%', marginBottom: '20px', marginLeft: '20px', marginTop: '-5px' }}>
@@ -597,13 +550,13 @@ function ProfitDetails() {
                                 </div>
                             </div>
                             <div className="col-lg-3 col-md-6 mb-3">
-                                <div className="card" style={{ background: 'linear-gradient(to right, rgba(0, 123, 255, 0.8), rgba(255, 0, 123, 0.8))', color: '#fff' }}>
+                                <div className="card" style={{ background: 'linear-gradient(to right, #a86008, #ffba56)', color: '#fff' }}>
                                     <div className="card-body d-flex justify-content-between align-items-center">
                                         <div>
                                             <h3 className="card-title">{totalAmount.toFixed(2)}</h3>
                                             <p className="card-text" style={{ marginTop: '25px' }}>Monthly Sales (Rs.)</p>
                                         </div>
-                                        <i className="bi bi-cash h1" style={{ fontSize: '3.5rem' }}></i>
+                                        <i className="bi bi-cart4 h1"></i>
                                     </div>
                                     <div className="card-footer bg-transparent border-top-0">
                                         <div class="progress" style={{ height: '10px', width: '85%', marginBottom: '20px', marginLeft: '20px', marginTop: '-5px' }}>
@@ -613,13 +566,13 @@ function ProfitDetails() {
                                 </div>
                             </div>
                             <div className="col-lg-3 col-md-6 mb-3">
-                                <div className="card" style={{ background: 'linear-gradient(to right, rgba(0, 123, 255, 0.8), rgba(255, 0, 123, 0.8))', color: '#fff' }}>
+                                <div className="card" style={{ background: 'linear-gradient(to right, #6c757d, #007bff)', color: '#fff' }}>
                                     <div className="card-body d-flex justify-content-between align-items-center">
                                         <div>
                                             <h3 className="card-title">{(totalSupp + totalSalary + totalOther + profit.EPF_ETF).toFixed(2)}</h3>
                                             <p className="card-text" style={{ marginTop: '25px' }}>Monthly Expenses (Rs.)</p>
                                         </div>
-                                        <i className="bi bi-cash h1"></i>
+                                        <i className="bi bi-credit-card h1"></i>
                                     </div>
                                     <div className="card-footer bg-transparent border-top-0">
                                         <div class="progress" style={{ height: '10px', width: '85%', marginBottom: '20px', marginLeft: '20px', marginTop: '-5px' }}>
@@ -693,10 +646,68 @@ function ProfitDetails() {
 
                 )}
 
-
             </div>
-        </div>
+            </Layout>
     );
 }
 
 export default ProfitDetails;
+
+/*
+<ul class="nav nav-tabs mb-3" id="myTab0" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <Link
+                            className="nav-link"
+                            id="contact-tab0"
+                            to="/finance"
+                            role="tab"
+                            aria-controls="contact"
+                            aria-selected="false"
+                        >
+                            Dashboard
+                        </Link>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button
+                            data-mdb-tab-init
+                            class="nav-link active"
+                            id="profile-tab0"
+                            type="button"
+                            role="tab"
+                            aria-controls="profile"
+                            aria-selected="false"
+                            onClick={handleClick}
+                            style={{ borderBottom: '2px solid #007bff', borderTop: 'none' }}
+                        >
+                            <i className="bi bi-cash"></i> Profit Log
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <Link
+                            className="nav-link"
+                            id="contact-tab0"
+                            to="/otherExpense"
+                            role="tab"
+                            aria-controls="contact"
+                            aria-selected="false"
+                        >
+                            Other Expenses
+                        </Link>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button
+                            data-mdb-tab-init
+                            class="nav-link"
+                            id="contact-tab0"
+                            data-mdb-target="#contact0"
+                            type="button"
+                            role="tab"
+                            aria-controls="contact"
+                            aria-selected="false"
+                            onClick={handleClickTax}
+                        >
+                            Tax Document
+                        </button>
+                    </li>
+                </ul>
+                */
