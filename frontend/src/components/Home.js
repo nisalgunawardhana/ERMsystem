@@ -176,7 +176,7 @@ if (user) {
 
       case user.isCashier:
       cashierComponent = (
-        navigate('/bill')
+        navigate('/dashboard/cashier')
       );
       break;
 
