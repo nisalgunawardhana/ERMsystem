@@ -25,6 +25,7 @@ export default function Bills() {
     const [endDate, setEndDate] = useState(null);
     const [showModal, setShowModal] = useState(false);
      const [currentDateTime, setCurrentDateTime] = useState('');
+       const [dateRangeSelected, setDateRangeSelected] = useState(false);
     // Define a state to control the visibility of the report modal
     const [showReportModal, setShowReportModal] = useState(false);
 
@@ -87,7 +88,10 @@ export default function Bills() {
     const generateReport = () => {
         if (!startDate || !endDate) {
             setShowModal(true);
+            if (dateRangeSelected) {
             toast.error("Please select both start and end dates before generating the report.");
+        }
+            setDateRangeSelected(true)
             return;
         }
 
@@ -176,10 +180,9 @@ export default function Bills() {
     `;
 
         setShowReportModal(false);
-
+        setDateRangeSelected(false);
         setReportContent(reportHtml);
         setShowReportModal(true);
-
         // Update startDate and endDate states
         setStartDate(startDateObj);
         setEndDate(endDateObj);
@@ -577,8 +580,11 @@ export default function Bills() {
                         </Form>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="secondary" onClick={() => setShowModal(false)}>Cancel</Button>
-                        <Button variant="primary" onClick={generateReport}>Generate</Button>
+                        <Button variant="secondary" onClick={() => {
+    setShowModal(false);
+    setDateRangeSelected(false); // Set dateRangeSelected to false
+}}>Cancel</Button>
+                        <Button variant="primary" onClick={{generateReport}}>Generate</Button>
                     </Modal.Footer>
                 </Modal>
 
