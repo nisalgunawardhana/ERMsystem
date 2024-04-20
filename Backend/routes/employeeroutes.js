@@ -1,5 +1,5 @@
 const router = require("express").Router();
-let employee = require("../models/employeemodel");
+let employees = require("../models/employeemodel");
 
 router.route("/add").post((req,res)=>{
     const employee_Id = req.body.employee_Id;
@@ -9,7 +9,7 @@ router.route("/add").post((req,res)=>{
     const employee_Email = req.body.employee_Email;
 
 
-    const newEmployee = new employee({
+    const newEmployee = new employees({
         employee_Id,
         name,
         employee_NIC,
@@ -25,7 +25,7 @@ router.route("/add").post((req,res)=>{
 })
 
 router.route("/").get((req,res)=>{
-    employee.find().then((employeemodel)=>{
+    employees.find().then((employeemodel)=>{
         res.json(employeemodel)
     }).catch((err)=>{
         console.log(err)
@@ -44,7 +44,7 @@ router.route("/update/:employee_Id").put(async (req,res)=>{
         employee_Email
     }
 
-    const update = await employee.findByIdAndUpdate(empid, updateEmployee).then(() => {
+    const update = await employees.findByIdAndUpdate(empid, updateEmployee).then(() => {
         res.status(200).send({status: "Employee updated"})
     }).catch((errr) => {
         console.log(errr);
@@ -52,10 +52,10 @@ router.route("/update/:employee_Id").put(async (req,res)=>{
     })
 })
 
-router.route("/delete/:employee_Id").delete(async (req,res) => {
+router.route("/delete/:id").delete(async (req,res) => {
     let empid = req.params.id;
 
-    await employee.findByIdAndDelete(empid).then(() => {
+    await employees.findByIdAndDelete(empid).then(() => {
         res.status(200).send({status: "Employee deleted"});
     }).catch((errr) => {
         console.log(errr);
@@ -64,3 +64,4 @@ router.route("/delete/:employee_Id").delete(async (req,res) => {
 })
 
 module.exports = router;
+
