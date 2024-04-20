@@ -119,7 +119,7 @@ const CashierDashboard = () => {
                 <div class="container">
                     <div class="row row-cols-1 row-cols-md-4 g-4">
                         <div class="col">
-                        <a href="/dashboard/cashier/bill/CreateBill" className="card-link" style={{ textDecoration: 'none', color: 'inherit' }}>
+                        <a href="/dashboard/cashier/billing/CreateBill" className="card-link" style={{ textDecoration: 'none', color: 'inherit' }}>
                             <div class="card h-100 text-center">
                                 <div class="card-body">
                                     <i class="bi bi-file-earmark-plus fs-1 mb-3"></i>

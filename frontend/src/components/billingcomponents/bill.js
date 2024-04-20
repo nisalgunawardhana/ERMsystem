@@ -371,7 +371,7 @@ export default function Bills() {
                     </div>
                 </div>
                 <div className="d-flex flex-wrap align-items-center">
-                    <h2 className="flex-grow-1">Bills</h2>
+                    <h2 className="flex-grow-1">Manage Billing </h2>
 
                 </div>
 
@@ -425,7 +425,7 @@ export default function Bills() {
                 <div className="d-flex flex-wrap align-items-center">
                     <h2 style={{ marginRight: '25px' }}> All Bills</h2>
                     {/* Add expense button */}
-                    <Link to="/dashboard/cashier/bill/CreateBill" className="btn btn-success"><i class="bi bi-plus-circle-fill me-2"></i>Create New Bill</Link>
+                    <Link to="/dashboard/cashier/bill/CreateBill" className="btn btn-outline-success"><i class="bi bi-plus-circle-fill me-2"></i>Create New Bill</Link>
                 </div>
                 <div className="d-flex justify-content-between align-items-center mb-3">
                     <div className="flex-grow-1">
@@ -479,7 +479,7 @@ export default function Bills() {
                                         <td>{bills.total_amount.toFixed(2)}</td>
                                         <td style={{ textAlign: 'center' }}>
                                             <button onClick={() => handlePreview(bills)} className="btn btn-outline-dark" style={{ margin: '0 5px' }}>Preview</button>
-                                            <Link to={`/bill/update/${bills._id}`} className="btn btn-outline-primary" style={{ margin: '0 5px' }}>Update</Link>
+                                            <Link to={`/dashboard/cashier/billing/update/${bills._id}`} className="btn btn-outline-primary" style={{ margin: '0 5px' }}>Update</Link>
                                             <button onClick={() => handleOpenDeleteConfirmation(bills._id)} className="btn btn-outline-danger" style={{ margin: '0 5px' }}>Delete</button>
                                         </td>
                                         <td style={{ textAlign: 'center' }}><input type="checkbox" checked={bills.selected || false} onChange={() => handleSelectBill(bills._id)} /></td>
