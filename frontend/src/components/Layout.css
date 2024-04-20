@@ -36,9 +36,10 @@
 .sidebar-header { 
     font-family: EB Garamond, sans-serif;
     font-weight: bold;  
-    font-size: 20px; 
+    font-size: 25px; 
     color: white;
-    padding-left: 8px;
+    padding-left: 18px;
+    padding-top: 20px;
 }
 
 .collapsed-sidebar .header{
@@ -85,7 +86,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-
+    
     margin-bottom: 12px;
 }
 
@@ -106,6 +107,7 @@
 .menu-item {
     color: white;
     margin-top: 30px;
+    padding-left: 10px;
 }
 
 /* link name */
@@ -150,3 +152,6 @@
     padding: 6px;
 }
 
+.logout {
+    margin-top: 200px; 
+}

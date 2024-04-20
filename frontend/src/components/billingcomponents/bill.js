@@ -6,6 +6,7 @@ import Layout from '../Layout';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { Toaster, toast } from 'react-hot-toast';
 
+
 export default function Bills() {
 
     const [bill, setbill] = useState([]);
@@ -23,6 +24,8 @@ export default function Bills() {
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [showModal, setShowModal] = useState(false);
+    const [currentDateTime, setCurrentDateTime] = useState('');
+    const [dateRangeSelected, setDateRangeSelected] = useState(false);
     // Define a state to control the visibility of the report modal
     const [showReportModal, setShowReportModal] = useState(false);
 
@@ -51,6 +54,14 @@ export default function Bills() {
 
         getbill();
         getTotalAmount();
+
+        const intervalId = setInterval(() => {
+            const now = new Date();
+            setCurrentDateTime(now.toLocaleString());
+        }, 1000);
+
+        // Cleanup interval
+        return () => clearInterval(intervalId);
     }, [])
 
     const handleOpenDeleteConfirmation = (id) => {
@@ -77,7 +88,10 @@ export default function Bills() {
     const generateReport = () => {
         if (!startDate || !endDate) {
             setShowModal(true);
-            toast.error("Please select both start and end dates before generating the report.");
+            if (dateRangeSelected) {
+                toast.error("Please select both start and end dates before generating the report.");
+            }
+            setDateRangeSelected(true)
             return;
         }
 
@@ -166,10 +180,9 @@ export default function Bills() {
     `;
 
         setShowReportModal(false);
-
+        setDateRangeSelected(false);
         setReportContent(reportHtml);
         setShowReportModal(true);
-
         // Update startDate and endDate states
         setStartDate(startDateObj);
         setEndDate(endDateObj);
@@ -177,13 +190,13 @@ export default function Bills() {
 
 
     // Function to close the report modal
-       const closeReportModal = () => {
-    // Reset the startDate, endDate, and reportContent states
-    setStartDate(null);
-    setEndDate(null);
-    setReportContent('');
-    setShowReportModal(false);
-};
+    const closeReportModal = () => {
+        // Reset the startDate, endDate, and reportContent states
+        setStartDate(null);
+        setEndDate(null);
+        setReportContent('');
+        setShowReportModal(false);
+    };
 
     const printReport = () => {
         const iframe = document.querySelector('iframe');
@@ -334,62 +347,77 @@ export default function Bills() {
 
 
 
+
+
     return (
         <Layout>
 
             <div className="container">
 
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/dashboard/cashier">Cashier Dashboard</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Billing</li>
-                    </ol>
-                </nav>
+                <div className="row">
+                    {/* Breadcrumb navigation */}
+                    <nav className="col-md-6" aria-label="breadcrumb">
+                        <ol className="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/dashboard/cashier">Cashier Dashboard</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Billing</li>
+                        </ol>
+                    </nav>
+                    {/* Current Date and Time */}
+                    <div className="col-md-6 text-md-end mb-3">
+                        <div className="date-time">
+                            <span className="date">{currentDateTime.split(',')[0]}</span>
+                            <span className="time"> | {currentDateTime.split(',')[1]}</span>
+                        </div>
+                    </div>
+                </div>
                 <div className="d-flex flex-wrap align-items-center">
-                    <h2 className="flex-grow-1">Bills</h2>
+                    <h2 className="flex-grow-1">Manage Billing </h2>
 
                 </div>
 
                 <div class="container">
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6 mb-3">
-                            <div class="card l-bg-cherry">
-                                <div class="card-statistic-3 p-4">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="col-8">
-                                            <h2 class="d-flex align-items-center mb-5">
+                    <div className="row">
+                        <div className="col-lg-6 col-md-6 mb-3">
+                            <div className="card shadow" style={{ backgroundColor: 'white' }}>
+                                <div className="card-statistic-3 p-4">
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        <div className="col-8">
+                                            <h2 className="d-flex align-items-center mb-5">
                                                 Rs.{totalAmount.toFixed(2)}
                                             </h2>
-                                            <h5 class="card-title" style={{ marginTop: '25px', marginBottom: '18px' }}>Total sales</h5>
+                                            <h5 className="card-title" style={{ marginTop: '25px', marginBottom: '18px' }}>Total sales</h5>
                                         </div>
                                         <i className="bi bi-cash-coin h1"></i>
                                     </div>
-                                    <div class="progress mt-1 " data-height="8" style={{ height: '8px' }}>
-                                        <div class="progress-bar l-bg-cyan" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '25%' }}></div>
+                                    <div className="progress mt-1" data-height="8" style={{ height: '8px' }}>
+                                        <div className="progress-bar bg-orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '75%', backgroundColor: 'orange' }}></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-6 col-md-6 mb-3">
-                            <div class="card l-bg-green-dark">
-                                <div class="card-statistic-3 p-4">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="col-8">
-                                            <h3 class="d-flex align-items-center mb-5">
+                        <div className="col-lg-6 col-md-6 mb-3">
+                            <div className="card shadow" style={{ backgroundColor: 'white' }}>
+                                <div className="card-statistic-3 p-4">
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        <div className="col-8">
+                                            <h3 className="d-flex align-items-center mb-5">
                                                 Bill Reports
                                             </h3>
-                                            <h5 class="card-title" style={{ marginTop: '25px' }}><button onClick={generateReport} className="btn btn-dark">Generate Report</button></h5>
+                                            <h5 className="card-title" style={{ marginTop: '25px' }}>
+                                                <button onClick={generateReport} className="btn btn-dark" style={{ backgroundColor: 'black', color: 'white', borderColor: 'black' }}>Generate Report</button>
+                                            </h5>
                                         </div>
                                         <i className="bi bi-bar-chart h1"></i>
                                     </div>
-                                    <div class="progress mt-1 " data-height="8" style={{ height: '8px' }}>
-                                        <div class="progress-bar l-bg-orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '25%' }}></div>
+                                    <div className="progress mt-1" data-height="8" style={{ height: '8px' }}>
+                                        <div className="progress-bar bg-orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '75%', backgroundColor: 'orange' }}></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
                     </div>
+
+
                 </div>
 
                 <br />
@@ -397,80 +425,79 @@ export default function Bills() {
                 <div className="d-flex flex-wrap align-items-center">
                     <h2 style={{ marginRight: '25px' }}> All Bills</h2>
                     {/* Add expense button */}
-                    <Link to="/bill/CreateBill" className="btn btn-success"><i class="bi bi-plus-circle-fill me-2"></i>Create New Bill</Link>
+                    <Link to="/dashboard/cashier/bill/CreateBill" className="btn btn-outline-success"><i class="bi bi-plus-circle-fill me-2"></i>Create New Bill</Link>
                 </div>
                 <div className="d-flex justify-content-between align-items-center mb-3">
                     <div className="flex-grow-1">
                         <input type="text" className="form-control" placeholder="Search by Customer ID" value={searchQuery} onChange={handleSearch} />
                     </div>
                     <div>
-                        <button onClick={handleSelectAll} className="btn btn-secondary" style={{ margin: '0 5px' }}>
+                        <button onClick={handleSelectAll} className="btn btn-outline-secondary" style={{ margin: '0 5px' }}>
                             {selectAll ? 'Unselect All' : 'Select All'}
                         </button>
-                        <button className="btn btn-dark" onClick={handleOpenDeleteAllConfirmation} style={{ margin: '0 5px' }}>Delete All Selected</button>
+                        <button className="btn btn-outline-danger" onClick={handleOpenDeleteAllConfirmation} style={{ margin: '0 5px' }}>Delete All Selected</button>
                     </div>
                 </div>
 
 
                 <div className="card">
                     <div className="card-body">
-                        
+
                         <table className="table">
-                    <thead>
-                        <tr >
+                            <thead>
+                                <tr >
 
-                            <th >#</th>
-                            <th >Customer ID</th>
-                            <th>Billing Date</th>
-                            <th style={{ textAlign: 'center' }}>Items</th>
-                            <th>Total Amount</th>
-                            <th style={{ textAlign: 'center' }}>Action</th>
-                            <th style={{ textAlign: 'center' }}>Select</th>
+                                    <th >#</th>
+                                    <th >Customer ID</th>
+                                    <th>Billing Date</th>
+                                    <th style={{ textAlign: 'center' }}>Items</th>
+                                    <th>Total Amount</th>
+                                    <th style={{ textAlign: 'center' }}>Action</th>
+                                    <th style={{ textAlign: 'center' }}>Select</th>
 
 
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {currentBills.map((bills, index) => (
-                            <tr key={bills._id}>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {currentBills.map((bills, index) => (
+                                    <tr key={bills._id}>
 
-                                <td>{index + 1}</td>
-                                <td>{bills.customer_id}</td>
-                                <td>{formatDate(bills.billing_date)}</td>
-                                <td>
-                                    <ol>
-                                        {bills.items.map(item => (
-                                            <li key={item.product_id}>
-                                                <div>Product ID: {item.product_id}</div>
-                                                <div>Quantity: {item.quantity}</div>
-                                                <div>Unit Price: {item.unit_price}</div>
-                                            </li>
-                                        ))}
-                                    </ol>
-                                </td>
-                                <td>{bills.total_amount.toFixed(2)}</td>
-                                <td style={{ textAlign: 'center' }}>
-                                    <Link to={`/bill/update/${bills._id}`} className="btn btn-primary" style={{ margin: '0 5px' }}>Update</Link>
-                                    <button onClick={() => handleOpenDeleteConfirmation(bills._id)} className="btn btn-danger" style={{ margin: '0 5px' }}>Delete</button>
-                                    <button onClick={() => handlePreview(bills)} className="btn btn-dark" style={{ margin: '0 5px' }}>Preview</button>
-
-                                </td>
-                                <td style={{ textAlign: 'center' }}><input type="checkbox" checked={bills.selected || false} onChange={() => handleSelectBill(bills._id)} /></td>
-                            </tr>
-                        ))}
-                    </tbody>
-                   </table>
+                                        <td>{index + 1}</td>
+                                        <td>{bills.customer_id}</td>
+                                        <td>{formatDate(bills.billing_date)}</td>
+                                        <td>
+                                            <ol>
+                                                {bills.items.map(item => (
+                                                    <li key={item.product_id}>
+                                                        <div>Product ID: {item.product_id}</div>
+                                                        <div>Quantity: {item.quantity}</div>
+                                                        <div>Unit Price: {item.unit_price}</div>
+                                                    </li>
+                                                ))}
+                                            </ol>
+                                        </td>
+                                        <td>{bills.total_amount.toFixed(2)}</td>
+                                        <td style={{ textAlign: 'center' }}>
+                                            <button onClick={() => handlePreview(bills)} className="btn btn-outline-dark" style={{ margin: '0 5px' }}>Preview</button>
+                                            <Link to={`/dashboard/cashier/billing/update/${bills._id}`} className="btn btn-outline-primary" style={{ margin: '0 5px' }}>Update</Link>
+                                            <button onClick={() => handleOpenDeleteConfirmation(bills._id)} className="btn btn-outline-danger" style={{ margin: '0 5px' }}>Delete</button>
+                                        </td>
+                                        <td style={{ textAlign: 'center' }}><input type="checkbox" checked={bills.selected || false} onChange={() => handleSelectBill(bills._id)} /></td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
                 <div class="container text-center">
                     <div class="row">
                         <div class="col">
                             <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/dashboard/cashier">Cashier Dashboard</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Billing</li>
-                    </ol>
-                </nav>
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="/dashboard/cashier">Cashier Dashboard</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Billing</li>
+                                </ol>
+                            </nav>
                         </div>
                         <div class="col">
 
@@ -553,7 +580,10 @@ export default function Bills() {
                         </Form>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="secondary" onClick={() => setShowModal(false)}>Cancel</Button>
+                        <Button variant="secondary" onClick={() => {
+                            setShowModal(false);
+                            setDateRangeSelected(false); // Set dateRangeSelected to false
+                        }}>Cancel</Button>
                         <Button variant="primary" onClick={generateReport}>Generate</Button>
                     </Modal.Footer>
                 </Modal>
