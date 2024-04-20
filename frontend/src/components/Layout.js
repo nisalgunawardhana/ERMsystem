@@ -86,11 +86,6 @@ function Layout({children}) {
     //3. financial manager
     const financialManagerMenu = [
         {
-            name: 'Home',
-            path: '/',
-            icon: 'ri-home-4-line'
-        },
-        {
             name: 'Dashboard',
             path: '/finance',
             icon: 'ri-line-chart-line'
@@ -179,12 +174,12 @@ function Layout({children}) {
         },
         {
             name: 'Dashboard',
-            path: '/adminDashboard',
+            path: '/Trainee',
             icon: 'ri-user-settings-line'
         },
         {
             name: 'Add Trainee',
-            path: '/signup',
+            path: '{toggleForm}',
             icon: 'ri-add-circle-line'
         },
         {
