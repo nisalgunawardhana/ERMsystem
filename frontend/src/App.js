@@ -41,6 +41,9 @@ import ProtectedRoute from './components/ProtectedRoute';
 import SystemUsers from './pages/SystemUsers';
 import Notes from './pages/Notes';
 import CashierDashboard from './components/cashierDashboard';
+import Stock from './components/stockComponent/stock';
+import Clothes from './components/stockComponent/clothes';
+import Toys from './components/stockComponent/toys';
 
 function App() {
   const {loading} = useSelector(state => state.alerts);
@@ -103,7 +106,9 @@ function App() {
           <Route path="/dashboard/cashier/discounts" element={<ProtectedRoute><Discounts/></ProtectedRoute>} />
           <Route path="/dashboard/cashier" element={<ProtectedRoute><CashierDashboard/></ProtectedRoute>}/>
           <Route path="/employee" element={<ProtectedRoute><Employees/></ProtectedRoute>}/>
-          <Route path="/customer/update/:id" element={<ProtectedRoute><UpdateCustomer/></ProtectedRoute>}/>
+          <Route path="/dashboard/stock" element={<ProtectedRoute><Stock/></ProtectedRoute>}/>
+          <Route path="/dashboard/stock/clothes" element={<ProtectedRoute><Clothes/></ProtectedRoute>}/>
+          <Route path="/dashboard/stock/toys" element={<ProtectedRoute><Toys/></ProtectedRoute>}/>
 
         </Routes>  
       

@@ -150,7 +150,7 @@ if (user) {
                   }}>
                 <div className="card-body">
                   <h5 className="card-title">Stock</h5>
-                  <Link to={`/stock`} className="btn btn-primary" style={{ color: '#fff' }}>Go to Stock</Link>
+                  <Link to={`/clothes`} className="btn btn-primary" style={{ color: '#fff' }}>Go to Stock</Link>
                 </div>
               </div>
             </div>
