@@ -98,11 +98,6 @@ function Layout({children}) {
     //3. financial manager
     const financialManagerMenu = [
         {
-            name: 'Home',
-            path: '/',
-            icon: 'ri-home-4-line'
-        },
-        {
             name: 'Dashboard',
             path: '/finance',
             icon: 'ri-line-chart-line'
