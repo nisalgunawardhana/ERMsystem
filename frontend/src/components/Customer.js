@@ -222,40 +222,53 @@ const CustomerR = () => {
                 </nav>
             <h1>Customer Management</h1>
             <Row className="mb-3">
-                <Col>
-                    <Card className="h-100 bg-primary text-white">
-                        <Card.Body>
-                            <Card.Title>Generate Report</Card.Title>
-                            <Card.Text>
-                                Generate a report about all customer details and loyalty points.
-                            </Card.Text>
-                            <Button variant="light" onClick={handleGenerateReport}>Generate Report</Button>
-                        </Card.Body>
-                    </Card>
-                </Col>
-                <Col>
-                    <Card className="h-100 bg-danger text-white">
-                        <Card.Body>
-                            <Card.Title>Add Customer</Card.Title>
-                            <Card.Text>
-                                Add a new customer to the database.
-                            </Card.Text>
-                            <Button variant="light" onClick={() => setShowModal(true)}>Add Customer</Button>
-                        </Card.Body>
-                    </Card>
-                </Col>
-                <Col>
-                    <Card className="h-100 bg-warning text-white">
-                        <Card.Body>
-                            <Card.Title>Delete All Points</Card.Title>
-                            <Card.Text>
-                                Delete all customer loyalty points.
-                            </Card.Text>
-                            <Button variant="light" onClick={handleDeleteAllPoints}>Delete All Points</Button>
-                        </Card.Body>
-                    </Card>
-                </Col>
-            </Row>
+    <Col>
+        <div className="card shadow" style={{ backgroundColor: 'white' }}>
+            <div className="card-statistic-3 p-4">
+                <div className="d-flex justify-content-between align-items-center">
+                    <div className="col-8">
+                        <h3 className="d-flex align-items-center mb-5" style={{ color: 'black' }}>
+                            Generate Report
+                        </h3>
+                        
+                    </div>
+                    <Button variant="light" onClick={handleGenerateReport}>Generate Report</Button>
+                </div>
+            </div>
+        </div>
+    </Col>
+    <Col>
+        <div className="card shadow" style={{ backgroundColor: 'white' }}>
+            <div className="card-statistic-3 p-4">
+                <div className="d-flex justify-content-between align-items-center">
+                    <div className="col-8">
+                        <h3 className="d-flex align-items-center mb-5" style={{ color: 'black' }}>
+                            Add Customer
+                        </h3>
+                        
+                    </div>
+                    <Button variant="light" onClick={() => setShowModal(true)}>Add Customer</Button>
+                </div>
+            </div>
+        </div>
+    </Col>
+    <Col>
+        <div className="card shadow" style={{ backgroundColor: 'white' }}>
+            <div className="card-statistic-3 p-4">
+                <div className="d-flex justify-content-between align-items-center">
+                    <div className="col-8">
+                        <h3 className="d-flex align-items-center mb-5" style={{ color: 'black' }}>
+                            Delete All Points
+                        </h3>
+                       
+                    </div>
+                    <Button variant="light" onClick={handleDeleteAllPoints}>Delete All Points</Button>
+                </div>
+            </div>
+        </div>
+    </Col>
+</Row>
+
 
             <div className="mb-3">
                 <input
