@@ -31,7 +31,10 @@ import Employees from './components/employeeComponent/employee';
 import Login from './pages/Login';
 //signup
 import Signup from './pages/Signup';
-
+//stock
+import StockManagement from './components/stockComponent/stock';
+import Clothes from './components/stockComponent/clothes';
+import Toys from './components/stockComponent/toys';
 
 
 
@@ -71,6 +74,9 @@ function App() {
         <Route path="/employee" element={<Employees/>}/>
         <Route path="/login" element={<Login/>}/>
         <Route path="/signup" element={<Signup/>}/>
+        <Route path="/clothes" element={<Clothes/>}/>
+        <Route path="/toys" element={<Toys/>}/>
+        <Route path="/stock" element={<StockManagement/>}/>
 
       </Routes>  
     

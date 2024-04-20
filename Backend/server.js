@@ -83,6 +83,12 @@ app.use("/customer", customer);
 const discounts = require("./routes/discounttoute.js");
 app.use("/discounts", discounts);
 
+const clothes = require("./routes/clothesRoutes.js");
+app.use("/clothes", clothes);
+
+const toys = require("./routes/toysRoutes.js");
+app.use("/toys", toys);
+
 app.listen(PORT, () => {
     console.log(`Server is up and running on: ${PORT}`);
 });
