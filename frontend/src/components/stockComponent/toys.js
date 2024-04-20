@@ -332,6 +332,14 @@ export default function Toys() {
                                     <button className="btn btn-outline-primary me-2" onClick={() => handleOpenUpdateModal(toys)}>Update</button>
                                     <button onClick={() => handleDeleteToys(toys.item_code)} className="btn btn-outline-danger">Delete</button>
                                 </td>
+                                {/* Check if quantity is less than or equal to the alert quantity */}
+                                {toys.quantity <= toys.alert_quantity && (
+                                    <td>
+                                        <div className="alert alert-warning" role="alert">
+                                            Alert: Reorder this item!
+                                        </div>
+                                    </td>
+                                )}
                             </tr>
                         ))}
                     </tbody>
