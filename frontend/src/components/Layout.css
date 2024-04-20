@@ -1,0 +1,157 @@
+.main {
+    padding: 20px;
+    height: 100vh;
+
+    
+}
+
+.sidebar {
+    background-color: #080a3c;
+    border-top-right-radius: 18px;
+    border-bottom-right-radius: 15px;
+    box-shadow: 0 0 5px gray;
+    margin-right: 10px;
+    min-height: 98%;
+    padding: 10px;
+    width: 250px;
+    display:block;
+    position: fixed;  
+}
+
+.collapsed-sidebar {
+    background-color: #080a3c;
+    border-top-right-radius: 18px;
+    border-bottom-right-radius: 15px;
+    box-shadow: 0 0 5px gray;
+    margin-right: 10px;
+    min-height: 98%;
+    padding: 10px;
+    width: 73px;
+    overflow-x: hidden; /* Hide overflowing content horizontally */
+    transition: width 0.3s ease; /* Add transition effect for smooth animation */
+    display:block;
+    position: fixed; 
+}
+
+.sidebar-header { 
+    font-family: EB Garamond, sans-serif;
+    font-weight: bold;  
+    font-size: 25px; 
+    color: white;
+    padding-left: 18px;
+    padding-top: 20px;
+}
+
+.collapsed-sidebar .header{
+    margin-bottom: 12px;
+}
+
+.sidebar-shopname {
+    opacity: 1; /* Show the text when sidebar is expanded */
+    width: auto; /* Show the text when sidebar is expanded */
+    overflow: visible; /* Show overflowing content */
+    transition: width 0.3s ease, opacity 0.3s ease; /* Add transition for width and opacity */
+}
+
+.collapsed-sidebar-shopname {
+    opacity: 0; /* Hide the text when sidebar is collapsed */
+    width: 0; /* Hide the text when sidebar is collapsed */
+    overflow: hidden; /* Hide overflowing content */
+    transition: width 0.3s ease; /* Add transition for width and opacity */
+}
+
+.collapsed-sidebar .active-menu-item {
+    color: rgb(0, 0, 0);
+    background-color:#ff5f0f;
+    padding: 5px;
+    border-radius: 30px;
+}
+
+.content {
+    width: 100%;
+    height: 100%;
+    margin-top: 4px;
+    margin-left: 255px;
+}
+
+
+
+.header {
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 0 2px gray;
+    margin-bottom: 20px;
+    height: 10vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+    margin-bottom: 12px;
+}
+
+.body {
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 0 2px rgb(128, 128, 128);
+    width: 100%;
+    padding: 15px;
+    margin-top: 12px;
+    min-height: 85vh;
+}
+
+.menu {
+    margin-top: 90px;
+}
+
+.menu-item {
+    color: white;
+    margin-top: 30px;
+    padding-left: 10px;
+}
+
+/* link name */
+.menu-item a{
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    padding-left: 15px;
+}
+
+/* icons */
+.menu-item i {
+    color: white;
+    font-size: 22px;
+    margin: 0 10px;
+}
+
+/* color change of the menu item to show the particular current page */
+.active-menu-item {
+    color: rgb(0, 0, 0);
+    background-color:#ff5f0f;
+    padding: 10px;
+    border-radius: 30px;
+}
+
+.header-action-icon {
+    font-size: 20px !important;
+    color: black;
+    cursor: pointer;
+    padding-left: 18px;
+}
+
+/*
+.close-popover .ant-popover-inner-content {
+    max-width: 50px !important; 
+}
+*/
+
+.page-title {
+    font-size: 25px;
+    color: rgba(0, 0, 0, 0.744);
+    padding: 6px;
+}
+
+.logout {
+    margin-top: 200px; 
+}

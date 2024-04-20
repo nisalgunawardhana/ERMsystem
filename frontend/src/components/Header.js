@@ -22,29 +22,28 @@ function Header({ toggleSidebar, isSidebarOpen }) {
             <li class="list-group-item">And a fifth one</li>
           </ul>
         </div>
-        </div>
-
-        {/* Page Content */}
-        <div style={{ marginLeft: isSidebarOpen ? "250px" : "0", transition: "margin-left 0.3s", marginTop: "60px", zIndex: "1030" }}>
-          {/* Header */}
-          <nav className="navbar bg-body-tertiary fixed-top" style={{ zIndex: "1050" }}>
-
-            <div className="container-fluid">
-              <a className="navbar-brand" href="#">
-                Diyana Fashion Store
-              </a>
-              <button
-                className="navbar-toggler"
-                type="button"
-                onClick={toggleSidebar}
-              >
-                <span className="navbar-toggler-icon"></span>
-              </button>
-            </div>
-          </nav>
-        </div>
       </div>
-      );
+
+      {/* Page Content */}
+      <div style={{ marginLeft: isSidebarOpen ? "250px" : "0", transition: "margin-left 0.3s", marginTop: "60px", zIndex: "1030" }}>
+        {/* Header */}
+        <nav className="navbar bg-body-tertiary fixed-top" style={{ zIndex: "1050" }}>
+          <div className="container-fluid">
+            <a className="navbar-brand" href="#" style={{ fontFamily: "Shantell Sans, sans-serif", fontSize: "24px" }}>
+              Diyana Fashion 
+            </a>
+            <button
+              className="navbar-toggler"
+              type="button"
+              onClick={toggleSidebar}
+            >
+              <span className="navbar-toggler-icon"></span>
+            </button>
+          </div>
+        </nav>
+      </div>
+    </div>
+  );
 }
 
-      export default Header;
+export default Header;

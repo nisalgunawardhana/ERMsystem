@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Form, Button, Table, Modal, Row, Col, Card } from "react-bootstrap";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { Pagination } from "react-bootstrap"; // Import Pagination component
+import Layout from './Layout';
 
 const CustomerR = () => {
     const [customers, setCustomers] = useState([]);
@@ -17,10 +19,16 @@ const CustomerR = () => {
     });
     const [customerToDelete, setCustomerToDelete] = useState(null);
     const [showDeleteCustomerPrompt, setShowDeleteCustomerPrompt] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1); // Define currentPage state
+    const customersPerPage = 6; // Define customersPerPage state
 
     useEffect(() => {
         fetchCustomers();
     }, []);
+
+    useEffect(() => {
+        setFilteredCustomers(customers);
+    }, [customers]);
 
     const fetchCustomers = async () => {
         try {
@@ -30,6 +38,14 @@ const CustomerR = () => {
             console.error("Error fetching customers:", error);
         }
     };
+
+    const paginate = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+
+    const indexOfLastCustomer = currentPage * customersPerPage;
+    const indexOfFirstCustomer = indexOfLastCustomer - customersPerPage;
+    const currentCustomers = filteredCustomers.slice(indexOfFirstCustomer, indexOfLastCustomer);
 
     const handleSearch = (e) => {
         const query = e.target.value.toLowerCase();
@@ -163,7 +179,7 @@ const CustomerR = () => {
             </html>
         `);
         printWindow.document.close();
-    
+
         printWindow.downloadCustomerReport = () => {
             const pdfContent = printWindow.document.documentElement.outerHTML;
             const pdfBlob = new Blob([pdfContent], { type: "application/pdf" });
@@ -176,7 +192,7 @@ const CustomerR = () => {
             printWindow.close();
         };
     };
-    
+
 
     const handleDeleteAllPoints = async () => {
         try {
@@ -196,105 +212,117 @@ const CustomerR = () => {
 
 
     return (
+        <Layout>
         <div className="container">
+            <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/dashboard/cashier">Cashier Dashboard</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Customer Management </li>
+                    </ol>
+                </nav>
             <h1>Customer Management</h1>
             <Row className="mb-3">
-                <Col>
-                    <Card className="h-100">
-                        <Card.Body>
-                            <Card.Title>Generate Report</Card.Title>
-                            <Card.Text>
-                                Generate a report about all customer details and loyalty points.
-                            </Card.Text>
-                            <Button variant="primary" onClick={handleGenerateReport}>Generate Report</Button>
-                        </Card.Body>
-                    </Card>
-                </Col>
-                <Col>
-                    <Card className="h-100">
-                        <Card.Body>
-                            <Card.Title>Add Customer</Card.Title>
-                            <Card.Text>
-                                Add a new customer to the database.
-                            </Card.Text>
-                            <Button variant="success" onClick={() => setShowModal(true)}>Add Customer</Button>
-                        </Card.Body>
-                    </Card>
-                </Col>
-                <Col>
-                    <Card className="h-100 d-flex justify-content-center align-items-center">
-                        <Card.Body>
-                            <Card.Title>Delete All Points</Card.Title>
-                            <Card.Text>
-                                Delete all customer loyalty points.
-                            </Card.Text>
-                            <Button variant="danger" onClick={handleDeleteAllPoints}>Delete All Points</Button>
-                        </Card.Body>
-                    </Card>
+    <Col>
+        <div className="card shadow" style={{ backgroundColor: 'white' }}>
+            <div className="card-statistic-3 p-4">
+                <div className="d-flex justify-content-between align-items-center">
+                    <div className="col-8">
+                        <h3 className="d-flex align-items-center mb-5" style={{ color: 'black' }}>
+                            Generate Report
+                        </h3>
+                        
+                    </div>
+                    <Button variant="light" onClick={handleGenerateReport}>Generate Report</Button>
+                </div>
+            </div>
+        </div>
+    </Col>
+    <Col>
+        <div className="card shadow" style={{ backgroundColor: 'white' }}>
+            <div className="card-statistic-3 p-4">
+                <div className="d-flex justify-content-between align-items-center">
+                    <div className="col-8">
+                        <h3 className="d-flex align-items-center mb-5" style={{ color: 'black' }}>
+                            Add Customer
+                        </h3>
+                        
+                    </div>
+                    <Button variant="light" onClick={() => setShowModal(true)}>Add Customer</Button>
+                </div>
+            </div>
+        </div>
+    </Col>
+    <Col>
+        <div className="card shadow" style={{ backgroundColor: 'white' }}>
+            <div className="card-statistic-3 p-4">
+                <div className="d-flex justify-content-between align-items-center">
+                    <div className="col-8">
+                        <h3 className="d-flex align-items-center mb-5" style={{ color: 'black' }}>
+                            Delete All Points
+                        </h3>
+                       
+                    </div>
+                    <Button variant="light" onClick={handleDeleteAllPoints}>Delete All Points</Button>
+                </div>
+            </div>
+        </div>
+    </Col>
+</Row>
 
-                </Col>
-            </Row>
+
             <div className="mb-3">
                 <input
                     type="text"
                     className="form-control"
                     placeholder="Search by Customer ID"
                     value={searchQuery}
-                    onChange={handleSearch}
+                    onChange={(e) => {
+                        setSearchQuery(e.target.value);
+                        const query = e.target.value.toLowerCase();
+                        const filtered = customers.filter((customer) =>
+                            customer.customer_id.toLowerCase().includes(query)
+                        );
+                        setFilteredCustomers(filtered);
+                    }}
                 />
             </div>
-            <Table striped bordered hover>
-                <thead>
-                    <tr>
-                        <th>Customer ID</th>
-                        <th>Customer Name</th>
-                        <th>Email</th>
-                        <th>Point</th>
-                        <th>Gender</th>
-                        <th colSpan="2">Action</th> {/* Spanning two columns for Edit and Delete buttons */}
-                    </tr>
-                </thead>
-                <tbody>
-                    {searchQuery === ""
-                        ? customers.map((customer) => (
-                            <tr key={customer._id}>
-                                <td>{customer.customer_id}</td>
-                                <td>{customer.customer_name}</td>
-                                <td>{customer.email}</td>
-                                <td>{customer.point}</td>
-                                <td>{customer.gender}</td>
-                                <td>
-                                    <Link to={`/customer/update/${customer.customer_id}`} className="btn btn-primary">Update</Link>
-                                </td>
-                                <td>
-                                    <Button
-                                        variant="danger"
-                                        onClick={() =>
-                                            handleDelete(customer.customer_id)
-                                        }
-                                    >
-                                        Delete
-                                    </Button>
-                                </td>
-                            </tr>
-                        ))
-                        : filteredCustomers.map((customer) => (
-                            <tr key={customer._id}>
-                                <td>{customer.customer_id}</td>
-                                <td>{customer.customer_name}</td>
-                                <td>{customer.email}</td>
-                                <td>{customer.point}</td>
-                                <td>{customer.gender}</td>
-                                <td>
-                                    <Button variant="primary">Edit</Button>
-                                </td>
-                                <td>
-                                    <Button variant="danger" onClick={() => handleDelete(customer.customer_id)}>Delete</Button>
-                                </td>
-                            </tr>
+            <div className="container">
+                <div className="row">
+                    {currentCustomers.map(customer => (
+                        <div key={customer._id} className="col-md-4 mb-4">
+                            <div className="card">
+                                <div className="card-body">
+                                    <h5 className="card-title">Customer ID: {customer.customer_id}</h5>
+                                    <p className="card-text">Name: {customer.customer_name}</p>
+                                    <p className="card-text">Email: {customer.email}</p>
+                                    <p className="card-text">Point: {customer.point}</p>
+                                    <p className="card-text">Gender: {customer.gender}</p>
+                                    <div className="btn-group">
+                                        <Link to={`/customer/update/${customer.customer_id}`} className="btn btn-primary me-2">
+                                            <i className="bi bi-pencil-fill"></i> Update
+                                        </Link>
+                                        <button className="btn btn-danger" onClick={() => handleDelete(customer.customer_id)}>
+                                            <i className="bi bi-trash-fill"></i> Delete
+                                        </button>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+                <div className="d-flex justify-content-center">
+                    <Pagination>
+                        <Pagination.Prev onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1} />
+                        {[...Array(Math.ceil(filteredCustomers.length / customersPerPage)).keys()].map(number => (
+                            <Pagination.Item key={number + 1} onClick={() => paginate(number + 1)} active={number + 1 === currentPage}>
+                                {number + 1}
+                            </Pagination.Item>
                         ))}
-                </tbody>
-            </Table>
+                        <Pagination.Next onClick={() => paginate(currentPage + 1)} disabled={currentPage === Math.ceil(filteredCustomers.length / customersPerPage)} />
+                    </Pagination>
+                </div>
+            </div>
             <Modal show={showModal} onHide={() => setShowModal(false)}>
                 <Modal.Header closeButton>
                     <Modal.Title>Add Customer</Modal.Title>
@@ -335,6 +363,7 @@ const CustomerR = () => {
                                 name="point"
                                 onChange={handleChange}
                                 value={customerData.point}
+                                readOnly
                             />
                         </Form.Group>
                         <Form.Group controlId="gender">
@@ -350,7 +379,7 @@ const CustomerR = () => {
                                 <option value="Other">Other</option>
                             </Form.Control>
                         </Form.Group>
-                        <Button variant="primary" type="submit">
+                        <Button variant="primary" type="submit" >
                             Add
                         </Button>
                     </Form>
@@ -369,6 +398,8 @@ const CustomerR = () => {
                 </Modal.Footer>
             </Modal>
         </div>
+
+        </Layout>
     );
 };
 

@@ -1,35 +1,92 @@
-import { useState } from "react"
+import React from 'react'
+import { Form, Input, Button } from 'antd';
+import { useNavigate } from 'react-router-dom'
+import loginImage from '../images/login.jpg'
+import { toast } from "react-hot-toast"
+import axios from "axios"
+import { useDispatch } from "react-redux"
+import { hideLoading, showLoading } from '../redux/alertsSlice';
 
-const Login = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+function Login() {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+    const onFinish = async(values) => {
+        try {
+            dispatch(showLoading())
+            const response = await axios.post('/api/user/login', values)
+            dispatch(hideLoading())
 
-    console.log(email, password)
-  }
+            if (response.data.success) {
+                toast.success(response.data.message)
+                toast("Redirecting ...")
 
-  return (
-    <form className="login" onSubmit={handleSubmit}>
-      <h3>Log In</h3>
-      
-      <label>Email address:</label>
-      <input 
-        type="email" 
-        onChange={(e) => setEmail(e.target.value)} 
-        value={email} 
-      />
-      <label>Password:</label>
-      <input 
-        type="password" 
-        onChange={(e) => setPassword(e.target.value)} 
-        value={password} 
-      />
+                // Extract role information from response data
+                const role = response.data.role;
 
-      <button>Log in</button>
-    </form>
-  )
+                // Redirect based on the role
+                switch (role) {
+                    case 'admin':
+                        navigate("/admin");
+                        break;
+                    case 'cashier':
+                        navigate("/cashier");
+                        break;
+                    case 'financial manager':
+                        navigate("/finance");
+                        break;
+                    case 'staff manager':
+                        navigate("/emp");
+                        break;
+                    case 'training coordinator':
+                        navigate("/trainees");
+                        break;
+                    case 'logistic manager':
+                        navigate("/logistic");
+                        break;
+                    default:
+                        // Redirect to a default page if role is not recognized
+                        navigate("/");
+                }
+
+                // Store token in local storage
+                localStorage.setItem("token", response.data.data);
+            } else {
+                toast.error(response.data.message)
+            }
+
+        } catch (error) {
+            dispatch(hideLoading())
+            toast.error('Something went wrong')
+        }
+    }
+
+    return (
+        <div className='login-container'>
+            <div className='login-background'>
+                <img src={loginImage} alt='Login Image'/>   
+            </div>
+
+            <div className='authentication'>
+                <div className='authentication-form card p-4'>
+                
+                <h1 className='card-topic'>Welcome Back!</h1>
+                <br></br>
+                <Form layout='vertical' onFinish={onFinish}>
+                    <Form.Item label='Email' name='email'>
+                        <Input placeholder='Email'/>
+                    </Form.Item>
+
+                    <Form.Item label='Password' name='password'>
+                        <Input placeholder='Password' type='password'/>
+                    </Form.Item>
+
+                    <Button className='primary-button my-1' htmlType='submit'>LOGIN</Button>
+                </Form>
+                </div>
+            </div>
+        </div>
+    )
 }
 
 export default Login
