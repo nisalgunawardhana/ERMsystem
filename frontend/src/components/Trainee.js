@@ -28,6 +28,8 @@ export default function Trainee() {
     const [selectedMeetingId, setSelectedMeetingId] = useState(null);
     const [selectedTraineeId, setselectedTraineeId] = useState(null);
     const [dailyAverageRatings, setDailyAverageRatings] = useState({});
+    const [currentDateTime, setCurrentDateTime] = useState('');
+
 
     useEffect(() => {
         axios.get('http://localhost:8080/meetings/')
@@ -46,6 +48,15 @@ export default function Trainee() {
             .catch(err => {
                 console.error('Error fetching trainees:', err);
             });
+
+            const intervalId = setInterval(() => {
+                const now = new Date();
+                setCurrentDateTime(now.toLocaleString());
+            }, 1000);
+    
+            // Cleanup interval
+            return () => clearInterval(intervalId);
+
     }, []);
 
     useEffect(() => {
@@ -358,12 +369,22 @@ export default function Trainee() {
     return (
         <Layout>
             <div className="container">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <div className="row">
+        {/* Breadcrumb navigation */}
+        <nav className="col-md-6" aria-label="breadcrumb">
+            <ol className="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Trainee</li>
-                    </ol>
-                </nav>
+            </ol>
+        </nav>
+        {/* Current Date and Time */}
+        <div className="col-md-6 text-md-end mb-3">
+                        <div className="date-time">
+                            <span className="date">{currentDateTime.split(',')[0]}</span>
+                            <span className="time"> | {currentDateTime.split(',')[1]}</span>
+                        </div>
+                    </div>
+    </div>
                 <h1>Trainee Management</h1>
                 <br></br>
 
@@ -375,7 +396,7 @@ export default function Trainee() {
                                 <div className="text-center my-auto">
                                     <h1 className="card-text">{trainees.length}</h1>
                                 </div>
-                                <button onClick={toggleForm} className="btn btn-success">Add New Trainee</button>
+                                <button onClick={toggleForm} className="btn btn-outline-success">Add New Trainee</button>
                             </div>
                         </div>
                     </div>
@@ -386,7 +407,7 @@ export default function Trainee() {
                                 <div className="text-center my-auto">
                                     <h1 className="card-text">{meetings.length}</h1>
                                 </div>
-                                <button onClick={toggleMeetingForm} className="btn btn-success">Add New Session</button>
+                                <button onClick={toggleMeetingForm} className="btn btn-outline-success">Add New Session</button>
                             </div>
                         </div>
                     </div>
@@ -395,7 +416,7 @@ export default function Trainee() {
                             <div className="card-body">
                                 <h4 className="card-title">Generate Report</h4>
                                 <p className="card-text">Generate a summary of trainee performance.</p>
-                                <button onClick={generateReport} className="btn btn-primary">Generate Report</button>
+                                <button onClick={generateReport} className="btn btn-outline-secondary">Generate Report</button>
                             </div>
                         </div>
                     </div>
@@ -522,8 +543,8 @@ export default function Trainee() {
                                                     <td>{meeting.meeting_date}</td>
                                                     <td>{meeting.meeting_location}</td>
                                                     <td>
-                                                        <button onClick={() => editMeeting(meeting)} className="btn btn-primary" style={{ margin: '0 5px' }} >Update</button>
-                                                        <button onClick={() => handleDelete(meeting._id)} className="btn btn-danger" style={{ margin: '0 5px' }} >Delete</button>
+                                                        <button onClick={() => editMeeting(meeting)} className="btn btn-outline-primary" style={{ margin: '0 5px' }} >Update</button>
+                                                        <button onClick={() => handleDelete(meeting._id)} className="btn btn-outline-danger" style={{ margin: '0 5px' }} >Delete</button>
                                                     </td>
                                                 </tr>
                                             ))}
@@ -567,8 +588,8 @@ export default function Trainee() {
                                                         <p className="card-text">Gender :  <strong>{trainee.trainee_gender}</strong></p>
                                                         <p className="card-text">Ratings :  <strong>{trainee.trainee_rating}</strong></p>
                                                         <div>
-                                                            <button onClick={() => editTrainee(trainee)} className="btn btn-primary" style={{ margin: '0 5px' }} >Update</button>
-                                                            <button onClick={() => handleDeleteTrainee(trainee._id)} className="btn btn-danger" style={{ margin: '0 5px' }} >Delete</button>
+                                                            <button onClick={() => editTrainee(trainee)} className="btn btn-outline-primary" style={{ margin: '0 5px' }} >Update</button>
+                                                            <button onClick={() => handleDeleteTrainee(trainee._id)} className="btn btn-outline-danger" style={{ margin: '0 5px' }} >Delete</button>
                                                         </div>
                                                     </div>
                                                 </div>

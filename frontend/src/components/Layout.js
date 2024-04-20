@@ -179,12 +179,12 @@ function Layout({children}) {
         },
         {
             name: 'Dashboard',
-            path: '/adminDashboard',
+            path: '/Trainee',
             icon: 'ri-user-settings-line'
         },
         {
             name: 'Add Trainee',
-            path: '/signup',
+            path: '{toggleForm}',
             icon: 'ri-add-circle-line'
         },
         {
