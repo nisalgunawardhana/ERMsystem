@@ -170,6 +170,68 @@ function SystemUsers() {
         user.userRole.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
+    //generate report
+    const generateReport = () => {
+        const printWindow = window.open("", "_blank", "width=600,height=600");
+        printWindow.document.write(`
+            <html>
+                <head>
+                    <title>System User Report</title>
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;
+                            padding: 20px;
+                        }
+                        h1 {
+                            text-align: center;
+                        }
+                        table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            margin-bottom: 20px;
+                        }
+                        th, td {
+                            border: 1px solid #ccc;
+                            padding: 8px;
+                            text-align: left;
+                        }
+                        th {
+                            background-color: #f2f2f2;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <h1>User Report</h1>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>User Role</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${users.map((user, index) => `
+                                <tr>
+                                    <td>${index + 1}</td>
+                                    <td>${user.first_name}</td>
+                                    <td>${user.last_name}</td>
+                                    <td>${user.userRole}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                    <div class="back-button">
+                        <button onclick="window.close()" class="btn btn-secondary">Back</button>
+                    </div>
+                </body>
+            </html>
+        `);
+        printWindow.document.close();
+        printWindow.print();
+    };
+    
     
     return (
         <Layout>
@@ -177,6 +239,29 @@ function SystemUsers() {
                 <h2>System Users</h2>
                 <hr />
                 <br/>
+
+                <div className="col-md-4">
+                    <div className="card mb-3" 
+                        style={{ background: `#ff5f0f`, 
+                        color: 'white', 
+                        borderRadius: '20px' }}>
+
+                        <div className="card-body">
+                            <h5 className="card-title">Generate Reports</h5>
+                            <p className="card-text">Generate and download sales reports.</p>
+                            <button onClick={generateReport} className="btn btn-dark">Generate Report</button>
+                            <div className="progress-bar bg-light" 
+                                role="progressbar" style={{ width: '75%' }} 
+                                aria-valuenow="75" aria-valuemin="0" 
+                                aria-valuemax="100">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <br/>
+           
+            </div>
                 <div className="button-group mb-3 d-flex align-items-center">
                    
                     {/* search */}
@@ -207,7 +292,9 @@ function SystemUsers() {
                             <th>Last Name</th>
                             <th>Email</th>
                             <th>User Role</th>
+                            <th>User created date</th>
                             <th>Actions</th>
+                            
                         </tr>
                     </thead>
                     <tbody>
@@ -222,6 +309,7 @@ function SystemUsers() {
                                 <td>{user.last_name}</td>
                                 <td>{user.email}</td>
                                 <td>{user.userRole}</td>
+                                <td>{user.createdAt}</td>
                                 
                                 <td>
                                 <Button variant="primary" onClick={() => handleUpdate(user)} style={{ marginRight: '15px' }}>Update</Button>
@@ -231,7 +319,7 @@ function SystemUsers() {
                         ))}
                     </tbody>
                 </Table>
-            </div>
+            
 
              {/* Update User Modal */}
              <Modal show={showUpdateModal} onHide={handleCloseUpdateModal}>
@@ -272,7 +360,6 @@ function SystemUsers() {
                     <Button variant="danger" onClick={confirmDelete}>Delete</Button>
                     <Button variant="secondary" onClick={cancelDelete}>No</Button>
                 </Modal.Footer>
-
             </Modal>
 
         </Layout>

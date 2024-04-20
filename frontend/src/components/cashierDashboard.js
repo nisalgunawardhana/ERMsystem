@@ -130,7 +130,7 @@ const CashierDashboard = () => {
                             </a>
                         </div>
                         <div class="col">
-                        <a href="/customer" className="card-link" style={{ textDecoration: 'none', color: 'inherit' }}>
+                        <a href="/dashboard/cashier/customer" className="card-link" style={{ textDecoration: 'none', color: 'inherit' }}>
                             <div class="card h-100 text-center">
                                 <div class="card-body">
                                     <i class="bi bi-person-plus fs-1 mb-3"></i>
