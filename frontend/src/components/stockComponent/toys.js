@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Row, Col, Card, Button } from 'react-bootstrap';
+import Layout from '../Layout';
 
 
 export default function Toys() {
@@ -181,146 +182,148 @@ export default function Toys() {
     };
 
     return (
-        <div className="container">
-            <h1>Manage Toys</h1>
-            <Row className="mb-3">
-                <Col>
-                    <Card className="h-100">
-                        <Card.Body>
-                            <Card.Title>Generate Report</Card.Title>
-                            <Card.Text>
-                                Generate a report about all customer details and loyalty points.
-                            </Card.Text>
-                            <Button variant="primary" onClick={generateReport}>Generate Report</Button>
-                        </Card.Body>
-                    </Card>
-                </Col>
-            
-            </Row>
+        <Layout>
+            <div className="container">
+                <h1>Manage Toys</h1>
+                <Row className="mb-3">
+                    <Col>
+                        <Card className="h-100">
+                            <Card.Body>
+                                <Card.Title>Generate Report</Card.Title>
+                                <Card.Text>
+                                    Generate a report about all customer details and loyalty points.
+                                </Card.Text>
+                                <Button variant="primary" onClick={generateReport}>Generate Report</Button>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                
+                </Row>
 
-            {/* Search input */}
-            <div className="d-flex justify-content-between align-items-center mb-3">
-                <div className="flex-grow-1">
-                    <input type="text" className="form-control" placeholder="Search by Item Name" value={searchQuery} onChange={handleSearch} />
+                {/* Search input */}
+                <div className="d-flex justify-content-between align-items-center mb-3">
+                    <div className="flex-grow-1">
+                        <input type="text" className="form-control" placeholder="Search by Item Name" value={searchQuery} onChange={handleSearch} />
+                    </div>
+                    <div>
+                        <button onClick={handleOpenAddModal} className="btn btn-dark">Add New Toys</button>
+                    </div>
                 </div>
-                <div>
-                    <button onClick={handleOpenAddModal} className="btn btn-dark">Add New Toys</button>
-                </div>
-            </div>
 
-            {/* Modal for adding new toys */}
-            {/* Modal for adding new toys */}
-<div className="modal" style={{ display: showAddModal ? 'block' : 'none' }}>
-    <div className="modal-dialog">
-        <div className="modal-content">
-            <div className="modal-header">
-                <h5 className="modal-title">Add New Toys</h5>
-                <button type="button" className="close" style={{ position: 'absolute', right: '10px', top: '10px' }} onClick={() => setShowAddModal(false)}>
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div className="modal-body">
-                <form onSubmit={handleFormSubmit}>
-                    {error && <div className="alert alert-danger" role="alert">{error}</div>}
-                    <div className="form-group">
-                        <label>Item Code</label>
-                        <input type="text" className="form-control" value={itemCode} onChange={(e) => setItemCode(e.target.value)} />
-                    </div>
-                    <div className="form-group">
-                        <label>Item Name</label>
-                        <input type="text" className="form-control" value={itemName} onChange={(e) => setItemName(e.target.value)} />
-                    </div>
-                    <div className="form-group">
-                        <label>Category</label>
-                        <input type="text" className="form-control" value={category} onChange={(e) => setCategory(e.target.value)} />
-                    </div>
-                    <div className="form-group">
-                        <label>Quantity</label>
-                        <input type="number" className="form-control" value={quantity} onChange={(e) => setQuantity(e.target.value)} />
-                    </div>
-                    <div className="form-group">
-                        <label>Alert Quantity</label>
-                        <input type="number" className="form-control" value={alertQuantity} onChange={(e) => setAlertQuantity(e.target.value)} />
-                    </div>
-                    <button type="submit" className="btn btn-primary">Add Toys</button>
-                    <button type="button" className="btn btn-secondary" onClick={() => setShowAddModal(false)}>Close</button>
-                </form>
+                {/* Modal for adding new toys */}
+                {/* Modal for adding new toys */}
+    <div className="modal" style={{ display: showAddModal ? 'block' : 'none' }}>
+        <div className="modal-dialog">
+            <div className="modal-content">
+                <div className="modal-header">
+                    <h5 className="modal-title">Add New Toys</h5>
+                    <button type="button" className="close" style={{ position: 'absolute', right: '10px', top: '10px' }} onClick={() => setShowAddModal(false)}>
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div className="modal-body">
+                    <form onSubmit={handleFormSubmit}>
+                        {error && <div className="alert alert-danger" role="alert">{error}</div>}
+                        <div className="form-group">
+                            <label>Item Code</label>
+                            <input type="text" className="form-control" value={itemCode} onChange={(e) => setItemCode(e.target.value)} />
+                        </div>
+                        <div className="form-group">
+                            <label>Item Name</label>
+                            <input type="text" className="form-control" value={itemName} onChange={(e) => setItemName(e.target.value)} />
+                        </div>
+                        <div className="form-group">
+                            <label>Category</label>
+                            <input type="text" className="form-control" value={category} onChange={(e) => setCategory(e.target.value)} />
+                        </div>
+                        <div className="form-group">
+                            <label>Quantity</label>
+                            <input type="number" className="form-control" value={quantity} onChange={(e) => setQuantity(e.target.value)} />
+                        </div>
+                        <div className="form-group">
+                            <label>Alert Quantity</label>
+                            <input type="number" className="form-control" value={alertQuantity} onChange={(e) => setAlertQuantity(e.target.value)} />
+                        </div>
+                        <button type="submit" className="btn btn-primary">Add Toys</button>
+                        <button type="button" className="btn btn-secondary" onClick={() => setShowAddModal(false)}>Close</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-{/* Modal for updating toys */}
-<div className="modal" style={{ display: showUpdateModal ? 'block' : 'none' }}>
-    <div className="modal-dialog">
-        <div className="modal-content">
-            <div className="modal-header">
-                <h5 className="modal-title">Update Toys</h5>
-                <button type="button" className="close" style={{ position: 'absolute', right: '10px', top: '10px' }} onClick={() => setShowUpdateModal(false)}>
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div className="modal-body">
-                <form onSubmit={handleFormSubmit}>
-                    {error && <div className="alert alert-danger" role="alert">{error}</div>}
-                    <div className="form-group">
-                        <label>Item Code</label>
-                        <input type="text" className="form-control" value={itemCode} onChange={(e) => setItemCode(e.target.value)} />
-                    </div>
-                    <div className="form-group">
-                        <label>Item Name</label>
-                        <input type="text" className="form-control" value={itemName} onChange={(e) => setItemName(e.target.value)} />
-                    </div>
-                    <div className="form-group">
-                        <label>Category</label>
-                        <input type="text" className="form-control" value={category} onChange={(e) => setCategory(e.target.value)} />
-                    </div>
-                    <div className="form-group">
-                        <label>Quantity</label>
-                        <input type="number" className="form-control" value={quantity} onChange={(e) => setQuantity(e.target.value)} />
-                    </div>
-                    <div className="form-group">
-                        <label>Alert Quantity</label>
-                        <input type="number" className="form-control" value={alertQuantity} onChange={(e) => setAlertQuantity(e.target.value)} />
-                    </div>
-                    <button type="submit" className="btn btn-primary">Update Toys</button>
-                    <button type="button" className="btn btn-secondary" onClick={() => setShowUpdateModal(false)}>Close</button>
-                </form>
+    {/* Modal for updating toys */}
+    <div className="modal" style={{ display: showUpdateModal ? 'block' : 'none' }}>
+        <div className="modal-dialog">
+            <div className="modal-content">
+                <div className="modal-header">
+                    <h5 className="modal-title">Update Toys</h5>
+                    <button type="button" className="close" style={{ position: 'absolute', right: '10px', top: '10px' }} onClick={() => setShowUpdateModal(false)}>
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div className="modal-body">
+                    <form onSubmit={handleFormSubmit}>
+                        {error && <div className="alert alert-danger" role="alert">{error}</div>}
+                        <div className="form-group">
+                            <label>Item Code</label>
+                            <input type="text" className="form-control" value={itemCode} onChange={(e) => setItemCode(e.target.value)} />
+                        </div>
+                        <div className="form-group">
+                            <label>Item Name</label>
+                            <input type="text" className="form-control" value={itemName} onChange={(e) => setItemName(e.target.value)} />
+                        </div>
+                        <div className="form-group">
+                            <label>Category</label>
+                            <input type="text" className="form-control" value={category} onChange={(e) => setCategory(e.target.value)} />
+                        </div>
+                        <div className="form-group">
+                            <label>Quantity</label>
+                            <input type="number" className="form-control" value={quantity} onChange={(e) => setQuantity(e.target.value)} />
+                        </div>
+                        <div className="form-group">
+                            <label>Alert Quantity</label>
+                            <input type="number" className="form-control" value={alertQuantity} onChange={(e) => setAlertQuantity(e.target.value)} />
+                        </div>
+                        <button type="submit" className="btn btn-primary">Update Toys</button>
+                        <button type="button" className="btn btn-secondary" onClick={() => setShowUpdateModal(false)}>Close</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-            {/* Toys table */}
-            <table className="table">
-                <thead className="table-dark">
-                    <tr>
-                        <th>#</th>
-                        <th>Item Code</th>
-                        <th>Item Name</th>
-                        <th>Category</th>
-                        <th>Quantity</th>
-                        <th>Alert Quantity</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {filteredToys.map((toys, index) => (
-                        <tr key={toys.item_code}>
-                            <td>{index + 1}</td>
-                            <td>{toys.item_code}</td>
-                            <td>{toys.item_name}</td>
-                            <td>{toys.category}</td>
-                            <td>{toys.quantity}</td>
-                            <td>{toys.alert_quantity}</td>
-                            <td>
-                                <button className="btn btn-primary" onClick={() => handleOpenUpdateModal(toys)}>Update</button>
-                                <button onClick={() => handleDeleteToys(toys.item_code)} className="btn btn-danger ml-2">Delete</button>
-                            </td>
+                {/* Toys table */}
+                <table className="table">
+                    <thead className="table-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>Item Code</th>
+                            <th>Item Name</th>
+                            <th>Category</th>
+                            <th>Quantity</th>
+                            <th>Alert Quantity</th>
+                            <th>Action</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+                    <tbody>
+                        {filteredToys.map((toys, index) => (
+                            <tr key={toys.item_code}>
+                                <td>{index + 1}</td>
+                                <td>{toys.item_code}</td>
+                                <td>{toys.item_name}</td>
+                                <td>{toys.category}</td>
+                                <td>{toys.quantity}</td>
+                                <td>{toys.alert_quantity}</td>
+                                <td>
+                                    <button className="btn btn-primary" onClick={() => handleOpenUpdateModal(toys)}>Update</button>
+                                    <button onClick={() => handleDeleteToys(toys.item_code)} className="btn btn-danger ml-2">Delete</button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </Layout>
     );
 }
