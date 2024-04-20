@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 // Define the category enum
-const CategoryEnum = ["8+", "12+", "16+", "18+"];
+const CategoryEnum = ["F", "M"];
 
 const stockSchema = new Schema({
     item_code: {

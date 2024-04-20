@@ -321,6 +321,19 @@ export default function Clothes() {
         <Layout>
 
             <div className="container">
+            <div className="row">
+                    {/* Breadcrumb navigation */}
+                    <nav className="col-md-6" aria-label="breadcrumb">
+                        <ol className="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/dashboard/stock">Stock Dashboard</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Clothes</li>
+                        </ol>
+                    </nav>
+                    {/* Current Date and Time */}
+                    <div className="col-md-6 text-md-end mb-3">
+                        
+                    </div>
+                </div>
                 <h1>Manage Clothes</h1>
                 <Row className="mb-3">
                     <Col>
@@ -330,7 +343,7 @@ export default function Clothes() {
                                 <Card.Text>
                                     Generate a report about all customer details and loyalty points.
                                 </Card.Text>
-                                <Button variant="primary" onClick={generateReport}>Generate Report</Button>
+                                <Button className="btn btn-dark" onClick={generateReport}>Generate Report</Button>
                             </Card.Body>
                         </Card>
                     </Col>
@@ -343,7 +356,7 @@ export default function Clothes() {
                         <input type="text" className="form-control" placeholder="Search by Item Name" value={searchQuery} onChange={handleSearch} />
                     </div>
                     <div>
-                        <button onClick={handleOpenAddModal} className="btn btn-dark">Add New Clothes</button>
+                        <button onClick={handleOpenAddModal} className="btn btn-outline-success">Add New Clothes</button>
                     </div>
                 </div>
 
@@ -370,7 +383,7 @@ export default function Clothes() {
                             <input type="text" className="form-control" value={itemName} onChange={(e) => setItemName(e.target.value)} />
                         </div>
                         <div className="form-group">
-                            <label>Category</label>
+                            <label>Category : F-Female M-Male</label>
                             <input type="text" className="form-control" value={category} onChange={(e) => setCategory(e.target.value)} />
                         </div>
                         <div className="form-group">
@@ -453,8 +466,8 @@ export default function Clothes() {
                                 <td>{clothes.quantity}</td>
                                 <td>{clothes.alert_quantity}</td>
                                 <td>
-                                    <button className="btn btn-primary" onClick={() => handleOpenUpdateModal(clothes)}>Update</button>
-                                    <button onClick={() => handleDeleteClothes(clothes.item_code)} className="btn btn-danger ml-2">Delete</button>
+                                    <button className="btn btn-outline-primary" onClick={() => handleOpenUpdateModal(clothes)}>Update</button>
+                                    <button onClick={() => handleDeleteClothes(clothes.item_code)} className="btn btn-outline-danger">Delete</button>
                                 </td>
                             </tr>
                         ))}

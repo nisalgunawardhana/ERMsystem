@@ -184,6 +184,19 @@ export default function Toys() {
     return (
         <Layout>
             <div className="container">
+            <div className="row">
+                    {/* Breadcrumb navigation */}
+                    <nav className="col-md-6" aria-label="breadcrumb">
+                        <ol className="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/dashboard/stock">Stock Dashboard</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Toys</li>
+                        </ol>
+                    </nav>
+                    {/* Current Date and Time */}
+                    <div className="col-md-6 text-md-end mb-3">
+                        
+                    </div>
+                </div>
                 <h1>Manage Toys</h1>
                 <Row className="mb-3">
                     <Col>
@@ -193,7 +206,7 @@ export default function Toys() {
                                 <Card.Text>
                                     Generate a report about all customer details and loyalty points.
                                 </Card.Text>
-                                <Button variant="primary" onClick={generateReport}>Generate Report</Button>
+                                <Button className="btn btn-dark" onClick={generateReport}>Generate Report</Button>
                             </Card.Body>
                         </Card>
                     </Col>
@@ -206,7 +219,7 @@ export default function Toys() {
                         <input type="text" className="form-control" placeholder="Search by Item Name" value={searchQuery} onChange={handleSearch} />
                     </div>
                     <div>
-                        <button onClick={handleOpenAddModal} className="btn btn-dark">Add New Toys</button>
+                        <button onClick={handleOpenAddModal} className="btn btn-outline-success">Add New Toys</button>
                     </div>
                 </div>
 
@@ -233,7 +246,7 @@ export default function Toys() {
                             <input type="text" className="form-control" value={itemName} onChange={(e) => setItemName(e.target.value)} />
                         </div>
                         <div className="form-group">
-                            <label>Category</label>
+                            <label>Category : 8+, 12+, 16+, 18+</label>
                             <input type="text" className="form-control" value={category} onChange={(e) => setCategory(e.target.value)} />
                         </div>
                         <div className="form-group">
@@ -316,8 +329,8 @@ export default function Toys() {
                                 <td>{toys.quantity}</td>
                                 <td>{toys.alert_quantity}</td>
                                 <td>
-                                    <button className="btn btn-primary" onClick={() => handleOpenUpdateModal(toys)}>Update</button>
-                                    <button onClick={() => handleDeleteToys(toys.item_code)} className="btn btn-danger ml-2">Delete</button>
+                                    <button className="btn btn-outline-primary" onClick={() => handleOpenUpdateModal(toys)}>Update</button>
+                                    <button onClick={() => handleDeleteToys(toys.item_code)} className="btn btn-outline-danger">Delete</button>
                                 </td>
                             </tr>
                         ))}
