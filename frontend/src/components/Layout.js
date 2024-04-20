@@ -145,7 +145,7 @@ function Layout({children}) {
         },
         {
             name: 'Dashboard',
-            path: '/adminDashboard',
+            path: '/employee',
             icon: 'ri-user-settings-line'
         },
         {

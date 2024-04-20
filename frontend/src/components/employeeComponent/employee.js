@@ -1,365 +1,248 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import './Employee.css';
+import axios from "axios";
+import { Modal, Button, Form } from 'react-bootstrap';
 import Layout from '../Layout';
 
 export default function Employees() {
     const [employees, setEmployees] = useState([]);
-    const [searchQuery, setSearchQuery] = useState('');
-    const [showAddModal, setShowAddModal] = useState(false);
-    const [showUpdateModal, setShowUpdateModal] = useState(false);
-    const [selectedEmployee, setSelectedEmployee] = useState(null);
-    const [employeeId, setEmployeeId] = useState('');
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [nic, setNic] = useState('');
-    const [contact, setContact] = useState('');
-    const [email, setEmail] = useState('');
-    const [error, setError] = useState('');
-
+    const [employeeData, setEmployeeData] = useState({
+        employee_Id: '',
+        name: { FirstName: '', LastName: '' },
+        employee_NIC: '',
+        employee_Contact: '',
+        employee_Email: ''
+    });
+    const [selectAll, setSelectAll] = useState(false);
+    const [selectedEmployees, setSelectedEmployees] = useState([]);
+    const [showModal, setShowModal] = useState(false);
+    const [formError, setFormError] = useState({});
 
     useEffect(() => {
-        axios.get('http://localhost:8080/employee/')
+        // Fetch employees data when component mounts
+        fetchEmployees();
+    }, []);
+
+    const fetchEmployees = () => {
+        axios.get("http://localhost:8080/employees/")
             .then((res) => {
                 setEmployees(res.data);
             })
             .catch((err) => {
-                alert(err.message);
-            });
-    }, []);
-
-    const handleDeleteEmployee = (id) => {
-        axios.delete(`http://localhost:8080/employee/delete/${id}`)
-            .then(() => {
-                // Fetch the updated list of employees from the server after deletion
-                axios.get('http://localhost:8080/employee/')
-                    .then((res) => {
-                        setEmployees(res.data);
-                    })
-                    .catch((err) => {
-                        alert(err.message);
-                    });
-            })
-            .catch((err) => {
-                alert(err.message);
+                console.log(err);
             });
     };
-   
 
-
-    const handleSearch = (e) => {
-        const query = e.target.value;
-        setSearchQuery(query);
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setEmployeeData({ ...employeeData, [name]: value });
     };
 
-    const handleOpenAddModal = () => {
-        setShowAddModal(true);
-    };
-
-    const handleOpenUpdateModal = (employee) => {
-        setSelectedEmployee(employee);
-        setEmployeeId(employee.employee_Id);
-        setFirstName(employee.name[0].FirstName);
-        setLastName(employee.name[0].LastName);
-        setNic(employee.employee_NIC);
-        setContact(employee.employee_Contact);
-        setEmail(employee.employee_Email);
-        setShowUpdateModal(true);
-    };
-
-    const handleFormSubmit = async (event) => {
-        event.preventDefault();
-
-        try {
-            setError('');
-
-            if (!employeeId || !firstName || !lastName || !nic || !contact || !email) {
-                setError('All fields are required.');
-                return;
-            }
-
-            if (selectedEmployee) {
-                await axios.put(`http://localhost:8080/employee/update/${selectedEmployee._id}`, {
-                    employee_Id: employeeId,
-                    name: [{ FirstName: firstName, LastName: lastName }],
-                    employee_NIC: nic,
-                    employee_Contact: contact,
-                    employee_Email: email
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (validateForm()) {
+            axios.post("http://localhost:8080/employees/add", employeeData)
+                .then(() => {
+                    setShowModal(false);
+                    fetchEmployees();
+                    resetForm();
+                })
+                .catch((err) => {
+                    console.log(err);
                 });
-
-                setShowUpdateModal(false);
-            } else {
-                await axios.post('http://localhost:8080/employee/add', {
-                    employee_Id: employeeId,
-                    name: [{ FirstName: firstName, LastName: lastName }],
-                    employee_NIC: nic,
-                    employee_Contact: contact,
-                    employee_Email: email
-                });
-
-                setShowAddModal(false);
-            }
-
-            const res = await axios.get('http://localhost:8080/employee/');
-            setEmployees(res.data);
-        } catch (err) {
-            setError(err.response?.data?.error || 'An error occurred.');
         }
     };
 
-    const filteredEmployees = employees.filter(employee =>
-        employee.employee_Id.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const validateForm = () => {
+        let isValid = true;
+        let errors = {};
 
-    const generateReport = () => {
-        // Open a new window
-        const printWindow = window.open("", "_blank", "width=600,height=600");
-    
-        // Write HTML content to the new window
-        printWindow.document.write(`
-            <html>
-                <head>
-                    <title>Employees Report</title>
-                    <style>
-                        body {
-                            font-family: Arial, sans-serif;
-                            padding: 20px;
-                        }
-                        h1 {
-                            text-align: center;
-                        }
-                        table {
-                            width: 100%;
-                            border-collapse: collapse;
-                            margin-bottom: 20px;
-                        }
-                        th, td {
-                            border: 1px solid #ccc;
-                            padding: 8px;
-                            text-align: left;
-                        }
-                        th {
-                            background-color: #f2f2f2;
-                        }
-                        .back-button {
-                            text-align: center;
-                            margin-top: 20px;
-                        }
-                    </style>
-                </head>
-                <body>
-                    <h1>Employees Report</h1>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Employee ID</th>
-                                <th>Name</th>
-                                <th>Contact</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${employees.map(employee => `
-                                <tr>
-                                    <td>${employee.employee_Id}</td>
-                                    <td>${employee.name[0].FirstName,employee.name[0].LastName}</td>
-                                    <td>${employee.employee_Contact}</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                    
-                    <div class="back-button">
-                        <button onclick="window.close()" class="btn btn-secondary">Back</button>
-                    </div>
-                </body>
-            </html>
-        `);
-    
-        // Close the HTML document
-        printWindow.document.close();
-    
-        // Print the report
-        printWindow.print();
+        if (!employeeData.employee_Id) {
+            isValid = false;
+            errors.employee_Id = "Employee ID is required";
+        }
+
+        if (!employeeData.name.FirstName || !employeeData.name.LastName) {
+            isValid = false;
+            errors.name = "First Name and Last Name are required";
+        }
+
+        if (!employeeData.employee_NIC) {
+            isValid = false;
+            errors.employee_NIC = "NIC is required";
+        }
+
+        if (!employeeData.employee_Contact) {
+            isValid = false;
+            errors.employee_Contact = "Contact is required";
+        }
+
+        if (!employeeData.employee_Email) {
+            isValid = false;
+            errors.employee_Email = "Email is required";
+        } else if (!isValidEmail(employeeData.employee_Email)) {
+            isValid = false;
+            errors.employee_Email = "Invalid email address";
+        }
+
+        setFormError(errors);
+        return isValid;
     };
 
+    const isValidEmail = (email) => {
+        // Basic email validation regex
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    };
 
+    const resetForm = () => {
+        setEmployeeData({
+            employee_Id: '',
+            name: { FirstName: '', LastName: '' },
+            employee_NIC: '',
+            employee_Contact: '',
+            employee_Email: ''
+        });
+        setFormError({});
+    };
 
-    
+    const handleDelete = (id) => {
+        axios.delete(`http://localhost:8080/employees/delete/${id}`)
+            .then(() => {
+                fetchEmployees();
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
+
+    const handleSelectAll = () => {
+        setSelectAll(!selectAll);
+        const updatedEmployees = employees.map(emp => {
+            if (!selectAll) {
+                return { ...emp, selected: true };
+            } else {
+                return { ...emp, selected: false };
+            }
+        });
+        setEmployees(updatedEmployees);
+        setSelectedEmployees(!selectAll ? [...employees] : []);
+    };
+
+    const handleSelectEmployee = (id) => {
+        const updatedEmployees = employees.map(emp => {
+            if (emp._id === id) {
+                return { ...emp, selected: !emp.selected };
+            }
+            return emp;
+        });
+        setEmployees(updatedEmployees);
+        const selected = updatedEmployees.filter(emp => emp.selected);
+        setSelectedEmployees(selected);
+    };
+
+    const handlePreview = (employee) => {
+        console.log("Preview Employee:", employee);
+        // Add your preview logic here
+    };
+
+    const handleDeleteSelected = () => {
+        selectedEmployees.forEach(emp => {
+            handleDelete(emp._id);
+        });
+    };
+
+    const handleShowModal = () => {
+        setShowModal(true);
+        resetForm();
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+        resetForm();
+    };
 
     return (
         <Layout>
             <div className="container">
-            <h3 fonrweight="blod">Employee Management</h3>
-
-            <div className="row">
-                <div className="col-md-4">
-                <div className="card border-success mb-3">
-                <div className="card-body">
-                    <h5 className="card-title">Add New Employee</h5>
-                    
-                    <button onClick={handleOpenAddModal} className="btn btn-dark">Add New Employee</button>
-                    
-                </div>
-            </div>
-                </div>
-                <div className="col-md-4">
-                <div className="card mb-3" style={{ background: `linear-gradient(to right, rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8), rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8))`, color: 'white', borderRadius: '20px' }}>
-                        <div className="card-body">
-                            <h5 className="card-title"
-                                fonrweight="bold">Total Employees</h5>
-                            <br/>
-                            <div className="text-center my-auto">
-                                <h1 className="card-text">{employees.length}</h1>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="col-md-4">
-                    <div className="card mb-3" style={{ background: `linear-gradient(to right, rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8), rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8))`, color: 'white', borderRadius: '20px' }}>
-                        <div className="card-body">
-                            <h5 className="card-title">Generate Reports</h5>
-                            <p className="card-text">Generate and download employee reports.</p>
-                            <button onClick={generateReport} className="btn btn-dark">Generate Report</button>
-                            <div className="progress-bar bg-light" role="progressbar" style={{ width: '75%' }} aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div className="d-flex justify-content-between align-items-center mb-3">
-                <div className="flex-grow-1">
-                    <input type="text" className="form-control" placeholder="Search by Employee ID" value={searchQuery} onChange={handleSearch} />
-                </div>
-                
-            </div>
-
-            <div className="modal-backdrop" style={{ display: showAddModal || showUpdateModal ? 'block' : 'none' }}></div>
-
-            
-            <div className="modal" style={{ display: showAddModal ? 'block' : 'none' }}>
-                <div className="modal-dialog">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title">Add New Employee</h5>
-                            <button type="button" className="close" style={{ position: 'absolute', right: '10px', top: '10px' }} onClick={() => setShowAddModal(false)}>
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div className="modal-body">
-                            <form onSubmit={handleFormSubmit}>
-                                {error && <div className="alert alert-danger" role="alert">{error}</div>}
-                                <div className="form-group">
-                                <label>Employee ID</label>
-                                <input type="text" className="form-control" onChange={(e) => setEmployeeId(e.target.value)} pattern="^EMP\d+$" title="EMPXXXX" required/>
-                            <small className="form-text text-muted">EMPXXXX</small>
-                            </div>
-                        <div className="form-group">
-                                <label>First Name</label>
-                                <input type="text" className="form-control" onChange={(e) => setFirstName(e.target.value)} required/>
-                            </div>
-                        <div className="form-group">
-                            <label>Last Name</label>
-                            <input type="text" className="form-control" onChange={(e) => setLastName(e.target.value)} required/>
-                            </div>
-                        <div className="form-group">
-                            <label>NIC</label>
-                            <input type="text" className="form-control" onChange={(e) => setNic(e.target.value)} required/>
-                            </div>
-                        <div className="form-group">
-                            <label>Contact</label>
-                            <input type="tel" className="form-control" onChange={(e) => setContact(e.target.value)} pattern="[0-9]{10}" title="Contact must be a 10-digit number" required/>
-                        </div>
-                        <div className="form-group">
-                            <label>Email</label>
-                            <input type="email" className="form-control" onChange={(e) => setEmail(e.target.value)} required/>
-                        </div>
-                        <button type="submit" className="btn btn-primary">Add Employee</button>
-                        <button type="button" className="btn btn-secondary" onClick={() => setShowAddModal(false)}>Close</button>
-                        </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Modal for updating employee */}
-            <div className="modal" style={{ display: showUpdateModal ? 'block' : 'none' }}>
-                <div className="modal-dialog">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title">Update Employee</h5>
-                            <button type="button" className="close" style={{ position: 'absolute', right: '10px', top: '10px' }} onClick={() => setShowUpdateModal(false)}>
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div className="modal-body">
-                            <form onSubmit={handleFormSubmit}>
-                                {error && <div className="alert alert-danger" role="alert">{error}</div>}
-                                <div className="form-group">
-                                    <label>Employee ID</label>
-                                    <input type="text" className="form-control" onChange={(e) => setEmployeeId(e.target.value)} pattern="^EMP\d+$" title="EMPXXXX" required/>
-                            <small className="form-text text-muted">EMPXXXX</small>
-                                </div>
-                                <div className="form-group">
-                                    <label>First Name</label>
-                                    <input type="text" className="form-control" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
-                                </div>
-                                <div className="form-group">
-                                    <label>Last Name</label>
-                                    <input type="text" className="form-control" value={lastName} onChange={(e) => setLastName(e.target.value)} />
-                                </div>
-                                <div className="form-group">
-                                    <label>NIC</label>
-                                    <input type="text" className="form-control" value={nic} onChange={(e) => setNic(e.target.value)} />
-                                </div>
-                                <div className="form-group">
-                                    <label>Contact</label>
-                                    <input type="tel" className="form-control" onChange={(e) => setContact(e.target.value)} pattern="[0-9]{10}" title="Contact must be a 10-digit number" required/>                                </div>
-                                <div className="form-group">
-                                    <label>Email</label>
-                                    <input type="email" className="form-control" value={email} onChange={(e) => setEmail(e.target.value)} />
-                                </div>
-                                <button type="submit" className="btn btn-primary">Update Employee</button>
-                                <button type="button" className="btn btn-secondary" onClick={() => setShowUpdateModal(false)}>Close</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Employees table */}
-            <table className="table">
-                <thead className="table-dark">
-                    <tr>
-                        <th>#</th>
-                        <th>Employee ID</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>NIC</th>
-                        <th>Contact</th>
-                        <th>Email</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {filteredEmployees.map((employee, index) => (
-                        <tr key={employee._id}>
-                            <td>{index + 1}</td>
-                            <td>{employee.employee_Id}</td>
-                            <td>{employee.name[0].FirstName}</td>
-                            <td>{employee.name[0].LastName}</td>
-                            <td>{employee.employee_NIC}</td>
-                            <td>{employee.employee_Contact}</td>
-                            <td>{employee.employee_Email}</td>
-                            <td>
-                                <button className="btn btn-primary" onClick={() => handleOpenUpdateModal(employee)} style={{ margin: '0 5px' }}>Update</button>
-                                <button onClick={() => handleDeleteEmployee(employee._id)} className="btn btn-danger ml-2" style={{ margin: '0 5px' }}>Delete</button>
-                            </td>
+                <h2>All Employees</h2>
+                <button onClick={handleShowModal} className="btn btn-success mb-3">Add Employee</button>
+                <button onClick={handleSelectAll} className="btn btn-secondary mb-3 mx-2">{selectAll ? 'Unselect All' : 'Select All'}</button>
+                <button onClick={handleDeleteSelected} className="btn btn-danger mb-3" disabled={selectedEmployees.length === 0}>Delete Selected</button>
+                <table className="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Employee ID</th>
+                            <th>Name</th>
+                            <th>NIC</th>
+                            <th>Contact</th>
+                            <th>Email</th>
+                            <th>Action</th>
+                            <th>Select</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
-            </div>
+                    </thead>
+                    <tbody>
+                        {employees.map((employee, index) => (
+                            <tr key={employee._id}>
+                                <td>{index + 1}</td>
+                                <td>{employee.employee_Id}</td>
+                                <td>{employee.name.FirstName} {employee.name.LastName}</td>
+                                <td>{employee.employee_NIC}</td>
+                                <td>{employee.employee_Contact}</td>
+                                <td>{employee.employee_Email}</td>
+                                <td>
+                                    <button onClick={() => handleDelete(employee._id)} className="btn btn-danger">Delete</button>
+                                    <button onClick={() => handlePreview(employee)} className="btn btn-dark mx-2">Preview</button>
+                                </td>
+                                <td>
+                                    <input type="checkbox" checked={employee.selected || false} onChange={() => handleSelectEmployee(employee._id)} />
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
 
-        </Layout>   
+                <Modal show={showModal} onHide={handleCloseModal}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Add Employee</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Form onSubmit={handleSubmit}>
+                            <Form.Group controlId="employee_Id">
+                                <Form.Label>Employee ID</Form.Label>
+                                <Form.Control type="text" name="employee_Id" value={employeeData.employee_Id} onChange={handleChange} required />
+                                {formError.employee_Id && <div className="text-danger">{formError.employee_Id}</div>}
+                            </Form.Group>
+                            <Form.Group controlId="FirstName">
+                                <Form.Label>First Name</Form.Label>
+                                <Form.Control type="text" name="FirstName" value={employeeData.name.FirstName} onChange={(e) => setEmployeeData({ ...employeeData, name: { ...employeeData.name, FirstName: e.target.value } })} required />
+                                {formError.name && <div className="text-danger">{formError.name}</div>}
+                            </Form.Group>
+                            <Form.Group controlId="LastName">
+                                <Form.Label>Last Name</Form.Label>
+                                <Form.Control type="text" name="LastName" value={employeeData.name.LastName} onChange={(e) => setEmployeeData({ ...employeeData, name: { ...employeeData.name, LastName: e.target.value } })} required />
+                            </Form.Group>
+                            <Form.Group controlId="employee_NIC">
+                                <Form.Label>NIC</Form.Label>
+                                <Form.Control type="number" name="employee_NIC" value={employeeData.employee_NIC} onChange={handleChange} required />
+                                {formError.employee_NIC && <div className="text-danger">{formError.employee_NIC}</div>}
+                            </Form.Group>
+                            <Form.Group controlId="employee_Contact">
+                                <Form.Label>Contact</Form.Label>
+                                <Form.Control type="number" name="employee_Contact" value={employeeData.employee_Contact} onChange={handleChange} required />
+                                {formError.employee_Contact && <div className="text-danger">{formError.employee_Contact}</div>}
+                            </Form.Group>
+                            <Form.Group controlId="employee_Email">
+                                <Form.Label>Email</Form.Label>
+                                <Form.Control type="email" name="employee_Email" value={employeeData.employee_Email} onChange={handleChange} required />
+                                {formError.employee_Email && <div className="text-danger">{formError.employee_Email}</div>}
+                            </Form.Group>
+                            <Button variant="primary" type="submit">
+                                Submit
+                            </Button>
+                        </Form>
+                    </Modal.Body>
+                </Modal>
+            </div>
+        </Layout>
     );
 }
