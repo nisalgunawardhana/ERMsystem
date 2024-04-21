@@ -93,9 +93,9 @@ function Register() {
                                 <Option value="staff_manager">Staff Manager</Option>
                             </Select>
                         </Form.Item>
-                    
+
+                        <br/>
                         <Button className='register-button my-2' htmlType='submit'>Create User</Button>
-                
                     </Form>
                 </div>
             </div>

@@ -283,13 +283,13 @@ function SystemUsers() {
                     <div className="card shadow" style={{ backgroundColor: 'white' }}>
                         <div className="card-statistic-3 p-4">
                             <div className="d-flex justify-content-between align-items-center">
-                                <div className="card-body p-4">
+                                <div className="card-body p-">
                                     <h5 className="card-title" 
-                                    style={{ textAlign: 'center' }}>Total Number of System Users
+                                     style={{ fontSize: '32px', textAlign: 'center' }}>Total Number of System Users
                                     </h5>
                                     <p style={{ fontSize: '40px', textAlign: 'center', fontWeight: 'bold' }}>{totalUsers}</p>
                                 </div>
-                                    <i className="ri-account-circle-line h1"></i>
+                                <i className="ri-account-circle-line h1"></i>
                             </div>
                     
                             <div className="progress mt-1" 

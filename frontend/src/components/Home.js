@@ -75,7 +75,7 @@ if (user) {
 
                 {/*finance*/}
                 <div className="col-md-3">
-                  <a href="/finance" style={{ textDecoration: 'none' }}>
+                  <a href="/dashboard/finance" style={{ textDecoration: 'none' }}>
                     <div className="function-box" style={{ backgroundColor: 'white', border: '1px solid #ced4da', borderRadius: '20px', padding: '30px', marginBottom: '20px', boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', color: '#080a3c' }}>
                       <div className="text-center mb-4">
                         <i className="ri-money-dollar-circle-fill function-icon" style={{ fontSize: '40px', color: '#080a3c' }}></i>
@@ -89,7 +89,7 @@ if (user) {
 
                 {/*staff training*/}
                 <div className="col-md-3">
-                  <a href="/trainee" style={{ textDecoration: 'none' }}>
+                  <a href="/dashboard/trainee" style={{ textDecoration: 'none' }}>
                     <div className="function-box" style={{ backgroundColor: 'white', border: '1px solid #ced4da', borderRadius: '20px', padding: '30px', marginBottom: '20px', boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', color: '#080a3c' }}>
                       <div className="text-center mb-4">
                         <i className="bi bi-lightbulb-fill function-icon" style={{ fontSize: '40px', color: '#080a3c' }}></i>
@@ -103,7 +103,7 @@ if (user) {
 
                 {/*supplier*/}
                 <div className="col-md-3">
-                  <a href="/supplier" style={{ textDecoration: 'none' }}>
+                  <a href="/dashboard/logistics/supplier" style={{ textDecoration: 'none' }}>
                     <div className="function-box" style={{ backgroundColor: 'white', border: '1px solid #ced4da', borderRadius: '20px', padding: '30px', marginBottom: '20px', boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', color: '#080a3c' }}>
                       <div className="text-center mb-4">
                         <i className="ri-store-3-fill function-icon" style={{ fontSize: '40px', color: '#080a3c' }}></i>
@@ -131,7 +131,7 @@ if (user) {
 
                 {/*employees*/}
                 <div className="col-md-3">
-                  <a href="/employee" style={{ textDecoration: 'none' }}>
+                  <a href="/dashboard/employee" style={{ textDecoration: 'none' }}>
                     <div className="function-box" style={{ backgroundColor: 'white', border: '1px solid #ced4da', borderRadius: '20px', padding: '30px', marginBottom: '20px', boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', color: '#080a3c' }}>
                       <div className="text-center mb-4">
                         <i className="bi bi-people-fill function-icon" style={{ fontSize: '40px', color: '#080a3c' }}></i>
@@ -159,7 +159,7 @@ if (user) {
 
                 {/*stock*/}
                 <div className="col-md-3">
-                  <a href="/stock" style={{ textDecoration: 'none' }}>
+                  <a href="/dashboard/logistics/stock" style={{ textDecoration: 'none' }}>
                     <div className="function-box" style={{ backgroundColor: 'white', border: '1px solid #ced4da', borderRadius: '20px', padding: '30px', marginBottom: '20px', boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', color: '#080a3c' }}>
                       <div className="text-center mb-4">
                         <i className="bi bi-archive-fill function-icon" style={{ fontSize: '40px', color: '#080a3c' }}></i>
