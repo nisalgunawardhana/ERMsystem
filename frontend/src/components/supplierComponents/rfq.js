@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Button, Table, Collapse, Row, Col, Form, Card, Container, InputGroup} from "react-bootstrap"; 
 import { Link } from "react-router-dom";
 import axios from "axios";
-// style={{backgroundColor: "#41C9E2" }}
+import Layout from '../Layout';
+import './supplier.css';
+// import '../finance.css';
 
 function RFQ() {
 
@@ -276,10 +278,11 @@ function RFQ() {
     };
 
     return (
+        <Layout>
         <Container fluid className="mb-4 bg" >
             <Row>
                 <Col sm={8}>
-                    <div className="container">
+                    <div >
                         <h2><span><h6 className="fw-light">RFQ management</h6></span>Requests For Quotations
                             <small className="text-body-secondary"> RFQ</small>
                         </h2>
@@ -296,7 +299,7 @@ function RFQ() {
                             </Form.Group>
                         </div>
 
-                        <Table className="mt-4 rounded card-shadow-1" striped bordered hover>
+                        <Table className="mt-4 rounded " striped bordered hover>
                             <thead>
                                 <tr>
                                     <th>RFQ ID</th>
@@ -387,10 +390,10 @@ function RFQ() {
                     </div>
                 </Col>
                 <Col sm={4}>
-                    <div className="mt-2 me-3" style={{ marginTop: "0.5rem" }}>
+                    <div className="mt-2 ms-2" style={{ marginTop: "0.5rem" }}>
                         <Row className="g-4">
                             <Col  xs={13}>
-                                <Card className="card-shadow-1">
+                                <Card className="shadow">
                                     <Card.Header className="text-danger" as="h6">Expiring Requests</Card.Header>
                                     <Card.Body>
                                         <p className="fw-light text-danger">RFQs with Deadline Within <span className="fs-5">3 Days</span></p>
@@ -404,18 +407,23 @@ function RFQ() {
                                 </Card>
                             </Col>
                             <Col  xs={13}>
-                                <Card className="card-shadow-1">
+                                <Card className="shadow">
                                     <Card.Header as="h6">Quotations in Supplier Network</Card.Header>
                                     <Card.Body>
-                                        <InputGroup className="mb-3">
-                                        <Form.Control 
-                                            type="text" 
-                                            placeholder="Enter search term" 
-                                            value={searchTerm} 
-                                            onChange={(e) => setSearchTerm(e.target.value)} 
-                                        />
-                                        <InputGroup.Text><Button variant="light" onClick={handleSearch}><i className="bi bi-search"></i></Button></InputGroup.Text>
-                                        </InputGroup>
+                                        <Row>
+                                            <Col>
+                                                <Form.Control 
+                                                type="text" 
+                                                placeholder="Enter search term" 
+                                                value={searchTerm} 
+                                                onChange={(e) => setSearchTerm(e.target.value)} 
+                                                />
+                                            </Col>
+                                            <Col xs={3}>
+                                                <Button variant="light " className="search-button" onClick={handleSearch}><i className="bi bi-search search-icon"></i></Button>
+                                            </Col>
+                                        </Row>
+                                        
                                         <ul>
                                             {searchResults.map((rfq, index) => (
                                                 <li key={index}>{rfq.rfq_id}</li>
@@ -425,19 +433,19 @@ function RFQ() {
                                 </Card >
                             </Col>
                             <Col  xs={13}>
-                                <Card className="text-center card-shadow-1">
+                                <Card className="text-center shadow">
                                 <Card.Header as="h6">RFQ management</Card.Header>
                                 <Card.Body>
                                     <Card.Title>Report for Requests For Quotations (RFQ)</Card.Title>
                                     <Card.Text>
                                     Annual Requests made for suppliers
                                     </Card.Text>
-                                    <Button variant="dark" onClick={handleRFQReport}>Generate Report</Button>
+                                    <Button variant="dark" className="mt-5 mb-2" onClick={handleRFQReport}>Generate Report</Button>
                                 </Card.Body>
                                 </Card>
                             </Col>
                             <Col  xs={13}>
-                                <Card className="card-shadow-1">
+                                <Card className="card shadow">
                                 <Card.Header as="h6">happy?</Card.Header>
                                 <Card.Body>
                                     <Card.Title>cdcdcd</Card.Title>
@@ -452,7 +460,36 @@ function RFQ() {
                     </div>
                 </Col>
             </Row>
+
+            <Card className="card">
+                <Card.Header as="h6">happy?</Card.Header>
+                <Card.Body>
+                    <Card.Title>cdcdcd</Card.Title>
+                    <Card.Text>
+                    With support bla bla bla
+                    </Card.Text>
+                    <Button variant="primary">Go somewhere</Button>
+                </Card.Body>
+            </Card>
+
+            <div class="card">
+                <div class="card-statistic-3 p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="col-8">
+                            <h2 class="d-flex align-items-center mb-5">
+                                Rs.
+                            </h2>
+                            <h5 class="card-title" style={{ marginTop: '25px' }}>Total Profit</h5>
+                        </div>
+                        <i className="bi bi-cash-coin h1"></i>
+                    </div>
+                    <div class="progress mt-1 " data-height="8" style={{ height: '8px' }}>
+                        <div class="progress-bar " role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '25%', backgroundColor:"red" }}></div>
+                    </div>
+                </div>
+            </div>
         </Container>
+    </Layout>
     );
 }
 

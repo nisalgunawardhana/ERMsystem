@@ -1,8 +1,9 @@
 import {React, useState, useEffect} from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
-import { Button, Form, Row, Col, ToggleButton, ButtonGroup} from "react-bootstrap";
+import { Button, Form, Row, Col, ProgressBar} from "react-bootstrap";
 import axios from "axios";
-
+import Layout from '../Layout';
+import './supplier.css';
 
 function AddSupplierPerformance() {
 
@@ -22,6 +23,8 @@ function AddSupplierPerformance() {
 
     const [noofDamages, setNoofDamages] = useState(0);
     const [noofActualItems, setNoofActualItems] = useState(0);
+    const [actualItemsPercentage, setActualItemsPercentage] = useState(0);
+
 
     const [purchaseOrder, setPurchaseOrder] = useState({
         purchaseOrder_id: "",
@@ -82,7 +85,7 @@ function AddSupplierPerformance() {
                     order_date: po.order_date ? po.order_date.substring(0, 10) : "",
                     deliver_date: po.deliver_date ? po.deliver_date.substring(0, 10) : "",
                     payment_date: po.payment_date ? po.payment_date.substring(0, 10) : "",
-                    sup_deliver_date: po.sup_deliver_date ? po.sup_deliver_date.substring(0, 10) : ""
+                    sup_deliver_date: po.sup_deliver_date ? po.sup_deliver_date.substring(0, 10) : "",
                 });
             })
             .catch(error => {
@@ -136,8 +139,33 @@ function AddSupplierPerformance() {
             });
     };
     
+    // function progress_bar() {
+    //     var speed = 30;
+    //     var items = document.querySelectorAll('.progress_bar .progress_bar_item');
+    
+    //     items.forEach(function(item) {
+    //         var progressBar = item.querySelector('.progress');
+    //         var itemValue = progressBar.dataset.progress;
+    //         var i = 0;
+    //         var itemValueDisplay = item.querySelector('.item_value');
+    
+    //         var count = setInterval(function() {
+    //             if (i <= itemValue) {
+    //                 progressBar.style.width = i + '%';
+    //                 itemValueDisplay.textContent = i + '%';
+    //             } else {
+    //                 clearInterval(count);
+    //             }
+    //             i++;
+    //         }, speed);
+    //     });
+    // }
+    
+    // useEffect(() => {
+    //     progress_bar();
+    // }, []);
 
-
+    
     //FORMAT DATE
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -227,21 +255,21 @@ function AddSupplierPerformance() {
             });
     }, [purchaseOrder.supplier_id]);
 
-
     return(
+        <Layout>
         <div className="container-fluid bg">
 
             <Row>
                 <Col>
                     <div className="p-2 ">
                         <div >
-                            <p className="fw-light" style={{color:"#334eac"}}>Purchase order Management
+                            <p className="fw-light layout-blue">Purchase order Management
                             <h2 >Purchase Order {purchaseOrder.purchaseOrder_id}</h2></p>
                             <Link to="/purchaseOrder">
                                 <Button className="back-btn" variant="secondary" ><i className="bi bi-arrow-left me-2"></i><span>Back</span></Button>
                             </Link>
                             <Link to="/purchaseOrder/add">
-                            <Button className="ms-2 text-white" variant="white" style={{backgroundColor:"#334eac"}} id="up-btn" ><i className="bi bi-filetype-pdf me-2"></i>Create New Purchase Order</Button>
+                            <Button className="ms-2 text-white layout-blue-bg" variant="secondary" id="up-btn" ><i className="bi bi-filetype-pdf me-2"></i>Create New Purchase Order</Button>
                             </Link>
                         </div>
 
@@ -260,10 +288,40 @@ function AddSupplierPerformance() {
                             <div>
                                 <Row>
                                     <Col>
-                                        <p className="fs-6 p-3 fw-light rounded text-light" style={{backgroundColor:"#334eac"}}>Order Status<br></br><span className="fs-5 ">{purchaseOrder.order_status}</span></p>
+                                    <div class="card">
+                                        <div class="card-statistic-3 p-4">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div class="col-8">
+                                                    <h2 class="d-flex align-items-center fs-6 mb-3">
+                                                        Order Status
+                                                    </h2>
+                                                    <h5 class="card-title " >{purchaseOrder.order_status}</h5>
+                                                </div>
+                                                <i className="bi bi-truck h1"></i>
+                                            </div>
+                                            <div class="progress mt-1 " data-height="8" style={{ height: '8px' }}>
+                                                <div class="progress-bar" role="progressbar" data-width="25%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style={{ width: '75%' }}></div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     </Col>
                                     <Col>
-                                        <p className="fs-6 p-3 fw-light rounded text-light" style={{backgroundColor:"#334eac"}}>Payment Status<br></br><span className="fs-5 ">{purchaseOrder.payment_status}</span></p>
+                                    <div class="card">
+                                        <div class="card-statistic-3 p-4">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div class="col-8">
+                                                    <h2 class="d-flex align-items-center fs-6 mb-3">
+                                                        Payment Status
+                                                    </h2>
+                                                    <h5 class="card-title " >{purchaseOrder.payment_status}</h5>
+                                                </div>
+                                                <i className="bi bi-credit-card-2-front h1"></i>
+                                            </div>
+                                            <div class="progress mt-1 " data-height="8" style={{ height: '8px' }}>
+                                                <div class="progress-bar" role="progressbar" data-width="25%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style={{ width: '75%' }}></div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     </Col>
                                 </Row>
                             </div>
@@ -271,13 +329,13 @@ function AddSupplierPerformance() {
                     </div>
                 </Col>
                 <Col>
-                    <div className="p-2 my-3 border border-secondary rounded card-shadow-1">
-                        <h3 className="text-center">Supplier Performance<br></br><span className="fw-light fs-5 ">based on purchase order {purchaseOrder.purchaseOrder_id}</span></h3>
+                    <div className="my-3 border border-secondary rounded card-shadow-1">
+                        <h3 className="text-center mt-4 layout-blue">Supplier Performance<br></br><span className="fw-light fs-5 ">based on purchase order {purchaseOrder.purchaseOrder_id}</span></h3>
 
                         <div className="d-flex justify-content-center">
-                            <div className="w-75">
+                            <div className="container custom-container-supPerformance">
                                 <Form onSubmit={handleSubmit} >
-                                    <Form.Group controlId="payment_date" className="mb-5 mt-4">
+                                    <Form.Group controlId="payment_date" className="mb-3 mt-4">
                                     <Form.Label>Our Payment date</Form.Label>
                                     <Form.Control
                                         type="date"
@@ -297,10 +355,11 @@ function AddSupplierPerformance() {
                                         />
                                     </Form.Group>
 
-                                    <div className="p-3 bg-warning">Days Difference: {calculateDateDifference()} days</div>
+                                    <div className="text-center p-3 my-3 bg-warning rounded-4">
+                                        <div className="p-3 ">Days Difference <br></br><span className="fw-semibold fs-4">{calculateDateDifference()} days</span></div>
 
-                                    <div className="p-3 bg-warning">Lead Time: {calculateLeadTime()} days</div>                               
-
+                                        <div className="p-3 ">Lead Time<br></br><span className="fw-semibold fs-4"> {calculateLeadTime()} days</span></div>                               
+                                    </div>
 
                                     <Form.Group controlId="noofDamages" className="mt-2">
                                         <Form.Label>Number of damaged items:</Form.Label>
@@ -312,10 +371,14 @@ function AddSupplierPerformance() {
                                         />
                                     </Form.Group>
 
-                                    <div className="mt-3">
-                                        <p>Total Number of Order Items: {calculateTotalQuantity()}</p>
+                                    <div className="mt-3 text-center bg-warning p-3 rounded-4">
+                                        <p className="mt-3">Total Number of Order Items: {calculateTotalQuantity()}</p>
                                         <p>Number of Damaged Items: {noofDamages}</p>
-                                        <p><b>Quality of Goods: {calculateQualityOfGoods()}%</b></p>
+                                        <p className="mt-4"><b>Quality of Goods<br></br><span className="fw-semibold fs-4">{calculateQualityOfGoods()}%</span></b></p>
+
+                                        <div class="progress mt-1 " data-height="8" style={{ height: '8px' }}>
+                                            <div class="progress-bar orange" role="progressbar" data-width="25%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style={{ width: '75%' }}></div>
+                                        </div>
                                     </div>
 
                                     <Form.Group controlId="noofActualItems" className="mt-3">
@@ -328,12 +391,17 @@ function AddSupplierPerformance() {
                                         />
                                     </Form.Group>
 
-                                    <p><b>Quantity Accuracy: {calculateQuantityAccuracy()}%</b></p>
+                                    <div>
+                                        <p className="mt-4 text-center"><b>Quantity Accuracy<br></br><span className="fw-semibold fs-4"> {calculateQuantityAccuracy()}%</span></b></p>
 
-
-                                    <Form.Group controlId="responsiveness">
+                                        <div class="progress mt-1 " data-height="8" style={{ height: '8px' }}>
+                                            <div class="progress-bar orange" role="progressbar" data-width="25%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style={{ width: '75%' }}></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <Form.Group controlId="responsiveness" className="mt-4 mb-3">
                                     <Form.Label>Responsiveness:</Form.Label><br></br>
-                                    <div className="btn-group">
+                                    <div className="btn-group d-flex justify-content-center">
                                         <input
                                             type="radio"
                                             id="responsive-excellent"
@@ -401,7 +469,7 @@ function AddSupplierPerformance() {
                                         />
                                     </Form.Group>
 
-                                    <Form.Group controlId="additional" className="mt-2">
+                                    <Form.Group controlId="additional" className="mt-3">
                                         <Form.Label>Additional Information</Form.Label>
                                         <Form.Control
                                             as="textarea"
@@ -412,9 +480,9 @@ function AddSupplierPerformance() {
                                         />
                                     </Form.Group>
 
-                                    <Form.Group controlId="overallSatisfaction">
+                                    <Form.Group controlId="overallSatisfaction" className="mt-3">
                                     <Form.Label>overallSatisfaction:</Form.Label><br></br>
-                                    <div className="btn-group">
+                                    <div className="btn-group d-flex justify-content-center">
                                         <input
                                             type="radio"
                                             id="satisfaction-excellent"
@@ -471,7 +539,7 @@ function AddSupplierPerformance() {
 
 
                                     <div className="mb-5 d-flex flex-column align-items-center justify-content-center">
-                                        <Button className="mt-4 col-md-4" variant="primary" type="submit">Update Purchase Order</Button>
+                                        <Button className="mt-5 " variant="primary" type="submit">Update Purchase Order</Button>
                                     </div>
                                 </Form>
                             </div>
@@ -482,6 +550,7 @@ function AddSupplierPerformance() {
             </Row>
 
         </div>
+    </Layout>
     )
 }
 

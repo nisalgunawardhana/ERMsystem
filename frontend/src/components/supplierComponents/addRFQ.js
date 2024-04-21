@@ -3,6 +3,9 @@ import { Button, Form, Col, Row } from "react-bootstrap";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import Layout from '../Layout';
+import './supplier.css';
+
 
 function AddRFQss() {
 
@@ -65,10 +68,11 @@ function AddRFQss() {
     }
 
     return( 
+        <Layout>
         <div>
             <div className="bg">
-                <h3 className="ms-5">Create a Request For Quotation (RFQ)</h3>
-                <div className="my-5 w-75 p-5 container custom-container-rfq" >
+                <p className="fw-light layout-blue">RFQ Management<h3>Create a Request For Quotation (RFQ)</h3></p>
+                <div className="my-5 container custom-container-supplier" >
                 <Form onSubmit={handleSubmit}>
 
                     <Form.Group controlId="rfqId">
@@ -183,7 +187,7 @@ function AddRFQss() {
                         }}/>
                     </Form.Group>
 
-                    <div className=" text-center">
+                    <div className=" text-center mt-5">
                         <Link to="/rfq">
                             <Button variant="secondary mx-2">Back</Button>
                         </Link>
@@ -193,6 +197,7 @@ function AddRFQss() {
                 </div>
             </div>
         </div>
+    </Layout>
     )
 }
 

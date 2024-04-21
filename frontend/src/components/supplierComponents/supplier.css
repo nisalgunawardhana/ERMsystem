@@ -7,6 +7,14 @@
   background-color: #225874;
 }
 
+.red{
+  background-color: red;
+}
+
+.orange{
+  background-color: #FF5F0F;
+}
+
 .luxery-yellow{
   background-color: #EBC266;
   border-color: #EBC266;
@@ -26,6 +34,13 @@
   background-color: #6c757d;
 }
 
+.layout-blue{
+  color: #080a3c;
+}
+
+.layout-blue-bg{
+  background-color: #080a3c;
+}
 /*CARDS______________________________________________________________________________________*/
 
 /*MAIN CARDS*/
@@ -47,6 +62,8 @@
 
 .card-up:hover {
   transform: translateY(-5px); 
+  background-color: white;
+  transition: transform 0.5s ease;
 }
 
 .card-shadow-1 {
@@ -73,29 +90,25 @@
 }
 
 /*supplier containers*/
-.custom-container-supplier{
-  border: 1px solid #DBA979; 
-  background-color: #ECCA9C;
+.custom-container-supplier.container{
+  background-color: rgba(159, 166, 148, 0.5);
+  width:"95%";
   border-radius: 10px; 
-  padding: 30px;
-}
-
-.custom-container-supplier.container {
-  padding: 40px; 
-  
+  padding-left: 100px;
+  padding-right: 100px;
+  padding-top: 40px;
+  padding-bottom: 20px;
 }
 
 /*purchase Order containers*/
-.custom-container-po{
-    border: 1px solid #7096d1; 
-    background-color: #89CFF3;
-    border-radius: 10px; 
-    padding: 30px;
-}
 
-.custom-container-po.container {
-    padding: 40px; 
-
+/*supplier performance containers*/
+.custom-container-supPerformance{
+  background-color: white;
+  width:"95%";
+  border-radius: 10px; 
+  padding-left: 50px;
+  padding-right: 50px;
 }
 
 
@@ -153,6 +166,58 @@
   right: -2rem;
 }
 
+
+/*side-btn-btn*/
+.side-btn-btn {
+  position: relative;
+  transition: background-color 300ms ease-out;
+  background-color: red;
+  text-align: center;
+  border: transparent;
+  padding-left: 20px;
+  padding-right: 20px;
+  width: auto;
+  height: 30px;
+  border-radius: 6px;
+  color: white;
+}
+
+.side-btn-btn span {
+  display: inline-block;
+  position: relative;
+  transition: all 300ms ease-out;
+  will-change: transform;
+  /* top: 50%; */
+  transform: translateY(-50%);
+}
+
+.side-btn-btn:hover span {
+  transform: translate3d(-1rem, 0, 0);
+}
+
+.side-btn-btn:hover {
+  opacity: 0.95;
+  color:white;
+}
+
+.side-btn-btn .bi {
+  position: absolute;
+  width: 2.5rem;
+  right: 0;
+  opacity: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: all 300ms ease-out;
+  will-change: right, opacity;
+}
+
+.side-btn-btn:hover .bi {
+  opacity: 1;
+  right: -0.5rem;
+}
+
+
+
 /*up-btn*/
 #up-btn {
   position: relative;
@@ -189,6 +254,10 @@
 #up-btn:hover i {
   top: -5px;
 }
+
+
+
+
 
 #up-btn-btn i {
   position: relative;
@@ -276,4 +345,85 @@
 }
 
 
+.search-icon {
+  font-size: 1rem; 
+  color: #6c757d; 
+  padding: 6px; 
+  transition: color 0.3s ease;
+  
+}
 
+.search-button:hover .search-icon {
+  color: white; 
+  transition: color 0.3s ease;
+}
+
+.search-button {
+  border-radius: 20px;
+  transition: background-color 0.3s ease;
+}
+
+
+/*progress bars*/
+:root {
+  --primary-color: #f50045;
+  --secondary-color: #000;
+  --bar-height: 1.5rem;
+}
+
+button {
+  background-color: var(--secondary-color);
+  border: 0;
+  border-radius: 0;
+  padding: 1rem 2rem;
+  color: #fff;
+  cursor: pointer;
+}
+
+button:hover {
+  border-radius: 6px;
+  background-color: var(--primary-color);
+  transition: all 500ms ease;
+}
+
+.ce_ixelgen_progress_bar {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.ce_ixelgen_progress_bar .progress_bar_item {
+  margin-bottom: 2rem;
+}
+
+.ce_ixelgen_progress_bar .item_label,
+.ce_ixelgen_progress_bar .item_value {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.ce_ixelgen_progress_bar .item_value {
+  font-weight: 400;
+}
+
+.ce_ixelgen_progress_bar .item_bar {
+  position: relative;
+  height: var(--bar-height);
+  width: 100%;
+  background-color: var(--secondary-color);
+  border-radius: 4px;
+}
+
+.ce_ixelgen_progress_bar .item_bar .progress {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  height: var(--bar-height);
+  margin: 0;
+  background-color: var(--primary-color);
+  border-radius: 4px;
+  transition: width 100ms ease;
+}

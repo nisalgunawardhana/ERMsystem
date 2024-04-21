@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Form, Button, Row, Col, Popover, OverlayTrigger} from 'react-bootstrap';
-import { useNavigate } from "react-router-dom";
+import { useNavigate , Link} from "react-router-dom";
+import Layout from '../Layout';
+import './supplier.css';
 
 function AddSupplier() {
 
@@ -90,11 +92,12 @@ function AddSupplier() {
 
 
     return(
+        <Layout>
         <div className="container-fluid mb-6 bg ps-5">
             <p className="fw-light ms-3 mb-4">Supplier Management
             <h2>Add new Supplier</h2></p>
 
-            <div className="mt-4 container custom-container-supplier" style={{width:"65%"}}>
+            <div className="mt-4 container custom-container-supplier card-shadow-1" >
                 <Form onSubmit={sendData}>
                     <Form.Group controlId="supplierID">
                         <Form.Label>Supplier ID</Form.Label>
@@ -204,15 +207,15 @@ function AddSupplier() {
                     </div>
 
                     <div className="mt-4">
-                    <h6>Product Types</h6>
-                    <Row>
+                        <h6>Product Types</h6>
+                        <Row>
                         {['Mens-Shirts', 'Mens-Trousers', 'Mens T-Shirt', 'Suits', 'Shorts', 'Jackets and Blazers', 'Traditional wear',
                         'Tops and Blouses', 'Dresses','Party dresses', 'Skirts', 'Trousers and Denims', 'Office wear',
                         'Children wear', 'Toys', 'Accessories'].map((type, index) => (
                             <Col className="mt-2" key={index} xs={6} sm={4} md={3} lg={3}>
                                 <Form.Check
                                     inline
-                                    label={type}
+                                    label={<p className="mt-2">{type}</p>}
                                     name="product_types"
                                     type="checkbox"
                                     id={`inline-checkbox-${index}`}
@@ -327,14 +330,27 @@ function AddSupplier() {
                     </div>
                     
 
-                    <div className="d-flex flex-column align-items-center justify-content-center">
-                    <Button className="mt-5 col-md-4 text-white" variant="white" type="submit" style={{backgroundColor:"#F99417"}}>Add new Supplier</Button>
-                    </div>
-                
+                    <div className="mt-5 d-flex  justify-content-center">
+                        <Row >
+                            <Col xs={4} >
+                                <Link to="/supplier/" className="d-flex align-items-center">
+                                    <Button className="back-btn" variant="secondary" style={{ height: '40px', fontSize: '16px' }}>
+                                        <i className="bi bi-arrow-left me-2"></i>
+                                        <span>Back</span>
+                                    </Button>
+                                </Link>
+                            </Col>
+                            <Col>
+                                <Button className="text-white luxery-yellow " variant="white" type="submit" >Add new Supplier</Button>
+                            </Col>
+                            
+                        </Row>
+                    </div>    
                 </Form>
             </div>
             
         </div>
+    </Layout>
     )
 }
 

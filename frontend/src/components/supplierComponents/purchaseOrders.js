@@ -3,6 +3,7 @@ import axios from "axios";
 import { Table, Button, Form, Row, Col, Card, InputGroup, Pagination } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import './supplier.css';
+import Layout from '../Layout';
 
 function PurchaseOrder() {
 
@@ -319,22 +320,76 @@ function PurchaseOrder() {
 
 
     return(
-        <div className="bg">
-            <div className="container-fluid ms-3">
-                <h2><span className="fw-light fs-6">Purchase Order Management</span><br></br>Purchase Orders</h2>
+        <Layout>
+        <div className="bg container-fluid">
+            <div className="container layout-blue">
+                <h2><span className="fw-light fs-6 ">Purchase Order Management</span><br></br>Purchase Orders</h2>
                 
                 <div className="mt-3">
                     <Link to="/supplier/"><Button className="back-btn " variant="secondary"><i className="bi bi-arrow-left me-2"></i><span>Back</span></Button></Link>
             
                     <Link to="/purchaseOrder/add"><Button className=" ms-3 text-white" id="up-btn-btn" ><i className="bi bi-cart3 me-2"></i>Create Purchase Order</Button></Link>
                 </div>
-
             </div>
 
-            <div className="container-fluid"> 
+            <div className="mt-4">
+                <Row>
+                    <Col>
+                    <div className="card">
+                        <div className="card-statistic-3 p-4">
+                            <div className="d-flex justify-content-between align-items-center">
+                                <div className="col-8">
+                                    <h2 className="d-flex align-items-center text-secondary fs-6 mb-1">
+                                        Purchase Orders
+                                    </h2>
+                                    <h5 className="card-title fs-4" >Order supplies to restock</h5>
+                                    <div>
+                                        <Link to="/purchaseOrder/add">
+                                            <Button variant="dark" className="side-btn mt-5 mb-2 ">
+                                                <span>
+                                                Create a purchase Orders
+                                                <i className="bi bi-file-bar-graph"></i></span>
+                                            </Button>
+                                        </Link>
+                                    </div>
+                                </div>
+                                <i className="bi bi-cart4 h1"></i>
+                            </div>
+                            <div className="progress mt-1 " data-height="8" style={{ height: '8px' }}>
+                                <div className="progress-bar orange" role="progressbar" data-width="25%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style={{ width: '75%' }}></div>
+                            </div>
+                        </div>
+                    </div>
+                    </Col>
+                    <Col>
+                    <div className="card ">
+                        <div className="card-statistic-3 p-4 ">
+                            <div className="d-flex justify-content-between align-items-center mb-1">
+                                <div className="col-8">
+                                    <h2 className="d-flex align-items-center text-secondary fs-6 mb-1">
+                                        Supplier report
+                                    </h2>
+                                    <h5 className="card-title " >Generate purchase order report for financial processes</h5>
+                                    <div>
+                                        <Button className="mb-2 mt-4 position-relative bottom-0 start-0 text-white" variant="dark" onClick={handlePOReport}>All Purchase Order report</Button>
+                                    </div>
+                                </div>
+                                <i className="bi bi-file-earmark-bar-graph-fill h1"></i>
+                            </div>
+                            <div className="progress mt-1  " data-height="8" style={{ height: '8px' }}>
+                                <div className="progress-bar orange" role="progressbar" data-width="25%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style={{ width: '75%' }}></div>
+                            </div>
+                        </div>
+                    </div>
+                    </Col>
+                </Row>
+            </div>
+                
+
+            <div > 
                 <Row >
-                    <Col >
-                        <Card className="mt-4 ms-2 text-center card-shadow-1 rounded text-white dark-blue" style={{ height: '90%'}}>
+                    <Col xs={3}>
+                        <Card className="mt-4 text-center card-shadow-1 rounded text-white dark-blue" style={{height:"80%"}}>
                             <Card.Body className="mt-4">
                                 <Card.Text>
                                 <p className="fs-3">Rs.{totalAmount}<br></br>
@@ -344,35 +399,39 @@ function PurchaseOrder() {
                             </Card.Body>
                         </Card>
                     </Col>
-                    <Col >
-                        <Card className="mt-4 card-shadow-1 rounded" style={{ height: '90%', backgroundColor:'#7096d1', borderColor:'#E5DDC5' }}>
+                    <Col xs={3}>
+                        <Card className="mt-4 card-shadow-1 rounded" style={{ height:"80%", backgroundColor:'#7096d1', borderColor:'#E5DDC5' }}>
                             <Card.Header as="h6" style={{backgroundColor:'#7096d1'}}>Monthly Purchase Orders</Card.Header>
                             <Card.Body >
                                 <Form>
                                     <Form.Group controlId="formSearchPO">
                                         <Form.Label>Search Purchase order by month</Form.Label>
-                                        <InputGroup>
-                                            <Form.Control
-                                                type="text"
-                                                placeholder="Enter desired month"
-                                                aria-label="formSearchmonth"
-                                                aria-describedby="basic-addon1"
-                                                value={month}
-                                                onChange={(e) => setMonth(e.target.value)}
-                                            />
-                                            <Button variant="outline-secondary " id="button-addon3" onClick={handleSearchByMonth}>
-                                                <i className="bi bi-search"></i>
-                                            </Button>
-                                        </InputGroup>
-                                        <p className="mt-2">Number of POs in month of {month}: <span className="fw-semibold"> {purchaseOrderIDs.length}</span> </p>
+                                        <Row>
+                                            <Col xs={9}>
+                                                <Form.Control
+                                                    type="text"
+                                                    placeholder="Enter month"
+                                                    aria-label="formSearchmonth"
+                                                    aria-describedby="basic-addon1"
+                                                    value={month}
+                                                    onChange={(e) => setMonth(e.target.value)}
+                                                />
+                                            </Col>
+                                            <Col xs={1}>
+                                                <Button variant="outline-secondary search-button" style={{width:"20px", height:"40px"}} onClick={handleSearchByMonth}>
+                                                    <i className="bi bi-search search-button d-flex justify-content-center"></i>
+                                                </Button>
+                                            </Col>
+                                        </Row>
+                                        <p className="mt-3">Number of POs in month of {month}: <span className="fw-semibold"> {purchaseOrderIDs.length}</span> </p>
                                         <p className="mt-4">Total Order Amount for that month: <br></br><span className="fs-4 d-block text-center">Rs. {totalOrderAmountForMonth}</span></p>
                                     </Form.Group>
                                 </Form>
                             </Card.Body>
                         </Card>
                     </Col>
-                    <Col >
-                        <Card className="mt-4 card-shadow-1 rounded light-brown" style={{ height: '90%'}}>
+                    <Col xs={3}>
+                        <Card className="mt-4 card-shadow-1 rounded light-brown" style={{height:"80%"}}>
                             <Card.Header as="h6" >Today Purchase Orders</Card.Header>
                             <Card.Body className="light-brown">
                                 <Card.Text >
@@ -384,8 +443,8 @@ function PurchaseOrder() {
                             </Card.Body>
                         </Card>
                     </Col>
-                    <Col >
-                        <Card className="mt-4 me-2 card-shadow-1 rounded" style={{ height: '90%', backgroundColor:'#89CFF3', borderColor:'#7096d1' }}>
+                    <Col xs={3}>
+                        <Card className="mt-4 me-2 card-shadow-1 rounded" style={{ height:"80%", backgroundColor:'#89CFF3', borderColor:'#7096d1' }}>
                             <Card.Header as="h6"  style={{backgroundColor:'#89CFF3'}}>Deliver status and Payment status</Card.Header>
                             <Card.Body >
                                 <Card.Title>Delivering Orders</Card.Title>
@@ -405,45 +464,53 @@ function PurchaseOrder() {
                 </Row>
             </div>
 
-            <div className="container-fluid">
-                <div className="ms-2 mt-4 fs-4 " style={{ color: '#334eac' }}>All Purchase Orders</div>
+            <div>
+                <div className="ms-2 fs-4 layout-blue" >All Purchase Orders</div>
                 <Row>
-                    <Col xs={4} >
-                    <div className="container mb-3 " style={{ color: '#334eac' }}>
+                    <Col xs={5} >
+                    <div className="container mb-3 ">
                         <Form>
-                            <Form.Group controlId="formSearchPO">
+                            <Form.Group controlId="formSearchPO " className="mt-3 ">
                                 <Form.Label>Search by Purchase Order ID</Form.Label>
-                                <InputGroup >
-                                <Form.Control
-                                    type="text"
-                                    placeholder="Enter Purchase Order ID"
-                                    aria-label="formSearchPO"
-                                    aria-describedby="basic-addon1"
-                                    value={searchQuery}
-                                    onChange={handleSearchPurchaseOrder}
-                                />
-                                <Button variant="outline-secondary" id="button-addon2"><i className="bi bi-search"></i></Button>
-                                </InputGroup>
+                                <Row>
+                                    <Col >
+                                        <Form.Control
+                                            type="text"
+                                            placeholder="Enter Purchase Order ID"
+                                            aria-label="formSearchPO"
+                                            aria-describedby="basic-addon1"
+                                            value={searchQuery}
+                                            onChange={handleSearchPurchaseOrder}
+                                        />
+                                    </Col>
+                                    <Col xs={2}>
+                                        <Button variant="outline-secondary search-button" ><i className="bi bi-search search-icon"></i></Button>
+                                    </Col>
+                                </Row>
                             </Form.Group>
                         </Form>
                     </div>
                     </Col>
-                    <Col  xs={4} >
-                    <div className="container mb-3 " style={{ color: '#334eac' }}>
+                    <Col  xs={5} >
+                    <div className="container mb-3 ms-5">
                         <Form>
-                            <Form.Group ontrolId="formSearchDate">
+                            <Form.Group ontrolId="formSearchDate" className="mt-3">
                                 <Form.Label>Search by Order date</Form.Label>
-                                <InputGroup >
-                                <Form.Control
-                                    type="date"
-                                    placeholder="Select Order Date"
-                                    aria-label="formSearchPOdtae"
-                                    aria-describedby="basic-addon1"
-                                    value={searchDate}
-                                    onChange={handleSearchPurchaseOrderByDate}
-                                />
-                                <Button variant="outline-secondary" id="button-addon2"><i className="bi bi-search"></i></Button>
-                                </InputGroup>
+                                <Row>
+                                    <Col>
+                                        <Form.Control
+                                        type="date"
+                                        placeholder="Select Order Date"
+                                        aria-label="formSearchPOdtae"
+                                        aria-describedby="basic-addon1"
+                                        value={searchDate}
+                                        onChange={handleSearchPurchaseOrderByDate}
+                                        />
+                                    </Col>
+                                    <Col xs={2}>
+                                        <Button variant="outline-secondary search-button" ><i className="bi bi-search search-icon"></i></Button>
+                                    </Col>
+                                </Row>
                             </Form.Group>
                         </Form>
                     </div>
@@ -451,7 +518,7 @@ function PurchaseOrder() {
                 </Row>
             </div>
 
-            <div className="container-fluid ">
+            <div>
                 <Table striped bordered hover className="shadow">
                     <thead>
                         <tr>
@@ -460,10 +527,10 @@ function PurchaseOrder() {
                         <th>Supplier Name</th>
                         <th>Order Date</th>
                         <th>Delivery Date</th>
-                        <th>Order Items</th>
+                        {/* <th>Order Items</th> */}
                         <th>Order Amount</th>
                         <th>Delivery Information</th>
-                        <th>Payment Information</th>
+                        {/* <th>Payment Information</th> */}
                         <th>Additional Information</th>
                         <th>Total Order Amount</th>
                         <th>Invoice Number</th>
@@ -480,7 +547,7 @@ function PurchaseOrder() {
                             <td>{order.supplier_name}</td>
                             <td>{order.order_date}</td>
                             <td>{order.deliver_date}</td>
-                            <td>
+                            {/* <td>
                                 <ul>
                                     {order.order_items.map((item, index) => (
                                     <li key={index}>
@@ -488,16 +555,16 @@ function PurchaseOrder() {
                                     </li>
                                     ))}
                                 </ul>
-                            </td>
+                            </td> */}
                             <td>Rs. {order.order_amount}</td>
                             <td>
                                 Method: {order.delivery_information.delivery_method} Costs:{" "}
                                 {order.delivery_information.delivery_costs}
                             </td>
-                            <td>
+                            {/* <td>
                                 Method: {order.payment_information.payment_method}, Terms:{" "}
                                 {order.payment_information.payment_terms}
-                            </td>
+                            </td> */}
                             <td>{order.additional_infomation}</td>
                             <td><b>Rs. {order.total_order_amount}</b></td>
                             <td>{order.invoice_no}</td>
@@ -521,16 +588,19 @@ function PurchaseOrder() {
                     </tbody>
                 </Table>
             </div>
+
             <div className="container d-flex justify-content-center">
-      <Pagination>
-        <Pagination.First onClick={() => paginate(1)} />
-        <Pagination.Prev onClick={() => paginate(currentPage - 1)} />
-        {paginationItems}
-        <Pagination.Next onClick={() => paginate(currentPage + 1)} />
-        <Pagination.Last onClick={() => paginate(Math.ceil((searchQuery === "" && searchDate === "" ? purchaseOrders.length : searchResults.length) / ordersPerPage))} />
-      </Pagination>
-    </div>
+            <Pagination>
+                <Pagination.First onClick={() => paginate(1)} />
+                <Pagination.Prev onClick={() => paginate(currentPage - 1)} />
+                {paginationItems}
+                <Pagination.Next onClick={() => paginate(currentPage + 1)} />
+                <Pagination.Last onClick={() => paginate(Math.ceil((searchQuery === "" && searchDate === "" ? purchaseOrders.length : searchResults.length) / ordersPerPage))} />
+            </Pagination>
+            </div>
+
         </div>
+    </Layout>
     )
 }
 

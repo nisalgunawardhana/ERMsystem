@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import {Button, Card, Row, Col,Form, ListGroup, InputGroup} from 'react-bootstrap';
 import { Link } from "react-router-dom";
 import axios from "axios";
-// import "./supplier.css";
+import Layout from '../Layout';
+import './supplier.css';
 
 function Supplier () {
 
@@ -152,95 +153,102 @@ function Supplier () {
     const renderSuppliers = searchQuery === "" ? suppliers : searchResults
 
     return(
-            <div className="container-fluid bg ">
-                <h2><span className="fw-light fs-5">Supplier and Purchase Order Management</span><br></br>
+        <Layout>
+            <div className="container-fluid bg">
+                <h2><span className="fw-light fs-5 mb-5">Supplier and Purchase Order Management</span><br></br>
                 Manage Suppliers and Purchase Orders</h2>
 
-                <div className="mt-5 ">
-                    <Row >
-                        <Col xs={4}>
-                            <Card className="h-100 text-white card-large card-shadow-1 luxery-yellow">
-                                <Card.Header>Supplier Management</Card.Header>
-                                <Card.Body>
-                                    <Card.Title>Suppliers</Card.Title>
-                                    <Card.Text>
-                                        Manage supplier network and safeguard sensitive details
-                                        <Button className="mt-3 text-white" variant="secondary" onClick={handleSupplierReport}>Supplier report</Button>
-                                    </Card.Text>
-                                </Card.Body>
-                                <Card.Footer className="d-flex justify-content-end flex-column align-items-end" >
-                                    <div className="text-secondary  mb-auto">Insert new supplier details to the system</div>
-                                    <Link to="/supplier/add">
-                                        <Button variant="secondary" className="mt-1 mb-2 side-btn"><span>Add Supplier<i className="bi bi-shop"></i></span></Button>
-                                    </Link>
-                                </Card.Footer>
-                            </Card> 
+                <div className="mt-4">
+                    <Row>
+                        <Col>
+                        <div className="card">
+                            <div className="card-statistic-3 p-4">
+                                <div className="d-flex justify-content-between align-items-center">
+                                    <div className="col-8">
+                                        <h2 className="d-flex align-items-center text-secondary fs-6 mb-1">
+                                            Supplier details
+                                        </h2>
+                                        <h5 className="card-title fs-4" >Enhance Supplier Network</h5>
+                                        <div>
+                                            <Row>
+                                                <Col xs={6}>
+                                                    <Link to="/supplier/add">
+                                                    <Button variant="dark" className="side-btn mt-5 mb-2 ">
+                                                        <span>
+                                                        Add a new Supplier
+                                                        <i className="bi bi-people-fill"></i></span>
+                                                    </Button>
+                                                    </Link>
+                                                </Col>
+                                                <Col >
+                                                    <Link to="/rfq">
+                                                    <Button variant="success" className="side-btn mt-5 mb-2">
+                                                        <span>
+                                                        Create a <br></br>RFQ
+                                                        <i className="bi bi-file"></i></span>
+                                                    </Button>
+                                                    </Link>
+                                                </Col>
+                                            </Row>
+                                            
+                                            
+                                        </div>
+                                    </div>
+                                    <i className="bi bi-people-fill h1"></i>
+                                </div>
+                                <div className="progress mt-1 " data-height="8" style={{ height: '8px' }}>
+                                    <div className="progress-bar orange" role="progressbar" data-width="25%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style={{ width: '75%' }}></div>
+                                </div>
+                            </div>
+                        </div>
                         </Col>
-                        <Col xs={5}>
-                            <Card className="h-100 text-white card-large card-shadow-1 dark-blue" >
-                                <Card.Header>Purchase Order Management</Card.Header>
-                                <Card.Body className="d-flex flex-column">
-                                    <Card.Title>Purchase Orders</Card.Title>
-                                    <Card.Text>
-                                        Simplify purchase order management process for streamlined efficiency
-                                    </Card.Text>
-                                    <div className=" mt-auto ml-auto">
-                                        <div className="mb-1 ">Restock Inventory by making a order</div>
-                                        <Link to="/purchaseOrder">
-                                            <Button variant="primary" className="side-btn">
-                                                <span>
-                                                Manage Purchase Orders
-                                                <i className="bi bi-cart4"></i></span>
-                                            </Button>
-                                        </Link>
-                                    </div>   
-                                </Card.Body>
-                            </Card>
-                        </Col>
-
-                        <Col xs={3} >
-                        <Card style={{ width: '20rem'}} className="h-100 card-large card-shadow-1 middle-green">
-                            <Card.Body  className="d-flex flex-column">
-                                <Card.Title>RFQ</Card.Title>
-                                <Card.Subtitle className="mb-2 text-muted">Requests For Quotations</Card.Subtitle>
-                                <Card.Text>
-                                Ready to connect with new suppliers? Send a request to access their price lists and more
-                                </Card.Text>
-                                <div className=" mt-auto ml-auto">
-                                    <div className="mb-1  text-success">Want to call new suppliers?</div>
-                                    <Link to="/rfq">
-                                        <Button variant="success" className="side-btn">
-                                            <span>
-                                            Call a supplier<i className="bi bi-send"></i>
-                                            </span>
-                                        </Button>
-                                    </Link>
-                                </div>  
-                            </Card.Body>
-                        </Card>
+                        <Col>
+                        <div className="card ">
+                            <div className="card-statistic-3 p-4 ">
+                                <div className="d-flex justify-content-between align-items-center mb-1">
+                                    <div className="col-8">
+                                        <h2 className="d-flex align-items-center text-secondary fs-6 mb-1">
+                                            Supplier report
+                                        </h2>
+                                        <h5 className="card-title " >Generate supplier report for financial processes</h5>
+                                        <div>
+                                            <Button className="mb-2 mt-5 position-relative bottom-0 start-0 text-white" variant="dark" onClick={handleSupplierReport}>Supplier report</Button>
+                                        </div>
+                                    </div>
+                                    <i className="bi bi-file-earmark-bar-graph-fill h1"></i>
+                                </div>
+                                <div className="progress mt-1  " data-height="8" style={{ height: '8px' }}>
+                                    <div className="progress-bar orange" role="progressbar" data-width="25%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style={{ width: '75%' }}></div>
+                                </div>
+                            </div>
+                        </div>
                         </Col>
                     </Row>
                 </div>
-
                 
-                <div className="mt-5 ">
+
+                <div className="mt-3">
                     <div className="fw-light fs-3 mb-1 ms-2 text-center">All Suppliers</div>
                     <div className="d-flex justify-content-center">
                     <Form className="w-50 ms-4">
                         <Form.Group controlId="formSearch">
-                            <InputGroup>
-                                <Form.Control
-                                    type="text"
-                                    placeholder="Enter Supplier name"
-                                    aria-label="formsearchSup"
-                                    aria-describedby="basic-addon1"
-                                    value={searchQuery}
-                                    onChange={handleSearchSupplier}
-                                />
-                                <Button variant="outline-secondary" id="button-addon3" onClick={handleSearchSupplier}>
-                                    <i className="bi bi-search"></i>
-                                </Button>
-                            </InputGroup>
+                            <Row>
+                                <Col >
+                                    <Form.Control
+                                        type="text"
+                                        placeholder="Enter Supplier name"
+                                        aria-label="formsearchSup"
+                                        aria-describedby="basic-addon1"
+                                        value={searchQuery}
+                                        onChange={handleSearchSupplier}
+                                    />
+                                </Col>
+                                <Col xs={2}>
+                                    <Button variant="outline-secondary search-button" onClick={handleSearchSupplier}>
+                                        <i className="bi bi-search search-icon"></i>
+                                    </Button>
+                                </Col>
+                            </Row>
                         </Form.Group>
                     </Form>
                     </div>
@@ -250,7 +258,7 @@ function Supplier () {
                 <Row xs={1} sm={2} md={3} lg={4}>
                     {renderSuppliers.map((supplier, index) => (
                         <Col key={index} className="mb-4">
-                            <Card className="h-100 card-up card-shadow-1" >
+                            <Card className="card-up card-shadow-1" style={{height:"90%"}} >
                                 <Card.Body>
                                     <Card.Title className="text-center">{supplier.supplier_name}</Card.Title><br></br>
                                     <Card.Text className="text-center">
@@ -265,28 +273,28 @@ function Supplier () {
                                         <div className="fw-light">Product Types:</div> {supplier.product_types.join(', ')}
                                     </ListGroup.Item>
                                 </ListGroup>
-                                <Card.Body className="">
-                                        <div className="fw-light">Supplier Performance:</div>
-                                        <div>Quality: {supplier.sup_performance.quality}</div>
-                                        <div>Delivery Time: {supplier.sup_performance.delivery_time}</div>
-                                </Card.Body><hr></hr>
-                                <Card.Body className="d-flex justify-content-end align-items-end">
-                                    <Row className="g-0">
-                                        <Col>
-                                            <Link to={`/supplier/get/${supplier._id}`} className="d-flex justify-content-center align-items-center" style={{ textDecoration: 'none' }}>
+                                <Card.Body >
+                                    <div className="fw-light">Supplier Performance:</div>
+                                    <div>Quality: {supplier.sup_performance.quality}</div>
+                                    <div>Delivery Time: {supplier.sup_performance.delivery_time}</div>
+                                    
+                                    <div>
+                                        <div className="mt-4 d-flex flex-column justify-content-between align-items-center">
+                                            <Link to={`/supplier/get/${supplier._id}`} style={{ textDecoration: 'none' }}>
                                                 <Button variant="dark" id="up-btn" size="sm" className="mt-2 border-0">
                                                     <i className="bi bi-shop-window me-2"></i> View Supplier
                                                 </Button>
                                             </Link>
-                                        </Col>
-                                    </Row>
+                                        </div>
+                                    </div>
                                 </Card.Body>
                             </Card>
                         </Col>
                     ))}
                 </Row>
             </div>
-            </div>
+        </div>
+    </Layout>
     )
 }
 

@@ -3,7 +3,9 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import axios from 'axios';
 import {Button, Row, Col, Card} from 'react-bootstrap'
 import './supplier.css';
-// import {jsPDF} from 'jspdf';
+import {jsPDF} from 'jspdf';
+import Layout from '../Layout';
+import PurchaseOrder from "./purchaseOrders";
 
 function ViewPO() {
 
@@ -309,64 +311,64 @@ function ViewPO() {
         printWindow.print();
     };
 
-    //PRINT AS A PDF
-    // const printPdfPO = () => {
-    //     const doc = new jsPDF();
+    // PRINT AS A PDF
+    const printPdfPO = () => {
+        const doc = new jsPDF();
     
-    //     // Add a border around the entire content
-    //     doc.setLineWidth(0.5); // Set border width
-    //     doc.rect(5, 5, 200, 280); // x, y, width, height
+        // Add a border around the entire content
+        doc.setLineWidth(0.5); // Set border width
+        doc.rect(5, 5, 200, 280); // x, y, width, height
     
-    //     doc.setFontSize(16);
-    //     doc.text('Purchase Order', 10, 20);
+        doc.setFontSize(16);
+        doc.text('Purchase Order', 10, 20);
     
-    //     doc.setFontSize(12);
-    //     doc.text(`Purchase Order ID: ${purchaseOrder.purchaseOrder_id}`, 10, 30);
-    //     doc.text(`Mongo DB ID: ${purchaseOrder._id}`, 10, 40);
-    //     doc.text(`Supplier ID: ${purchaseOrder.supplier_id}`, 10, 50);
-    //     doc.text(`Supplier Name: ${purchaseOrder.supplier_name}`, 10, 60);
+        doc.setFontSize(12);
+        doc.text(`Purchase Order ID: ${purchaseOrder.purchaseOrder_id}`, 10, 30);
+        doc.text(`Mongo DB ID: ${purchaseOrder._id}`, 10, 40);
+        doc.text(`Supplier ID: ${purchaseOrder.supplier_id}`, 10, 50);
+        doc.text(`Supplier Name: ${purchaseOrder.supplier_name}`, 10, 60);
 
-    //     doc.text(`Order Date: ${purchaseOrder.order_date}`, 20, 75);
-    //     doc.text(`Delivery Date: ${purchaseOrder.deliver_date}`, 90, 75);
+        doc.text(`Order Date: ${purchaseOrder.order_date}`, 20, 75);
+        doc.text(`Delivery Date: ${purchaseOrder.deliver_date}`, 90, 75);
     
-    //     doc.text(`Delivery Method: ${purchaseOrder.delivery_information.delivery_method}`, 10, 90);
-    //     doc.text(`Delivery Costs: ${purchaseOrder.delivery_information.delivery_costs}`, 10, 100);
+        doc.text(`Delivery Method: ${purchaseOrder.delivery_information.delivery_method}`, 10, 90);
+        doc.text(`Delivery Costs: ${purchaseOrder.delivery_information.delivery_costs}`, 10, 100);
     
-    //     doc.text(`Payment Terms: ${purchaseOrder.payment_information.payment_terms}`, 10, 115);
-    //     doc.text(`Payment Method: ${purchaseOrder.payment_information.payment_method}`, 10, 125);
+        doc.text(`Payment Terms: ${purchaseOrder.payment_information.payment_terms}`, 10, 115);
+        doc.text(`Payment Method: ${purchaseOrder.payment_information.payment_method}`, 10, 125);
     
-    //     // Draw table headers
-    //     doc.setFillColor(200, 200, 200); // Set header background color
-    //     doc.rect(10, 140, 190, 10, 'F'); // Draw header rectangle
-    //     doc.setTextColor(0); // Reset text color
-    //     doc.text('Item Name', 15, 145);
-    //     doc.text('Unit Price', 65, 145);
-    //     doc.text('Quantity', 95, 145);
-    //     doc.text('Description', 125, 145);
-    //     doc.text('Total Price', 165, 145);
+        // Draw table headers
+        doc.setFillColor(200, 200, 200); // Set header background color
+        doc.rect(10, 140, 190, 10, 'F'); // Draw header rectangle
+        doc.setTextColor(0); // Reset text color
+        doc.text('Item Name', 15, 145);
+        doc.text('Unit Price', 65, 145);
+        doc.text('Quantity', 95, 145);
+        doc.text('Description', 125, 145);
+        doc.text('Total Price', 165, 145);
     
-    //     // Draw table rows
-    //     let y = 155;
-    //     purchaseOrder.order_items.forEach((item) => {
-    //         doc.text(item.item_name, 15, y);
-    //         doc.text(item.unit_price.toString(), 65, y);
-    //         doc.text(item.quantity.toString(), 95, y);
-    //         doc.text(item.description, 125, y);
-    //         doc.text(item.total_price.toString(), 165, y);
-    //         y += 10; // Adjust Y-coordinate for next row
-    //     });
+        // Draw table rows
+        let y = 155;
+        purchaseOrder.order_items.forEach((item) => {
+            doc.text(item.item_name, 15, y);
+            doc.text(item.unit_price.toString(), 65, y);
+            doc.text(item.quantity.toString(), 95, y);
+            doc.text(item.description, 125, y);
+            doc.text(item.total_price.toString(), 165, y);
+            y += 10; // Adjust Y-coordinate for next row
+        });
     
-    //     doc.setFontSize(16); // Set the font size to 16 for the total order amount
-    //     doc.text(`Total Order Amount: ${purchaseOrder.total_order_amount}`, 10, y + 10);
+        doc.setFontSize(16); // Set the font size to 16 for the total order amount
+        doc.text(`Total Order Amount: ${purchaseOrder.total_order_amount}`, 10, y + 10);
 
-    //     doc.setFontSize(12);
-    //     doc.text(`Order Status: ${purchaseOrder.order_status}`, 10, y + 30);
-    //     doc.text(`Payment Status: ${purchaseOrder.payment_status}`, 80, y + 30);
-    //     doc.text(`Additional Information: ${purchaseOrder.additional_infomation}`, 10, y + 40);
+        doc.setFontSize(12);
+        doc.text(`Order Status: ${purchaseOrder.order_status}`, 10, y + 30);
+        doc.text(`Payment Status: ${purchaseOrder.payment_status}`, 80, y + 30);
+        doc.text(`Additional Information: ${purchaseOrder.additional_infomation}`, 10, y + 40);
     
-    //     // Save the PDF with a meaningful filename
-    //     doc.save(`Purchase_Order_${purchaseOrder.purchaseOrder_id}.pdf`);
-    // };
+        // Save the PDF with a meaningful filename
+        doc.save(`Purchase_Order_${purchaseOrder.purchaseOrder_id}.pdf`);
+    };
     
 
     //INVOICE UPLOAD - NOT WORKING
@@ -384,165 +386,181 @@ function ViewPO() {
 
 
     return(
-        <div className="p-3 container-fluid mb-3 bg">
-            <Row >
-                <Col xs={8}>
-                    <div className="">
-                        <div className="ms-4 ">
-                            <p className="fw-light">Purchase order Management
-                            <h2 >Purchase Order {purchaseOrder.purchaseOrder_id}</h2></p>
-                            <Link to="/purchaseOrder">
-                                <Button className="back-btn" variant="secondary" ><i className="bi bi-arrow-left me-2"></i><span>Back</span></Button>
-                            </Link>
-
-                            {/* <Button className="ms-2 text-white " variant="info" onClick={printPdfPO} id="up-btn" ><i className="bi bi-filetype-pdf me-2"></i>Download Purchase Order</Button> */}
-                            <Button className="ms-2 text-white " variant="info" id="up-btn" ><i className="bi bi-filetype-pdf me-2"></i>Download Purchase Order</Button>
-                        </div>
-
-                        <div className="mt-4 pe-4 shadow-lg rounded"> 
-                            <p className="fs-4 fw-light">Purchase Order ID: {purchaseOrder.purchaseOrder_id}</p>
-                            <p className="fs-6">Mongo DB database ID: {id}</p>
-                            <p>Supplier ID: {purchaseOrder.supplier_id}</p>
-                            
-                            <div >
-                                <h6>Delivery Information</h6>
-                                <p className="ms-3">Delivery Method :  {purchaseOrder.delivery_information.delivery_method}</p>
-                                <p className="ms-3">Delivery costs for the order :  {purchaseOrder.delivery_information.delivery_costs}</p>
-                            </div>
-
-                            <div className="mt-4">
-                                <h6>Payment details of the order</h6>
-                                <p className="ms-3">Payment terms :  {purchaseOrder.payment_information.payment_terms}</p>
-                                <p className="ms-3">Payment Method :  {purchaseOrder.payment_information.payment_method}</p>
-                            </div>
-
-                            <div>
-                                <Row className="ms-3 mt-5">
-                                    <Col xs={4}>
-                                        <p className="fs-6 p-3 text-center fw-light text-light rounded" style={{backgroundColor:"#334eac"}}>Order date: <br></br><span className="fw-semibold fs-5">{purchaseOrder.order_date}</span></p>
-                                    </Col>
-                                    <Col xs={4} className="ms-5">
-                                        <p className="fs-6 p-3 text-center fw-light text-light rounded" style={{backgroundColor:"#334eac"}}>Delivery date: <br></br><span className="fw-semibold fs-5">{purchaseOrder.deliver_date}</span></p>
-                                    </Col>
-                                </Row>
-                            </div>
-                        </div>
-                    </div>
-                </Col>
-                <Col xs={4} >
-                    <div className=" p-3 rounded shadow-lg rounded ">
-                        <h4 className="mb-4 ms-2">Supplier Details </h4>
-                        <p>Supplier ID: {supplier.supplier_id}</p>
-                        <p>Supplier Name: {supplier.supplier_name}</p>
-                        <p>Email: {supplier.email}</p>
-                        <p>Address: {supplier.address}</p>
-                        <p>Contact Number: {supplier.contact}</p>
-
-                        <Link to={`/supplier/get/${supplier._id}`}>
-                        <button  className="ms-3 side-btn dark-blue">
-                            <span>View Bank details<i className="bi bi-chevron-right"></i></span>
-                        </button>
+        <Layout>
+            <div className="mb-3 bg">
+                
+                <div>
+                    <div className="layout-blue">
+                        <p className="fw-light">Purchase order Management
+                        <h2 >Purchase Order {purchaseOrder.purchaseOrder_id}</h2></p>
+                        <Link to="/purchaseOrder">
+                            <Button className="back-btn" variant="secondary" ><i className="bi bi-arrow-left me-2"></i><span>Back</span></Button>
                         </Link>
 
-                        <p className="mt-2">Supplier selling product items:</p>
-                        <ul>
-                            {supplier.product_items && supplier.product_items.map((item, index) => (
-                                <li key={index}>
-                                    {item.product_name} - ${item.unit_price}
-                                </li>
-                            ))}
-                        </ul>
-
+                        <Button className="ms-2 text-white " variant="info" onClick={printPdfPO} id="up-btn" ><i className="bi bi-filetype-pdf me-2"></i>Download Purchase Order</Button>
                     </div>
-                </Col>
-            </Row>
+                    <Row >
+                        <Col xs={7}>
+                            <div className="p-3 shadow-lg rounded"> 
+                                <p className="fs-4 fw-light layout-blue">Purchase Order ID: {purchaseOrder.purchaseOrder_id}</p>
+                                <p className="fs-6">Mongo DB database ID: {id}</p>
+                                <p>Supplier ID: {purchaseOrder.supplier_id}</p>
+                                
+                                <div className="mt-4">
+                                    <h6>Delivery Information</h6>
+                                    <p className="ms-3">Delivery Method :  {purchaseOrder.delivery_information.delivery_method}</p>
+                                    <p className="ms-3">Delivery costs for the order :  {purchaseOrder.delivery_information.delivery_costs}</p>
+                                </div>
 
-            <div className="p-4 mt-3 rounded " >
-                <h6 >Ordered Items</h6>
-                <Row xs={1} md={6} lg={7}  className="g-4">
-                    {purchaseOrder.order_items.map((item, index) => (
-                        <Col key={index}>
-                            <Card style={{backgroundColor:"#d6cdc5", borderColor: "#d6cdc5"}}>
-                                <Card.Body>
-                                    <Card.Title ><span className="fw-light fs-6">#{index + 1}</span><br></br>{item.item_name}</Card.Title>
-                                    <Card.Subtitle className="mb-2 text-muted">Price: Rs. {item.unit_price}</Card.Subtitle>
-                                    <Card.Text>
-                                        <p><span>Quantity : </span> {item.quantity}<br />
-                                        <span>Description : </span> {item.description}<br />
-                                        <span>Total Price : </span> <br></br><span className="text-center fw-semibold">Rs. {item.total_price}</span></p>
-                                    </Card.Text>
-                                </Card.Body>
-                            </Card>
+                                <div className="mt-4">
+                                    <h6>Payment details of the order</h6>
+                                    <p className="ms-3">Payment terms :  {purchaseOrder.payment_information.payment_terms}</p>
+                                    <p className="ms-3">Payment Method :  {purchaseOrder.payment_information.payment_method}</p>
+                                </div>
+
+                                <div>
+                                    <Row className="ms-3 mt-5">
+                                        <Col xs={4}>
+                                            <p className="fs-6 p-3 text-center fw-light text-light rounded" style={{backgroundColor:"#334eac"}}>Order date: <br></br><span className="fw-semibold fs-5">{purchaseOrder.order_date}</span></p>
+                                        </Col>
+                                        <Col xs={4} className="ms-5">
+                                            <p className="fs-6 p-3 text-center fw-light text-light rounded" style={{backgroundColor:"#334eac"}}>Delivery date: <br></br><span className="fw-semibold fs-5">{purchaseOrder.deliver_date}</span></p>
+                                        </Col>
+                                    </Row>
+                                </div>
+
+                                <div className="p-4 mt-3 rounded " >
+                                    <h6 >Ordered Items</h6>
+                                    <Row xs={4} className="g-4">
+                                        {purchaseOrder.order_items.map((item, index) => (
+                                            <Col key={index} >
+                                                <Card  style={{backgroundColor:"#d6cdc5", borderColor: "#d6cdc5", height:"95%"}}>
+                                                    <Card.Body>
+                                                        <Card.Title ><span className="fw-light fs-6">#{index + 1}</span><br></br>{item.item_name}</Card.Title>
+                                                        <Card.Subtitle className="mb-2 text-muted">Price: Rs. {item.unit_price}</Card.Subtitle>
+                                                        <Card.Text>
+                                                            <p><span>Quantity : </span> {item.quantity}<br />
+                                                            <span>Description : </span> {item.description}<br />
+                                                            <span>Total Price : </span> <br></br><span className="text-center fw-semibold">Rs. {item.total_price}</span></p>
+                                                        </Card.Text>
+                                                    </Card.Body>
+                                                </Card>
+                                            </Col>
+                                        ))}
+                                    </Row>
+                                </div>
+                            
+                                <div>
+                                    <p className="fw-light  mb-4">Total Amount of the ordered items : <span className="fw-semibold fs-3"> Rs. {purchaseOrder.total_order_amount}</span></p>
+
+                                    <div className="text-center my-5 ms-5 ">
+                                        <p className="text-start">Current status of the order</p>
+                                        <Row>
+                                            <Col xs={4}>
+                                                <p className="fs-6 p-3 fw-light rounded text-light" style={{backgroundColor:"#334eac"}}>Payment Status<br></br><span className="fs-5 ">{purchaseOrder.payment_status}</span></p>
+                                            </Col>
+                                            <Col xs={4}>
+                                                <p className="ms-3 fs-6 p-3 fw-light rounded text-light"  style={{backgroundColor:"#334eac"}}>Order Status<br></br><span className="fs-5 ">{purchaseOrder.order_status}</span></p>
+                                            </Col>
+                                        </Row>                    
+                                    </div>
+                                </div>
+                            </div>
                         </Col>
-                    ))}
-                </Row>
-            </div>
-                    
-
-            <Row className="mt-5">
-                <Col md={7}>
-                    <div >
-                        <p className="fw-light  mb-4">Total Amount of the ordered items : <span className="fw-semibold fs-3"> Rs. {purchaseOrder.total_order_amount}</span></p>
-
-                        <div className="text-center my-5 ms-5 ">
-                            <p className="text-start">Current status of the order</p>
+                        <Col xs={5} >
                             <Row>
-                                <Col xs={4}>
-                                    <p className="fs-6 p-3 fw-light rounded text-light" style={{backgroundColor:"#334eac"}}>Payment Status<br></br><span className="fs-5 ">{purchaseOrder.payment_status}</span></p>
-                                </Col>
-                                <Col xs={4}>
-                                    <p className="ms-3 fs-6 p-3 fw-light rounded text-light"  style={{backgroundColor:"#334eac"}}>Order Status<br></br><span className="fs-5 ">{purchaseOrder.order_status}</span></p>
-                                </Col>
-                            </Row>                    
-                        </div>
+                                <div className=" p-3 rounded shadow-lg rounded ">
+                                    <p className="mb-4 ms-2 layout-blue fw-light text-center">Supplier<br></br><span className="fw-normal  fs-3">{supplier.supplier_name}</span></p>
+                                    <div className="text-center">
+                                        <p className="mt-5">Supplier ID: {supplier.supplier_id}</p>
+                                        <p>Email: {supplier.email}</p>
+                                        <p>Address: {supplier.address}</p>
+                                        <p>Contact Number: {supplier.contact}</p>
+                                    </div>
 
-                        <div className="mb-4 rounded"  style={{backgroundColor:"#89CFF3"}}>
-                            <Row>
-                                <Col >
-                                    <div className="text-secondary p-4 ">If payment is done,<br></br><span className="ms-3 text-dark ">Invoice number : <span className="fw-semibold ">{purchaseOrder.invoice_no}</span></span></div>
-                                </Col>
-                                <Col >
-                                <div className="file-input-container position-relative top-50 start-50 translate-middle">
-                                    <input
-                                        type="file"
-                                        ref={fileInputRef}
-                                        className="file-input"
-                                        onChange={handleFileChange}
-                                    />
-                                    <Button variant="success" className="text-white" onClick={handleClick} style={{backgroundColor:"#1679AB"}}><i className="bi bi-coin me-2"></i>Add invoice</Button>
-                                </div>    
-                                </Col>
+                                    {/* <Link to={`/supplier/get/${supplier._id}`}>
+                                    <Button  className="ms-3 side-btn " variant="success">
+                                        <span>View Bank details<i className="bi bi-bank"></i></span>
+                                    </Button>
+                                    </Link> */}
+
+                                    {/* <Link to={`/supplier/get/${supplier._id}`}>
+                                        <button className="side-btn-btn" type="button">
+                                            <span>View Bank details</span>
+                                            <i className="bi bi-bank"></i>
+                                        </button>
+                                    </Link> */}
+
+
+                                    <p className="mt-5">Supplier selling product items:</p>
+                                    <ul>
+                                        {supplier.product_items && supplier.product_items.map((item, index) => (
+                                            <li key={index}>
+                                                {item.product_name} - ${item.unit_price}
+                                            </li>
+                                        ))}
+                                    </ul>
+
+                                </div>
                             </Row>
+                            <Row>
+                                <div className="card-shadow-1 rounded p-3 mt-4 layout-blue">
+                                    <div className="mb-5 text-center fw-light">{purchaseOrder.supplier_name}<br></br><span className="fs-4 mb-5 fw-normal ">Supplier Performance</span>
+                                    <p className=" fs-6 fw-">for purchase order ID #{purchaseOrder.purchaseOrder_id}</p></div>
+
+                                    <p>Payment Date: {purchaseOrder.payment_date}</p>
+                                    <p >Supplier Deliver date:{purchaseOrder.sup_deliver_date} </p>
+                                    <p><b>Lead time took the supplier to finish purchase order process: {PurchaseOrder.leadTime}</b></p>
+                                    <p className="my-5">Measurement of the quality of the products as a percentage: <span className="fs-3 fw-semibold">{purchaseOrder.qualityOfGoods}%</span></p>
+                                    <div>Accuracy of the quantity of goods delivered compared to the ordered quantity:</div>
+                                    <div className="fs-3 mb-4  fw-semibold ">{purchaseOrder.quantityAccuracy}%</div>
+                                    <p>Timeliness and effectiveness of the supplier's responses to purchase orders and inquiries: {purchaseOrder.responsiveness} </p>
+                                    <p className="fw-semibold mt-4">Additional info<br></br><span className="fw-normal">{purchaseOrder.additional}</span></p>
+                                    <p className="my-5">Overall cost-effectiveness: <span className="fs-4 fw-semibold layout-blue">{purchaseOrder.costEffectiveness}</span></p>
+
+                                    <p>Are you satisfied with the purchase order {purchaseOrder.purchaseOrder_id}? <span className="fs-4 fw-semibold">{purchaseOrder.overallSatisfaction}</span> </p>
+
+                                </div>
+                            </Row>
+                        </Col>
+                    </Row>
+
+                    <div className="mt-5 rounded"  style={{backgroundColor:"#89CFF3"}}>
+                        <Row>
+                            <Col >
+                                <div className="text-secondary p-4 ">If payment is done,<br></br><span className="ms-3 text-dark ">Invoice number : <span className="fw-semibold ">{purchaseOrder.invoice_no}</span></span></div>
+                            </Col>
+                            <Col >
+                            <div className="file-input-container position-relative top-50 start-50 translate-middle">
+                                <input
+                                    type="file"
+                                    ref={fileInputRef}
+                                    className="file-input"
+                                    onChange={handleFileChange}
+                                />
+                                <Button variant="success" className="text-white" onClick={handleClick} style={{backgroundColor:"#1679AB"}}><i className="bi bi-coin me-2"></i>Add invoice</Button>
+                            </div>    
+                            </Col>
+                        </Row>
+                    </div>
+                   
+
+                    <div className="mt-4">
+                        <p className="mb-5  fw-semibold"> Additional instructions to follow: <br></br><span className="fw-normal">{purchaseOrder.additional_infomation}</span></p>
+
+                        <div className="d-flex justify-content-start me-3 mt-4">
+                            <Button variant="info" className="ms-2 text-white" id="up-btn" onClick={printPO}><i className="bi bi-printer-fill me-2"></i>Print as a document</Button>
+
+                            <Link to={`/purchaseOrder/update/${purchaseOrder._id}`} >
+                                <Button variant="white" className="ms-2 text-white " id="up-btn" style={{backgroundColor:"#334eac"}}><i className="bi bi-pen me-2"></i>Edit Order details</Button>
+                            </Link>
+
+                            <Button variant="danger" className="ms-2 " id="up-btn" onClick={handleDelete}><i className="bi bi-trash me-2" ></i>Delete order</Button>
                         </div>
                     </div>
-                </Col>
-                <Col md={5}>
-                    <div className=" p-3" style={{backgroundColor:"#334eac"}}>
-                        <h4 className="mb-4 text-white">Performance Metrics <span className="fs-6 fw-light ">for Purchase order </span><small className=" fs-6 ">${purchaseOrder._id}</small></h4>
-
-                        <p></p>
-                        <p></p>
-                        <p></p>
-                        <p></p>
-                        <p></p>
-                    </div>
-                </Col>
-            </Row>
-            
-            <div className="container-fluid">
-                <p className="mb-5  fw-semibold"> Additional instructions to follow: <br></br><span className="fw-normal">{purchaseOrder.additional_infomation}</span></p>
-
-                <div className="d-flex justify-content-start me-3 mt-4">
-                    <Button variant="info" className="ms-2 text-white" id="up-btn" onClick={printPO}><i className="bi bi-printer-fill me-2"></i>Print as a document</Button>
-
-                    <Link to={`/purchaseOrder/update/${purchaseOrder._id}`} >
-                        <Button variant="white" className="ms-2 text-white " id="up-btn" style={{backgroundColor:"#334eac"}}><i className="bi bi-pen me-2"></i>Edit Order details</Button>
-                    </Link>
-
-                    <Button variant="danger" className="ms-2 " id="up-btn" onClick={handleDelete}><i className="bi bi-trash me-2" ></i>Delete order</Button>
                 </div>
             </div>
-        </div>
+        </Layout>
     )
 }
 

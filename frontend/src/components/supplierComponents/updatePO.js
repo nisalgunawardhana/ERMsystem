@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from 'axios';
+import Layout from '../Layout';
+import './supplier.css';
 
 function UpdatePurchaseOrder() {
 
@@ -28,7 +30,17 @@ function UpdatePurchaseOrder() {
         invoice_no: 0,
         total_order_amount: 0,
         order_status: "",
-        payment_status: ""
+        payment_status: "",
+        payment_date: "",
+        sup_deliver_date: "",
+        leadTime: 0,
+        qualityOfGoods: 0,
+        quantityAccuracy: 0,
+        responsiveness: "",
+        costEffectiveness: "",
+        additional: "",
+        overallSatisfaction: ""
+
     });
 
     const [newOrderItem, setNewOrderItem] = useState({
@@ -165,320 +177,327 @@ function UpdatePurchaseOrder() {
 
 
     return(
-        <div className="bg">
-            <div className="w-75 container custom-container-po">
-                <h3>Update Purchase Order</h3>
-                <div className="mt-4 container" style={{width:'75%'}}>
-                    <Form onSubmit={handleSubmit}>
-                        <Form.Group controlId="purchaseOrder_id">
-                            <Form.Label>Purchase Order ID</Form.Label>
-                            <Form.Control
-                                type="text"
-                                name="purchaseOrder_id"
-                                value={purchaseOrder.purchaseOrder_id}
-                                onChange={handleChange}
-                            />
-                        </Form.Group>
-
-                        <Form.Group controlId="supplier_id">
-                            <Form.Label>Supplier ID</Form.Label>
-                            <Form.Control
-                                type="text"
-                                name="supplier_id"
-                                value={purchaseOrder.supplier_id}
-                                onChange={handleChange}
-                            />
-                        </Form.Group>
-
-                        <Form.Group controlId="supplierName">
-                            <Form.Label>Supplier Name</Form.Label>
-                            <Form.Control
-                                type="text"
-                                name="supplier_name"
-                                value={purchaseOrder.supplier_name}
-                                onChange={handleChange}
-                            />
-                        </Form.Group>
-
-                        <Row className="my-2">
-                            <Col>
-                            <Form.Group controlId="orderDate">
-                                <Form.Label>Order date</Form.Label>
-                                <Form.Control
-                                    type="date"
-                                    name="order_date"
-                                    value={purchaseOrder.order_date}
-                                    onChange={handleChange}
-                                />
-                            </Form.Group>
-                            </Col>
-
-                            <Col>
-                            <Form.Group controlId="deliveryDate">
-                                <Form.Label>Delivery date</Form.Label>
-                                <Form.Control
-                                    type="date"
-                                    name="deliver_date"
-                                    value={purchaseOrder.deliver_date}
-                                    onChange={handleChange}
-                                />
-                            </Form.Group>
-                            </Col>
-                        </Row>
-
-
+        <Layout>
+            <div className="bg">
+                <div className="container ">
                 
-                        <div className="mt-3">
-                            <h6>Order Items</h6>
-                            <Form.Group controlId="orderItemName">
-                                <Form.Label>Item Name</Form.Label>
+                    <p className="fw-light layout-blue">Purchase Order Management<h3 className="layout-blue">Update Purchase Order {purchaseOrder.purchaseOrder_id}</h3></p>
+
+                    <div className="mt-5 container custom-container-supplier" >
+                        <Form onSubmit={handleSubmit}>
+                            <Form.Group controlId="purchaseOrder_id">
+                                <Form.Label>Purchase Order ID</Form.Label>
                                 <Form.Control
                                     type="text"
-                                    name="item_name"
-                                    value={newOrderItem.item_name}
-                                    onChange={e => setNewOrderItem({ ...newOrderItem, item_name: e.target.value })}
+                                    name="purchaseOrder_id"
+                                    value={purchaseOrder.purchaseOrder_id}
+                                    onChange={handleChange}
                                 />
                             </Form.Group>
 
-                            <Row>
-                            <Col>
-                            <Form.Group controlId="orderItemUnitPrice">
-                                <Form.Label>Unit Price</Form.Label>
-                                <Form.Control
-                                    type="number"
-                                    name="unit_price"
-                                    value={newOrderItem.unit_price}
-                                    onChange={e => setNewOrderItem({ ...newOrderItem, unit_price: e.target.value })}
-                                />
-                            </Form.Group>
-                            </Col>
-                            <Col>
-                            <Form.Group controlId="orderItemQuantity">
-                                <Form.Label>Quantity</Form.Label>
-                                <Form.Control
-                                    type="number"
-                                    name="quantity"
-                                    value={newOrderItem.quantity}
-                                    onChange={e => setNewOrderItem({ ...newOrderItem, quantity: e.target.value })}
-                                />
-                            </Form.Group>
-                            </Col>
-                            <Col className="text-center fs-5 ">
-                                <Row><p >Total </p></Row>
-                                <Row><p>Rs. {newOrderItem.unit_price * newOrderItem.quantity} </p></Row>
-                            </Col>
-                            </Row>
-
-                            <Row>
-                            <Col className="mt-2">
-                            <Form.Group controlId="orderItemDescription">
-                                <Form.Label>Item description</Form.Label>
-                                <small class="text-muted"> not required</small>
+                            <Form.Group controlId="supplier_id" className="mt-2">
+                                <Form.Label>Supplier ID</Form.Label>
                                 <Form.Control
                                     type="text"
-                                    name="item_description"
-                                    value={newOrderItem.description}
-                                    onChange={e => setNewOrderItem({ ...newOrderItem, description: e.target.value })}
+                                    name="supplier_id"
+                                    value={purchaseOrder.supplier_id}
+                                    onChange={handleChange}
                                 />
                             </Form.Group>
-                            </Col>
-                            <Col className="mt-4">
-                            <Button className="my-3" variant="success" type="button"  onClick={handleAddNewItem} >Add Item to Purchase Order</Button>
-                            </Col>
+
+                            <Form.Group controlId="supplierName" className="mt-2">
+                                <Form.Label>Supplier Name</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    name="supplier_name"
+                                    value={purchaseOrder.supplier_name}
+                                    onChange={handleChange}
+                                />
+                            </Form.Group>
+
+                            <Row className="my-2">
+                                <Col>
+                                <Form.Group controlId="orderDate" className="mt-2">
+                                    <Form.Label>Order date</Form.Label>
+                                    <Form.Control
+                                        type="date"
+                                        name="order_date"
+                                        value={purchaseOrder.order_date}
+                                        onChange={handleChange}
+                                    />
+                                </Form.Group>
+                                </Col>
+
+                                <Col>
+                                <Form.Group controlId="deliveryDate" className="mt-2">
+                                    <Form.Label>Delivery date</Form.Label>
+                                    <Form.Control
+                                        type="date"
+                                        name="deliver_date"
+                                        value={purchaseOrder.deliver_date}
+                                        onChange={handleChange}
+                                    />
+                                </Form.Group>
+                                </Col>
                             </Row>
 
-                            <div  className=" rounded" style={{backgroundColor:"Red"}}>
-                                <table className="table table-secondary text-center">
-                                    <thead>
-                                        <tr>
-                                            <th>Item Name</th>
-                                            <th>Unit Price</th>
-                                            <th>Quantity</th>
-                                            <th>Description</th>
-                                            <th>Total Price</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {purchaseOrder.order_items.map((item, index) => (
-                                            <tr key={index}>
-                                                <td>{item.item_name}</td>
-                                                <td>{item.unit_price}</td>
-                                                <td>{item.quantity}</td>
-                                                <td>{item.description}</td>
-                                                <td className="fw-semibold fs-5">Rs. {item.total_price}</td>
-                                                <td>
-                                                    <Button variant="danger" size="sm" onClick={() => handleDeleteItem(index)}>
-                                                        Delete
-                                                    </Button>
-                                                </td>
+
+                    
+                            <div className="mt-3">
+                                <h6>Order Items</h6>
+                                <Form.Group controlId="orderItemName" className="mt-2">
+                                    <Form.Label>Item Name</Form.Label>
+                                    <Form.Control
+                                        type="text"
+                                        name="item_name"
+                                        value={newOrderItem.item_name}
+                                        onChange={e => setNewOrderItem({ ...newOrderItem, item_name: e.target.value })}
+                                    />
+                                </Form.Group>
+
+                                <Row>
+                                <Col>
+                                <Form.Group controlId="orderItemUnitPrice" className="mt-3">
+                                    <Form.Label>Unit Price</Form.Label>
+                                    <Form.Control
+                                        type="number"
+                                        name="unit_price"
+                                        value={newOrderItem.unit_price}
+                                        onChange={e => setNewOrderItem({ ...newOrderItem, unit_price: e.target.value })}
+                                    />
+                                </Form.Group>
+                                </Col>
+                                <Col>
+                                <Form.Group controlId="orderItemQuantity" className="mt-3">
+                                    <Form.Label>Quantity</Form.Label>
+                                    <Form.Control
+                                        type="number"
+                                        name="quantity"
+                                        value={newOrderItem.quantity}
+                                        onChange={e => setNewOrderItem({ ...newOrderItem, quantity: e.target.value })}
+                                    />
+                                </Form.Group>
+                                </Col>
+                                <Col className="text-center fs-5 mt-3">
+                                    <Row><p >Total </p></Row>
+                                    <Row><p>Rs. {newOrderItem.unit_price * newOrderItem.quantity} </p></Row>
+                                </Col>
+                                </Row>
+
+                                <Row>
+                                <Col className="mt-2">
+                                <Form.Group controlId="orderItemDescription">
+                                    <Form.Label>Item description</Form.Label>
+                                    <small class="text-muted"> not required</small>
+                                    <Form.Control
+                                        as="textarea"
+                                        rows={3}
+                                        name="item_description"
+                                        value={newOrderItem.description}
+                                        onChange={e => setNewOrderItem({ ...newOrderItem, description: e.target.value })}
+                                    />
+                                </Form.Group>
+                                </Col>
+                                <Col className="mt-4">
+                                <Button className="my-3" variant="success" type="button"  onClick={handleAddNewItem} >Add Item to Purchase Order</Button>
+                                </Col>
+                                </Row>
+
+                                <div  className=" rounded" style={{backgroundColor:"Red"}}>
+                                    <table className="table table-secondary text-center mt-5 ">
+                                        <thead>
+                                            <tr>
+                                                <th>Item Name</th>
+                                                <th>Unit Price</th>
+                                                <th>Quantity</th>
+                                                <th>Description</th>
+                                                <th>Total Price</th>
+                                                <th>Action</th>
                                             </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                            {purchaseOrder.order_items.map((item, index) => (
+                                                <tr key={index}>
+                                                    <td>{item.item_name}</td>
+                                                    <td>{item.unit_price}</td>
+                                                    <td>{item.quantity}</td>
+                                                    <td>{item.description}</td>
+                                                    <td className="fw-semibold fs-5">Rs. {item.total_price}</td>
+                                                    <td>
+                                                        <Button variant="danger" size="sm" onClick={() => handleDeleteItem(index)}>
+                                                            Delete
+                                                        </Button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+
+                                <h5 className="my-5">Order Amount : Rs. {purchaseOrder.order_amount}</h5>
+                            </div>
+
+
+                            <div className="mt-3">
+                                <h6>Delivery Information</h6>
+                                <Row>
+                                    <Col>
+                                    <Form.Group >
+                                        <Form.Label>Delivery Method</Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            name="delivery_information.delivery_method"
+                                            value={purchaseOrder.delivery_information.delivery_method}
+                                            onChange={handleChange}
+                                        />
+                                    </Form.Group>
+                                    </Col>
+                                    <Col>
+                                    <Form.Group >
+                                        <Form.Label>Delivery Costs</Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            name="delivery_costs"
+                                            value={purchaseOrder.delivery_information.delivery_costs}
+                                            onChange={handleDeliveryCostsChange}
+                                        />
+                                    </Form.Group>
+                                    </Col>
+                                </Row>
+                            </div>
+
+                            <div className="mt-4">
+                                <h6>Payment Information</h6>
+                                <Row>
+                                    <Col>
+                                    <Form.Group >
+                                        <Form.Label>Payment Method</Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            name="payment_information.payment_method"
+                                            value={purchaseOrder.payment_information.payment_method}
+                                            onChange={handleChange}
+                                        />
+                                    </Form.Group>
+                                    </Col>
+                                    <Col>
+                                    <Form.Group >
+                                        <Form.Label>Payment Terms and Aggrements</Form.Label>
+                                        <Form.Control
+                                            as="textarea"
+                                            rows={3}
+                                            name="payment_information.payment_terms"
+                                            value={purchaseOrder.payment_information.payment_terms}
+                                            onChange={handleChange}
+                                        />
+                                    </Form.Group>
+                                    </Col>
+                                </Row>
+                            </div>
+
+                            <div className="mt-4">
+                            <Form.Group controlId="additionalOrderInfo">
+                                <Form.Label>Additional Information</Form.Label>
+                                <Form.Control
+                                    as="textarea"
+                                    rows={3}
+                                    name="additional_infomation"
+                                    value={purchaseOrder.additional_infomation}
+                                    onChange={handleChange}
+                                />
+                            </Form.Group>
+
+                            <Form.Group controlId="invoicdID" className="mt-3">
+                                <Form.Label>Invoice Number</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    name="invoice_no"
+                                    value={purchaseOrder.invoice_no}
+                                    onChange={handleChange}
+                                />
+                            </Form.Group>
+                            </div>
+
+                            <div>
+                            <h3 className="my-5">Total Order Amount : Rs. {purchaseOrder.total_order_amount}</h3>
+                            </div>
+
+                            <div className="mt-3 text-center">
+                                <h6>Tract your Purchase Order</h6>
+                                <Row>
+                                    <Col>
+                                        <Form.Group >
+                                            <Form.Label>Order Status</Form.Label>
+                                            <Col>
+                                            <input 
+                                                type="radio" 
+                                                className="btn-check" 
+                                                name="order_status" 
+                                                id="order_pending" 
+                                                autoComplete="off"
+                                                value="Pending"
+                                                checked={purchaseOrder.order_status === "Pending"} 
+                                                onChange={handleChange} 
+                                            />
+                                            <label className="btn btn-secondary me-2" htmlFor="order_pending">Pending</label>
+
+                                            <input 
+                                                type="radio" 
+                                                className="btn-check" 
+                                                name="order_status" 
+                                                id="order_delivered" 
+                                                autoComplete="off"
+                                                value="Delivered" 
+                                                checked={purchaseOrder.order_status === "Delivered"} 
+                                                onChange={handleChange} 
+                                            />
+                                            <label className="btn btn-secondary" htmlFor="order_delivered">Delivered</label>
+                                            </Col>
+                                        </Form.Group>
+                                    </Col>
+                                    <Col>
+                                        <Form.Group >
+                                            <Form.Label>Payment Status</Form.Label>
+                                            <Col>
+                                            <input 
+                                                type="radio" 
+                                                className="btn-check" 
+                                                name="payment_status" 
+                                                id="order_payment_paid" 
+                                                autoComplete="off"
+                                                value="Paid" 
+                                                checked={purchaseOrder.payment_status === "Paid"} 
+                                                onChange={handleChange} 
+                                            />
+                                            <label className="btn btn-secondary me-2" htmlFor="order_payment_paid">Paid</label>
+
+                                            <input 
+                                                type="radio" 
+                                                className="btn-check" 
+                                                name="payment_status" 
+                                                id="order_payment_unpaid" 
+                                                autoComplete="off"
+                                                value="Unpaid" 
+                                                checked={purchaseOrder.payment_status === "UnPaid"} 
+                                                onChange={handleChange} 
+                                            />
+                                            <label className="btn btn-secondary" htmlFor="order_payment_unpaid">Unpaid</label>
+                                            </Col>
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
                             </div>
                             
+                            <div className="mb-5 d-flex flex-column align-items-center justify-content-center">
+                            <Button className="mt-4 col-md-4" variant="primary" type="submit">Update Purchase Order</Button>
+                            </div>
 
-                            <h5 className="my-5">Order Amount : Rs. {purchaseOrder.order_amount}</h5>
-                        </div>
-
-
-                        <div className="mt-3">
-                            <h6>Delivery Information</h6>
-                            <Row>
-                                <Col>
-                                <Form.Group >
-                                    <Form.Label>Delivery Method</Form.Label>
-                                    <Form.Control
-                                        type="text"
-                                        name="delivery_information.delivery_method"
-                                        value={purchaseOrder.delivery_information.delivery_method}
-                                        onChange={handleChange}
-                                    />
-                                </Form.Group>
-                                </Col>
-                                <Col>
-                                <Form.Group >
-                                    <Form.Label>Delivery Costs</Form.Label>
-                                    <Form.Control
-                                        type="text"
-                                        name="delivery_costs"
-                                        value={purchaseOrder.delivery_information.delivery_costs}
-                                        onChange={handleDeliveryCostsChange}
-                                    />
-                                </Form.Group>
-                                </Col>
-                            </Row>
-                        </div>
-
-                        <div className="mt-3">
-                            <h6>Payment Information</h6>
-                            <Row>
-                                <Col>
-                                <Form.Group >
-                                    <Form.Label>Payment Method</Form.Label>
-                                    <Form.Control
-                                        type="text"
-                                        name="payment_information.payment_method"
-                                        value={purchaseOrder.payment_information.payment_method}
-                                        onChange={handleChange}
-                                    />
-                                </Form.Group>
-                                </Col>
-                                <Col>
-                                <Form.Group >
-                                    <Form.Label>Payment Terms and Aggrements</Form.Label>
-                                    <Form.Control
-                                        type="text"
-                                        name="payment_information.payment_terms"
-                                        value={purchaseOrder.payment_information.payment_terms}
-                                        onChange={handleChange}
-                                    />
-                                </Form.Group>
-                                </Col>
-                            </Row>
-                        </div>
-
-                        <div className="mt-3">
-                        <Form.Group controlId="additionalOrderInfo">
-                            <Form.Label>Additional Information</Form.Label>
-                            <Form.Control
-                                type="text"
-                                name="additional_infomation"
-                                value={purchaseOrder.additional_infomation}
-                                onChange={handleChange}
-                            />
-                        </Form.Group>
-
-                        <Form.Group controlId="invoicdID">
-                            <Form.Label>Invoice Number</Form.Label>
-                            <Form.Control
-                                type="text"
-                                name="invoice_no"
-                                value={purchaseOrder.invoice_no}
-                                onChange={handleChange}
-                            />
-                        </Form.Group>
-                        </div>
-
-                        <div>
-                        <h3 className="my-5">Total Order Amount : Rs. {purchaseOrder.total_order_amount}</h3>
-                        </div>
-
-                        <div className="mt-3 text-center">
-                            <h6>Tract your Purchase Order</h6>
-                            <Row>
-                                <Col>
-                                    <Form.Group >
-                                        <Form.Label>Order Status</Form.Label>
-                                        <Col>
-                                        <input 
-                                            type="radio" 
-                                            className="btn-check" 
-                                            name="order_status" 
-                                            id="order_pending" 
-                                            autoComplete="off"
-                                            value="Pending"
-                                            checked={purchaseOrder.order_status === "Pending"} 
-                                            onChange={handleChange} 
-                                        />
-                                        <label className="btn btn-secondary me-2" htmlFor="order_pending">Pending</label>
-
-                                        <input 
-                                            type="radio" 
-                                            className="btn-check" 
-                                            name="order_status" 
-                                            id="order_delivered" 
-                                            autoComplete="off"
-                                            value="Delivered" 
-                                            checked={purchaseOrder.order_status === "Delivered"} 
-                                            onChange={handleChange} 
-                                        />
-                                        <label className="btn btn-secondary" htmlFor="order_delivered">Delivered</label>
-                                        </Col>
-                                    </Form.Group>
-                                </Col>
-                                <Col>
-                                    <Form.Group >
-                                        <Form.Label>Payment Status</Form.Label>
-                                        <Col>
-                                        <input 
-                                            type="radio" 
-                                            className="btn-check" 
-                                            name="payment_status" 
-                                            id="order_payment_paid" 
-                                            autoComplete="off"
-                                            value="Paid" 
-                                            checked={purchaseOrder.payment_status === "Paid"} 
-                                            onChange={handleChange} 
-                                        />
-                                        <label className="btn btn-secondary me-2" htmlFor="order_payment_paid">Paid</label>
-
-                                        <input 
-                                            type="radio" 
-                                            className="btn-check" 
-                                            name="payment_status" 
-                                            id="order_payment_unpaid" 
-                                            autoComplete="off"
-                                            value="Unpaid" 
-                                            checked={purchaseOrder.payment_status === "UnPaid"} 
-                                            onChange={handleChange} 
-                                        />
-                                        <label className="btn btn-secondary" htmlFor="order_payment_unpaid">Unpaid</label>
-                                        </Col>
-                                    </Form.Group>
-                                </Col>
-                            </Row>
-                        </div>
-                        
-                        <div className="mb-5 d-flex flex-column align-items-center justify-content-center">
-                        <Button className="mt-4 col-md-4" variant="primary" type="submit">Update Purchase Order</Button>
-                        </div>
-
-                    </Form>
+                        </Form>
+                    </div>
                 </div>
             </div>
-        </div>
+        </Layout>
     )
 }
 

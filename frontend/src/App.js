@@ -21,6 +21,7 @@ import AddPurchaseOrder from './components/supplierComponents/addPurchaseOrder';
 import UpdateSupplier from './components/supplierComponents/updateSupplier';
 import RFQ from './components/supplierComponents/rfq';
 import AddRFQss from './components/supplierComponents/addRFQ';
+import LogisticDashboard from './components/supplierComponents/dashboard';
 import ViewPO from './components/supplierComponents/viewPOs';
 import ViewSupplier from './components/supplierComponents/viewSupplier';
 import AddSupplierPerformance from './components/supplierComponents/supPerformance';
@@ -100,8 +101,9 @@ function App() {
           <Route path="/rfq" element={<ProtectedRoute><RFQ/></ProtectedRoute>}/>
           <Route path="/rfq/add" element={<ProtectedRoute><AddRFQss/></ProtectedRoute>}/>
           <Route path="/purchaseOrder/update/:id" element={<ProtectedRoute><UpdatePurchaseOrder/></ProtectedRoute>}/>
+          <Route path="/logisticsDashboard" element={<ProtectedRoute><LogisticDashboard/></ProtectedRoute>}/>
           <Route path="/purchaseOrder/get/:id" element={<ProtectedRoute><ViewPO/></ProtectedRoute>}/>
-          <Route path="/purchaseOrder/addPerformance//:id" element={<ProtectedRoute><AddSupplierPerformance/></ProtectedRoute>}/>
+          <Route path="/purchaseOrder/addPerformance/:id" element={<ProtectedRoute><AddSupplierPerformance/></ProtectedRoute>}/>
           <Route path="/supplier/get/:id" element={<ProtectedRoute><ViewSupplier/></ProtectedRoute>}/>
           <Route path="/Customer" element={<ProtectedRoute><CustomerR/></ProtectedRoute>}/>
           <Route path="/Customer/update/:id" element={<ProtectedRoute><UpdateCustomer/></ProtectedRoute>}/>

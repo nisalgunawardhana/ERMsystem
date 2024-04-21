@@ -2,6 +2,8 @@ import {React, useState, useEffect} from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
 import axios from "axios";
 import { Link, useParams, useNavigate } from "react-router-dom";
+import Layout from '../Layout';
+import './supplier.css';
 
 function UpdateSupplier() {
 
@@ -111,314 +113,319 @@ function UpdateSupplier() {
     
 
     return(
-        <div className="bg">
-            <div  className="w-75 p-3 m-3 text-end ">
-                <Link to={`/supplier/`}><Button className="mt-3 me-3" variant="primary">Back</Button></Link>
-            </div>
+        <Layout>
+            <div className="bg">
 
-            <div className="w-75 container custom-container-supplier">
-                <h2 >Update Supplier</h2><h4 className="mt-2 mb-3">{supplier_name}</h4>
+                <div className="container-fluid ">
+                    <h2 >Update Supplier</h2><h4 className="mt-2 mb-3">{supplier_name}</h4>
 
-                <Form>
-                <Form.Group controlId="supplierID">
-                    <Form.Label>Supplier ID</Form.Label>
-                    <Form.Control type="text" name="supplier_id" readOnly 
-                    value={supplier_id}
-                    />
-                </Form.Group>
+                    <div className="container custom-container-supplier card-shadow-1">
+                        <Form className="mt-4">
+                        <Form.Group controlId="supplierID" >
+                            <Form.Label>Supplier ID</Form.Label>
+                            <Form.Control type="text" name="supplier_id" readOnly 
+                            value={supplier_id}
+                            />
+                        </Form.Group>
 
-                <Form.Group controlId="supplierName">
-                    <Form.Label>Supplier Name</Form.Label>
-                    <Form.Control type="text" name="supplier_name" readOnly
-                    value={supplier_name}
-                    />
-                </Form.Group>
+                        <Form.Group controlId="supplierName" className="mt-3">
+                            <Form.Label>Supplier Name</Form.Label>
+                            <Form.Control type="text" name="supplier_name" readOnly
+                            value={supplier_name}
+                            />
+                        </Form.Group>
 
-                <Form.Group controlId="supplierAddress">
-                    <Form.Label>Address</Form.Label>
-                    <Form.Control type="text" name="supplier_address" required
-                    value={address}
-                    onChange={e => setAddress(e.target.value)}
-                    />
-                </Form.Group>
+                        <Form.Group controlId="supplierAddress" className="mt-3">
+                            <Form.Label>Address</Form.Label>
+                            <Form.Control type="text" name="supplier_address" required
+                            value={address}
+                            onChange={e => setAddress(e.target.value)}
+                            />
+                        </Form.Group>
 
-                <Form.Group controlId="supplierContact">
-                    <Form.Label>Contact Number</Form.Label>
-                    <Form.Control type="text" name="supplier_contact"  required
-                    value={contact}
-                    onChange={(e) => {
-                        setContactNumber(e.target.value);
-                    }}/>
-                </Form.Group>
+                        <Form.Group controlId="supplierContact" className="mt-3">
+                            <Form.Label>Contact Number</Form.Label>
+                            <Form.Control type="text" name="supplier_contact"  required
+                            value={contact}
+                            onChange={(e) => {
+                                setContactNumber(e.target.value);
+                            }}/>
+                        </Form.Group>
 
-                <Form.Group controlId="supplierEmail">
-                    <Form.Label>Email Address</Form.Label>
-                    <Form.Control type="text" name="supplier_email" required
-                    value={email}
-                    onChange={(e) => {
-                        setEmail(e.target.value);
-                    }}/>
-                </Form.Group>
-
-
-
-
-                <div className="mt-3">
-                    <h6>Product Types</h6>
-                    <Row>
-                        {['Mens-Shirts', 'Mens-Trousers', 'Mens T-Shirt', 'Suits', 'Shorts', 'Jackets and Blazers', 'Traditional wear',
-                    'Tops and Blouses', 'Dresses','Party dresses', 'Skirts', 'Trousers and Denims', 'Office wear',
-                    'Children wear', 'Toys', 'Accessories', ...product_types].map((type, index) => (
-                            <Col className="mt-2" key={index} xs={6} sm={4} md={3} lg={3}>
-                                <Form.Check
-                                    inline
-                                    label={type}
-                                    name="product_types"
-                                    type="checkbox"
-                                    id={`inline-checkbox-${index}`}
-                                    value={type}
-                                    checked={selectedProductTypes.includes(type)}
-                                    onChange={handleProductCheckBox}
-                                    />
-                            </Col>
-                        ))}
-                    </Row>
-                    <p className="mt-2 mb-4"><em>Previuosly selected Product types are shown above</em></p>
-                </div>
+                        <Form.Group controlId="supplierEmail" className="mt-3">
+                            <Form.Label>Email Address</Form.Label>
+                            <Form.Control type="text" name="supplier_email" required
+                            value={email}
+                            onChange={(e) => {
+                                setEmail(e.target.value);
+                            }}/>
+                        </Form.Group>
 
 
 
 
-                <div className="mt-2">
-                    <h6>Bank Details</h6>
-                    <Form.Group controlId="bank">
-                        <Form.Label>Bank</Form.Label>
-                        <Form.Control type="text" name="bank" 
-                        value={bank_details.bank}
-                        onChange={(e) => {
-                            setBankDetails({ ...bank_details, bank: e.target.value})
-                        }} />
-                    </Form.Group>
+                        <div className="mt-3">
+                            <h6>Product Types</h6>
+                            <Row>
+                                {['Mens-Shirts', 'Mens-Trousers', 'Mens T-Shirt', 'Suits', 'Shorts', 'Jackets and Blazers', 'Traditional wear',
+                            'Tops and Blouses', 'Dresses','Party dresses', 'Skirts', 'Trousers and Denims', 'Office wear',
+                            'Children wear', 'Toys', 'Accessories', ...product_types].map((type, index) => (
+                                    <Col className="mt-2" key={index} xs={6} sm={4} md={3} lg={3}>
+                                        <Form.Check
+                                            inline
+                                            label={<p className="mt-2">{type}</p>}
+                                            name="product_types"
+                                            type="checkbox"
+                                            id={`inline-checkbox-${index}`}
+                                            value={type}
+                                            checked={selectedProductTypes.includes(type)}
+                                            onChange={handleProductCheckBox}
+                                            />
+                                    </Col>
+                                ))}
+                            </Row>
+                            <p className="mt-2 mb-4"><em>Previuosly selected Product types are shown above</em></p>
+                        </div>
 
-                    <Form.Group controlId="branch">
-                        <Form.Label>branch</Form.Label>
-                        <Form.Control type="text" name="branch" 
-                        value={bank_details.branch} 
-                        onChange={(e) => {
-                            setBankDetails({ ...bank_details, branch: e.target.value})
-                        }} />
-                    </Form.Group>
 
-                    <Form.Group controlId="accountNo">
-                        <Form.Label>Account No</Form.Label>
-                        <Form.Control type="number" name="account_no" 
-                        value={bank_details.acc_no} 
-                        onChange={(e) => {
-                            setBankDetails({ ...bank_details, acc_no: e.target.value})
-                        }}/>
-                    </Form.Group>
 
-                    <Form.Group controlId="paymentMethod">
-                        <Form.Label>Payment Method</Form.Label>
-                        <Form.Control type="text" name="payment_method"
-                        value={bank_details.payment_method}
-                        onChange={(e) => {
-                            setBankDetails({ ...bank_details, payment_method: e.target.value})
-                        }}/>
-                    </Form.Group>
 
-                    <Form.Group controlId="paymentTerms">
-                        <Form.Label>Payment Terms</Form.Label>
-                        <Form.Control type="text" name="payment_terms" 
-                        value={bank_details.payment_terms}
-                        onChange={(e) => {
-                            setBankDetails({ ...bank_details, payment_terms: e.target.value})
-                        }}/>
-                    </Form.Group>
-                </div>
-
-                <div>
-                    <h6 className="my-3">Add new product</h6>
-                    <Row>
-                        <Col>
-                            <Form.Group>
-                                <Form.Label>New Product Name</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    name="new_product_name"
-                                    value={newProductItem}
-                                    onChange={(e) => setNewProductItem(e.target.value)}
-                                />
+                        <div className="mt-2 w-75">
+                            <h6>Bank Details</h6>
+                            <Form.Group controlId="bank">
+                                <Form.Label>Bank</Form.Label>
+                                <Form.Control type="text" name="bank" 
+                                value={bank_details.bank}
+                                onChange={(e) => {
+                                    setBankDetails({ ...bank_details, bank: e.target.value})
+                                }} />
                             </Form.Group>
-                        </Col>
-                        <Col>
-                            <Form.Group>
-                                <Form.Label>New Unit Price</Form.Label>
-                                <Form.Control
-                                    type="number"
-                                    name="new_unit_price"
-                                    value={newProductUnitPrice}
-                                    onChange={(e) => setNewProductUnitPrice(e.target.value)}
-                                />
+
+                            <Form.Group controlId="branch" className="mt-2">
+                                <Form.Label>branch</Form.Label>
+                                <Form.Control type="text" name="branch" 
+                                value={bank_details.branch} 
+                                onChange={(e) => {
+                                    setBankDetails({ ...bank_details, branch: e.target.value})
+                                }} />
                             </Form.Group>
-                        </Col>
-                    </Row>
-                    <div className="my-3">
-                        <Button className="me-2" variant="outline-success" onClick={handleAddNewProduct}>Add New Product</Button>
+
+                            <Form.Group controlId="accountNo" className="mt-2">
+                                <Form.Label>Account No</Form.Label>
+                                <Form.Control type="number" name="account_no" 
+                                value={bank_details.acc_no} 
+                                onChange={(e) => {
+                                    setBankDetails({ ...bank_details, acc_no: e.target.value})
+                                }}/>
+                            </Form.Group>
+
+                            <Form.Group controlId="paymentMethod" className="mt-2">
+                                <Form.Label>Payment Method</Form.Label>
+                                <Form.Control type="text" name="payment_method"
+                                value={bank_details.payment_method}
+                                onChange={(e) => {
+                                    setBankDetails({ ...bank_details, payment_method: e.target.value})
+                                }}/>
+                            </Form.Group>
+
+                            <Form.Group controlId="paymentTerms" className="mt-2">
+                                <Form.Label>Payment Terms</Form.Label>
+                                <Form.Control type="text" name="payment_terms" 
+                                value={bank_details.payment_terms}
+                                onChange={(e) => {
+                                    setBankDetails({ ...bank_details, payment_terms: e.target.value})
+                                }}/>
+                            </Form.Group>
+                        </div>
+
+                        <div>
+                            <h6 className="my-3">Add new product</h6>
+                            <Row>
+                                <Col>
+                                    <Form.Group>
+                                        <Form.Label>New Product Name</Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            name="new_product_name"
+                                            value={newProductItem}
+                                            onChange={(e) => setNewProductItem(e.target.value)}
+                                        />
+                                    </Form.Group>
+                                </Col>
+                                <Col>
+                                    <Form.Group>
+                                        <Form.Label>New Unit Price</Form.Label>
+                                        <Form.Control
+                                            type="number"
+                                            name="new_unit_price"
+                                            value={newProductUnitPrice}
+                                            onChange={(e) => setNewProductUnitPrice(e.target.value)}
+                                        />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+                            <div className="my-3">
+                                <Button className="me-2" variant="outline-success" onClick={handleAddNewProduct}>Add New Product</Button>
+                            </div>
+                        </div>
+
+
+
+                        {/* <div>
+                            <h6 className="mt-4 ">Existing Product Details</h6>
+                            <Form.Group controlId="items">
+                                {product_items.map((item, index) => (
+                                    <Row className="my-2" key={index}>
+                                        <Col>
+                                            <Form.Control
+                                                type="text"
+                                                placeholder="Product ID"
+                                                value={item.product_name}
+                                                onChange={(e) => handleItemChange(index, 'product_name', e.target.value)}
+                                            />
+                                        </Col>
+                                        <Col>
+                                            <Form.Control
+                                                type="number"
+                                                placeholder="Unit Price"
+                                                value={item.unit_price}
+                                                onChange={(e) => handleItemChange(index, 'unit_price', e.target.value)}
+                                            />
+                                        </Col>
+                                        <Col>
+                                            <Button variant="danger" onClick={() => handleRemoveProduct(index)}>Remove Item</Button>
+                                        </Col>
+                                    </Row>
+                                ))}
+                            </Form.Group>
+                        </div> */}
+
+
+                        <div>
+                            <h6 className="mt-4">Existing Product Details</h6>
+                            <Form.Group controlId="items">
+                                {product_items.map((item, index) => (
+                                    <Row className="my-2" key={index}>
+                                        <Col>
+                                            <Form.Control
+                                                type="text"
+                                                placeholder="Product Name"
+                                                value={item.product_name}
+                                                onChange={(e) => handleItemChange(index, 'product_name', e.target.value)}
+                                            />
+                                        </Col>
+                                        <Col>
+                                            <Form.Control
+                                                type="number"
+                                                placeholder="Unit Price"
+                                                value={item.unit_price}
+                                                onChange={(e) => handleItemChange(index, 'unit_price', e.target.value)}
+                                            />
+                                        </Col>
+                                        <Col>
+                                            <Button variant="danger" onClick={() => handleRemoveProduct(index)}>Remove Item</Button>
+                                        </Col>
+                                    </Row>
+                                ))}
+                                {newProductItem && (
+                                    <Row className="my-2">
+                                        <Col>
+                                            <Form.Control
+                                                type="text"
+                                                placeholder="Product Name"
+                                                value={newProductItem}
+                                                onChange={(e) => setNewProductItem(e.target.value)}
+                                            />
+                                        </Col>
+                                        <Col>
+                                            <Form.Control
+                                                type="number"
+                                                placeholder="Unit Price"
+                                                value={newProductUnitPrice}
+                                                onChange={(e) => setNewProductUnitPrice(e.target.value)}
+                                            />
+                                        </Col>
+                                        <Col>
+                                            <Button variant="danger" onClick={() => setNewProductItem("")}>Remove Item</Button>
+                                        </Col>
+                                    </Row>
+                                )}
+                            </Form.Group>
+                        </div>
+
+
+
+
+                        <div className="mt-5">
+                            <h6>Average Supplier Performance</h6>
+                            <Row>
+                                <Col>
+                                <Form.Group controlId="supplierQuality">
+                                    <Form.Label> Average Quality</Form.Label>
+                                    <Form.Control type="text" name="supplier_quality" 
+                                    value={sup_performance.quality}  
+                                    onChange={(e) => {
+                                        setSupPerformance({ ...sup_performance, quality: e.target.value})
+                                    }}/>
+                                </Form.Group>
+                                </Col>
+                            
+                                <Col>
+                                <Form.Group controlId="supplierDelivery">
+                                    <Form.Label>Average Delivery time</Form.Label>
+                                    <Form.Control type="text" name="supplier_delivery" 
+                                    value={sup_performance.delivery_time}  
+                                    onChange={(e) => {
+                                        setSupPerformance({ ...sup_performance, delivery_time: e.target.value})
+                                    }}/>
+                                </Form.Group>
+                                </Col>
+                            </Row>
+                        </div>
+
+                        <div >
+                            <h6 className="mt-5">Contract Details</h6>
+                            <Row>
+                                <Col>
+                                <Form.Group >
+                                    <Form.Label>Contract Start Date</Form.Label>
+                                    <Form.Control type="text" name="contract_start_date"   
+                                    value={contract.start_date} 
+                                    onChange={(e) => {
+                                        setContract({ ...contract, start_date: e.target.value})
+                                    }}/>
+                                </Form.Group>
+                                </Col>
+                                <Col>
+                                <Form.Group >
+                                    <Form.Label>End Date</Form.Label>
+                                    <Form.Control type="text" name="contract_end_date" 
+                                    value={contract.end_date} 
+                                    onChange={(e) => {
+                                        setContract({ ...contract, end_date: e.target.value})
+                                    }}/>
+                                </Form.Group>
+                                </Col>
+                            </Row>
+                        </div>
+                        
+
+                        <div className="d-flex mt-5 mb-4 justify-content-center">
+                            <Row>
+                                <Col xs={8}>
+                                    <Button className="px-4 luxery-yellow" variant="secondary" onClick={handleUpdate} type="submit">Update {supplier_name}</Button>
+                                </Col>
+                                <Col xs={1} >
+                                    <Link to={`/supplier/`}><Button className=" me-3" variant="secondary">Back</Button></Link>
+                                </Col>
+                            </Row>
+                        </div>
+                        
+                        </Form>
                     </div>
                 </div>
-
-
-
-                {/* <div>
-                    <h6 className="mt-4 ">Existing Product Details</h6>
-                    <Form.Group controlId="items">
-                        {product_items.map((item, index) => (
-                            <Row className="my-2" key={index}>
-                                <Col>
-                                    <Form.Control
-                                        type="text"
-                                        placeholder="Product ID"
-                                        value={item.product_name}
-                                        onChange={(e) => handleItemChange(index, 'product_name', e.target.value)}
-                                    />
-                                </Col>
-                                <Col>
-                                    <Form.Control
-                                        type="number"
-                                        placeholder="Unit Price"
-                                        value={item.unit_price}
-                                        onChange={(e) => handleItemChange(index, 'unit_price', e.target.value)}
-                                    />
-                                </Col>
-                                <Col>
-                                    <Button variant="danger" onClick={() => handleRemoveProduct(index)}>Remove Item</Button>
-                                </Col>
-                            </Row>
-                        ))}
-                    </Form.Group>
-                </div> */}
-
-
-                <div>
-                    <h6 className="mt-4">Existing Product Details</h6>
-                    <Form.Group controlId="items">
-                        {product_items.map((item, index) => (
-                            <Row className="my-2" key={index}>
-                                <Col>
-                                    <Form.Control
-                                        type="text"
-                                        placeholder="Product Name"
-                                        value={item.product_name}
-                                        onChange={(e) => handleItemChange(index, 'product_name', e.target.value)}
-                                    />
-                                </Col>
-                                <Col>
-                                    <Form.Control
-                                        type="number"
-                                        placeholder="Unit Price"
-                                        value={item.unit_price}
-                                        onChange={(e) => handleItemChange(index, 'unit_price', e.target.value)}
-                                    />
-                                </Col>
-                                <Col>
-                                    <Button variant="danger" onClick={() => handleRemoveProduct(index)}>Remove Item</Button>
-                                </Col>
-                            </Row>
-                        ))}
-                        {newProductItem && (
-                            <Row className="my-2">
-                                <Col>
-                                    <Form.Control
-                                        type="text"
-                                        placeholder="Product Name"
-                                        value={newProductItem}
-                                        onChange={(e) => setNewProductItem(e.target.value)}
-                                    />
-                                </Col>
-                                <Col>
-                                    <Form.Control
-                                        type="number"
-                                        placeholder="Unit Price"
-                                        value={newProductUnitPrice}
-                                        onChange={(e) => setNewProductUnitPrice(e.target.value)}
-                                    />
-                                </Col>
-                                <Col>
-                                    <Button variant="danger" onClick={() => setNewProductItem("")}>Remove Item</Button>
-                                </Col>
-                            </Row>
-                        )}
-                    </Form.Group>
-                </div>
-
-
-
-
-                <div className="mt-3">
-                    <h6>Average Supplier Performance</h6>
-                    <Row>
-                        <Col>
-                        <Form.Group controlId="supplierQuality">
-                            <Form.Label> Average Quality</Form.Label>
-                            <Form.Control type="text" name="supplier_quality" 
-                            value={sup_performance.quality}  
-                            onChange={(e) => {
-                                setSupPerformance({ ...sup_performance, quality: e.target.value})
-                            }}/>
-                        </Form.Group>
-                        </Col>
-                    
-                        <Col>
-                        <Form.Group controlId="supplierDelivery">
-                            <Form.Label>Average Delivery time</Form.Label>
-                            <Form.Control type="text" name="supplier_delivery" 
-                            value={sup_performance.delivery_time}  
-                            onChange={(e) => {
-                                setSupPerformance({ ...sup_performance, delivery_time: e.target.value})
-                            }}/>
-                        </Form.Group>
-                        </Col>
-                    </Row>
-                </div>
-
-                <div >
-                    <h6 className="mt-3">Contract Details</h6>
-                    <Row>
-                        <Col>
-                        <Form.Group >
-                            <Form.Label>Contract Start Date</Form.Label>
-                            <Form.Control type="text" name="contract_start_date"   
-                            value={contract.start_date} 
-                            onChange={(e) => {
-                                setContract({ ...contract, start_date: e.target.value})
-                            }}/>
-                        </Form.Group>
-                        </Col>
-                        <Col>
-                        <Form.Group >
-                            <Form.Label>End Date</Form.Label>
-                            <Form.Control type="text" name="contract_end_date" 
-                            value={contract.end_date} 
-                            onChange={(e) => {
-                                setContract({ ...contract, end_date: e.target.value})
-                            }}/>
-                        </Form.Group>
-                        </Col>
-                    </Row>
-                </div>
-                
-
-                <div className="d-flex flex-column my-4 align-items-center justify-content-center">
-                    <Row>
-                        <Col><Button className="px-4" variant="primary" onClick={handleUpdate} type="submit">Update</Button></Col>
-                        <Col sm={5}><Link to={`/supplier/`}><Button className=" me-3" variant="secondary">Back</Button></Link></Col>
-                    </Row>
-                </div>
-                
-                </Form>
             </div>
-        </div>
+        </Layout>
     )
 }
 

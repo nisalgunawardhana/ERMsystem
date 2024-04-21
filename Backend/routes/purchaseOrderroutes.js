@@ -17,7 +17,6 @@ router.route("/add").post((req,res)=>{
     const total_order_amount = req.body.total_order_amount;
     const order_status = req.body.order_status;
     const payment_status = req.body.payment_status;
-
     const payment_date = req.body.payment_date;
     const sup_deliver_date = req.body.sup_deliver_date;
     const leadTime = req.body.leadTime;
@@ -27,8 +26,6 @@ router.route("/add").post((req,res)=>{
     const costEffectiveness = req.body.costEffectiveness;
     const additional = req.body.additional;
     const overallSatisfaction = req.body.overallSatisfaction;
-    
-
 
     const newPurchaseOrder = new purchaseOrder({
         purchaseOrder_id,
@@ -245,7 +242,7 @@ router.route("/download").get(async (req, res) => {
         "invoice_no",
         "total_order_amount",
         "order_status",
-        "payment_status"
+        "payment_status",
       ]; 
       const json2csv = require('json2csv').parse;
   
