@@ -115,6 +115,7 @@ function UpdateCustomer() {
 
       </Form>
     </div>
+  
     </Layout>
   );
 }
