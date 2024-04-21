@@ -116,8 +116,8 @@ function Layout({children}) {
         },
         {
             name: 'Dashboard',
-            path: '/adminDashboard',
-            icon: 'ri-user-settings-line'
+            path: '/logisticsDashboard',
+            icon: 'ri-align-item-left-fill'
         },
         {
             name: 'Stock',
@@ -125,9 +125,14 @@ function Layout({children}) {
             icon: 'ri-archive-line',
         },
         {
-            name: 'Supplier',
+            name: 'Suppliers',
             path: '/supplier',
             icon: 'ri-truck-line', 
+        },
+        {
+            name: 'Purchase Orders',
+            path: '/purchaseOrder',
+            icon: 'ri-store-2-line', 
         }
     ];
     
