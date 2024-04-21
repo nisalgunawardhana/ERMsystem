@@ -93,15 +93,11 @@ export default function Bills() {
             }
             setDateRangeSelected(true)
             return;
-
         }
-
-
 
         const startDateObj = new Date(startDate);
         const endDateObj = new Date(endDate);
         setShowModal(false);
-
 
         const filteredBills = bill.filter(b => {
             const billingDate = new Date(b.billing_date);
@@ -185,10 +181,8 @@ export default function Bills() {
 
         setShowReportModal(false);
         setDateRangeSelected(false);
-
         setReportContent(reportHtml);
         setShowReportModal(true);
-
         // Update startDate and endDate states
         setStartDate(startDateObj);
         setEndDate(endDateObj);
@@ -202,7 +196,6 @@ export default function Bills() {
         setEndDate(null);
         setReportContent('');
         setShowReportModal(false);
-        setDateRangeSelected(false);
     };
 
     const printReport = () => {
@@ -257,18 +250,6 @@ export default function Bills() {
         setbill(updatedBill);
     };
 
-    const handleDeleteSelected = () => {
-        const selectedBills = bill.filter(b => b.selected).map(b => b._id);
-        selectedBills.forEach(id => {
-            axios.delete(`http://localhost:8080/bills/delete/${id}`)
-                .then(() => {
-                    setbill(prevBills => prevBills.filter(b => b._id !== id));
-                })
-                .catch((err) => {
-                    alert(err.message);
-                });
-        });
-    };
 
     const indexOfLastBill = currentPage * billsPerPage;
     const indexOfFirstBill = indexOfLastBill - billsPerPage;
@@ -306,7 +287,7 @@ export default function Bills() {
 
 
         // Define the actual secret code
-        const actualSecretCode = 'DELETE_ALL_BILLS';
+        const actualSecretCode = '1111';
 
         // Verify the secret code
         if (secretCode === actualSecretCode) {
@@ -354,6 +335,8 @@ export default function Bills() {
 
 
 
+
+
     return (
         <Layout>
 
@@ -376,50 +359,53 @@ export default function Bills() {
                     </div>
                 </div>
                 <div className="d-flex flex-wrap align-items-center">
-                    <h2 className="flex-grow-1">Bills</h2>
+                    <h2 className="flex-grow-1">Manage Billing </h2>
 
                 </div>
 
                 <div class="container">
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6 mb-3">
-                            <div class="card l-bg-cherry">
-                                <div class="card-statistic-3 p-4">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="col-8">
-                                            <h2 class="d-flex align-items-center mb-5">
+                    <div className="row">
+                        <div className="col-lg-6 col-md-6 mb-3">
+                            <div className="card shadow" style={{ backgroundColor: 'white' }}>
+                                <div className="card-statistic-3 p-4">
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        <div className="col-8">
+                                            <h2 className="d-flex align-items-center mb-5">
                                                 Rs.{totalAmount.toFixed(2)}
                                             </h2>
-                                            <h5 class="card-title" style={{ marginTop: '25px', marginBottom: '18px' }}>Total sales</h5>
+                                            <h5 className="card-title" style={{ marginTop: '25px', marginBottom: '18px' }}>Total sales</h5>
                                         </div>
                                         <i className="bi bi-cash-coin h1"></i>
                                     </div>
-                                    <div class="progress mt-1 " data-height="8" style={{ height: '8px' }}>
-                                        <div class="progress-bar l-bg-cyan" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '25%' }}></div>
+                                    <div className="progress mt-1" data-height="8" style={{ height: '8px' }}>
+                                        <div className="progress-bar bg-orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '75%', backgroundColor: 'orange' }}></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-6 col-md-6 mb-3">
-                            <div class="card l-bg-green-dark">
-                                <div class="card-statistic-3 p-4">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="col-8">
-                                            <h3 class="d-flex align-items-center mb-5">
+                        <div className="col-lg-6 col-md-6 mb-3">
+                            <div className="card shadow" style={{ backgroundColor: 'white' }}>
+                                <div className="card-statistic-3 p-4">
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        <div className="col-8">
+                                            <h3 className="d-flex align-items-center mb-5">
                                                 Bill Reports
                                             </h3>
-                                            <h5 class="card-title" style={{ marginTop: '25px' }}><button onClick={generateReport} className="btn btn-dark">Generate Report</button></h5>
+                                            <h5 className="card-title" style={{ marginTop: '25px' }}>
+                                                <button onClick={generateReport} className="btn btn-dark" style={{ backgroundColor: 'black', color: 'white', borderColor: 'black' }}>Generate Report</button>
+                                            </h5>
                                         </div>
                                         <i className="bi bi-bar-chart h1"></i>
                                     </div>
-                                    <div class="progress mt-1 " data-height="8" style={{ height: '8px' }}>
-                                        <div class="progress-bar l-bg-orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '25%' }}></div>
+                                    <div className="progress mt-1" data-height="8" style={{ height: '8px' }}>
+                                        <div className="progress-bar bg-orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '75%', backgroundColor: 'orange' }}></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
+
+
                 </div>
 
                 <br />
@@ -427,17 +413,17 @@ export default function Bills() {
                 <div className="d-flex flex-wrap align-items-center">
                     <h2 style={{ marginRight: '25px' }}> All Bills</h2>
                     {/* Add expense button */}
-                    <Link to="/dashboard/cashier/bill/CreateBill" className="btn btn-success"><i class="bi bi-plus-circle-fill me-2"></i>Create New Bill</Link>
+                    <Link to="/dashboard/cashier/bill/CreateBill" className="btn btn-outline-success"><i class="bi bi-plus-circle-fill me-2"></i>Create New Bill</Link>
                 </div>
                 <div className="d-flex justify-content-between align-items-center mb-3">
                     <div className="flex-grow-1">
                         <input type="text" className="form-control" placeholder="Search by Customer ID" value={searchQuery} onChange={handleSearch} />
                     </div>
                     <div>
-                        <button onClick={handleSelectAll} className="btn btn-secondary" style={{ margin: '0 5px' }}>
+                        <button onClick={handleSelectAll} className="btn btn-outline-secondary" style={{ margin: '0 5px' }}>
                             {selectAll ? 'Unselect All' : 'Select All'}
                         </button>
-                        <button className="btn btn-dark" onClick={handleOpenDeleteAllConfirmation} style={{ margin: '0 5px' }}>Delete All Selected</button>
+                        <button className="btn btn-outline-danger" onClick={handleOpenDeleteAllConfirmation} style={{ margin: '0 5px' }}>Delete All Selected</button>
                     </div>
                 </div>
 
@@ -480,10 +466,9 @@ export default function Bills() {
                                         </td>
                                         <td>{bills.total_amount.toFixed(2)}</td>
                                         <td style={{ textAlign: 'center' }}>
-                                            <Link to={`/bill/update/${bills._id}`} className="btn btn-primary" style={{ margin: '0 5px' }}>Update</Link>
-                                            <button onClick={() => handleOpenDeleteConfirmation(bills._id)} className="btn btn-danger" style={{ margin: '0 5px' }}>Delete</button>
-                                            <button onClick={() => handlePreview(bills)} className="btn btn-dark" style={{ margin: '0 5px' }}>Preview</button>
-
+                                            <button onClick={() => handlePreview(bills)} className="btn btn-outline-dark" style={{ margin: '0 5px' }}>Preview</button>
+                                            <Link to={`/dashboard/cashier/billing/update/${bills._id}`} className="btn btn-outline-primary" style={{ margin: '0 5px' }}>Update</Link>
+                                            <button onClick={() => handleOpenDeleteConfirmation(bills._id)} className="btn btn-outline-danger" style={{ margin: '0 5px' }}>Delete</button>
                                         </td>
                                         <td style={{ textAlign: 'center' }}><input type="checkbox" checked={bills.selected || false} onChange={() => handleSelectBill(bills._id)} /></td>
                                     </tr>
@@ -587,7 +572,7 @@ export default function Bills() {
                             setShowModal(false);
                             setDateRangeSelected(false); // Set dateRangeSelected to false
                         }}>Cancel</Button>
-                        <Button variant="primary" onClick={generateReport} >Generate</Button>
+                        <Button variant="primary" onClick={generateReport}>Generate</Button>
                     </Modal.Footer>
                 </Modal>
 

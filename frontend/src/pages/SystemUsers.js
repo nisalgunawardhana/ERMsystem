@@ -14,6 +14,7 @@ function SystemUsers() {
     const [userToDelete, setUserToDelete] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectAll, setSelectAll] = useState(false);
+    const [totalUsers, setTotalUsers] = useState(0);
 
     useEffect(() => {
         // Fetch users data when the component mounts
@@ -49,8 +50,8 @@ function SystemUsers() {
                     userRole: userRole
                 };
             });
-
             setUsers(updatedUsers);
+            setTotalUsers(updatedUsers.length);
         } catch (error) {
             console.error("Error fetching users:", error);
         }
@@ -145,6 +146,7 @@ function SystemUsers() {
         try {
             await axios.delete(`/api/users/delete/${userToDelete}`);
             setUsers(users.filter(user => user._id !== userToDelete));
+            setTotalUsers(prevTotalUsers => prevTotalUsers - 1);
             toast.success("User deleted successfully"); // Display success message
             
         } catch (error) {
@@ -201,7 +203,7 @@ function SystemUsers() {
                     </style>
                 </head>
                 <body>
-                    <h1>User Report</h1>
+                    <h1>System User Report</h1>
                     <table>
                         <thead>
                             <tr>
@@ -209,6 +211,7 @@ function SystemUsers() {
                                 <th>First Name</th>
                                 <th>Last Name</th>
                                 <th>User Role</th>
+                                <th>User created date</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -218,6 +221,7 @@ function SystemUsers() {
                                     <td>${user.first_name}</td>
                                     <td>${user.last_name}</td>
                                     <td>${user.userRole}</td>
+                                    <td>${new Date(user.createdAt).toLocaleDateString('en-GB')}</td>
                                 </tr>
                             `).join('')}
                         </tbody>
@@ -235,37 +239,48 @@ function SystemUsers() {
     
     return (
         <Layout>
-            <div className="system-users p-2">
-                <h2>System Users</h2>
-                <hr />
-                <br/>
-
+            <div className="system-users p-3">
+            <h2>System Users</h2>
+            <hr />
+            <br/>
+                
+            <div className="cards d-flex justify-content-between">
                 <div className="col-md-4">
                     <div className="card mb-3" 
-                        style={{ background: `#ff5f0f`, 
-                        color: 'white', 
-                        borderRadius: '20px' }}>
+                        style={{ background: 'white', 
+                        color: 'black', 
+                        borderRadius: '15px'}}>
 
-                        <div className="card-body">
-                            <h5 className="card-title">Generate Reports</h5>
-                            <p className="card-text">Generate and download sales reports.</p>
-                            <button onClick={generateReport} className="btn btn-dark">Generate Report</button>
-                            <div className="progress-bar bg-light" 
-                                role="progressbar" style={{ width: '75%' }} 
-                                aria-valuenow="75" aria-valuemin="0" 
-                                aria-valuemax="100">
-                            </div>
+                        <div className="card-body p-4">
+                            <h5 className="card-title" style={{ textAlign: 'center' }}>Total Number of System Users</h5>
+                            <p style={{ fontSize: '40px', textAlign: 'center', fontWeight: 'bold' }}>{totalUsers}</p>
                         </div>
                     </div>
                 </div>
 
-                <br/>
-           
+                <div className="col-md-4">
+                    <div className="card mb-3" 
+                        style={{ background: 'white', 
+                        color: 'black', 
+                        borderRadius: '15px' }}>
+
+                        <div className="card-body p-4">
+                            <h5 className="card-title">Generate Reports</h5>
+                            <p className="card-text">Generate and download System Users report</p>
+                            <button onClick={generateReport} className="btn btn-dark">Generate Report</button>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            </div>
+
+            <div className="card p-3">
+                <br/>
                 <div className="button-group mb-3 d-flex align-items-center">
                    
                     {/* search */}
-                    <div className="search-container col-md-8">
+                    <div className="search-container col-md-7" style={{paddingLeft: '35px'}}>
                         <input
                             type="text"
                             placeholder="Search user by Name, Email, or Role"
@@ -273,28 +288,26 @@ function SystemUsers() {
                             onChange={handleSearch}
                         />
                     </div>
-
+                    <div className="three-buttons" style={{ marginLeft: 'auto' }}>
                     <Button variant="danger" onClick={handleDeleteSelected}>Delete Selected</Button>
                     <Button variant="dark" onClick={handleSelectAll} style={{ marginLeft: '10px' }}>
                         {selectAll ? 'Deselect All' : 'Select All'}
                     </Button>
                     <Button variant="dark" onClick={handleClearSelection} style={{ marginLeft: '10px' }}>Clear Selection</Button>
-                
+                    </div> 
                 </div>
                 <br/>
 
                 <Table striped bordered hover>
                     <thead>
                         <tr>
-                            <th>Okay</th>
+                            <th></th>
                             <th>#</th>
                             <th>First Name</th>
                             <th>Last Name</th>
                             <th>Email</th>
                             <th>User Role</th>
                             <th>User created date</th>
-                            <th>Actions</th>
-                            
                         </tr>
                     </thead>
                     <tbody>
@@ -309,17 +322,20 @@ function SystemUsers() {
                                 <td>{user.last_name}</td>
                                 <td>{user.email}</td>
                                 <td>{user.userRole}</td>
-                                <td>{user.createdAt}</td>
+                                <td>{new Date(user.createdAt).toLocaleDateString('en-GB')}</td>
                                 
                                 <td>
-                                <Button variant="primary" onClick={() => handleUpdate(user)} style={{ marginRight: '15px' }}>Update</Button>
-                                <Button variant="danger" onClick={() => handleDelete(user._id)}>Delete</Button>
+                                    <Button variant="primary" onClick={() => handleUpdate(user)} style={{ marginLeft: '20px' }}>Update</Button>
+                                </td>
+
+                                <td>
+                                    <Button variant="danger" onClick={() => handleDelete(user._id)} style={{ marginLeft: '20px' }}>Delete</Button>
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </Table>
-            
+                </div>
 
              {/* Update User Modal */}
              <Modal show={showUpdateModal} onHide={handleCloseUpdateModal}>

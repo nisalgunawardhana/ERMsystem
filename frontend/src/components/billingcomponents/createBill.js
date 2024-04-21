@@ -137,7 +137,7 @@ function CreateBill() {
       })
       .catch((err) => {
         console.error("Error while submitting form:", err);
-        alert("Error occurred while submitting the form. Please try again later.");
+        alert("Error occurred while adding points. Please try again later.");
       });
 
 
@@ -269,7 +269,7 @@ function CreateBill() {
 
 
   const handleBack = () => {
-    navigate("/bill/");
+    navigate("/dashboard/cashier/billing");
   };
 
   return (

@@ -7,10 +7,10 @@ import axios from "axios"
 import { useDispatch } from "react-redux"
 import { hideLoading, showLoading } from '../redux/alertsSlice';
 
-
 function Login() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
     const onFinish = async(values) => {
         try {
             dispatch(showLoading())
@@ -19,10 +19,38 @@ function Login() {
 
             if (response.data.success) {
                 toast.success(response.data.message)
-                toast("Redirecting to Homepage")
-                //putting the information gettting from the backend to the local storage
-                localStorage.setItem("token", response.data.data)
-                navigate("/")
+                toast("Redirecting ...")
+
+                // Extract role information from response data
+                const role = response.data.role;
+
+                // Redirect based on the role
+                switch (role) {
+                    case 'admin':
+                        navigate("/admin");
+                        break;
+                    case 'cashier':
+                        navigate("/cashier");
+                        break;
+                    case 'financial manager':
+                        navigate("/finance");
+                        break;
+                    case 'staff manager':
+                        navigate("/emp");
+                        break;
+                    case 'training coordinator':
+                        navigate("/trainees");
+                        break;
+                    case 'logistic manager':
+                        navigate("/logistic");
+                        break;
+                    default:
+                        // Redirect to a default page if role is not recognized
+                        navigate("/");
+                }
+
+                // Store token in local storage
+                localStorage.setItem("token", response.data.data);
             } else {
                 toast.error(response.data.message)
             }

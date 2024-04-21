@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Modal } from 'react-bootstrap';
+import Layout from './Layout';
 
 function UpdateTax() {
     const { id } = useParams(); // Get the expense ID from the URL params
@@ -136,7 +136,8 @@ function UpdateTax() {
     }, []); // Run only once after the component mount
 
     return (
-        <div className="container" style={{ marginTop: '90px' }}>
+        <Layout>
+        <div className="container" style={{ marginTop: '20px' }}>
             <div className="row justify-content-center">
                 <div className="col-lg-8">
                     <form onSubmit={handleSubmit}>
@@ -211,6 +212,7 @@ function UpdateTax() {
                 </div>
             </div>
         </div>
+        </Layout>
     );
 }
 export default UpdateTax;
