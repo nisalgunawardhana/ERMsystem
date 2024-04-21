@@ -119,12 +119,12 @@ function Layout({children}) {
         {
             name: 'Dashboard',
             path: '/logisticsDashboard',
-            icon: 'ri-align-item-left-fill'
+            icon: 'ri-layout-masonry-line'
         },
         {
             name: 'Stock',
             path: '/stock',
-            icon: 'ri-archive-line',
+            icon: 'ri-store-2-line',
         },
         {
             name: 'Suppliers',
@@ -136,6 +136,7 @@ function Layout({children}) {
             path: '/purchaseOrder',
             icon: 'ri-store-2-line', 
         }
+
     ];
     
     //5. staff manager

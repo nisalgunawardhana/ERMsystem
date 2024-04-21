@@ -393,56 +393,79 @@ function RFQ() {
                     <div className="mt-2 ms-2" style={{ marginTop: "0.5rem" }}>
                         <Row className="g-4">
                             <Col  xs={13}>
-                                <Card className="shadow">
-                                    <Card.Header className="text-danger" as="h6">Expiring Requests</Card.Header>
-                                    <Card.Body>
-                                        <p className="fw-light text-danger">RFQs with Deadline Within <span className="fs-5">3 Days</span></p>
-                                        <p className="text-danger">RFQ ID</p>
-                                        <ul>
-                                            {rfqsWithinThreeDays.map((rfq, index) => (
-                                                <li className="text-danger" key={index}>{rfq.rfq_id}</li>
-                                            ))}
-                                        </ul>
-                                    </Card.Body>
-                                </Card>
+                                <div className="card">
+                                    <div className="card-statistic-3 p-4">
+                                        <div className="d-flex justify-content-between align-items-center">
+                                            <div className="col-8">
+                                                <div className="text-secondary">Expiring Requests</div>
+                                                <div className="fs-5 fw-semibold">RFQs with Deadline Within 3 Days</div>
+                                                <div className="d-flex align-items-center mb-3 mt-4">
+                                                    <ul>
+                                                        {rfqsWithinThreeDays.map((rfq, index) => (
+                                                            <li key={index}><i className="bi bi-layers-fill layout-blue me-2"></i>{rfq.rfq_id}</li>
+                                                        ))}
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <i className="bi bi-cash-coin h1"></i>
+                                        </div>
+                                        <div className="progress mt-1 " data-height="8" style={{ height: '8px' }}>
+                                            <div className="progress-bar " role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '75%', backgroundColor:"red" }}></div>
+                                        </div>
+                                    </div>
+                                </div>
                             </Col>
                             <Col  xs={13}>
-                                <Card className="shadow">
-                                    <Card.Header as="h6">Quotations in Supplier Network</Card.Header>
-                                    <Card.Body>
-                                        <Row>
-                                            <Col>
-                                                <Form.Control 
-                                                type="text" 
-                                                placeholder="Enter search term" 
-                                                value={searchTerm} 
-                                                onChange={(e) => setSearchTerm(e.target.value)} 
-                                                />
-                                            </Col>
-                                            <Col xs={3}>
-                                                <Button variant="light " className="search-button" onClick={handleSearch}><i className="bi bi-search search-icon"></i></Button>
-                                            </Col>
-                                        </Row>
-                                        
-                                        <ul>
-                                            {searchResults.map((rfq, index) => (
-                                                <li key={index}>{rfq.rfq_id}</li>
-                                            ))}
-                                        </ul>
-                                    </Card.Body>
-                                </Card >
+                                <div className="card">
+                                    <div className="card-statistic-3 p-4">
+                                        <div className="d-flex justify-content-between align-items-center">
+                                            <div className="">
+                                                <p className="text-secondary">Find Quotations by entering any word term in the introduction</p>
+                                                <Row>
+                                                    <Col>
+                                                        <Form.Control 
+                                                        type="text" 
+                                                        placeholder="Enter search term" 
+                                                        value={searchTerm} 
+                                                        onChange={(e) => setSearchTerm(e.target.value)} 
+                                                        />
+                                                    </Col>
+                                                    <Col xs={3}>
+                                                        <Button variant="light " className="search-button" onClick={handleSearch}><i className="bi bi-search search-icon"></i></Button>
+                                                    </Col>
+                                                </Row>
+
+                                                <div className="mt-3 mb-2">RFQ IDs related to that term,</div>
+                                                <ul>
+                                                    {searchResults.map((rfq, index) => (
+                                                        <li key={index}><i className="bi bi-layers-fill layout-blue me-2"></i>{rfq.rfq_id}</li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div className="progress mt-1 " data-height="8" style={{ height: '8px' }}>
+                                            <div className="progress-bar orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '75%'}}></div>
+                                        </div>
+                                    </div>
+                                </div>
                             </Col>
                             <Col  xs={13}>
-                                <Card className="text-center shadow">
-                                <Card.Header as="h6">RFQ management</Card.Header>
-                                <Card.Body>
-                                    <Card.Title>Report for Requests For Quotations (RFQ)</Card.Title>
-                                    <Card.Text>
-                                    Annual Requests made for suppliers
-                                    </Card.Text>
-                                    <Button variant="dark" className="mt-5 mb-2" onClick={handleRFQReport}>Generate Report</Button>
-                                </Card.Body>
-                                </Card>
+                                <div class="card">
+                                    <div class="card-statistic-3 p-4">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="col-8">
+                                                <h3 class="d-flex align-items-center mb-5">
+                                                    RFQ Report
+                                                </h3>
+                                                <Button variant="dark" className="mt-5 mb-2" onClick={handleRFQReport}>Generate Report</Button>
+                                            </div>
+                                            <i className="bi bi-cash-coin h1"></i>
+                                        </div>
+                                        <div class="progress mt-1 " data-height="8" style={{ height: '8px' }}>
+                                            <div class="progress-bar orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '75%'}}></div>
+                                        </div>
+                                    </div>
+                                </div>
                             </Col>
                             <Col  xs={13}>
                                 <Card className="card shadow">
@@ -461,18 +484,7 @@ function RFQ() {
                 </Col>
             </Row>
 
-            <Card className="card">
-                <Card.Header as="h6">happy?</Card.Header>
-                <Card.Body>
-                    <Card.Title>cdcdcd</Card.Title>
-                    <Card.Text>
-                    With support bla bla bla
-                    </Card.Text>
-                    <Button variant="primary">Go somewhere</Button>
-                </Card.Body>
-            </Card>
-
-            <div class="card">
+            {/* <div class="card">
                 <div class="card-statistic-3 p-4">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="col-8">
@@ -487,7 +499,7 @@ function RFQ() {
                         <div class="progress-bar " role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '25%', backgroundColor:"red" }}></div>
                     </div>
                 </div>
-            </div>
+            </div> */}
         </Container>
     </Layout>
     );
