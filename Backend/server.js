@@ -79,10 +79,12 @@ const userRoute = require("./routes/userRoute.js");
 app.use("/api/user", userRoute);
 app.use("/api/users", userRoute);
 
-app.use(express.static('./frontend/build'));
-app.get('*'(req, res)=> {
-    res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))
-});
+const clothes = require("./routes/clothesRoutes.js");
+app.use("/clothes", clothes);
+
+const toys = require("./routes/toysRoutes.js");
+app.use("/toys", toys);
+
 
 app.listen(PORT, () => {
     console.log(`Server is up and running on: ${PORT}`);
