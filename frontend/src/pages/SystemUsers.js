@@ -390,11 +390,11 @@ function SystemUsers() {
                                 <td>{new Date(user.createdAt).toLocaleDateString('en-GB')}</td>
                                 
                                 <td>
-                                    <Button variant="primary" onClick={() => handleUpdate(user)} style={{ marginLeft: '20px' }}>Update</Button>
+                                    <Button variant="btn btn-outline-primary" onClick={() => handleUpdate(user)} style={{ marginLeft: '20px' }}>Update</Button>
                                 </td>
 
                                 <td>
-                                    <Button variant="danger" onClick={() => handleDelete(user._id)} style={{ marginLeft: '20px' }}>Delete</Button>
+                                    <Button variant="btn btn-outline-danger" onClick={() => handleDelete(user._id)} style={{ marginLeft: '20px' }}>Delete</Button>
                                 </td>
                             </tr>
                         ))}

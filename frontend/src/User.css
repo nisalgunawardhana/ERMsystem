@@ -81,32 +81,6 @@ label {
   color: white !important;
 }
 
-
-/* authentication pages */
-.authentication {
-  height: 85vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /*background-color: #1AACAC;*/
-}
-
-.authentication-form {
-  width: 395px;
-}
-
-.authentication .card-title {
-  font-size: 1.5rem;
-  font-weight: bold;
-  background-color: orange;
-  color:#fff !important;
-  max-width: max-content !important;
-  padding: 7px 15px;
-  margin-left: -24.5px;
-  border-bottom-right-radius: 10px;
-  border-top-right-radius: 10px;
-}
-
 /* login background */
 .login-container {
   position: relative; 
@@ -128,28 +102,6 @@ label {
   object-fit: cover; 
 }
 
-/* register background */
-.register-container {
-  position: relative; 
-}
-
-.register-background {
-  position: absolute; 
-  top: 0;
-  left: 0;
-  width: 100%; 
-  height: 100%; 
-  z-index: -1; 
-  overflow: hidden; 
-}
-
-.register-background img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; 
-}
-
-
 @keyframes App-logo-spin {
 from {
   transform: rotate(0deg);
@@ -165,4 +117,11 @@ to {
   padding-left: 30px;
 }
 
-
+.register-button {
+  background-color: #1677ff !important;
+  font-weight: bold !important;
+  height: 40px !important;
+  width: 15% !important;
+  font-size: 16px !important;
+  color: #fff !important;
+}

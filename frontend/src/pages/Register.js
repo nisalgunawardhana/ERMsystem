@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Input, Button, Row, Col } from 'antd';
+import { Form, Input, Button, Select, Col, Row } from 'antd';
 import { Link, useNavigate } from 'react-router-dom'
 import registerImage from '../images/register.jpg'
 import axios from "axios"
@@ -9,10 +9,12 @@ import { showLoading, hideLoading } from '../redux/alertsSlice';
 import '../User.css'
 import Layout from '../components/Layout';
 
+const { Option } = Select;
+
 function Register() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
+    
     const onFinish = async(values) => {
         //to make sure all the fields are filled
         if (!values.first_name) {
@@ -47,43 +49,58 @@ function Register() {
 
     return (
         <Layout>
-
-<div className='register-container'>
-            <div className='register-background'>
-                <img src={registerImage} alt='Register Image'/>   
-            </div>
-            
-
+        <div className='register-container'>
             <div className='authentication'>
-                <div className='authentication-form card p-4'>
-                <h1 className='card-topic'>New System User</h1>
-                
-                <Form layout='vertical' onFinish={onFinish}> 
-                    <Form.Item required label='First Name' name='first_name' >
-                        <Input placeholder='First Name'/>
-                    </Form.Item> 
-                        
-                    <Form.Item required  label='Last Name' name='last_name'>
-                        <Input placeholder='Last Name'/>
-                    </Form.Item>        
-                   
-                    <Form.Item required label='Email' name='email'>
-                        <Input placeholder='Email'/>
-                    </Form.Item>
+                <div className='authentication-form  p-5'>
+                    <h1 className='card-topic'>Add New System User</h1>
+                    <br/>
+                    <Form layout='vertical' onFinish={onFinish}> 
+                        <Row gutter={[50, 13]}>
+                            <Col span={12}>
+                                <Form.Item required label='First Name' name='first_name' >
+                                    <Input placeholder='First Name'/>
+                                </Form.Item> 
+                            </Col>
+                            
+                            <Col span={12}>
+                                <Form.Item required  label='Last Name' name='last_name'>
+                                    <Input placeholder='Last Name'/>
+                                </Form.Item>   
+                            </Col>
+                        </Row>     
 
-                    <Form.Item required label='Password' name='password'>
-                        <Input placeholder='Password' type='password'/>
-                    </Form.Item>
+                        <Row gutter={[50, 13]}>  
+                            <Col span={12}>
+                                <Form.Item required label='Email' name='email'>
+                                    <Input placeholder='Email'/>
+                                </Form.Item>
+                            </Col>
+                            
+                            <Col span={12}>
+                                <Form.Item required label='Password' name='password'>
+                                    <Input placeholder='Password' type='password'/>
+                                </Form.Item>
+                            </Col>
+                        </Row>
+
+                        <Form.Item required label='Role' name='role'>
+                            <Select placeholder="Select a role">
+                                <Option value="admin">Admin</Option>
+                                <Option value="cashier">Cashier</Option>
+                                <Option value="financial_manager">Financial Manager</Option>
+                                <Option value="logistic_manager">Logistic Manager</Option>
+                                <Option value="staff_training_coordinator">Staff Training Coordinator</Option>
+                                <Option value="staff_manager">Staff Manager</Option>
+                            </Select>
+                        </Form.Item>
+                    
+                        <Button className='register-button my-2' htmlType='submit'>Create User</Button>
                 
-                    <Button className='primary-button my-1' htmlType='submit'>Create User</Button>
-            
-                </Form>
-                
+                    </Form>
                 </div>
             </div>
         </div>
-
-        </Layout>
+    </Layout>
         
     )
 }
