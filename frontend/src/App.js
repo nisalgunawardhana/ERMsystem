@@ -86,7 +86,6 @@ function App() {
           <Route path="/" element={<ProtectedRoute><Home/></ProtectedRoute>}/>
           <Route path="/users" element={<ProtectedRoute><SystemUsers/></ProtectedRoute>}/>
           <Route path="/notes" element={<ProtectedRoute><Notes/></ProtectedRoute>}/>
-
           <Route path="/dashboard/finance/otherExpense" element={<ProtectedRoute><AllOther/></ProtectedRoute>}/>
           <Route path="/dashboard/finance/otherExpense/update/:id" element={<ProtectedRoute><UpdateOther/></ProtectedRoute>}/>
           <Route path="/dashboard/finance/" element={<ProtectedRoute><FinanceDash/></ProtectedRoute>}/>
@@ -96,20 +95,20 @@ function App() {
           <Route path="/dashboard/finance/tax" element={<ProtectedRoute><TaxDetails/></ProtectedRoute>}/>
           <Route path="/dashboard/finance/tax/add" element={<ProtectedRoute><AddTax/></ProtectedRoute>}/>
           <Route path="/dashboard/finance/tax/update/:id" element={<ProtectedRoute><UpdateTax/></ProtectedRoute>}/>
-          <Route path="/supplier" element={<ProtectedRoute><Supplier/></ProtectedRoute>}/>
-          <Route path='/purchaseOrder' element={<ProtectedRoute><PurchaseOrder/></ProtectedRoute>}/>
-          <Route path="/supplier/add" element={<ProtectedRoute><AddSupplier/></ProtectedRoute>}/>
-          <Route path="/supplier/update/:id" element={<ProtectedRoute><UpdateSupplier/></ProtectedRoute>}/>
-          <Route path="/purchaseOrder/add" element={<ProtectedRoute><AddPurchaseOrder/></ProtectedRoute>}/>
-          <Route path="/rfq" element={<ProtectedRoute><RFQ/></ProtectedRoute>}/>
-          <Route path="/rfq/add" element={<ProtectedRoute><AddRFQss/></ProtectedRoute>}/>
-          <Route path="/purchaseOrder/update/:id" element={<ProtectedRoute><UpdatePurchaseOrder/></ProtectedRoute>}/>
+          <Route path="/dashboard/logistics/supplier" element={<ProtectedRoute><Supplier/></ProtectedRoute>}/>
+          <Route path='/dashboard/logistics/purchaseOrder' element={<ProtectedRoute><PurchaseOrder/></ProtectedRoute>}/>
+          <Route path="/dashboard/logistics/supplier/add" element={<ProtectedRoute><AddSupplier/></ProtectedRoute>}/>
+          <Route path="/dashboard/logistics/supplier/update/:id" element={<ProtectedRoute><UpdateSupplier/></ProtectedRoute>}/>
+          <Route path="/dashboard/logistics/purchaseOrder/add" element={<ProtectedRoute><AddPurchaseOrder/></ProtectedRoute>}/>
+          <Route path="/dashboard/logistics/rfq" element={<ProtectedRoute><RFQ/></ProtectedRoute>}/>
+          <Route path="/dashboard/logistics/rfq/add" element={<ProtectedRoute><AddRFQss/></ProtectedRoute>}/>
+          <Route path="/dashboard/logistics/purchaseOrder/update/:id" element={<ProtectedRoute><UpdatePurchaseOrder/></ProtectedRoute>}/>
           <Route path="/dashboard/logistics" element={<ProtectedRoute><LogisticDashboard/></ProtectedRoute>}/>
-          <Route path="/purchaseOrder/get/:id" element={<ProtectedRoute><ViewPO/></ProtectedRoute>}/>
-          <Route path="/purchaseOrder/addPerformance/:id" element={<ProtectedRoute><AddSupplierPerformance/></ProtectedRoute>}/>
-          <Route path="/supplier/get/:id" element={<ProtectedRoute><ViewSupplier/></ProtectedRoute>}/>
-          <Route path="/Customer" element={<ProtectedRoute><CustomerR/></ProtectedRoute>}/>
-          <Route path="/Customer/update/:id" element={<ProtectedRoute><UpdateCustomer/></ProtectedRoute>}/>
+          <Route path="/dashboard/logistics/purchaseOrder/get/:id" element={<ProtectedRoute><ViewPO/></ProtectedRoute>}/>
+          <Route path="/dashboard/logistics/purchaseOrder/addPerformance/:id" element={<ProtectedRoute><AddSupplierPerformance/></ProtectedRoute>}/>
+          <Route path="/dashboard/logistics/supplier/get/:id" element={<ProtectedRoute><ViewSupplier/></ProtectedRoute>}/>
+          <Route path="/dashboard/cashier/Customer" element={<ProtectedRoute><CustomerR/></ProtectedRoute>}/>
+          <Route path="/dashboard/cashier/Customer/update/:id" element={<ProtectedRoute><UpdateCustomer/></ProtectedRoute>}/>
           <Route path="/dashboard/trainee" element={<ProtectedRoute><Trainees/></ProtectedRoute>}/>
           <Route path="/dashboard/cashier/billing" element={<ProtectedRoute><Bill/></ProtectedRoute>}/>
           <Route path="/dashboard/cashier/bill/CreateBill" element={<ProtectedRoute><CreateBill/></ProtectedRoute>}/>
