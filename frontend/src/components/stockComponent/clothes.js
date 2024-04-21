@@ -3,10 +3,10 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Row, Col, Card, Button } from 'react-bootstrap';
 import Layout from '../Layout';
-/*import { Chart, LinearScale, CategoryScale, LineController, LineElement, Title } from 'chart.js';
+import { Chart, LinearScale, CategoryScale, LineController, LineElement, Title } from 'chart.js';
 
 // Register the necessary components and scales
-Chart.register(LinearScale, CategoryScale, LineController, LineElement, Title);*/
+Chart.register(LinearScale, CategoryScale, LineController, LineElement, Title);
 
 
 
@@ -24,6 +24,7 @@ export default function Clothes() {
     const [itemCode, setItemCode] = useState('');
     const [itemName, setItemName] = useState('');
     const [category, setCategory] = useState('');
+    const [price, setPrice] = useState('');
     const [quantity, setQuantity] = useState('');
     const [alertQuantity, setAlertQuantity] = useState('');
     const [error, setError] = useState('');
@@ -51,23 +52,24 @@ export default function Clothes() {
     }, [clothes]);
 
     useEffect(() => {
-        let quantityChart;
-
+        let quantityChart = null;
+    
         // Function to create or update the quantity line chart
         const createOrUpdateQuantityChart = () => {
-            const ctx = document.getElementById('quantityChart').getContext('2d');
-        
-            // Check if quantityChartData is null, and if so, return early or provide a default value
-            if (!quantityChartData) {
-                console.error('quantityChartData is null');
-                return; // Return early or provide a default value
+            const canvas = document.getElementById('canvas-1');
+    
+            // Check if canvas or clothes array is null or empty, and if so, return early
+            if (!canvas || !clothes || clothes.length === 0) {
+                console.error('Canvas or clothes array is null or empty');
+                return;
             }
-        
-            // Destructure quantityChartData or provide default values if it's null
-            const { labels = [], data = [] } = quantityChartData;
-        
+    
+            // Extract labels and data from the clothes array
+            const labels = clothes.map(clothes => clothes.item_name);
+            const data = clothes.map(clothes => clothes.quantity);
+    
             // Create the new chart instance
-            const quantityChart = new Chart(ctx, {
+            quantityChart = new Chart(document.getElementById('canvas-1'), {
                 type: 'line',
                 data: {
                     labels: labels,
@@ -88,12 +90,27 @@ export default function Clothes() {
                     }
                 }
             });
-        };        
-        
-
-        // Create or update quantity chart
+        };
+    
+        // Call the function to create or update the quantity chart
         createOrUpdateQuantityChart();
-    }, [quantityChartData]);*/
+    
+        // Check if clothes array changes and update the chart accordingly
+        if (clothes && clothes.length > 0) {
+            setTimeout(() => {
+                createOrUpdateQuantityChart();
+            }, 100);
+        }
+    
+        // Cleanup function
+        return () => {
+            if (quantityChart) {
+                quantityChart.destroy();
+            }
+        };
+    
+    }, [clothes]);
+    */
 
     useEffect(() => {
         axios.get('http://localhost:8080/clothes/')
@@ -133,6 +150,7 @@ export default function Clothes() {
         setItemCode(clothes.item_code);
         setItemName(clothes.item_name);
         setCategory(clothes.category);
+        setPrice(clothes.price);
         setQuantity(clothes.quantity);
         setAlertQuantity(clothes.alert_quantity);
         setShowUpdateModal(true);
@@ -145,7 +163,7 @@ export default function Clothes() {
         try {
             setError('');
 
-            if (!itemCode || !itemName || !category || !quantity || !alertQuantity) {
+            if (!itemCode || !itemName || !category || !price || !quantity || !alertQuantity) {
                 setError('All fields are required.');
                 return;
             }
@@ -155,6 +173,7 @@ export default function Clothes() {
                     item_code: itemCode,
                     item_name: itemName,
                     category: category,
+                    price: price,
                     quantity: quantity,
                     alert_quantity: alertQuantity
                 });
@@ -165,6 +184,7 @@ export default function Clothes() {
                     item_code: itemCode,
                     item_name: itemName,
                     category: category,
+                    price: price,
                     quantity: quantity,
                     alert_quantity: alertQuantity
                 });
@@ -258,6 +278,7 @@ export default function Clothes() {
             printWindow.close();
         };
     };
+    
     /*
     useEffect(() => {
         let lineChart = null;
@@ -387,6 +408,10 @@ export default function Clothes() {
                             <input type="text" className="form-control" value={category} onChange={(e) => setCategory(e.target.value)} />
                         </div>
                         <div className="form-group">
+                            <label>Price</label>
+                            <input type="number" className="form-control" value={price} onChange={(e) => setPrice(e.target.value)} />
+                        </div>
+                        <div className="form-group">
                             <label>Quantity</label>
                             <input type="number" className="form-control" value={quantity} onChange={(e) => setQuantity(e.target.value)} />
                         </div>
@@ -428,6 +453,10 @@ export default function Clothes() {
                             <input type="text" className="form-control" value={category} onChange={(e) => setCategory(e.target.value)} />
                         </div>
                         <div className="form-group">
+                            <label>Price</label>
+                            <input type="number" className="form-control" value={price} onChange={(e) => setPrice(e.target.value)} />
+                        </div>
+                        <div className="form-group">
                             <label>Quantity</label>
                             <input type="number" className="form-control" value={quantity} onChange={(e) => setQuantity(e.target.value)} />
                         </div>
@@ -451,6 +480,7 @@ export default function Clothes() {
                             <th>Item Code</th>
                             <th>Item Name</th>
                             <th>Category</th>
+                            <th>Price</th>
                             <th>Quantity</th>
                             <th>Alert Quantity</th>
                             <th>Action</th>
@@ -463,6 +493,7 @@ export default function Clothes() {
                                 <td>{clothes.item_code}</td>
                                 <td>{clothes.item_name}</td>
                                 <td>{clothes.category}</td>
+                                <td>{clothes.price}</td>
                                 <td>{clothes.quantity}</td>
                                 <td>{clothes.alert_quantity}</td>
                                 <td>
@@ -482,7 +513,7 @@ export default function Clothes() {
                     </tbody>
                 </table>
 
-                {/*<Row className="mb-3">
+                <Row className="mb-3">
                     <Col>
                         <Card className="h-100">
                             <Card.Body>
@@ -490,11 +521,11 @@ export default function Clothes() {
                                 <Card.Text>
                                     Track the quantity of clothes over time.
                                 </Card.Text>
-                                <canvas id="quantityChart"></canvas>
+                                <canvas id="canvas-1"></canvas>
                             </Card.Body>
                         </Card>
                     </Col>
-                    </Row>*/}
+                    </Row>
             </div>
             
         </Layout>

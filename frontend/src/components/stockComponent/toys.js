@@ -13,6 +13,7 @@ export default function Toys() {
     const [itemCode, setItemCode] = useState('');
     const [itemName, setItemName] = useState('');
     const [category, setCategory] = useState('');
+    const [price, setPrice] = useState('');
     const [quantity, setQuantity] = useState('');
     const [alertQuantity, setAlertQuantity] = useState('');
     const [error, setError] = useState('');
@@ -55,6 +56,7 @@ export default function Toys() {
         setItemCode(toys.item_code);
         setItemName(toys.item_name);
         setCategory(toys.category);
+        setPrice(toys.price);
         setQuantity(toys.quantity);
         setAlertQuantity(toys.alert_quantity);
         setShowUpdateModal(true);
@@ -67,7 +69,7 @@ export default function Toys() {
         try {
             setError('');
 
-            if (!itemCode || !itemName || !category || !quantity || !alertQuantity) {
+            if (!itemCode || !itemName || !category || !price || !quantity || !alertQuantity) {
                 setError('All fields are required.');
                 return;
             }
@@ -77,6 +79,7 @@ export default function Toys() {
                     item_code: itemCode,
                     item_name: itemName,
                     category: category,
+                    price: price,
                     quantity: quantity,
                     alert_quantity: alertQuantity
                 });
@@ -87,6 +90,7 @@ export default function Toys() {
                     item_code: itemCode,
                     item_name: itemName,
                     category: category,
+                    price: price,
                     quantity: quantity,
                     alert_quantity: alertQuantity
                 });
@@ -250,6 +254,10 @@ export default function Toys() {
                             <input type="text" className="form-control" value={category} onChange={(e) => setCategory(e.target.value)} />
                         </div>
                         <div className="form-group">
+                            <label>Price</label>
+                            <input type="number" className="form-control" value={price} onChange={(e) => setPrice(e.target.value)} />
+                        </div>
+                        <div className="form-group">
                             <label>Quantity</label>
                             <input type="number" className="form-control" value={quantity} onChange={(e) => setQuantity(e.target.value)} />
                         </div>
@@ -291,6 +299,10 @@ export default function Toys() {
                             <input type="text" className="form-control" value={category} onChange={(e) => setCategory(e.target.value)} />
                         </div>
                         <div className="form-group">
+                            <label>Price</label>
+                            <input type="number" className="form-control" value={price} onChange={(e) => setPrice(e.target.value)} />
+                        </div>
+                        <div className="form-group">
                             <label>Quantity</label>
                             <input type="number" className="form-control" value={quantity} onChange={(e) => setQuantity(e.target.value)} />
                         </div>
@@ -314,6 +326,7 @@ export default function Toys() {
                             <th>Item Code</th>
                             <th>Item Name</th>
                             <th>Category</th>
+                            <th>Price</th>
                             <th>Quantity</th>
                             <th>Alert Quantity</th>
                             <th>Action</th>
@@ -326,6 +339,7 @@ export default function Toys() {
                                 <td>{toys.item_code}</td>
                                 <td>{toys.item_name}</td>
                                 <td>{toys.category}</td>
+                                <td>{toys.price}</td>
                                 <td>{toys.quantity}</td>
                                 <td>{toys.alert_quantity}</td>
                                 <td>
