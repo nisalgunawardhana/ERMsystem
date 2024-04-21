@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import Layout from '../Layout';
 
 
+
 function CreateBill() {
   const [customer_id, setCustomerId] = useState("");
   const [billing_date, setBillingDate] = useState(new Date().toISOString().split('T')[0]);
@@ -18,6 +19,7 @@ function CreateBill() {
   const navigate = useNavigate();
   const [discountRules, setDiscountRules] = useState([]);
   const [discountAmount, setDiscountAmount] = useState(0);
+  
 
 
   useEffect(() => {
@@ -140,8 +142,6 @@ function CreateBill() {
         alert("Error occurred while adding points. Please try again later.");
       });
 
-
-
     axios
       .post("http://localhost:8080/bills/add", newBill)
       .then((response) => {
@@ -152,7 +152,7 @@ function CreateBill() {
         setTotalAmount(0);
         setDiscountAmount(0);
         handlePrint(newBill);
-        navigate("/bill/");
+        navigate("/dashboard/cashier/billing");
       })
       .catch((err) => {
         console.error("Error while submitting form:", err);
@@ -268,9 +268,9 @@ function CreateBill() {
   };
 
 
-  const handleBack = () => {
-    navigate("/dashboard/cashier/billing");
-  };
+ const handleBack = () => {
+  window.history.back();
+};
 
   return (
     <Layout>
@@ -333,7 +333,7 @@ function CreateBill() {
                 />
               </Form.Group>
 
-              <Button variant="primary" onClick={addItem}>
+              <Button variant="btn btn-outline-primary" onClick={addItem}>
                 Add Item
               </Button>
 
@@ -364,10 +364,10 @@ function CreateBill() {
                 <div className="row mb-3">
                   <div className="col">
                     <div className="btn-group">
-                      <Button variant="btn btn-success" type="submit" className="me-5 rounded">
+                      <Button variant="btn btn-outline-success" type="submit" className="me-5 rounded">
                         Submit
                       </Button>
-                      <button className="btn btn-dark rounded" onClick={handleBack}>
+                      <button className="btn btn-outline-dark" onClick={handleBack}>
                         Back
                       </button>
                     </div>
@@ -407,17 +407,7 @@ function CreateBill() {
               </ol>
             </div>
           </div>
-          <div className="card">
-            <div class="container mt-5">
-              <form id="employeeForm" action="submit_employee.php" method="post">
-                <div class="form-group">
-                  <label for="employeeID">Employee ID:</label>
-                  <input type="text" class="form-control" id="employeeID" name="employeeID" />
-                </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
-              </form>
-            </div>
-          </div>
+          
         </div>
 
       </div>

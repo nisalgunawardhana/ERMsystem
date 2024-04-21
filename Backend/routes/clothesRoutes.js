@@ -1,5 +1,6 @@
 const router = require("express").Router();
-let clothes = require("../models/clothesmodel");
+const clothes = require("../models/clothesmodel");
+
 
 router.route("/add").post((req,res)=>{
     const item_code = req.body.item_code;
@@ -7,6 +8,8 @@ router.route("/add").post((req,res)=>{
     const category = req.body.category;
     const quantity = req.body.quantity;
     const alert_quantity = req.body.alert_quantity;
+
+
     
     
 
@@ -115,6 +118,30 @@ router.route("/quantitys/:item_code").get(async (req, res) => {
     }
 })
 
+router.route("/decrement/:item_code").put(async (req, res) => {
+    const item_code = req.params.item_code;
+    const purchasedQuantity = req.body.quantity; // Access quantity from request body
+
+    try {
+        const clothe = await clothes.findOne({ item_code });
+        if (!clothe) {
+            return res.status(404).json({ error: "Clothes not found" });
+        }
+
+        const updatedQuantity = clothe.quantity - purchasedQuantity;
+        if (updatedQuantity < 0) {
+            return res.status(400).json({ error: "Insufficient quantity" });
+        }
+
+        clothe.quantity = updatedQuantity;
+
+        await clothe.save();
+        res.json({ message: "Clothes quantity updated", updatedQuantity });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
 
 
 module.exports = router;
