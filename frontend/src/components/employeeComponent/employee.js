@@ -19,7 +19,7 @@ export default function Employees() {
     const [email, setEmail] = useState('');
     const [error, setError] = useState('');
     const [selectAll, setSelectAll] = useState(false);
-
+    const [currentDateTime, setCurrentDateTime] = useState('');
 
     useEffect(() => {
         axios.get('http://localhost:8080/employee/')
@@ -29,7 +29,15 @@ export default function Employees() {
             .catch((err) => {
                 alert(err.message);
             });
-    }, []);
+
+            const intervalId = setInterval(() => {
+                const now = new Date();
+                setCurrentDateTime(now.toLocaleString());
+            }, 1000);
+    
+            // Cleanup interval
+            return () => clearInterval(intervalId);
+        }, []);
 
     const handleDeleteEmployee = (id) => {
         console.log("Deleting employee with ID:", id); // Add this line
@@ -242,42 +250,64 @@ export default function Employees() {
         }
     };
 
-   
-
-    
-
-    
-
     return (
         <Layout>
             <div className="container">
-            <h3 fonrweight="blod">Employee Management</h3>
-
-           
-
-    <div className="row mb-6">
-                <div className="col-md-6">
-                    <div className="card">
-                        <div className="card-body">
-                            <h4 className="card-title">Total Employee</h4>
-                            <div className="text-center my-auto">
-                                <h1 className="card-text">{employees.length}</h1>
-                            </div>
-                            <button onClick={handleOpenAddModal} className="btn btn-dark">Add New Employee</button>
+            <div className="row">
+        {/* Breadcrumb navigation */}
+        <nav className="col-md-6" aria-label="breadcrumb">
+            <ol className="breadcrumb">
+                <li className="breadcrumb-item active" aria-current="page">Employee Dashboard</li>
+            </ol>
+        </nav>
+        {/* Current Date and Time */}
+        <div className="col-md-6 text-md-end mb-3">
+                        <div className="date-time">
+                            <span className="date">{currentDateTime.split(',')[0]}</span>
+                            <span className="time"> | {currentDateTime.split(',')[1]}</span>
                         </div>
                     </div>
+    </div>
+         {/* Page title */}
+         <h2 className="text-left mb-4">Employee Dashboard</h2>   
+         <div className="row">
+    <div className="col-lg-7 col-md-3 mb-3">
+        <div className="card shadow" style={{ backgroundColor: 'white' }}>
+            <div className="card-statistic-3 p-4">
+                <div className="d-flex justify-content-between align-items-center">
+                    <div className="col-8">
+                        <h1 className="d-flex align-items-center mb-5" style={{ color: 'black' }}>
+                            {employees.length}
+                        </h1>  
+                        <h3 className="card-title" style={{ color: 'black', marginTop: '25px' }}>Total Employee</h3>
+                    </div> 
+                    <i className="bi bi-person fs-1 mb-3" style={{ color: 'black' }}></i>
                 </div>
+                <div className="progress mt-1" data-height="8" style={{ height: '8px' }}>
+                    <div className="progress-bar bg-orange" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '75%', backgroundColor: 'orange' }}></div>
+                </div>   
+                <br />
+                <button onClick={handleOpenAddModal} className="btn btn-outline-success"><i class="bi bi-plus-circle-fill me-2"></i>Add New Employee</button>
+            </div>
+        </div>
+    </div>
         
-                <div className="col-md-6">
-                    <div className="card">
-                        <div className="card-body">
-                            <h5 className="card-title">Generate Report</h5>
+    <div className="col-lg-5 col-md-6 mb-3">
+        <div className="card shadow" style={{ backgroundColor: 'white' }}>
+            <div className="card-statistic-3 p-4">
+                <div className="d-flex justify-content-between align-items-center">
+                    <div className="col-8">
+                        <h5 className="card-title">Generate Report</h5>
                             <p className="card-text">Here's the comprehensive report summarizing all Employee,</p>
-                            <button onClick={generateReport} className="btn btn-primary">Generate Report</button>
-                        </div>
+                        <button onClick={generateReport} className="btn btn-outline-danger"><i className="bi bi-file-earmark-bar-graph-fill me-2"></i>Generate Report</button>
                     </div>
                 </div>
-          
+            </div>
+        </div>
+    </div>
+</div>
+
+    
                 <div className="col-md-6 mb-3">
                     <div className="d-flex justify-content-between align-items-center">
                         <div className="flex-grow-1">
@@ -325,8 +355,8 @@ export default function Employees() {
                             <td>{employee.employee_Contact}</td>
                             <td>{employee.employee_Email}</td>
                             <td>
-                                <button className="btn btn-primary" onClick={() => handleOpenUpdateModal(employee)} style={{ margin: '0 5px' }}>Update</button>
-                                <button onClick={() => handleDeleteEmployee(employee._id)} className="btn btn-danger ml-2" style={{ margin: '0 5px' }}>Delete</button>
+                                <button onClick={() => handleOpenUpdateModal(employee)} className="btn btn-outline-primary" style={{ margin: '0 5px' }} >Update</button>
+                                <button onClick={() => handleDeleteEmployee(employee._id)} className="btn btn-outline-danger" style={{ margin: '0 5px'}}>Delete</button>
                             </td>
                         </tr>
                     ))}
@@ -428,7 +458,8 @@ export default function Employees() {
         </div>
         </div>
         </div>
-        </div>
+        
+
 
         </Layout>   
     );

@@ -109,15 +109,11 @@ function Layout({children}) {
 
     //4. logistic managers
     const logisticManagerMenu = [
-        {
-            name: 'Home',
-            path: '/',
-            icon: 'ri-home-4-line'
-        },
+        
         {
             name: 'Dashboard',
-            path: '/adminDashboard',
-            icon: 'ri-user-settings-line'
+            path: '/dashboard/logistics',
+            icon: 'ri-align-item-left-fill'
         },
         {
             name: 'Stock',
@@ -125,61 +121,47 @@ function Layout({children}) {
             icon: 'ri-archive-line',
         },
         {
-            name: 'Supplier',
+            name: 'Suppliers',
             path: '/supplier',
             icon: 'ri-truck-line', 
+        },
+        {
+            name: 'Purchase Orders',
+            path: '/purchaseOrder',
+            icon: 'ri-store-2-line', 
         }
     ];
     
     //5. staff manager
     const staffManagerMenu = [
         {
-            name: 'Home',
-            path: '/',
-            icon: 'ri-home-4-line'
-        },
-        {
             name: 'Dashboard',
-            path: '/employee',
+            path: '/dashboard/employee',
             icon: 'ri-user-settings-line'
         },
         {
             name: 'Attendance',
-            path: '/attendance',
+            path: '/dashboard/employee/attendence',
             icon: 'ri-check-double-line'
         },
         {
-            name: 'Bonus Points',
-            path: '/bonus-points',
-            icon: 'ri-medal-line'
+            name: 'Tranee management',
+            path: '/dashboard/trainee',
+            icon: 'ri-home-4-line'
         },
-        {
-            name: 'Salaries',
-            path: '/salaries',
-            icon: 'ri-money-dollar-circle-line'
-        }
     ];
     
     //6.training coordinator
     const trainingCoordinatorMenu = [
         {
-            name: 'Home',
-            path: '/',
+            name: 'Dashboard',
+            path: '/dashboard/trainee',
             icon: 'ri-home-4-line'
         },
+        
         {
-            name: 'Dashboard',
-            path: '/Trainee',
-            icon: 'ri-user-settings-line'
-        },
-        {
-            name: 'Add Trainee',
-            path: '{toggleForm}',
-            icon: 'ri-add-circle-line'
-        },
-        {
-            name: 'Add Session',
-            path: '/tasks',
+            name: 'Employee Management',
+            path: '/dashboard/employee',
             icon: 'ri-task-line'
         },
     ];

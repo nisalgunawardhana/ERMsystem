@@ -270,7 +270,7 @@ const CustomerR = () => {
                     <i className="bi bi-bar-chart h1"></i>
                 </div>
                 <Button className="btn btn-dark" onClick={handleGenerateReport}>Generate Report</Button>
-                <div className="progress mt-1" data-height="8" style={{ height: '8px' }}>
+                <div className="progress mt-3" data-height="8" style={{ height: '8px' }}>
                     <div className="progress-bar bg-orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '75%', backgroundColor: 'orange' }}></div>
                 </div>
             </div>
@@ -290,7 +290,7 @@ const CustomerR = () => {
                     
                 </div>
                 <Button className="btn btn-dark" onClick={() => setShowModal(true)}>Add Customer</Button>
-                <div className="progress mt-1" data-height="8" style={{ height: '8px' }}>
+                <div className="progress mt-3" data-height="8" style={{ height: '8px' }}>
                     <div className="progress-bar bg-orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '75%', backgroundColor: 'orange' }}></div>
                 
                 </div>
@@ -312,7 +312,7 @@ const CustomerR = () => {
                     <i className="bi bi-trash h1"></i>
                 </div>
                 <Button className="btn btn-dark" onClick={handleDeleteAllPoints}>Delete All Points</Button>
-                <div className="progress mt-1" data-height="8" style={{ height: '8px' }}>
+                <div className="progress mt-3" data-height="8" style={{ height: '8px' }}>
                     <div className="progress-bar bg-orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '75%', backgroundColor: 'orange' }}></div>
                 </div>
             </div>
@@ -351,7 +351,7 @@ const CustomerR = () => {
                                     <p className="card-text">Point: {customer.point}</p>
                                     <p className="card-text">Gender: {customer.gender}</p>
                                     <div className="btn-group">
-                                        <Link to={`/customer/update/${customer.customer_id}`} className="btn btn-outline-primary  me-2">
+                                        <Link to={`/dashboard/cashier/Customer/update/${customer.customer_id}`} className="btn btn-outline-primary  me-2">
                                             <i className="bi bi-pencil-fill"></i> Update
                                         </Link>
                                         <button className="btn btn-outline-danger" onClick={() => handleDelete(customer.customer_id)}>
