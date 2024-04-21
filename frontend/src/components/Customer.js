@@ -351,7 +351,7 @@ const CustomerR = () => {
                                     <p className="card-text">Point: {customer.point}</p>
                                     <p className="card-text">Gender: {customer.gender}</p>
                                     <div className="btn-group">
-                                        <Link to={`/customer/update/${customer.customer_id}`} className="btn btn-outline-primary  me-2">
+                                        <Link to={`/dashboard/cashier/Customer/update/${customer.customer_id}`} className="btn btn-outline-primary  me-2">
                                             <i className="bi bi-pencil-fill"></i> Update
                                         </Link>
                                         <button className="btn btn-outline-danger" onClick={() => handleDelete(customer.customer_id)}>
