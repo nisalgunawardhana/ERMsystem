@@ -35,6 +35,10 @@ import UpdateBill from './components/billingComponents/updateBill';
 //discount
 import Discounts from './components/discountComponents/Discount';
 import Employees from './components/employeeComponent/employee';
+import Stock from './components/stockComponent/stock';
+import Clothe from './components/stockComponent/clothes';
+import Toy from './components/stockComponent/toys';
+
 
 //user management
 import Login from './pages/Login';
