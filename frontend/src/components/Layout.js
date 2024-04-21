@@ -217,10 +217,13 @@ function Layout({children}) {
     }
 
     const handleLogout = () => {
+        const confirmLogout = window.confirm('Are you sure you want to logout?');
         // Show a confirmation message before logging out
-        localStorage.clear();
-        dispatch(setUser(null)); // Clear user state in Redux store
-        navigate('/login');
+        if (confirmLogout) {
+            localStorage.clear();
+            dispatch(setUser(null)); // Clear user state in Redux store
+            navigate('/login');
+        }
     };
 
     const getData = async () => {
