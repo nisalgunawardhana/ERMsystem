@@ -328,7 +328,7 @@ export default function Toys() {
                             <input type="text" className="form-control" value={itemName} onChange={(e) => setItemName(e.target.value)} />
                         </div>
                         <div className="form-group">
-                            <label>Category : 8+, 12+, 16+, 18+</label>
+                            <label>Category: 8+, 12+, 16+, 18+</label>
                             <input type="text" className="form-control" value={category} onChange={(e) => setCategory(e.target.value)} />
                         </div>
                         <div className="form-group">
@@ -373,7 +373,7 @@ export default function Toys() {
                             <input type="text" className="form-control" value={itemName} onChange={(e) => setItemName(e.target.value)} />
                         </div>
                         <div className="form-group">
-                            <label>Category</label>
+                            <label>Category: 8+, 12+, 16+, 18+</label>
                             <input type="text" className="form-control" value={category} onChange={(e) => setCategory(e.target.value)} />
                         </div>
                         <div className="form-group">
@@ -424,7 +424,7 @@ export default function Toys() {
                             <th>#</th>
                             <th>Item Code</th>
                             <th>Item Name</th>
-                            <th>Category</th>
+                            <th>Category: 8+, 12+, 16+, 18+</th>
                             <th>Price</th>
                             <th>Quantity</th>
                             <th>Alert Quantity</th>

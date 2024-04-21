@@ -411,7 +411,7 @@ export default function Clothes() {
                             <input type="text" className="form-control" value={itemName} onChange={(e) => setItemName(e.target.value)} />
                         </div>
                         <div className="form-group">
-                            <label>Category : F-Female M-Male</label>
+                            <label>Category: F-Female M-Male</label>
                             <input type="text" className="form-control" value={category} onChange={(e) => setCategory(e.target.value)} />
                         </div>
                         <div className="form-group">
@@ -456,7 +456,7 @@ export default function Clothes() {
                             <input type="text" className="form-control" value={itemName} onChange={(e) => setItemName(e.target.value)} />
                         </div>
                         <div className="form-group">
-                            <label>Category</label>
+                            <label>Category: F-Female M-Male</label>
                             <input type="text" className="form-control" value={category} onChange={(e) => setCategory(e.target.value)} />
                         </div>
                         <div className="form-group">
@@ -507,7 +507,7 @@ export default function Clothes() {
                             <th>#</th>
                             <th>Item Code</th>
                             <th>Item Name</th>
-                            <th>Category</th>
+                            <th>Category: F-Female M-Male</th>
                             <th>Price</th>
                             <th>Quantity</th>
                             <th>Alert Quantity</th>
