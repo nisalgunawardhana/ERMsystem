@@ -13,8 +13,8 @@ const RFQSchema = new Schema({
     },
 
     quotation_items: [{
-        qitem_des: String,
-        qunit_price: Number,
+        qitem: String,
+        quantity: Number,
       }],
 
     quality_standards:{

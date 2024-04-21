@@ -62,14 +62,6 @@ router.route("/add/check").post(async (req, res) => {
   
   });
 
-router.route("/").get((req,res)=>{
-    Tax.find().then((tax)=>{
-        res.json(tax)
-    }).catch((err)=>{
-        console.log(err)
-    })
-});
-
 //route to update tax doc
 router.route("/update/:id").put(async (req,res)=>{
     let taxId = req.params.id;
@@ -95,7 +87,7 @@ router.route("/update/:id").put(async (req,res)=>{
 });
 
 //route to get latest tax doc
-router.route("/get/taxdoc").get(async (req, res) => {
+router.route("/").get(async (req, res) => {
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
     const currentYearStart = new Date(currentYear, 3 - 1, 1); // 1st April of the current year

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Modal } from 'react-bootstrap';
+import Layout from './Layout';
 
 function EditProfit() {
     const { id } = useParams(); // Get the expense ID from the URL params
@@ -163,6 +164,8 @@ function EditProfit() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
+        const totProfit = (profit - (profit * Rate /100));
+
         const newProfit = {
             Profit_ID: Profit.Profit_ID,
             Month: Profit.Month,
@@ -171,7 +174,7 @@ function EditProfit() {
             Salaries: totalSalary,
             EPF_ETF: total,
             Other_expenses: totalOther,
-            Monthly_profit: profit,
+            Monthly_profit: totProfit,
             Date_modified: editedDate,
             Description: Profit.Description
         };
@@ -180,7 +183,7 @@ function EditProfit() {
         axios.put(`http://localhost:8080/profit/update/${Profit._id}`, newProfit)
             .then((res) => {
                 console.log(res.data);
-                navigate(`/profit/get/${Profit.Profit_ID}`);
+                navigate(`/dashboard/finance/profit`);
             })
             .catch((err) => {
                 console.log(err);
@@ -206,7 +209,8 @@ function EditProfit() {
     }, []); // Run only once after the component mount
 
     return (
-        <div className="container" style={{ marginTop: '90px' }}>
+        <Layout>
+        <div className="container" style={{ marginTop: '20px' }}>
             <div className="row justify-content-center">
                 <div className="col-lg-8">
                     <form onSubmit={handleSubmit}>
@@ -346,7 +350,7 @@ function EditProfit() {
                 </div>
             </div>
         </div>
-
+        </Layout>
     );
 }
 export default EditProfit;

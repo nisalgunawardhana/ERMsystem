@@ -87,47 +87,48 @@ function Layout({children}) {
     const financialManagerMenu = [
         {
             name: 'Dashboard',
-            path: '/finance',
+            path: '/dashboard/finance',
             icon: 'ri-line-chart-line'
         },
         {
             name: 'Profit Log',
-            path: `/profit/get/profitlog`,
+            path: `/dashboard/finance/profit`,
             icon: 'ri-currency-line'
         },
         {
             name: 'Other Expenses',
-            path: '/otherExpense',
+            path: '/dashboard/finance/otherExpense',
             icon: 'ri-coins-line'
         },
         {
             name: 'Tax Document',
-            path: '/profile',
+            path: '/dashboard/finance/tax',
             icon: 'ri-article-line'
         },
     ];
 
     //4. logistic managers
     const logisticManagerMenu = [
-        {
-            name: 'Home',
-            path: '/',
-            icon: 'ri-home-4-line'
-        },
+        
         {
             name: 'Dashboard',
-            path: '/adminDashboard',
-            icon: 'ri-user-settings-line'
+            path: '/dashboard/logistics',
+            icon: 'ri-align-item-left-fill'
         },
         {
             name: 'Stock',
-            path: '/stock',
+            path: '/dashboard/stock',
             icon: 'ri-archive-line',
         },
         {
-            name: 'Supplier',
+            name: 'Suppliers',
             path: '/supplier',
             icon: 'ri-truck-line', 
+        },
+        {
+            name: 'Purchase Orders',
+            path: '/purchaseOrder',
+            icon: 'ri-store-2-line', 
         }
     ];
     
@@ -140,13 +141,8 @@ function Layout({children}) {
         },
         {
             name: 'Dashboard',
-            path: '/adminDashboard',
+            path: '/employee',
             icon: 'ri-user-settings-line'
-        },
-        {
-            name: 'Add Employee',
-            path: '/signup',
-            icon: 'ri-add-circle-line'
         },
         {
             name: 'Attendance',
@@ -168,23 +164,14 @@ function Layout({children}) {
     //6.training coordinator
     const trainingCoordinatorMenu = [
         {
-            name: 'Home',
-            path: '/',
+            name: 'Dashboard',
+            path: '/dashboard/trainee',
             icon: 'ri-home-4-line'
         },
+        
         {
-            name: 'Dashboard',
-            path: '/Trainee',
-            icon: 'ri-user-settings-line'
-        },
-        {
-            name: 'Add Trainee',
-            path: '{toggleForm}',
-            icon: 'ri-add-circle-line'
-        },
-        {
-            name: 'Add Session',
-            path: '/tasks',
+            name: 'Employee Management',
+            path: '/dashboard/employee',
             icon: 'ri-task-line'
         },
     ];

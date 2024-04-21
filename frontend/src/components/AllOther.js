@@ -632,313 +632,279 @@ export default function AllOther() {
         }
     };
 
+    const [dateTime, setDateTime] = useState(new Date());
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setDateTime(new Date());
+        }, 1000); // Update every second
+
+        // Cleanup function
+        return () => clearInterval(timer);
+    }, []);
+
+    // Format the date and time
+    const formattedDate = dateTime.toLocaleDateString();
+    const formattedTime = dateTime.toLocaleTimeString();
+
     return (
         <Layout>
-        <div className="container" >
-            <ul class="nav nav-tabs mb-3" id="myTab0" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <Link
-                        className="nav-link"
-                        id="contact-tab0"
-                        to="/finance"
-                        role="tab"
-                        aria-controls="contact"
-                        aria-selected="false"
-                    >
-                        Dashboard
-                    </Link>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button
-                        data-mdb-tab-init
-                        class="nav-link"
-                        id="profile-tab0"
-                        type="button"
-                        role="tab"
-                        aria-controls="profile"
-                        aria-selected="false"
-                        onClick={handleClick}
-                    >
-                        Profit Log
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <Link
-                        className="nav-link active"
-                        id="contact-tab0"
-                        to="/otherExpense"
-                        role="tab"
-                        aria-controls="contact"
-                        aria-selected="false"
-                        style={{ borderBottom: '2px solid #007bff', borderTop: 'none' }}
-                    >
-                        <i className="bi bi-wallet"></i> Other Expenses
-                    </Link>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button
-                        data-mdb-tab-init
-                        class="nav-link"
-                        id="contact-tab0"
-                        data-mdb-target="#contact0"
-                        type="button"
-                        role="tab"
-                        aria-controls="contact"
-                        aria-selected="false"
-                        onClick={handleClickTax}
-                    >
-                        Tax Document
-                    </button>
-                </li>
-            </ul>
-            {/*Breadcrumb*/}
-            <nav aria-label="breadcrumb" style={{ marginTop: '20px' }}>
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="/">Home</a></li>
-                    <li class="breadcrumb-item"><a href="/finance">Finance Dashboard</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Other Expenses</li>
-                </ol>
+            <div className="container" >
 
-                <Toaster />
-            </nav>
-
-            <div className="row mb-2" style={{ marginTop: '40px' }}>
-                <div className="d-flex justify-content-start mb-3 align-items-center">
-                    <h3 className="me-5">All Other Expenses</h3>
-                    <div className="d-flex flex-wrap align-items-center">
-                        <button className="btn btn-success mb-2 mb-md-0 mr-4 mr-sm-2" style={{ marginRight: '25px' }} onClick={handleShow}>Add Expense</button>
-                        {/* Add expense button */}
-                        <Button className="ml-4 ml-sm-2" onClick={handleGenerate}>Generate Report</Button>
+                <div className="row">
+                    <div className="col-md-8">
+                        {/*Breadcrumb*/}
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="/finance">Finance Dashboard</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Other Expenses</li>
+                            </ol>
+                            <Toaster />
+                        </nav>
                     </div>
-
-                    <div>
-                        <Modal style={{ marginTop: '70px' }} show={showModal} onHide={handleCloseModal}>
-                            <Modal.Header closeButton>
-                                <Modal.Title>Select Month and Year</Modal.Title>
-                            </Modal.Header>
-                            <Modal.Body>
-                                {reportButtonClicked && (!selectedMonth || !selectedYear) && (
-                                    <div className="alert alert-danger" role="alert">
-                                        Please select both month and year.
-                                    </div>
-                                )}
-                                <div className="row">
-                                    <div className="col-md-6 mb-3">
-                                        <label htmlFor="month" className="form-label">Select Month:</label>
-                                        <select id="month" className="form-select" value={selectedMonth} onChange={handleMonthChange} required>
-                                            <option value="">Select Month</option>
-                                            {Array.from({ length: 12 }, (_, i) => i + 1).map(month => (
-                                                <option key={month} value={month}>{getMonthName(month)}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                    <div className="col-md-6 mb-3">
-                                        <label htmlFor="year" className="form-label">Select Year:</label>
-                                        <select id="year" className="form-select" value={selectedYear} onChange={handleYearChange} required>
-                                            <option value="">Select Year</option>
-                                            {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(year => (
-                                                <option key={year} value={year}>{year}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                </div>
-                            </Modal.Body>
-                            <Modal.Footer>
-                                <Button variant="secondary" onClick={handleCloseModal}>Close</Button>
-                                <Button variant="primary" onClick={handleReportGeneration}>Generate Report</Button>
-                            </Modal.Footer>
-                        </Modal>
+                    <div className="col-md-4 d-flex justify-content-end">
+                        <p>{formattedDate} | {formattedTime}</p>
                     </div>
                 </div>
-                <div className="container mt-3">
-                    <div className="row justify-content-center">
-                        <div className="col-lg-4 col-md-6 mb-3">
-                            {/* Current year Total amount of expenses*/}
-                            <div className="card mb-3" style={{ background: 'linear-gradient(to right, #493240, #f09)', color: '#fff' }}>
-                                <div className="card-body d-flex justify-content-between align-items-center">
-                                    <div className="card-body">
-                                        <h2 className="card-title">Rs.{total}</h2>
-                                        <p className="card-text" style={{ marginTop: '35px' }}>Current Year Expenses</p>
-                                    </div>
-                                    <i className="bi bi-cash h1" style={{ marginTop: '-20px', marginRight: '20px', fontSize: '3.5rem' }}></i>
-                                </div>
-                                <div className="card-footer bg-transparent border-top-0">
-                                    <div className="progress" style={{ height: '10px', marginBottom: '20px', width: '80%', marginLeft: '10px', marginTop: '-25px' }}>
-                                        <div className="progress-bar" role="progressbar" style={{ backgroundColor: '#b2beb5', width: '50%' }} aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {/*Current month expenses amount*/}
-                        <div className="col-lg-4 col-md-6 mb-3">
-                            <div className="card mb-3" style={{ background: 'linear-gradient(to right, #0a504a, #38ef7d)', color: '#fff' }}>
-                                <div className="card-body d-flex justify-content-between align-items-center">
-                                    <div className="card-body">
-                                        <h2 className="card-title">Rs.{totalMonth}</h2>
-                                        <p className="card-text" style={{ marginTop: '35px' }}>Current Month Expenses</p>
-                                    </div>
-                                    <i className="bi bi-calendar3 h1" style={{ marginTop: '-20px', marginRight: '20px', fontSize: '2.5rem' }}></i>
-                                </div>
-                                <div className="card-footer bg-transparent border-top-0">
-                                    <div className="progress" style={{ height: '10px', marginBottom: '20px', width: '80%', marginLeft: '10px', marginTop: '-25px' }}>
-                                        <div className="progress-bar" role="progressbar" style={{ backgroundColor: '#b2beb5', width: '75%' }} aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {/*Average monthly expense amount*/}
-                        <div className="col-lg-4 col-md-6 mb-3">
-                            <div className="card mb-3" style={{ background: 'linear-gradient(to right, #a86008, #ffba56)', color: '#fff' }}>
-                                <div className="card-body d-flex justify-content-between align-items-center">
-                                    <div className="card-body">
-                                        <h2 className="card-title">Rs.{average}</h2>
-                                        <p className="card-text" style={{ marginTop: '35px' }}>Average Monthly Expenses</p>
-                                    </div>
-                                    <i className="bi bi-graph-up" style={{ marginTop: '-20px', marginRight: '20px', fontSize: '2.5rem' }}></i>
-                                </div>
-                                <div className="card-footer bg-transparent border-top-0">
-                                    <div className="progress" style={{ height: '10px', marginBottom: '20px', width: '90%', marginLeft: '10px', marginTop: '-25px' }}>
-                                        <div className="progress-bar" role="progressbar" style={{ backgroundColor: '#b2beb5', width: '30%' }} aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                </div>
-                            </div>
+
+
+                <div className="row mb-2" style={{ marginTop: '10px' }}>
+                    <div className="d-flex justify-content-start mb-3 align-items-center">
+                        <h3 className="me-5">All Other Expenses</h3>
+                        <div className="d-flex flex-wrap align-items-center">
+                            <button className="btn btn-outline-primary mb-2 mb-md-0 mr-4 mr-sm-2" style={{ marginRight: '25px' }} onClick={handleShow}><i className="ri-add-line"></i> Add Expense</button>
+                            {/* Add expense button */}
+                            <button className="btn btn-outline-success ml-4 ml-sm-2" onClick={handleGenerate}><i className="bi bi-file-earmark-bar-graph"></i>  Generate Report</button>
                         </div>
 
+                        <div>
+                            <Modal style={{ marginTop: '70px' }} show={showModal} onHide={handleCloseModal}>
+                                <Modal.Header closeButton>
+                                    <Modal.Title>Select Month and Year</Modal.Title>
+                                </Modal.Header>
+                                <Modal.Body>
+                                    {reportButtonClicked && (!selectedMonth || !selectedYear) && (
+                                        <div className="alert alert-danger" role="alert">
+                                            Please select both month and year.
+                                        </div>
+                                    )}
+                                    <div className="row">
+                                        <div className="col-md-6 mb-3">
+                                            <label htmlFor="month" className="form-label">Select Month:</label>
+                                            <select id="month" className="form-select" value={selectedMonth} onChange={handleMonthChange} required>
+                                                <option value="">Select Month</option>
+                                                {Array.from({ length: 12 }, (_, i) => i + 1).map(month => (
+                                                    <option key={month} value={month}>{getMonthName(month)}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div className="col-md-6 mb-3">
+                                            <label htmlFor="year" className="form-label">Select Year:</label>
+                                            <select id="year" className="form-select" value={selectedYear} onChange={handleYearChange} required>
+                                                <option value="">Select Year</option>
+                                                {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(year => (
+                                                    <option key={year} value={year}>{year}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </Modal.Body>
+                                <Modal.Footer>
+                                    <Button variant="secondary" onClick={handleCloseModal}>Close</Button>
+                                    <Button variant="primary" onClick={handleReportGeneration}>Generate Report</Button>
+                                </Modal.Footer>
+                            </Modal>
+                        </div>
                     </div>
-                </div>
-                {/*Search bar*/}
-                <div className="col" style={{ marginTop: '20px' }}>
-                    <input type="text" className="form-control" value={searchTerm} onChange={handleSearchChange} placeholder="Search..." />
-                </div>
-
-            </div>
-            {/*Filters for expenses*/}
-            <div className="d-flex justify-content-start mb-3 align-items-center">
-                <div className="col" style={{ marginTop: '20px', marginRight: '10px' }}>
-                    <select className="form-select" value={filterMonth} onChange={handleFilterMonthChange}>
-                        <option value="">All Months</option>
-                        {months.map(month => (
-                            <option key={month.value} value={month.value}>{month.label}</option>
-                        ))}
-                    </select>
-                </div>
-                <div className="col" style={{ marginTop: '20px', marginRight: '10px' }}>
-                    <select className="form-select" value={filterYear} onChange={handleFilterYearChange}>
-                        <option value="">All Years</option>
-                        {years.map(year => (
-                            <option key={year.value} value={year.value}>{year.label}</option>
-                        ))}
-                    </select>
-                </div>
-                <div className="col" style={{ marginTop: '20px', marginRight: '10px' }}>
-                    <select className="form-select" value={filterType} onChange={handleFilterTypeChange}>
-                        <option value="">All Types</option>
-                        {expenseTypes.map(type => (
-                            <option key={type} value={type}>{type}</option>
-                        ))}
-                    </select>
-                </div>
-                <button className="btn btn-secondary" style={{ marginTop: '20px' }} onClick={handleResetFilters}>Reset</button>
-            </div>
-
-            {/*All expenses*/}
-            <div style={{ marginTop: '20px' }}>
-                <div className="container">
-                    <div className="row">
-                        {currentExpenses.map(expense => (
-                            <div key={expense._id} className="col-md-4 mb-4">
-                                <div className="card">
-                                    <div className="card-body">
-                                        <h5 className="card-title"><i class="bi bi-card-list"></i>  Expense ID: {expense.Expense_id}</h5>
-                                        <p className="card-text"><i class="bi bi-chat-left-text"></i>  Type: {expense.Type}</p>
-                                        <p className="card-text"><i class="bi bi-calendar3"></i>  Date: {expense.Date ? expense.Date.split('T')[0] : ''}</p>
-                                        <p className="card-text"><i class="bi bi-check-circle"></i>  Status: {expense.Status}</p>
-                                        <p className="card-text"><i class="bi bi-currency-dollar"></i>  Cost: Rs.{expense.Cost}</p>
-                                        <div className="btn-group">
-                                            <Link to={`/otherExpense/update/${expense._id}`} className="btn btn-success me-2">
-                                                <i className="bi bi-pencil-fill"></i> Update {/*Update button*/}
-                                            </Link>
-                                            <button className="btn btn-danger" onClick={() => handleDelete(expense._id)}>
-                                                <i className="bi bi-trash-fill"></i> Delete {/*Delete button*/}
-                                            </button>
+                    <div className="container mt-3">
+                        <div className="row justify-content-center">
+                            <div className="col-lg-4 col-md-6 mb-3">
+                                {/* Current year Total amount of expenses*/}
+                                <div className="card mb-3" style={{ background: 'white' }}>
+                                    <div className="card-body d-flex justify-content-between align-items-center">
+                                        <div className="card-body">
+                                            <h2 className="card-title">Rs.{total}</h2>
+                                            <p className="card-text" style={{ marginTop: '35px' }}>Current Year Expenses</p>
+                                        </div>
+                                        <i className="bi bi-cash h1" style={{ marginTop: '-20px', marginRight: '20px', fontSize: '3.5rem' }}></i>
+                                    </div>
+                                    <div className="card-footer bg-transparent border-top-0">
+                                        <div className="progress" style={{ height: '10px', marginBottom: '20px', width: '80%', marginLeft: '10px', marginTop: '-25px' }}>
+                                            <div className="progress-bar" role="progressbar" style={{ backgroundColor: 'orange', width: '50%' }} aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        ))}
+                            {/*Current month expenses amount*/}
+                            <div className="col-lg-4 col-md-6 mb-3">
+                                <div className="card mb-3" style={{ background: 'white' }}>
+                                    <div className="card-body d-flex justify-content-between align-items-center">
+                                        <div className="card-body">
+                                            <h2 className="card-title">Rs.{totalMonth}</h2>
+                                            <p className="card-text" style={{ marginTop: '35px' }}>Current Month Expenses</p>
+                                        </div>
+                                        <i className="bi bi-calendar3 h1" style={{ marginTop: '-20px', marginRight: '20px', fontSize: '2.5rem' }}></i>
+                                    </div>
+                                    <div className="card-footer bg-transparent border-top-0">
+                                        <div className="progress" style={{ height: '10px', marginBottom: '20px', width: '80%', marginLeft: '10px', marginTop: '-25px' }}>
+                                            <div className="progress-bar" role="progressbar" style={{ backgroundColor: 'orange', width: '50%' }} aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {/*Average monthly expense amount*/}
+                            <div className="col-lg-4 col-md-6 mb-3">
+                                <div className="card mb-3" style={{ background: 'white' }}>
+                                    <div className="card-body d-flex justify-content-between align-items-center">
+                                        <div className="card-body">
+                                            <h2 className="card-title">Rs.{average}</h2>
+                                            <p className="card-text" style={{ marginTop: '35px' }}>Average Monthly Expenses</p>
+                                        </div>
+                                        <i className="bi bi-graph-up" style={{ marginTop: '-20px', marginRight: '20px', fontSize: '2.5rem' }}></i>
+                                    </div>
+                                    <div className="card-footer bg-transparent border-top-0">
+                                        <div className="progress" style={{ height: '10px', marginBottom: '20px', width: '90%', marginLeft: '10px', marginTop: '-25px' }}>
+                                            <div className="progress-bar" role="progressbar" style={{ backgroundColor: 'orange', width: '50%' }} aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
-                    <div className="d-flex justify-content-center">
-                        <Pagination>
-                            <Pagination.Prev onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1} />
-                            {[...Array(Math.ceil(sortedData().length / expensesPerPage)).keys()].map(number => (
-                                <Pagination.Item key={number + 1} onClick={() => paginate(number + 1)} active={number + 1 === currentPage}>
-                                    {number + 1}
-                                </Pagination.Item>
+                    {/*Search bar*/}
+                    <div className="col" style={{ marginTop: '20px' }}>
+                        <input type="text" className="form-control" value={searchTerm} onChange={handleSearchChange} placeholder="Search Expense by ID..." />
+                    </div>
+
+                </div>
+                {/*Filters for expenses*/}
+                <div className="d-flex justify-content-start mb-3 align-items-center">
+                    <div className="col" style={{ marginTop: '20px', marginRight: '10px' }}>
+                        <select className="form-select" value={filterMonth} onChange={handleFilterMonthChange}>
+                            <option value="">All Months</option>
+                            {months.map(month => (
+                                <option key={month.value} value={month.value}>{month.label}</option>
                             ))}
-                            <Pagination.Next onClick={() => paginate(currentPage + 1)} disabled={currentPage === Math.ceil(sortedData().length / expensesPerPage)} />
-                        </Pagination>
+                        </select>
                     </div>
+                    <div className="col" style={{ marginTop: '20px', marginRight: '10px' }}>
+                        <select className="form-select" value={filterYear} onChange={handleFilterYearChange}>
+                            <option value="">All Years</option>
+                            {years.map(year => (
+                                <option key={year.value} value={year.value}>{year.label}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="col" style={{ marginTop: '20px', marginRight: '10px' }}>
+                        <select className="form-select" value={filterType} onChange={handleFilterTypeChange}>
+                            <option value="">All Types</option>
+                            {expenseTypes.map(type => (
+                                <option key={type} value={type}>{type}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <button className="btn btn-outline-secondary" style={{ marginTop: '20px' }} onClick={handleResetFilters}><i className="ri-restart-line"></i>  Reset</button>
                 </div>
 
-                {/*Modal to confirm expense deletion*/}
-                {showDeletePrompt && (
-                    <Modal show={showDeletePrompt} onHide={cancelDelete}>
-                        <Modal.Header closeButton>
-                            <Modal.Title>Confirm Deletion</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            Are you sure you want to delete this expense?
-                        </Modal.Body>
-                        <Modal.Footer>
-                            <Button variant="danger" onClick={confirmDelete}>Yes</Button>
-                            <Button variant="secondary" onClick={cancelDelete}>No</Button>
-                        </Modal.Footer>
-                    </Modal>
-                )}
-            </div>
-            {/*Modal to add expense*/}
-            <div className="modal-backdrop" style={{ display: isOpen ? 'block' : 'none', backdropFilter: isOpen ? 'blur(5px)' : 'none' }}></div>
-            <Modal show={isOpen} onHide={handleClose} style={{ marginTop: '60px' }}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Add New Expense</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <form onSubmit={handleSubmit}>
-                        {/* Form fields */}
-                        <div className="mb-3">
-                            <label htmlFor="id" className="form-label"><i class="bi bi-card-list"></i>  Expense ID</label>
-                            <input type="text" className="form-control" id="id" name="Expense_id" value={expenseData.Expense_id} onChange={handleChanges} readOnly required />
+                {/*All expenses*/}
+                <div style={{ marginTop: '20px' }}>
+                    <div className="container">
+                        <div className="row">
+                            {currentExpenses.map(expense => (
+                                <div key={expense._id} className="col-md-4 mb-4">
+                                    <div className="card">
+                                        <div className="card-body">
+                                            <h5 className="card-title"><i class="bi bi-card-list"></i>  Expense ID: {expense.Expense_id}</h5>
+                                            <p className="card-text"><i class="bi bi-chat-left-text"></i>  Type: {expense.Type}</p>
+                                            <p className="card-text"><i class="bi bi-calendar3"></i>  Date: {expense.Date ? expense.Date.split('T')[0] : ''}</p>
+                                            <p className="card-text"><i class="bi bi-check-circle"></i>  Status: {expense.Status}</p>
+                                            <p className="card-text"><i class="bi bi-currency-dollar"></i>  Cost: Rs.{expense.Cost}</p>
+                                            <div className="btn-group">
+                                                <Link to={`/dashboard/finance/otherExpense/update/${expense._id}`} className="btn btn-outline-primary me-2" style={{ borderRadius: '8px' }}>
+                                                <i className="ri-edit-line"></i>  Update {/*Update button*/}
+                                                </Link>
+                                                <button className="btn btn-outline-danger" onClick={() => handleDelete(expense._id)} style={{ borderRadius: '8px' }}>
+                                                    <i className="bi bi-trash"></i>  Delete {/*Delete button*/}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
-                        <div className="mb-3">
-                            <label htmlFor="type" className="form-label"><i class="bi bi-chat-left-text"></i>  Type of Expense</label>
-                            <select className="form-select" id="type" name="Type" value={expenseData.Type} onChange={handleChanges} required>
-                                <option value="">Select Type</option>
-                                <option value="Transportation">Transportation</option>
-                                <option value="Construction">Construction</option>
-                                <option value="Repair">Repair</option>
-                                <option value="Utilities">Utilities</option>
-                            </select>
+                        <div className="d-flex justify-content-center">
+                            <Pagination>
+                                <Pagination.Prev onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1} />
+                                {[...Array(Math.ceil(sortedData().length / expensesPerPage)).keys()].map(number => (
+                                    <Pagination.Item key={number + 1} onClick={() => paginate(number + 1)} active={number + 1 === currentPage}>
+                                        {number + 1}
+                                    </Pagination.Item>
+                                ))}
+                                <Pagination.Next onClick={() => paginate(currentPage + 1)} disabled={currentPage === Math.ceil(sortedData().length / expensesPerPage)} />
+                            </Pagination>
                         </div>
-                        <div className="mb-3">
-                            <label htmlFor="date" className="form-label"><i class="bi bi-calendar3"></i>  Date</label>
-                            <input type="date" className="form-control" id="date" name="Date" value={expenseData.Date} onChange={handleChanges} required readOnly />
-                        </div>
-                        <div className="mb-3">
-                            <label htmlFor="status" className="form-label"><i class="bi bi-check-circle"></i>  Payment Status</label>
-                            <input type="text" className="form-control" id="status" name="Status" value={expenseData.Status} onChange={handleChanges} required />
-                        </div>
-                        <div className="mb-3">
-                            <label htmlFor="cost" className="form-label"><i class="bi bi-currency-dollar"></i>  Amount (Rs.)</label>
-                            <input type="text" className="form-control" id="cost" name="Cost" value={expenseData.Cost} onChange={handleChanges} required />
-                            {costError && <div className="text-danger">{costError}</div>}
-                        </div>
+                    </div>
 
-                        {/* Submit button */}
-                        <button type="submit" className="btn btn-primary" style={{ marginLeft: '180px' }}>Submit</button>
-                    </form>
-                </Modal.Body>
-            </Modal>
-        </div>
+                    {/*Modal to confirm expense deletion*/}
+                    {showDeletePrompt && (
+                        <Modal show={showDeletePrompt} onHide={cancelDelete}>
+                            <Modal.Header closeButton>
+                                <Modal.Title>Confirm Deletion</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                                Are you sure you want to delete this expense?
+                            </Modal.Body>
+                            <Modal.Footer>
+                                <button className="btn btn-outline-danger" onClick={confirmDelete}><i className="ri-check-line"></i>  Yes</button>
+                                <button className="btn btn-outline-secondary" onClick={cancelDelete}><i className="ri-close-line"></i>  No</button>
+                            </Modal.Footer>
+                        </Modal>
+                    )}
+                </div>
+                {/*Modal to add expense*/}
+                <div className="modal-backdrop" style={{ display: isOpen ? 'block' : 'none', backdropFilter: isOpen ? 'blur(5px)' : 'none' }}></div>
+                <Modal show={isOpen} onHide={handleClose} style={{ marginTop: '60px' }}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Add New Expense</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <form onSubmit={handleSubmit}>
+                            {/* Form fields */}
+                            <div className="mb-3">
+                                <label htmlFor="id" className="form-label"><i class="bi bi-card-list"></i>  Expense ID</label>
+                                <input type="text" className="form-control" id="id" name="Expense_id" value={expenseData.Expense_id} onChange={handleChanges} readOnly required />
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="type" className="form-label"><i class="bi bi-chat-left-text"></i>  Type of Expense</label>
+                                <select className="form-select" id="type" name="Type" value={expenseData.Type} onChange={handleChanges} required>
+                                    <option value="">Select Type</option>
+                                    <option value="Transportation">Transportation</option>
+                                    <option value="Construction">Construction</option>
+                                    <option value="Repair">Repair</option>
+                                    <option value="Utilities">Utilities</option>
+                                </select>
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="date" className="form-label"><i class="bi bi-calendar3"></i>  Date</label>
+                                <input type="date" className="form-control" id="date" name="Date" value={expenseData.Date} onChange={handleChanges} required readOnly />
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="status" className="form-label"><i class="bi bi-check-circle"></i>  Payment Status</label>
+                                <input type="text" className="form-control" id="status" name="Status" value={expenseData.Status} onChange={handleChanges} required />
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="cost" className="form-label"><i class="bi bi-currency-dollar"></i>  Amount (Rs.)</label>
+                                <input type="text" className="form-control" id="cost" name="Cost" value={expenseData.Cost} onChange={handleChanges} required />
+                                {costError && <div className="text-danger">{costError}</div>}
+                            </div>
+
+                            {/* Submit button */}
+                            <button type="submit" className="btn btn-outline-primary" style={{ marginLeft: '180px' }}><i className="ri-check-line"></i>  Submit</button>
+                        </form>
+                    </Modal.Body>
+                </Modal>
+            </div>
         </Layout>
     )
 }

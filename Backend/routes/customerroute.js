@@ -174,11 +174,11 @@ router.get("/calculate-loyalty-points/:customer_id", async (req, res) => {
         if (!isNaN(totalAmount)) {
             // Calculate loyalty points (example calculation, adjust as needed)
             let loyaltyPoints = 0;
-            if (totalAmount > 1000 && totalAmount < 2000) {
+            if (totalAmount >= 1000 && totalAmount < 2000) {
                 loyaltyPoints = 1;
-            } else if (totalAmount > 2000 && totalAmount < 5000) {
+            } else if (totalAmount >= 2000 && totalAmount < 5000) {
                 loyaltyPoints = 3;
-            } else if (totalAmount > 5000) {
+            } else if (totalAmount >= 5000) {
                 loyaltyPoints = 5;
             }
 
