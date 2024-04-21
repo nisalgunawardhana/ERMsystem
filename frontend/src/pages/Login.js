@@ -7,6 +7,7 @@ import axios from "axios"
 import { useDispatch } from "react-redux"
 import { hideLoading, showLoading } from '../redux/alertsSlice';
 
+
 function Login() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -72,7 +73,7 @@ function Login() {
                 
                 <h1 className='card-topic'>Welcome Back!</h1>
                 <br></br>
-                <Form layout='vertical' onFinish={onFinish}>
+                <Form className='' layout='vertical' onFinish={onFinish}>
                     <Form.Item label='Email' name='email'>
                         <Input  className='loginginput'placeholder='Email'/>
                     </Form.Item>
