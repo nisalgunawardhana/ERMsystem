@@ -60,6 +60,31 @@ router.delete("/delete/:id", async (req, res) => {
     }
 });
 
+router.get("/employeeIds/:date", async (req, res) => {
+    const { date } = req.params;
+
+    try {
+        // Parse the date string into a JavaScript Date object
+        const queryDate = new Date(date);
+
+        // Set the query date to start of day and end of day
+        queryDate.setHours(0, 0, 0, 0);
+        const endDate = new Date(queryDate);
+        endDate.setHours(23, 59, 59, 999);
+
+        // Query attendance records for the specified date
+        const attendanceRecords = await Attendance.find({ date: { $gte: queryDate, $lte: endDate } });
+
+        // Extract unique employee IDs from attendance records
+        const employeeIds = Array.from(new Set(attendanceRecords.map(record => record.employee_Id)));
+
+        res.json(employeeIds);
+    } catch (error) {
+        console.error("Error fetching employee IDs:", error);
+        res.status(500).json({ error: "Failed to fetch employee IDs" });
+    }
+});
+
 
 
 

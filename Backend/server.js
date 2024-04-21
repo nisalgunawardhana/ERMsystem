@@ -78,6 +78,9 @@ app.use("/customer", customer);
 const discounts = require("./routes/discounttoute.js");
 app.use("/discounts", discounts);
 
+const attendance = require("./routes/attendanceroute.js");
+app.use("/attendance", attendance);
+
 //user management
 const userRoute = require("./routes/userRoute.js");
 app.use("/api/user", userRoute);
