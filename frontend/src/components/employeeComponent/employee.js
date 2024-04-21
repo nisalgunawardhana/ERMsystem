@@ -225,49 +225,41 @@ export default function Employees() {
             <div className="container">
             <h3 fonrweight="blod">Employee Management</h3>
 
-            <div className="row">
-                <div className="col-md-4">
-                <div className="card border-success mb-3">
-                <div className="card-body">
-                    <h5 className="card-title">Add New Employee</h5>
-                    
-                    <button onClick={handleOpenAddModal} className="btn btn-dark">Add New Employee</button>
-                    
-                </div>
-            </div>
-                </div>
-                <div className="col-md-4">
-                <div className="card mb-3" style={{ background: `linear-gradient(to right, rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8), rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8))`, color: 'white', borderRadius: '20px' }}>
+           
+
+    <div className="row mb-6">
+                <div className="col-md-6">
+                    <div className="card">
                         <div className="card-body">
-                            <h5 className="card-title"
-                                fonrweight="bold">Total Employees</h5>
-                            <br/>
+                            <h4 className="card-title">Total Employee</h4>
                             <div className="text-center my-auto">
                                 <h1 className="card-text">{employees.length}</h1>
                             </div>
+                            <button onClick={handleOpenAddModal} className="btn btn-dark">Add New Employee</button>
                         </div>
                     </div>
                 </div>
-                <div className="col-md-4">
-                    <div className="card mb-3" style={{ background: `linear-gradient(to right, rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8), rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8))`, color: 'white', borderRadius: '20px' }}>
+        
+                <div className="col-md-6">
+                    <div className="card">
                         <div className="card-body">
-                            <h5 className="card-title">Generate Reports</h5>
-                            <p className="card-text">Generate and download employee reports.</p>
-                            <button onClick={generateReport} className="btn btn-dark">Generate Report</button>
-                            <div className="progress-bar bg-light" role="progressbar" style={{ width: '75%' }} aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                            <h5 className="card-title">Generate Report</h5>
+                            <p className="card-text">Here's the comprehensive report summarizing all trainees,</p>
+                            <button onClick={generateReport} className="btn btn-primary">Generate Report</button>
                         </div>
                     </div>
                 </div>
+          
+    <div className="col-md-6 mb-3">
+        <div className="d-flex justify-content-between align-items-center">
+            <div className="flex-grow-1">
+                <input type="text" className="form-control" placeholder="Search by Employee ID" value={searchQuery} onChange={handleSearch} />
             </div>
-
-            <div className="d-flex justify-content-between align-items-center mb-3">
-                <div className="flex-grow-1">
-                    <input type="text" className="form-control" placeholder="Search by Employee ID" value={searchQuery} onChange={handleSearch} />
-                </div>
-                <div>
-                    <button className="btn btn-primary" onClick={handleDeleteSelected}>Delete Selected</button>
-                </div>
+            <div>
+                <button className="btn btn-primary" onClick={handleDeleteSelected}>Delete Selected</button>
             </div>
+        </div>
+    </div>
 
             {/* Employees table */}
             <table className="table">
@@ -398,6 +390,7 @@ export default function Employees() {
                     <button type="button" className="btn btn-secondary" onClick={() => setShowUpdateModal(false)}>Close</button>
                 </form>
             </div>
+        </div>
         </div>
         </div>
         </div>
