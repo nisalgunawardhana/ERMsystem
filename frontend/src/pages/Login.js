@@ -33,7 +33,7 @@ function Login() {
                         navigate("/cashier");
                         break;
                     case 'financial manager':
-                        navigate("/dashboard/finance");
+                        navigate("/finance");
                         break;
                     case 'staff manager':
                         navigate("/emp");

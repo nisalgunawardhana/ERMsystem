@@ -183,7 +183,7 @@ if (user) {
 
       case user.isFinanceManager:
       financeComponent = (
-        navigate('/finance')
+        navigate('/dashboard/finance')
       );
       break;
 
