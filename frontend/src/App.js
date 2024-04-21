@@ -41,6 +41,8 @@ import { Toaster } from 'react-hot-toast'
 import ProtectedRoute from './components/ProtectedRoute';
 import SystemUsers from './pages/SystemUsers';
 import Notes from './pages/Notes';
+
+
 import CashierDashboard from './components/cashierDashboard';
 import Stock from './components/stockComponent/stock';
 import Clothes from './components/stockComponent/clothes';

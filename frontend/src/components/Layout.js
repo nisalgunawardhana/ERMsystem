@@ -43,7 +43,7 @@ function Layout({children}) {
             icon: 'ri-home-4-line'
         },
         {
-            name: 'Dashboard',
+            name: 'Admin Dashboard',
             path: '/users',
             icon: 'ri-user-settings-line'
         },
@@ -134,11 +134,6 @@ function Layout({children}) {
     //5. staff manager
     const staffManagerMenu = [
         {
-            name: 'Home',
-            path: '/',
-            icon: 'ri-home-4-line'
-        },
-        {
             name: 'Dashboard',
             path: '/employee',
             icon: 'ri-user-settings-line'
@@ -167,11 +162,6 @@ function Layout({children}) {
     
     //6.training coordinator
     const trainingCoordinatorMenu = [
-        {
-            name: 'Home',
-            path: '/',
-            icon: 'ri-home-4-line'
-        },
         {
             name: 'Dashboard',
             path: '/Trainee',

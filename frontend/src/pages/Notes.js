@@ -14,12 +14,14 @@ const CreateNoteForm = () => {
     const onFinish = async(values) => {
         try {
             dispatch(showLoading())
-            const response = await axios.post('/api/notes', values)
+            const response = await axios.post('/api/notes', values);
+
+
             dispatch(hideLoading())
             if (response.data.success) {
                 toast.success(response.data.message)
                 toast("Note Added")
-                navigate("/users")
+                navigate("/notes")
             } else {
                 toast.error(response.data.message)
             }

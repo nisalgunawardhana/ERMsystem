@@ -144,24 +144,26 @@ router.delete('/delete-multiple', async (req, res) => {
 router.get('/read-all', async (req, res) => {
     try {
         const notes = await Note.find();
-        res.json(tasks);
+        res.json(notes); // Change tasks to notes
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 });
 
-// to create a new notes
-router.post('/add', async (req, res) => {
+// to create a new note
+router.post('/', async (req, res) => {
+    try {
     const note = new Note({
         note_no: req.body.note_no,
         note_title: req.body.note_title,
         note_description: req.body.note_description
     });
-
-    try {
-        const newNote = await note.save();
-        res.status(201).json(newNote);
+    await newnote.save()
+    
+        const newnote = await note.save();
+        res.status(201).json(newnote);
     } catch (error) {
+        console.log(error)
         res.status(400).json({ message: error.message });
     }
 });
