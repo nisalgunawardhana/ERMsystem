@@ -1,40 +1,38 @@
 const router = require("express").Router();
-let suppliers = require("../models/suppliermodel");
+let supPerformance = require("../models/superformancemodel");
 
 
 //CREATE
-router.route("/add").post((req,res)=>{
-    const supplier_id = req.body.supplier_id;
-    const supplier_name = req.body.supplier_name;
-    const address = req.body.address;
-    const contact = req.body.contact;
-    const email = req.body.email;
-    const product_types = req.body.product_types;
-    const product_items = req.body.product_items;
-    const bank_details = req.body.bank_details;
-    const sup_performance = req.body.sup_performance;
-    const contract = req.body.contract;
+router.route("/add/:id").post((req,res)=>{
+    const po_id = req.body.po_id;
+    const purchaseOrder_id = req.body.purchaseOrder_id;
+    const sup_id =  req.body.sup_id;
+    const sup_deliver_date = req.body.sup_deliver_date;
+    const leadTime = req.body.leadTime;
+    const qualityOfGoods = req.body.qualityOfGoods;
+    const quantityAccuracy = req.body.quantityAccuracy;
+    const responsiveness = req.body.responsiveness;
+    const costEffectiveness = req.body.costEffectiveness;
 
-
-    const newSupplier = new suppliers({
-        supplier_id,
-        supplier_name,
-        address,
-        contact,
-        email,
-        product_types,
-        product_items,
-        bank_details,
-        sup_performance,
-        contract
+    const newSupPerformance = new supPerformance({
+        po_id,
+        purchaseOrder_id,
+        sup_id,
+        sup_deliver_date,
+        leadTime,
+        qualityOfGoods,
+        quantityAccuracy,
+        responsiveness,
+        costEffectiveness
     })
     
-    newSupplier.save().then(()=>{
-        res.json("A new Supplier added")
+    newSupPerformance.save().then(()=>{
+        res.json("New supplier performance data Added");
     }).catch((err)=>{
         console.log(err);
     })
-});
+})
+
 
 
 //READ
@@ -44,7 +42,7 @@ router.route("/").get((req,res)=>{
     }).catch((err)=>{
         console.log(err)
     })
-});
+})
 
 
 //UPDATE
