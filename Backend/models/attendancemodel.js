@@ -10,8 +10,10 @@ const attendanceSchema = new Schema({
   },
   date: {
     type: Date,
-    default: Date.now
+    default: () => new Date()
   }
+  
+
 });
 
 const Attendance = mongoose.model("Attendance", attendanceSchema);

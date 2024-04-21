@@ -165,16 +165,13 @@ const FinanceDash = () => {
                 console.log("Creating or updating charts...");
             };
 
-            createOrUpdateLineChart();
-            createOrUpdateBarChart();
-
             // Cleanup function to destroy the charts when the component unmounts
             if (profit.length > 0) {
                 // Introduce a slight delay before rendering the charts
                 setTimeout(() => {
                     createOrUpdateLineChart();
                     createOrUpdateBarChart();
-                }, 120);
+                }, 100);
 
                 // Cleanup function to destroy the charts when the component unmounts
                 return () => {
@@ -199,7 +196,7 @@ const FinanceDash = () => {
     const submit = (e) => {
         e.preventDefault();
         // Redirect to the page where total amount is fetched for the entered month
-        window.location.href = `/profit/add/${month.Month}`;
+        window.location.href = `/dashboard/finance/profit/add/${month.Month}`;
     };
 
     const getCurrentMonth = () => {
@@ -493,7 +490,7 @@ const FinanceDash = () => {
                                 <div className="card mb-3" style={{ borderRadius: '20px' }}>
                                     <div className="card-body">
                                         <h5 className="card-title">Add Other expenses</h5>
-                                        <Link to={`/otherExpense`} className="btn btn-outline-primary me-2" style={{ width: '200px' }}><i className="ri-add-line"></i>  Add expenses</Link>
+                                        <Link to={`/dashboard/finance/otherExpense`} className="btn btn-outline-primary me-2" style={{ width: '200px' }}><i className="ri-add-line"></i>  Add expenses</Link>
                                     </div>
                                 </div>
                             </div>
@@ -501,7 +498,7 @@ const FinanceDash = () => {
                                 <div className="card mb-3" style={{ borderRadius: '20px' }}>
                                     <div className="card-body">
                                         <h5 className="card-title">Add new Tax Document</h5>
-                                        <Link to={`/otherExpense`} className="btn btn-outline-primary me-2" style={{ width: '200px' }}><i className="ri-add-line"></i>  Add Tax</Link>
+                                        <Link to={`/dashboard/finance/tax/add`} className="btn btn-outline-primary me-2" style={{ width: '200px' }}><i className="ri-add-line"></i>  Add Tax</Link>
                                     </div>
                                 </div>
                             </div>

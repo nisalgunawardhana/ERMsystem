@@ -470,7 +470,7 @@ export default function Bills() {
                                             <Link to={`/dashboard/cashier/billing/update/${bills._id}`} className="btn btn-outline-primary" style={{ margin: '0 5px' }}>Update</Link>
                                             <button onClick={() => handleOpenDeleteConfirmation(bills._id)} className="btn btn-outline-danger" style={{ margin: '0 5px' }}>Delete</button>
                                         </td>
-                                        <td style={{ textAlign: 'center' }}><input type="checkbox" checked={bills.selected || false} onChange={() => handleSelectBill(bills._id)} /></td>
+                                        <td style={{ textAlign: 'center' }}><input type="checkbox"  checked={bills.selected || false} onChange={() => handleSelectBill(bills._id)} /></td>
                                     </tr>
                                 ))}
                             </tbody>

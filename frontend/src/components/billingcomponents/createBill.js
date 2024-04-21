@@ -190,7 +190,7 @@ items.forEach(item => {
       })
       .catch((err) => {
         console.error("Error while submitting form:", err);
-        alert("Error occurred while adding points. Please try again later.");
+        
       });
 
     axios

@@ -43,7 +43,7 @@ function Layout({children}) {
             icon: 'ri-home-4-line'
         },
         {
-            name: 'Admin Dashboard',
+            name: 'Dashboard',
             path: '/users',
             icon: 'ri-user-settings-line'
         },
@@ -87,22 +87,22 @@ function Layout({children}) {
     const financialManagerMenu = [
         {
             name: 'Dashboard',
-            path: '/finance',
+            path: '/dashboard/finance',
             icon: 'ri-line-chart-line'
         },
         {
             name: 'Profit Log',
-            path: `/profit`,
+            path: `/dashboard/finance/profit`,
             icon: 'ri-currency-line'
         },
         {
             name: 'Other Expenses',
-            path: '/otherExpense',
+            path: '/dashboard/finance/otherExpense',
             icon: 'ri-coins-line'
         },
         {
             name: 'Tax Document',
-            path: '/tax',
+            path: '/dashboard/finance/tax',
             icon: 'ri-article-line'
         },
     ];
@@ -116,8 +116,8 @@ function Layout({children}) {
         },
         {
             name: 'Dashboard',
-            path: '/adminDashboard',
-            icon: 'ri-user-settings-line'
+            path: '/logisticsDashboard',
+            icon: 'ri-align-item-left-fill'
         },
         {
             name: 'Stock',
@@ -125,23 +125,28 @@ function Layout({children}) {
             icon: 'ri-archive-line',
         },
         {
-            name: 'Supplier',
+            name: 'Suppliers',
             path: '/supplier',
             icon: 'ri-truck-line', 
+        },
+        {
+            name: 'Purchase Orders',
+            path: '/purchaseOrder',
+            icon: 'ri-store-2-line', 
         }
     ];
     
     //5. staff manager
     const staffManagerMenu = [
         {
+            name: 'Home',
+            path: '/',
+            icon: 'ri-home-4-line'
+        },
+        {
             name: 'Dashboard',
             path: '/employee',
             icon: 'ri-user-settings-line'
-        },
-        {
-            name: 'Add Employee',
-            path: '/signup',
-            icon: 'ri-add-circle-line'
         },
         {
             name: 'Attendance',
@@ -164,17 +169,13 @@ function Layout({children}) {
     const trainingCoordinatorMenu = [
         {
             name: 'Dashboard',
-            path: '/Trainee',
-            icon: 'ri-user-settings-line'
+            path: '/dashboard/trainee',
+            icon: 'ri-home-4-line'
         },
+        
         {
-            name: 'Add Trainee',
-            path: '{toggleForm}',
-            icon: 'ri-add-circle-line'
-        },
-        {
-            name: 'Add Session',
-            path: '/tasks',
+            name: 'Employee Management',
+            path: '/dashboard/employee',
             icon: 'ri-task-line'
         },
     ];
@@ -217,13 +218,10 @@ function Layout({children}) {
     }
 
     const handleLogout = () => {
-        const confirmLogout = window.confirm('Are you sure you want to logout?');
         // Show a confirmation message before logging out
-        if (confirmLogout) {
-            localStorage.clear();
-            dispatch(setUser(null)); // Clear user state in Redux store
-            navigate('/login');
-        }
+        localStorage.clear();
+        dispatch(setUser(null)); // Clear user state in Redux store
+        navigate('/login');
     };
 
     const getData = async () => {
