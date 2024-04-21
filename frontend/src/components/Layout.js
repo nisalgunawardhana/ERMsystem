@@ -87,22 +87,22 @@ function Layout({children}) {
     const financialManagerMenu = [
         {
             name: 'Dashboard',
-            path: '/finance',
+            path: '/dashboard/finance',
             icon: 'ri-line-chart-line'
         },
         {
             name: 'Profit Log',
-            path: `/profit`,
+            path: `/dashboard/finance/profit`,
             icon: 'ri-currency-line'
         },
         {
             name: 'Other Expenses',
-            path: '/otherExpense',
+            path: '/dashboard/finance/otherExpense',
             icon: 'ri-coins-line'
         },
         {
             name: 'Tax Document',
-            path: '/tax',
+            path: '/dashboard/finance/tax',
             icon: 'ri-article-line'
         },
     ];

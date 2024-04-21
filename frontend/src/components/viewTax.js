@@ -168,7 +168,7 @@ function TaxDetails() {
     const submit = (e) => {
         e.preventDefault();
         // Redirect to the page where total amount is fetched for the entered month
-        window.location.href = `/tax/add`;
+        window.location.href = `/dashboard/finance/tax/add`;
     };
 
     const [totalAmount, setTotalAmount] = useState(0);
@@ -583,7 +583,7 @@ function TaxDetails() {
                                             </div>
                                         </div>
                                         <div className="button-container text-center" style={{ marginTop: '25px' }}>
-                                            <Link to={`/tax/update/${tax.Tax_ID}`} className="btn btn-outline-primary me-2" style={{ width: '160px' }}><i className="ri-edit-line"></i>  Edit</Link>
+                                            <Link to={`/dashboard/finance/tax/update/${tax.Tax_ID}`} className="btn btn-outline-primary me-2" style={{ width: '160px' }}><i className="ri-edit-line"></i>  Edit</Link>
                                         </div>
                                     </div>
                                 </div>

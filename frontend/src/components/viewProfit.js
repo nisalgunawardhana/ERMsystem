@@ -198,7 +198,7 @@ function ProfitDetails() {
     const submit = (e) => {
         e.preventDefault();
         // Redirect to the page where total amount is fetched for the entered month
-        window.location.href = `/profit/add/${month.Month}`;
+        window.location.href = `/dashboard/finance/profit/add/${month.Month}`;
     };
 
     const [totalAmount, setTotalAmount] = useState(0);
@@ -636,7 +636,7 @@ function ProfitDetails() {
                                         </div>
                                     </div>
                                     <div className="button-container text-center" style={{ marginTop: '25px' }}>
-                                        <Link to={`/profit/update/${profit._id}`} className="btn btn-outline-primary me-2" style={{ width: '120px' }}><i className="ri-edit-line"></i>  Edit</Link>
+                                        <Link to={`/dashboard/finance/profit/update/${profit._id}`} className="btn btn-outline-primary me-2" style={{ width: '120px' }}><i className="ri-edit-line"></i>  Edit</Link>
                                     </div>
 
                                 </div>

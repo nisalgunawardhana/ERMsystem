@@ -83,15 +83,15 @@ function App() {
           <Route path="/users" element={<ProtectedRoute><SystemUsers/></ProtectedRoute>}/>
           <Route path="/notes" element={<ProtectedRoute><Notes/></ProtectedRoute>}/>
 
-          <Route path="/otherExpense" element={<ProtectedRoute><AllOther/></ProtectedRoute>}/>
-          <Route path="/otherExpense/update/:id" element={<ProtectedRoute><UpdateOther/></ProtectedRoute>}/>
-          <Route path="/finance" element={<ProtectedRoute><FinanceDash/></ProtectedRoute>}/>
-          <Route path="/profit/add/:month" element={<ProtectedRoute><AddProfit/></ProtectedRoute>}/>
-          <Route path="/profit" element={<ProtectedRoute><ProfitDetails/></ProtectedRoute>}/>
-          <Route path="/profit/update/:id" element={<ProtectedRoute><EditProfit/></ProtectedRoute>}/>
-          <Route path="/tax" element={<ProtectedRoute><TaxDetails/></ProtectedRoute>}/>
-          <Route path="/tax/add" element={<ProtectedRoute><AddTax/></ProtectedRoute>}/>
-          <Route path="/tax/update/:id" element={<ProtectedRoute><UpdateTax/></ProtectedRoute>}/>
+          <Route path="/dashboard/finance/otherExpense" element={<ProtectedRoute><AllOther/></ProtectedRoute>}/>
+          <Route path="/dashboard/finance/otherExpense/update/:id" element={<ProtectedRoute><UpdateOther/></ProtectedRoute>}/>
+          <Route path="/dashboard/finance" element={<ProtectedRoute><FinanceDash/></ProtectedRoute>}/>
+          <Route path="/dashboard/finance/profit/add/:month" element={<ProtectedRoute><AddProfit/></ProtectedRoute>}/>
+          <Route path="/dashboard/finance/profit" element={<ProtectedRoute><ProfitDetails/></ProtectedRoute>}/>
+          <Route path="/dashboard/finance/profit/update/:id" element={<ProtectedRoute><EditProfit/></ProtectedRoute>}/>
+          <Route path="/dashboard/finance/tax" element={<ProtectedRoute><TaxDetails/></ProtectedRoute>}/>
+          <Route path="/dashboard/finance/tax/add" element={<ProtectedRoute><AddTax/></ProtectedRoute>}/>
+          <Route path="/dashboard/finance/tax/update/:id" element={<ProtectedRoute><UpdateTax/></ProtectedRoute>}/>
           <Route path="/supplier" element={<ProtectedRoute><Supplier/></ProtectedRoute>}/>
           <Route path='/purchaseOrder' element={<ProtectedRoute><PurchaseOrder/></ProtectedRoute>}/>
           <Route path="/supplier/add" element={<ProtectedRoute><AddSupplier/></ProtectedRoute>}/>
