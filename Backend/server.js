@@ -79,6 +79,11 @@ const userRoute = require("./routes/userRoute.js");
 app.use("/api/user", userRoute);
 app.use("/api/users", userRoute);
 
+app.use(express.static('./frontend/build'));
+app.get('*'(req, res)=> {
+    res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))
+});
+
 app.listen(PORT, () => {
     console.log(`Server is up and running on: ${PORT}`);
 });

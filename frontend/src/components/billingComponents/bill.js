@@ -250,18 +250,6 @@ export default function Bills() {
         setbill(updatedBill);
     };
 
-    const handleDeleteSelected = () => {
-        const selectedBills = bill.filter(b => b.selected).map(b => b._id);
-        selectedBills.forEach(id => {
-            axios.delete(`http://localhost:8080/bills/delete/${id}`)
-                .then(() => {
-                    setbill(prevBills => prevBills.filter(b => b._id !== id));
-                })
-                .catch((err) => {
-                    alert(err.message);
-                });
-        });
-    };
 
     const indexOfLastBill = currentPage * billsPerPage;
     const indexOfFirstBill = indexOfLastBill - billsPerPage;
