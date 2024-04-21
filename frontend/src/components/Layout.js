@@ -109,14 +109,10 @@ function Layout({children}) {
 
     //4. logistic managers
     const logisticManagerMenu = [
-        {
-            name: 'Home',
-            path: '/',
-            icon: 'ri-home-4-line'
-        },
+        
         {
             name: 'Dashboard',
-            path: '/logisticsDashboard',
+            path: '/dashboard/logistics',
             icon: 'ri-align-item-left-fill'
         },
         {
