@@ -38,7 +38,7 @@ function UpdateCustomer() {
     e.preventDefault();
     axios.put(`http://localhost:8080/customer/update/${id}`, customer)
       .then(() => {
-        navigate('/customer');
+        navigate('/dashboard/cashier/Customer');
       })
       .catch(error => {
         console.error('Error updating customer:', error);
@@ -49,7 +49,7 @@ function UpdateCustomer() {
     <Layout>
     <div className="custom-form-container">
       <div className="d-flex justify-content-end mb-3">
-        <Button variant="secondary" onClick={() => navigate('/customer')}>Back</Button>
+        
       </div>
       <h2>Update Customer</h2>
       <Form onSubmit={handleSubmit}>
@@ -103,9 +103,16 @@ function UpdateCustomer() {
             <option value="other">Other</option>
           </Form.Control>
         </Form.Group>
-        <Button variant="primary" type="submit">
-          Update Customer
-        </Button>
+        <div style={{ marginTop: '10px' }}>
+  <Button variant="primary" type="submit">
+    Update Customer
+  </Button>
+  <span style={{ marginLeft: '10px' }}></span>
+  <Button variant="secondary" onClick={() => navigate('/dashboard/cashier/Customer')}>
+    Back
+  </Button>
+</div>
+
       </Form>
     </div>
     </Layout>

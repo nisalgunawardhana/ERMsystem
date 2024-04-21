@@ -49,6 +49,8 @@ import { Toaster } from 'react-hot-toast'
 import ProtectedRoute from './components/ProtectedRoute';
 import SystemUsers from './pages/SystemUsers';
 import Notes from './pages/Notes';
+import Attendance from './components/employeeComponent/attendancelist';
+import Attendform from './components/employeeComponent/attendance';
 
 function App() {
   const {loading} = useSelector(state => state.alerts);
@@ -111,14 +113,17 @@ function App() {
           <Route path="/dashboard/cashier/Customer/update/:id" element={<ProtectedRoute><UpdateCustomer/></ProtectedRoute>}/>
           <Route path="/dashboard/trainee" element={<ProtectedRoute><Trainees/></ProtectedRoute>}/>
           <Route path="/dashboard/cashier/billing" element={<ProtectedRoute><Bill/></ProtectedRoute>}/>
-          <Route path="/dashboard/cashier/bill/CreateBill" element={<ProtectedRoute><CreateBill/></ProtectedRoute>}/>
-          <Route path="/dashboard/cashier/bill/update/:id" element={<ProtectedRoute><UpdateBill/></ProtectedRoute>}/>
+          <Route path="/dashboard/cashier/billing/CreateBill" element={<ProtectedRoute><CreateBill/></ProtectedRoute>}/>
+          <Route path="/dashboard/cashier/billing/update/:id" element={<ProtectedRoute><UpdateBill/></ProtectedRoute>}/>
           <Route path="/dashboard/cashier/discounts" element={<ProtectedRoute><Discounts/></ProtectedRoute>} />
           <Route path="/dashboard/cashier" element={<ProtectedRoute><CashierDashboard/></ProtectedRoute>}/>
           <Route path="/dashboard/employee" element={<ProtectedRoute><Employees/></ProtectedRoute>}/>
           <Route path="/dashboard/logistics/stock" element={<ProtectedRoute><Stock/></ProtectedRoute>}/>
           <Route path="/dashboard/logistics/stock/clothes" element={<ProtectedRoute><Clothe/></ProtectedRoute>}/>
           <Route path="/dashboard/logistics/stock/toys" element={<ProtectedRoute><Toy/></ProtectedRoute>}/>
+          <Route path="/dashboard/employee/attendence" element={<ProtectedRoute><Attendance/></ProtectedRoute>}/>
+          <Route path="/dashboard/employee/attendence/form" element={<ProtectedRoute><Attendform/></ProtectedRoute>}/>
+          
 
         </Routes>  
       
