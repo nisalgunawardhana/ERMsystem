@@ -27,7 +27,7 @@ export default function Trainee() {
     });
     const [selectedMeetingId, setSelectedMeetingId] = useState(null);
     const [selectedTraineeId, setselectedTraineeId] = useState(null);
-    const [dailyAverageRatings, setDailyAverageRatings] = useState({});
+    const [dailyAverageRatings, setDailyAverageRatings] = useState([]);
     const [currentDateTime, setCurrentDateTime] = useState('');
 
 
@@ -49,13 +49,13 @@ export default function Trainee() {
                 console.error('Error fetching trainees:', err);
             });
 
-            const intervalId = setInterval(() => {
-                const now = new Date();
-                setCurrentDateTime(now.toLocaleString());
-            }, 1000);
-    
-            // Cleanup interval
-            return () => clearInterval(intervalId);
+        const intervalId = setInterval(() => {
+            const now = new Date();
+            setCurrentDateTime(now.toLocaleString());
+        }, 1000);
+
+        // Cleanup interval
+        return () => clearInterval(intervalId);
 
     }, []);
 
@@ -283,22 +283,18 @@ export default function Trainee() {
         traineesData.forEach(trainee => {
             const date = new Date(trainee.createdAt).toLocaleDateString(); // Assuming trainee data has a createdAt field
             if (!dailyRatings[date]) {
-                dailyRatings[date] = {
-                    totalRatings: 0,
-                    numberOfTrainees: 0
-                };
+                dailyRatings[date] = [];
             }
-            dailyRatings[date].totalRatings += parseFloat(trainee.trainee_rating);
-            dailyRatings[date].numberOfTrainees++;
+            dailyRatings[date].push(parseFloat(trainee.trainee_rating));
         });
 
-        const dailyAverage = {};
+        const dailyAverages = {};
         for (const date in dailyRatings) {
-            dailyAverage[date] = dailyRatings[date].totalRatings / dailyRatings[date].numberOfTrainees;
+            const totalRating = dailyRatings[date].reduce((acc, rating) => acc + rating, 0);
+            dailyAverages[date] = totalRating / dailyRatings[date].length;
         }
 
-        setDailyAverageRatings(dailyAverage);
-        console.log('Daily Average Ratings:', dailyAverage);
+        setDailyAverageRatings(dailyAverages);
     };
 
     // Prepare data for Chart.js
@@ -370,21 +366,21 @@ export default function Trainee() {
         <Layout>
             <div className="container">
                 <div className="row">
-        {/* Breadcrumb navigation */}
-        <nav className="col-md-6" aria-label="breadcrumb">
-            <ol className="breadcrumb">
-            <li class="breadcrumb-item"><a href="/">Home</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Trainee</li>
-            </ol>
-        </nav>
-        {/* Current Date and Time */}
-        <div className="col-md-6 text-md-end mb-3">
+                    {/* Breadcrumb navigation */}
+                    <nav className="col-md-6" aria-label="breadcrumb">
+                        <ol className="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/">Home</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Trainee</li>
+                        </ol>
+                    </nav>
+                    {/* Current Date and Time */}
+                    <div className="col-md-6 text-md-end mb-3">
                         <div className="date-time">
                             <span className="date">{currentDateTime.split(',')[0]}</span>
                             <span className="time"> | {currentDateTime.split(',')[1]}</span>
                         </div>
                     </div>
-    </div>
+                </div>
                 <h1>Trainee Management</h1>
                 <br></br>
 
