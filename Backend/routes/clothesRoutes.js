@@ -6,6 +6,7 @@ router.route("/add").post((req,res)=>{
     const item_code = req.body.item_code;
     const item_name = req.body.item_name;
     const category = req.body.category;
+    const price = req.body.price;
     const quantity = req.body.quantity;
     const alert_quantity = req.body.alert_quantity;
 
@@ -17,6 +18,7 @@ router.route("/add").post((req,res)=>{
         item_code,
         item_name,
         category,
+        price,
         quantity,
         alert_quantity
     })
@@ -38,12 +40,13 @@ router.route("/").get((req,res)=>{
 
 router.route("/update/:item_code").put(async (req, res) => {
     let itm_code = req.params.item_code;
-    const { item_code, item_name, category, quantity, alert_quantity } = req.body;
+    const { item_code, item_name, category, price, quantity, alert_quantity } = req.body;
 
     const updateclothes = {
         item_code,
         item_name,
         category,
+        price,
         quantity,
         alert_quantity
     }
@@ -142,6 +145,39 @@ router.route("/decrement/:item_code").put(async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 });
+
+
+router.route("/decrease/:item_code").put(async (req, res) => {
+    const itm_code = req.params.item_code;
+    const quantityToDecrease = req.body.quantity; // Quantity to decrease
+
+    try {
+        // Find the clothes based on the custom item_code
+        const foundClothes = await clothes.findOne({ item_code: itm_code });
+
+        if (foundClothes) {
+            // Check if there's enough quantity to decrease
+            if (foundClothes.quantity >= quantityToDecrease) {
+                // Decrease the quantity
+                foundClothes.quantity -= quantityToDecrease;
+                
+                // Save the updated quantity
+                await foundClothes.save();
+
+                res.status(200).send({ status: "Quantity decreased", updatedClothes: foundClothes });
+            } else {
+                res.status(400).send({ status: "Not enough quantity to decrease" });
+            }
+        } else {
+            res.status(404).send({ status: "Clothes not found" });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ status: "Error decreasing quantity" });
+    }
+})
+
+
 
 
 module.exports = router;
