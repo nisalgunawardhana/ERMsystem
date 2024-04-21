@@ -117,7 +117,7 @@ function Layout({children}) {
         },
         {
             name: 'Stock',
-            path: '/dashboard/stock',
+            path: '/dashboard/logistics/stock',
             icon: 'ri-archive-line',
         },
         {
