@@ -75,9 +75,7 @@ function UpdateBill() {
     setTotalAmount(newTotalAmount);
   };
 
-  const addItem = () => {
-    setItems([...items, { product_id: '', quantity: 0, unit_price: 0 }]);
-  };
+  
 
   const removeItem = (index) => {
     const updatedItems = [...items];

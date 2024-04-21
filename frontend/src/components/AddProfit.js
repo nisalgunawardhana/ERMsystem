@@ -239,7 +239,7 @@ function AddProfit() {
                                                     <input type="text" className="form-control" id="other" value={(totalEPF + totalETF).toFixed(2)} onChange={(e) => setOther(e.target.value)} readOnly/>
                                                 </div>
                                                 <div className="col-md-3">
-                                                    <button type="button" className="btn btn-primary" onClick={handleShow}>Add</button>
+                                                    <button type="button" className="btn btn-primary" onClick={handleShow}><i className="ri-add-line"></i>Add</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -314,7 +314,7 @@ function AddProfit() {
                                     <input type="text" className="form-control" id="etf" value={totalETF.toFixed(2)} readOnly/>
                                 </div>
                                 {/* Submit button */}
-                                <button type="submit" className="btn btn-primary" style={{ marginLeft: '180px' }}>
+                                <button type="submit" className="btn btn-primary" style={{ marginLeft: '160px' }}>
                                     <i className="bi bi-arrow-right-circle me-2"></i> Submit
                                 </button>
 
