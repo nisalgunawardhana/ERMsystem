@@ -15,10 +15,6 @@ function EditProfit() {
     const [totalOther, setTotalOther] = useState(0);
     const [totalSupp, setTotalSupp] = useState(0);
     const [totalSalary, setTotalSalary] = useState(0);
-    const [Profit_ID, setID] = useState("");
-    const [Month, setMonth] = useState("");
-    const [Date_created, setDate] = useState("");
-    const [Description, setDesc] = useState("");
     const [editedDate, setEditedDate] = useState(null);
     const [Rate, setRate] = useState("");
     const navigate = useNavigate();
@@ -191,10 +187,6 @@ function EditProfit() {
             });
     };
 
-    const handleBack = () => {
-        navigate(`/profit/get/${Profit.Profit_ID}`); // Reset specificExpense to null to display all expenses
-    };
-
     useEffect(() => {
         const getCurrentDate = () => {
             const today = new Date();
@@ -266,7 +258,7 @@ function EditProfit() {
                                                     <input type="text" className="form-control" id="epfetf" name="EPF_ETF" value={total} onChange={handleChanges} readOnly />
                                                 </div>
                                                 <div className="col-md-3">
-                                                    <button type="button" className="btn btn-primary" onClick={handleShow}>Add</button>
+                                                    <button type="button" className="btn btn-outline-primary" onClick={handleShow}><i className="ri-add-line"></i>Add</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -293,7 +285,7 @@ function EditProfit() {
                                 <div className="row">
                                     <div className="col">
                                         <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-                                            <button type="submit" className="btn btn-primary me-5 rounded">Update Details</button>
+                                            <button type="submit" className="btn btn-outline-primary me-5"><i className="ri-edit-line"></i>  Update Details</button>
                                         </div>
                                     </div>
                                 </div>
@@ -314,8 +306,8 @@ function EditProfit() {
                                             <label htmlFor="salary" className="form-label col-md-4">
                                                 <i className="bi bi-cash me-2"></i>Total Salaries
                                             </label>
-                                            <button type="button" onClick={handleCalculateEPFETF} className="btn btn-primary" style={{ marginLeft: '160px' }}>
-                                                <i className="bi bi-check2-square me-2"></i> Add EPF_ETF
+                                            <button type="button" onClick={handleCalculateEPFETF} className="btn btn-outline-primary" style={{ marginLeft: '160px' }}>
+                                            <i className="ri-add-line"></i>  Add EPF/ETF
                                             </button>
                                         </div>
                                     </div>
@@ -340,8 +332,8 @@ function EditProfit() {
                                     <input type="text" className="form-control" id="etf" value={totalETF} />
                                 </div>
                                 {/* Submit button */}
-                                <button type="submit" className="btn btn-primary" style={{ marginLeft: '180px' }}>
-                                    <i className="bi bi-arrow-right-circle me-2"></i> Submit
+                                <button type="submit" className="btn btn-outline-primary" style={{ marginLeft: '180px' }}>
+                                <i className="ri-check-line"></i>  Submit
                                 </button>
 
                             </form>

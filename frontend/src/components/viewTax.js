@@ -238,30 +238,14 @@ function TaxDetails() {
         return months[monthIndex];
     };
 
-    const getPreviousMonth = () => {
-        const months = [
-            'January', 'February', 'March', 'April', 'May', 'June',
-            'July', 'August', 'September', 'October', 'November', 'December'
-        ];
-        const currentDate = new Date();
-        const monthIndex = (currentDate.getMonth() - 1 + 12) % 12; // Handling December as previous month
-        return months[monthIndex];
-    };
 
     const getCurrentYear = () => {
         const currentDate = new Date();
         return currentDate.getFullYear();
     };
 
-    const getPreviousYear = () => {
-        const currentDate = new Date();
-        const currentYear = currentDate.getFullYear();
-        const previousYear = currentYear - 1;
-        return previousYear;
-    };
-
     //navigate to profit log
-    const getCurrentMonthProfitId = async () => {
+    /* const getCurrentMonthProfitId = async () => {
         try {
             let currentMonth = getCurrentMonth();
             let currentYear = getCurrentYear();
@@ -307,9 +291,9 @@ function TaxDetails() {
             console.error('Error fetching profit details:', error);
             return null;
         }
-    };
+    };*/
 
-    const handleClick = async () => {
+   /* const handleClick = async () => {
         const profitId = await getCurrentMonthProfitId();
         if (profitId) {
             window.location.href = `/profit/get/${profitId}`;
@@ -364,9 +348,9 @@ function TaxDetails() {
             console.error('Error fetching tax details:', error);
             return null;
         }
-    };
+    };*/
 
-    const handleClickTax = async () => {
+  /*  const handleClickTax = async () => {
         const taxId = await getCurrentTaxId();
         if (taxId) {
             window.location.href = `/tax/get/${taxId}`;
@@ -374,7 +358,7 @@ function TaxDetails() {
             console.log('No profit record found for the current and previous months of the current year.');
             // Handle the case where there's no profit record for the current and previous months of the current year
         }
-    };
+    };*/
 
     useEffect(() => {
         let currentYear = getCurrentYear();
@@ -513,7 +497,7 @@ function TaxDetails() {
                                     <div className="card-body">
                                         <h5 className="card-title">Generate Annual Tax Report</h5>
                                         <p className="card-text">Click the button below to generate a report for the annual tax report.</p>
-                                        <button className="btn btn-outline-success mb-3" onClick={handleReportGeneration} style={{ marginTop: '10px', width: '200px' }}><i className="bi bi-file-earmark-bar-graph"></i>  Generate Report</button>
+                                        <button className="btn btn-dark mb-3" onClick={handleReportGeneration} style={{ marginTop: '10px', width: '200px' }}><i className="bi bi-file-earmark-bar-graph"></i>  Generate Report</button>
                                     </div>
                                 </div>
                             </div>
@@ -528,7 +512,7 @@ function TaxDetails() {
                                             <div className="row mb-3">
                                                 <div className="col">
                                                     <div className="btn-group">
-                                                        <button type="submit" className="btn btn-outline-primary mb-3" style={{ marginTop: '10px', width: '200px' }}><i className="ri-add-line"></i>  Add Tax Document</button>
+                                                        <button type="submit" className="btn btn-dark mb-3" style={{ marginTop: '10px', width: '200px' }}><i className="ri-add-line"></i>  Add Tax Document</button>
                                                     </div>
                                                 </div>
                                             </div>
