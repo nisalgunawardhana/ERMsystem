@@ -287,7 +287,7 @@ export default function Bills() {
 
 
         // Define the actual secret code
-        const actualSecretCode = 'DELETE_ALL_BILLS';
+        const actualSecretCode = '1111';
 
         // Verify the secret code
         if (secretCode === actualSecretCode) {
