@@ -31,6 +31,7 @@ import UpdateBill from './components/billingComponents/updateBill';
 import Discounts from './components/discountComponents/Discount';
 //employee management
 import Employees from './components/employeeComponent/employee';
+import Attendance from './components/employeeComponent/attendance';
 
 //user management
 import Login from './pages/Login';
@@ -106,7 +107,10 @@ function App() {
           <Route path="/dashboard/cashier/billing/update/:id" element={<ProtectedRoute><UpdateBill/></ProtectedRoute>}/>
           <Route path="/dashboard/cashier/discounts" element={<ProtectedRoute><Discounts/></ProtectedRoute>} />
           <Route path="/dashboard/cashier" element={<ProtectedRoute><CashierDashboard/></ProtectedRoute>}/>
+
           <Route path="/employee" element={<ProtectedRoute><Employees/></ProtectedRoute>}/>
+          <Route path="/attendance" element={<ProtectedRoute><Attendance/></ProtectedRoute>}/>
+
           <Route path="/dashboard/stock" element={<ProtectedRoute><Stock/></ProtectedRoute>}/>
           <Route path="/dashboard/stock/clothes" element={<ProtectedRoute><Clothes/></ProtectedRoute>}/>
           <Route path="/dashboard/stock/toys" element={<ProtectedRoute><Toys/></ProtectedRoute>}/>

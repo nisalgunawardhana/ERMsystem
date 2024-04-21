@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Layout from '../Layout';
 import { Modal, Button } from 'react-bootstrap';
 
-export default function Attendance() {
+ function Attendance() {
     const [uniqueDates, setUniqueDates] = useState([]);
     const [selectedDate, setSelectedDate] = useState('');
     const [attendanceRecords, setAttendanceRecords] = useState([]);
@@ -65,3 +66,5 @@ export default function Attendance() {
         </div>
     );
 }
+
+export default Attendance();

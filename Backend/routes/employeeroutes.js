@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const mongoose = require('mongoose');
 let employees = require("../models/employeemodel");
 
 router.route("/add").post((req,res)=>{
@@ -52,16 +53,37 @@ router.route("/update/:employee_Id").put(async (req,res)=>{
     })
 })
 
-router.route("/delete/:id").delete(async (req,res) => {
-    let empid = req.params.id;
+router.route("/delete/:id").delete(async (req, res) => {
+    const empId = req.params.id;
 
-    await employees.findByIdAndDelete(empid).then(() => {
-        res.status(200).send({status: "Employee deleted"});
-    }).catch((errr) => {
-        console.log(errr);
-        res.status(500).send({status: "Error with deleting employee"});
-    })
-})
+    try {
+        // Check if the provided ID is a valid ObjectId
+        if (!mongoose.Types.ObjectId.isValid(empId)) {
+            return res.status(400).json({ status: "Invalid employee ID" });
+        }
+
+        // Delete the employee document by its ObjectId
+        await employees.findByIdAndDelete(empId);
+        
+        res.status(200).json({ status: "Employee deleted" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ status: "Error deleting employee" });
+    }
+});
+
+router.delete('/deleteMultiple', async (req, res) => {
+    const { employeeId } = req.body;
+
+    try {
+        // Use $in operator to find and delete multiple employees by their IDs
+        await Employee.deleteMany({ employee_Id: { $in: employeeId } });
+        res.status(200).json({ message: 'Employees deleted successfully.' });
+    } catch (error) {
+        res.status(500).json({ error: 'An error occurred while deleting employees.' });
+    }
+});
+
 
 module.exports = router;
 
