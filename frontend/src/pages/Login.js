@@ -74,11 +74,11 @@ function Login() {
                 <br></br>
                 <Form layout='vertical' onFinish={onFinish}>
                     <Form.Item label='Email' name='email'>
-                        <Input placeholder='Email'/>
+                        <Input  className='loginginput'placeholder='Email'/>
                     </Form.Item>
 
                     <Form.Item label='Password' name='password'>
-                        <Input placeholder='Password' type='password'/>
+                        <Input className='loginginput' placeholder='Password' type='password'/>
                     </Form.Item>
 
                     <Button className='primary-button my-1' htmlType='submit'>LOGIN</Button>
