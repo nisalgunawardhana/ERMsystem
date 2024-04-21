@@ -168,23 +168,14 @@ function Layout({children}) {
     //6.training coordinator
     const trainingCoordinatorMenu = [
         {
-            name: 'Home',
-            path: '/',
+            name: 'Dashboard',
+            path: '/dashboard/trainee',
             icon: 'ri-home-4-line'
         },
+        
         {
-            name: 'Dashboard',
-            path: '/Trainee',
-            icon: 'ri-user-settings-line'
-        },
-        {
-            name: 'Add Trainee',
-            path: '{toggleForm}',
-            icon: 'ri-add-circle-line'
-        },
-        {
-            name: 'Add Session',
-            path: '/tasks',
+            name: 'Employee Management',
+            path: '/dashboard/employee',
             icon: 'ri-task-line'
         },
     ];
