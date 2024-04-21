@@ -14,7 +14,7 @@ function ProfitDetails() {
 
     //fetch profit log
     useEffect(() => {
-        axios.get(`http://localhost:8080/profit/get/${id}`)
+        axios.get(`http://localhost:8080/profit`)
             .then((res) => {
                 setProfit(res.data.profit);
             })
@@ -198,7 +198,7 @@ function ProfitDetails() {
     const submit = (e) => {
         e.preventDefault();
         // Redirect to the page where total amount is fetched for the entered month
-        window.location.href = `/profit/${month.Month}`;
+        window.location.href = `/profit/add/${month.Month}`;
     };
 
     const [totalAmount, setTotalAmount] = useState(0);
@@ -445,7 +445,6 @@ function ProfitDetails() {
                          {/* Breadcrumb for profit log */}
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="/">Home</a></li>
                                 <li class="breadcrumb-item"><a href="/finance">Finance Dashboard</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">Profit Log</li>
                             </ol>
@@ -455,7 +454,7 @@ function ProfitDetails() {
                         <p>{formattedDate} | {formattedTime}</p>
                     </div>
                 </div>
-                <h2 className="mb-4" style={{ marginTop: '25px' }}> Profit Log {(searchResult || profit) && `- ${searchResult ? searchResult[0].Month : profit.Month}`}</h2>
+                <h2 className="mb-4" style={{ marginTop: '5px' }}> Profit Log {(searchResult || profit) && `- ${searchResult ? searchResult[0].Month : profit.Month}`}</h2>
 
                 {/* Search bar to search profit log */}
                 <div className="row" style={{ marginTop: '15px' }}>
@@ -554,10 +553,7 @@ function ProfitDetails() {
                                     <div className="mb-3">
                                         <h6>Create Monthly profit log in order to analyze sales vs expenses</h6>
                                         <div className="row mb-3" style={{ marginTop: '15px' }}>
-                                            <div className="col-md-4">
-                                                <label htmlFor="Month" className="form-label">Select Month</label>
-                                            </div>
-                                            <div className="col-md-8">
+                                            <div className="col-md-12">
                                                 <select className="form-select" id="Month" name="Month" value={month.Month} onChange={handleChange}>
                                                     <option value="">Select Month</option>
                                                     <option value="January">January</option>

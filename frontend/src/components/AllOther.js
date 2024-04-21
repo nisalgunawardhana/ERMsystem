@@ -656,7 +656,6 @@ export default function AllOther() {
                         {/*Breadcrumb*/}
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="/">Home</a></li>
                                 <li class="breadcrumb-item"><a href="/finance">Finance Dashboard</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">Other Expenses</li>
                             </ol>
@@ -669,7 +668,7 @@ export default function AllOther() {
                 </div>
 
 
-                <div className="row mb-2" style={{ marginTop: '20px' }}>
+                <div className="row mb-2" style={{ marginTop: '10px' }}>
                     <div className="d-flex justify-content-start mb-3 align-items-center">
                         <h3 className="me-5">All Other Expenses</h3>
                         <div className="d-flex flex-wrap align-items-center">
@@ -857,8 +856,8 @@ export default function AllOther() {
                                 Are you sure you want to delete this expense?
                             </Modal.Body>
                             <Modal.Footer>
-                                <Button variant="danger" onClick={confirmDelete}>Yes</Button>
-                                <Button variant="secondary" onClick={cancelDelete}>No</Button>
+                                <button className="btn btn-outline-danger" onClick={confirmDelete}><i className="ri-check-line"></i>  Yes</button>
+                                <button className="btn btn-outline-secondary" onClick={cancelDelete}><i className="ri-close-line"></i>  No</button>
                             </Modal.Footer>
                         </Modal>
                     )}
@@ -901,7 +900,7 @@ export default function AllOther() {
                             </div>
 
                             {/* Submit button */}
-                            <button type="submit" className="btn btn-primary" style={{ marginLeft: '180px' }}>Submit</button>
+                            <button type="submit" className="btn btn-outline-primary" style={{ marginLeft: '180px' }}><i className="ri-check-line"></i>  Submit</button>
                         </form>
                     </Modal.Body>
                 </Modal>

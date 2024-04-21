@@ -72,14 +72,6 @@ router.route("/add/check").post(async (req, res) => {
 
 });
 
-router.route("/").get((req, res) => {
-  Profit.find().then((profit) => {
-    res.json(profit)
-  }).catch((err) => {
-    console.log(err)
-  })
-})
-
 router.route("/search/:month").get((req, res) => {
   const { month } = req.params;
   const query = month ? { Month: month } : {};
@@ -190,7 +182,7 @@ router.route("/update/:id").put(async (req, res) => {
 })
 
 //route to get profit log for latest month
-router.route("/get/profitlog").get(async (req, res) => {
+router.route("/").get(async (req, res) => {
   const currentDate = new Date();
   let currentMonth = currentDate.getMonth() + 1; // Adding 1 because getMonth() returns zero-based index
   let currentYear = currentDate.getFullYear();

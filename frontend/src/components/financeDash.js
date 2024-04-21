@@ -169,14 +169,23 @@ const FinanceDash = () => {
             createOrUpdateBarChart();
 
             // Cleanup function to destroy the charts when the component unmounts
-            return () => {
-                if (lineChart) {
-                    lineChart.destroy();
-                }
-                if (barChart) {
-                    barChart.destroy();
-                }
-            };
+            if (profit.length > 0) {
+                // Introduce a slight delay before rendering the charts
+                setTimeout(() => {
+                    createOrUpdateLineChart();
+                    createOrUpdateBarChart();
+                }, 120);
+
+                // Cleanup function to destroy the charts when the component unmounts
+                return () => {
+                    if (lineChart) {
+                        lineChart.destroy();
+                    }
+                    if (barChart) {
+                        barChart.destroy();
+                    }
+                };
+            }
         }
     }, [profit]);
 
@@ -190,7 +199,7 @@ const FinanceDash = () => {
     const submit = (e) => {
         e.preventDefault();
         // Redirect to the page where total amount is fetched for the entered month
-        window.location.href = `/profit/${month.Month}`;
+        window.location.href = `/profit/add/${month.Month}`;
     };
 
     const getCurrentMonth = () => {
@@ -364,7 +373,6 @@ const FinanceDash = () => {
                     <div className="col-md-8">
                         <nav aria-label="breadcrumb mb-3">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="/">Home</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">Finance Dashboard</li>
                             </ol>
                         </nav>
@@ -447,8 +455,8 @@ const FinanceDash = () => {
                                 <div className="card" style={{ borderRadius: '20px' }}>
                                     <div className="card-body">
                                         <form onSubmit={submit}>
-                                            <div className="mb-3">
-                                                <h6>Create Monthly profit log in order to analyze sales vs expenses</h6>
+                                            <div className="mb-2">
+                                                <h5>Add new Profit log</h5>
                                                 <div className="row mb-3" style={{ marginTop: '15px' }}>
                                                     <div className="col-md-12">
                                                         <select className="form-select" id="Month" name="Month" value={month.Month} onChange={handleChange} required>
@@ -481,12 +489,19 @@ const FinanceDash = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="row" style={{ marginTop: '0px' }}>
+                            <div className="row">
                                 <div className="card mb-3" style={{ borderRadius: '20px' }}>
                                     <div className="card-body">
-                                        <h5 className="card-title">Other Expenses</h5>
-                                        <p className="card-text">Add your repairing, transportational and constructional expenses.</p>
+                                        <h5 className="card-title">Add Other expenses</h5>
                                         <Link to={`/otherExpense`} className="btn btn-outline-primary me-2" style={{ width: '200px' }}><i className="ri-add-line"></i>  Add expenses</Link>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="card mb-3" style={{ borderRadius: '20px' }}>
+                                    <div className="card-body">
+                                        <h5 className="card-title">Add new Tax Document</h5>
+                                        <Link to={`/otherExpense`} className="btn btn-outline-primary me-2" style={{ width: '200px' }}><i className="ri-add-line"></i>  Add Tax</Link>
                                     </div>
                                 </div>
                             </div>

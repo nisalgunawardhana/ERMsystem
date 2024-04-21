@@ -13,7 +13,7 @@ function TaxDetails() {
     const [searchResult, setSearchResult] = useState(null);
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/tax/get/${id}`)
+        axios.get(`http://localhost:8080/tax`)
             .then((res) => {
                 setTax(res.data.tax);
                 setRate(res.data.tax.Rate);
@@ -413,7 +413,6 @@ function TaxDetails() {
                     <div className="col-md-8">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="/">Home</a></li>
                                 <li class="breadcrumb-item"><a href="/finance">Finance Dashboard</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">Tax Document</li>
                             </ol>
@@ -425,7 +424,7 @@ function TaxDetails() {
                     </div>
                 </div>
                 {/* Main Content */}
-                <div className="row mb-2" style={{ marginTop: '20px' }}>
+                <div className="row mb-2">
                     <div className="row align-items-center mb-4">
                         <div className="col-md-7">
                             <h2 className="mb-4" style={{ marginTop: '10px' }}><i className="fas fa-chart-line"></i> Tax Document {(searchResult || tax) && `- ${year}`}</h2>
