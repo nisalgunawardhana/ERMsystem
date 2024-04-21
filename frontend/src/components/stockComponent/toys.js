@@ -1,3 +1,4 @@
+/* global Chart */
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Row, Col, Card, Button } from 'react-bootstrap';
@@ -17,6 +18,63 @@ export default function Toys() {
     const [quantity, setQuantity] = useState('');
     const [alertQuantity, setAlertQuantity] = useState('');
     const [error, setError] = useState('');
+
+    useEffect(() => {
+        let quantityChart = null;
+    
+        // Function to create or update the quantity line chart
+        const createOrUpdateQuantityChart = () => {
+            const canvas = document.getElementById('canvas-1');
+    
+            // Check if canvas or toys array is null or empty, and if so, return early
+            if (!canvas || !Array.isArray(toys) || toys.length === 0) {
+                console.error('Canvas is null or toys array is empty');
+                return;
+            }
+            
+    
+            // Extract labels and data from the toys array
+            const labels = toys.map(toys => toys.item_name);
+            const data = toys.map(toys => toys.quantity);
+    
+            // Create the new chart instance
+            quantityChart = new Chart(document.getElementById('canvas-1'), {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Quantity',
+                        data: data,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        };
+    
+        // Call the function to create or update the quantity chart
+        const timeoutId = setTimeout(() => {
+            createOrUpdateQuantityChart();
+        }, 100);
+    
+        // Cleanup function
+        return () => {
+            clearTimeout(timeoutId);
+            if (quantityChart) {
+                quantityChart.destroy();
+            }
+        };
+
+    }, [toys]);
 
     useEffect(() => {
         axios.get('http://localhost:8080/toys/')
@@ -185,6 +243,26 @@ export default function Toys() {
         };
     };
 
+    const [selectedItemForDelete, setSelectedItemForDelete] = useState(null);
+
+    // Function to open delete confirmation modal
+    const handleOpenDeleteConfirmationModal = (toys) => {
+        setSelectedItemForDelete(toys);
+    };
+
+    // Function to handle canceling deletion
+    const handleCancelDelete = () => {
+        setSelectedItemForDelete(null);
+    };
+
+    // Function to handle confirming deletion
+    const handleConfirmDelete = () => {
+        if (selectedItemForDelete) {
+            handleDeleteToys(selectedItemForDelete.item_code);
+            setSelectedItemForDelete(null); // Close the modal after deletion
+        }
+    };
+
     return (
         <Layout>
             <div className="container">
@@ -318,6 +396,27 @@ export default function Toys() {
         </div>
     </div>
 
+    // Modal for delete confirmation
+<div className="modal" style={{ display: selectedItemForDelete ? 'block' : 'none' }}>
+    <div className="modal-dialog">
+        <div className="modal-content">
+            <div className="modal-header">
+                <h5 className="modal-title">Confirm Delete</h5>
+                <button type="button" className="close" style={{ position: 'absolute', right: '10px', top: '10px' }} onClick={handleCancelDelete}>
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div className="modal-body">
+                <p>Are you sure you want to delete {selectedItemForDelete?.item_name}?</p>
+            </div>
+            <div className="modal-footer">
+                <button type="button" className="btn btn-danger" onClick={handleConfirmDelete}>Delete</button>
+                <button type="button" className="btn btn-secondary" onClick={handleCancelDelete}>Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
                 {/* Toys table */}
                 <table className="table">
                     <thead className="table-dark">
@@ -344,7 +443,7 @@ export default function Toys() {
                                 <td>{toys.alert_quantity}</td>
                                 <td>
                                     <button className="btn btn-outline-primary me-2" onClick={() => handleOpenUpdateModal(toys)}>Update</button>
-                                    <button onClick={() => handleDeleteToys(toys.item_code)} className="btn btn-outline-danger">Delete</button>
+                                    <button className="btn btn-outline-danger me-2" onClick={() => handleOpenDeleteConfirmationModal(toys)}>Delete</button>
                                 </td>
                                 {/* Check if quantity is less than or equal to the alert quantity */}
                                 {toys.quantity <= toys.alert_quantity && (
@@ -358,6 +457,20 @@ export default function Toys() {
                         ))}
                     </tbody>
                 </table>
+
+                <Row className="mb-3">
+                    <Col>
+                        <Card className="h-100">
+                            <Card.Body>
+                                <Card.Title>Toys Quantity Chart</Card.Title>
+                                <Card.Text>
+                                    Track the quantity of toys over time.
+                                </Card.Text>
+                                <canvas id="canvas-1"></canvas>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                    </Row>
             </div>
         </Layout>
     );

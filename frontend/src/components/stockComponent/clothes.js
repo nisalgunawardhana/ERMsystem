@@ -1,19 +1,8 @@
-/* global chart */
+/* global Chart */
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Row, Col, Card, Button } from 'react-bootstrap';
 import Layout from '../Layout';
-import { Chart, LinearScale, CategoryScale, LineController, LineElement, Title } from 'chart.js';
-
-// Register the necessary components and scales
-Chart.register(LinearScale, CategoryScale, LineController, LineElement, Title);
-
-
-
-
-
-
-
 
 export default function Clothes() {
     const [clothes, setClothes] = useState([]);
@@ -30,7 +19,7 @@ export default function Clothes() {
     const [error, setError] = useState('');
     const [quantityChartData, setQuantityChartData] = useState(null);
 
-    /*useEffect(() => {
+   /* useEffect(() => {
         // Function to generate quantity chart data
         const generateQuantityChartData = () => {
             const labels = clothes.map(clothes => clothes.item_name);
@@ -49,7 +38,7 @@ export default function Clothes() {
         return () => {
             setQuantityChartData(null);
         };
-    }, [clothes]);
+    }, [clothes]);*/
 
     useEffect(() => {
         let quantityChart = null;
@@ -59,10 +48,11 @@ export default function Clothes() {
             const canvas = document.getElementById('canvas-1');
     
             // Check if canvas or clothes array is null or empty, and if so, return early
-            if (!canvas || !clothes || clothes.length === 0) {
-                console.error('Canvas or clothes array is null or empty');
+            if (!canvas || !Array.isArray(clothes) || clothes.length === 0) {
+                console.error('Canvas is null or clothes array is empty');
                 return;
             }
+            
     
             // Extract labels and data from the clothes array
             const labels = clothes.map(clothes => clothes.item_name);
@@ -93,24 +83,21 @@ export default function Clothes() {
         };
     
         // Call the function to create or update the quantity chart
-        createOrUpdateQuantityChart();
-    
-        // Check if clothes array changes and update the chart accordingly
-        if (clothes && clothes.length > 0) {
-            setTimeout(() => {
-                createOrUpdateQuantityChart();
-            }, 100);
-        }
+        const timeoutId = setTimeout(() => {
+            createOrUpdateQuantityChart();
+        }, 100);
     
         // Cleanup function
         return () => {
+            clearTimeout(timeoutId);
             if (quantityChart) {
                 quantityChart.destroy();
             }
         };
-    
+
     }, [clothes]);
-    */
+    
+    
 
     useEffect(() => {
         axios.get('http://localhost:8080/clothes/')
@@ -277,6 +264,26 @@ export default function Clothes() {
             URL.revokeObjectURL(pdfUrl);
             printWindow.close();
         };
+    };
+
+    const [selectedItemForDelete, setSelectedItemForDelete] = useState(null);
+
+    // Function to open delete confirmation modal
+    const handleOpenDeleteConfirmationModal = (clothes) => {
+        setSelectedItemForDelete(clothes);
+    };
+
+    // Function to handle canceling deletion
+    const handleCancelDelete = () => {
+        setSelectedItemForDelete(null);
+    };
+
+    // Function to handle confirming deletion
+    const handleConfirmDelete = () => {
+        if (selectedItemForDelete) {
+            handleDeleteClothes(selectedItemForDelete.item_code);
+            setSelectedItemForDelete(null); // Close the modal after deletion
+        }
     };
     
     /*
@@ -472,6 +479,27 @@ export default function Clothes() {
         </div>
     </div>
 
+    // Modal for delete confirmation
+<div className="modal" style={{ display: selectedItemForDelete ? 'block' : 'none' }}>
+    <div className="modal-dialog">
+        <div className="modal-content">
+            <div className="modal-header">
+                <h5 className="modal-title">Confirm Delete</h5>
+                <button type="button" className="close" style={{ position: 'absolute', right: '10px', top: '10px' }} onClick={handleCancelDelete}>
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div className="modal-body">
+                <p>Are you sure you want to delete {selectedItemForDelete?.item_name}?</p>
+            </div>
+            <div className="modal-footer">
+                <button type="button" className="btn btn-danger" onClick={handleConfirmDelete}>Delete</button>
+                <button type="button" className="btn btn-secondary" onClick={handleCancelDelete}>Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
                 {/* Clothes table */}
                 <table className="table">
                     <thead className="table-dark">
@@ -498,7 +526,7 @@ export default function Clothes() {
                                 <td>{clothes.alert_quantity}</td>
                                 <td>
                                     <button className="btn btn-outline-primary me-2" onClick={() => handleOpenUpdateModal(clothes)}>Update</button>
-                                    <button onClick={() => handleDeleteClothes(clothes.item_code)} className="btn btn-outline-danger">Delete</button>
+                                    <button className="btn btn-outline-danger me-2" onClick={() => handleOpenDeleteConfirmationModal(clothes)}>Delete</button>
                                 </td>
                                 {/* Check if quantity is less than or equal to the alert quantity */}
                                 {clothes.quantity <= clothes.alert_quantity && (
