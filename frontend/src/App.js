@@ -29,6 +29,7 @@ import CreateBill from './components/billingComponents/createBill';
 import UpdateBill from './components/billingComponents/updateBill';
 //discount
 import Discounts from './components/discountComponents/Discount';
+//employee management
 import Employees from './components/employeeComponent/employee';
 
 //user management

@@ -466,9 +466,17 @@ export default function Clothes() {
                                 <td>{clothes.quantity}</td>
                                 <td>{clothes.alert_quantity}</td>
                                 <td>
-                                    <button className="btn btn-outline-primary" onClick={() => handleOpenUpdateModal(clothes)}>Update</button>
+                                    <button className="btn btn-outline-primary me-2" onClick={() => handleOpenUpdateModal(clothes)}>Update</button>
                                     <button onClick={() => handleDeleteClothes(clothes.item_code)} className="btn btn-outline-danger">Delete</button>
                                 </td>
+                                {/* Check if quantity is less than or equal to the alert quantity */}
+                                {clothes.quantity <= clothes.alert_quantity && (
+                                    <td>
+                                        <div className="alert alert-warning" role="alert">
+                                            Alert: Reorder this item!
+                                        </div>
+                                    </td>
+                                )}
                             </tr>
                         ))}
                     </tbody>

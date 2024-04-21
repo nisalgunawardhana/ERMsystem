@@ -287,7 +287,7 @@ export default function Bills() {
 
 
         // Define the actual secret code
-        const actualSecretCode = 'DELETE_ALL_BILLS';
+        const actualSecretCode = '1111';
 
         // Verify the secret code
         if (secretCode === actualSecretCode) {
@@ -328,7 +328,7 @@ export default function Bills() {
                 }
             );
         } else {
-            alert("Invalid secret code. Please enter the correct secret code to delete all selected bills.");
+            toast.error("Invalid secret code. Please enter the correct secret code to delete all selected bills.");
         }
     };
 
@@ -413,7 +413,7 @@ export default function Bills() {
                 <div className="d-flex flex-wrap align-items-center">
                     <h2 style={{ marginRight: '25px' }}> All Bills</h2>
                     {/* Add expense button */}
-                    <Link to="/dashboard/cashier/bill/CreateBill" className="btn btn-outline-success"><i class="bi bi-plus-circle-fill me-2"></i>Create New Bill</Link>
+                    <Link to="/dashboard/cashier/billing/CreateBill" className="btn btn-outline-success"><i class="bi bi-plus-circle-fill me-2"></i>Create New Bill</Link>
                 </div>
                 <div className="d-flex justify-content-between align-items-center mb-3">
                     <div className="flex-grow-1">
@@ -519,6 +519,8 @@ export default function Bills() {
                     />
                 )}
 
+                
+
                 {/* Delete confirmation modal */}
                 <Modal show={showDeleteConfirmation} onHide={handleCloseDeleteConfirmation}>
                     <Modal.Header closeButton>
@@ -577,7 +579,7 @@ export default function Bills() {
                 </Modal>
 
 
-                <Modal show={showReportModal} onHide={closeReportModal} size="lg">
+                <Modal show={showReportModal} onHide={closeReportModal} size="lg" >
                     <Modal.Header closeButton>
                         <Modal.Title>Bills Report</Modal.Title>
                     </Modal.Header>

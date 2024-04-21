@@ -187,8 +187,8 @@ export default function Employees() {
     
 
     return (
-
-        <div className="container">
+        <Layout>
+            <div className="container">
             <h3 fonrweight="blod">Employee Management</h3>
 
             <div className="row">
@@ -358,6 +358,8 @@ export default function Employees() {
                     ))}
                 </tbody>
             </table>
-        </div>
+            </div>
+
+        </Layout>   
     );
 }

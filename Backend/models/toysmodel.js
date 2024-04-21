@@ -20,6 +20,11 @@ const stockSchema = new Schema({
         enum: CategoryEnum,
         required: true  
     },
+
+    price:{
+        type: Number,
+        required: true
+    },
     
     quantity:{
         type: Number,   

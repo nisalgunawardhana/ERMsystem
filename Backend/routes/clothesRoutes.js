@@ -1,12 +1,16 @@
 const router = require("express").Router();
-let clothes = require("../models/clothesmodel");
+const clothes = require("../models/clothesmodel");
+
 
 router.route("/add").post((req,res)=>{
     const item_code = req.body.item_code;
     const item_name = req.body.item_name;
     const category = req.body.category;
+    const price = req.body.price;
     const quantity = req.body.quantity;
     const alert_quantity = req.body.alert_quantity;
+
+
     
     
 
@@ -14,6 +18,7 @@ router.route("/add").post((req,res)=>{
         item_code,
         item_name,
         category,
+        price,
         quantity,
         alert_quantity
     })
@@ -35,12 +40,13 @@ router.route("/").get((req,res)=>{
 
 router.route("/update/:item_code").put(async (req, res) => {
     let itm_code = req.params.item_code;
-    const { item_code, item_name, category, quantity, alert_quantity } = req.body;
+    const { item_code, item_name, category, price, quantity, alert_quantity } = req.body;
 
     const updateclothes = {
         item_code,
         item_name,
         category,
+        price,
         quantity,
         alert_quantity
     }
@@ -95,7 +101,7 @@ router.route("/:id").get((req, res) => {
 
 
 
-router.route("/quantitys/:item_code").get(async (req, res) => {
+router.route("/price/:item_code").get(async (req, res) => {
     let itm_code = req.params.item_code;
 
     try {
@@ -104,8 +110,8 @@ router.route("/quantitys/:item_code").get(async (req, res) => {
 
         if (foundclothes) {
             // Retrieve and send the quantitys of the found clothes
-            const quantitys = foundclothes.quantity;
-            res.status(200).send({ quantitys });
+            const price = foundclothes.price;
+            res.status(200).send({ price });
         } else {
             res.status(404).send({ status: "clothes not found" });
         }
@@ -114,6 +120,63 @@ router.route("/quantitys/:item_code").get(async (req, res) => {
         res.status(500).send({ status: "Error retrieving quantitys" });
     }
 })
+
+router.route("/decrement/:item_code").put(async (req, res) => {
+    const item_code = req.params.item_code;
+    const purchasedQuantity = req.body.quantity; // Access quantity from request body
+
+    try {
+        const clothe = await clothes.findOne({ item_code });
+        if (!clothe) {
+            return res.status(404).json({ error: "Clothes not found" });
+        }
+
+        const updatedQuantity = clothe.quantity - purchasedQuantity;
+        if (updatedQuantity < 0) {
+            return res.status(400).json({ error: "Insufficient quantity" });
+        }
+
+        clothe.quantity = updatedQuantity;
+
+        await clothe.save();
+        res.json({ message: "Clothes quantity updated", updatedQuantity });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+
+
+router.route("/decrease/:item_code").put(async (req, res) => {
+    const itm_code = req.params.item_code;
+    const quantityToDecrease = req.body.quantity; // Quantity to decrease
+
+    try {
+        // Find the clothes based on the custom item_code
+        const foundClothes = await clothes.findOne({ item_code: itm_code });
+
+        if (foundClothes) {
+            // Check if there's enough quantity to decrease
+            if (foundClothes.quantity >= quantityToDecrease) {
+                // Decrease the quantity
+                foundClothes.quantity -= quantityToDecrease;
+                
+                // Save the updated quantity
+                await foundClothes.save();
+
+                res.status(200).send({ status: "Quantity decreased", updatedClothes: foundClothes });
+            } else {
+                res.status(400).send({ status: "Not enough quantity to decrease" });
+            }
+        } else {
+            res.status(404).send({ status: "Clothes not found" });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ status: "Error decreasing quantity" });
+    }
+})
+
 
 
 

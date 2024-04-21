@@ -121,7 +121,7 @@ function Layout({children}) {
         },
         {
             name: 'Stock',
-            path: '/stock',
+            path: '/dashboard/stock',
             icon: 'ri-archive-line',
         },
         {
@@ -140,7 +140,7 @@ function Layout({children}) {
         },
         {
             name: 'Dashboard',
-            path: '/adminDashboard',
+            path: '/employee',
             icon: 'ri-user-settings-line'
         },
         {
