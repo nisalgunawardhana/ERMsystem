@@ -38,7 +38,7 @@ function UpdateCustomer() {
     e.preventDefault();
     axios.put(`http://localhost:8080/customer/update/${id}`, customer)
       .then(() => {
-        navigate('/customer');
+        navigate('/dashboard/cashier/Customer');
       })
       .catch(error => {
         console.error('Error updating customer:', error);
