@@ -306,7 +306,8 @@ const CustomerR = () => {
                         </h3>
                        
                     </div>
-                    <i className="bi bi-bar-chart h1"></i>
+                    <i className="bi bi-trash h1"></i>
+
                     
                 </div>
                 <Button className="btn btn-dark" onClick={handleDeleteAllPoints}>Delete All Points</Button>
@@ -349,7 +350,7 @@ const CustomerR = () => {
                                     <p className="card-text">Point: {customer.point}</p>
                                     <p className="card-text">Gender: {customer.gender}</p>
                                     <div className="btn-group">
-                                        <Link to={`/customer/update/${customer.customer_id}`} className="btn btn-outline-primary">
+                                        <Link to={`/customer/update/${customer.customer_id}`} className="btn btn-outline-primary"style={{ margin: '0 5px' }}>
                                             <i className="bi bi-pencil-fill"></i> Update
                                         </Link>
                                         <button className="btn btn-outline-danger" onClick={() => handleDelete(customer.customer_id)}>
