@@ -73,9 +73,56 @@ const PurchaseOrderSchema = new Schema({
     payment_status:{
         type:String,
         required: true
+    },
+
+    payment_date: {
+        type: Date,
+       
+    },
+
+    sup_deliver_date: {
+        type: Date,
+      
+    },
+
+    leadTime: {
+        type: Number,
+      
+    },
+
+    qualityOfGoods: {
+        type: Number,
+        
+    },
+
+    quantityAccuracy: {
+        type: Number,
+      
+    },
+
+    responsiveness: {
+        type: String,
+        
+    },
+
+    costEffectiveness: {
+        type: String,
+      
+    }, 
+
+    additional: {
+        type: String,
+       
+    }, 
+
+    overallSatisfaction: {
+        type: String,
+        
     }
+
+
 
 })
 
-const purchaseOrder = mongoose.model("PO", PurchaseOrderSchema);
+const purchaseOrder = mongoose.model("purchaseOrder", PurchaseOrderSchema);
 module.exports = purchaseOrder;

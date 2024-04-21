@@ -1,5 +1,5 @@
 const router = require("express").Router();
-let toys = require("../models/toysmodel");
+const toys = require("../models/toysmodel");
 
 router.route("/add").post((req,res)=>{
     const item_code = req.body.item_code;
@@ -98,7 +98,7 @@ router.route("/:id").get((req, res) => {
 
 // nisal 
 
-router.route("/quantitys/:item_code").get(async (req, res) => {
+router.route("/price/:item_code").get(async (req, res) => {
     let itm_code = req.params.item_code;
 
     try {
@@ -107,8 +107,8 @@ router.route("/quantitys/:item_code").get(async (req, res) => {
 
         if (foundtoys) {
             // Retrieve and send the quantitys of the found toys
-            const quantitys = foundtoys.quantity;
-            res.status(200).send({ quantitys });
+            const price = foundtoys.price;
+            res.status(200).send({ price });
         } else {
             res.status(404).send({ status: "toys not found" });
         }
@@ -117,6 +117,32 @@ router.route("/quantitys/:item_code").get(async (req, res) => {
         res.status(500).send({ status: "Error retrieving quantitys" });
     }
 })
+
+router.route("/decrement/:item_code").put(async (req, res) => {
+    const item_code = req.params.item_code;
+    const purchasedQuantity = req.body.quantity; // Access quantity from request body
+
+    try {
+        const toys = await toys.findOne({ item_code });
+        if (!toys) {
+            return res.status(404).json({ error: "Toys not found" });
+        }
+
+        const updatedQuantity = toys.quantity - purchasedQuantity;
+        if (updatedQuantity < 0) {
+            return res.status(400).json({ error: "Insufficient quantity" });
+        }
+
+        toys.quantity = updatedQuantity;
+
+        await toys.save();
+        res.json({ message: "Toys quantity updated", updatedQuantity });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+
 
 
 

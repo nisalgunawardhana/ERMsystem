@@ -69,99 +69,122 @@ const FinanceDash = () => {
         let barChart = null;
         let lineChart = null;
 
+        console.log("Profit data:", profit)
         // Function to create or update the line chart
-        const createOrUpdateLineChart = () => {
-            // If a previous Chart instance exists, destroy it
-            if (lineChart) {
-                lineChart.destroy();
-            }
+        if (profit.length > 0) {
+            const createOrUpdateLineChart = () => {
+                // If a previous Chart instance exists, destroy it
+                const canvas = document.getElementById('canvas-1');
+                if (!canvas) {
+                    console.error("Canvas element for line chart not found");
+                    return;
+                }
 
-            // Extracting data for the chart
-            const salesLabels = profit.map(profit => profit.Month);
-            const salesData = profit.map(profit => parseFloat(profit.Sales_income));
-            const expenseData = profit.map(profit => parseFloat(profit.Other_expenses + profit.Supplier_expenses + profit.Salaries));
+                if (lineChart) {
+                    lineChart.destroy();
+                }
 
-            // Create the line chart
-            lineChart = new Chart(document.getElementById('canvas-1'), {
-                type: 'line',
-                data: {
-                    labels: salesLabels,
-                    datasets: [
-                        {
-                            label: 'Sales',
-                            data: salesData,
-                            borderColor: 'rgba(75, 192, 192, 1)',
-                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                            borderWidth: 1
-                        },
-                        {
-                            label: 'Expenses',
-                            data: expenseData,
-                            borderColor: 'rgba(255, 99, 132, 1)',
-                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                            borderWidth: 1
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true
+                // Extracting data for the chart
+                const salesLabels = profit.map(profit => profit.Month);
+                const salesData = profit.map(profit => parseFloat(profit.Sales_income));
+                const expenseData = profit.map(profit => parseFloat(profit.Other_expenses + profit.Supplier_expenses + profit.Salaries));
+
+                // Create the line chart
+                lineChart = new Chart(document.getElementById('canvas-1'), {
+                    type: 'line',
+                    data: {
+                        labels: salesLabels,
+                        datasets: [
+                            {
+                                label: 'Sales',
+                                data: salesData,
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Expenses',
+                                data: expenseData,
+                                borderColor: 'rgba(255, 99, 132, 1)',
+                                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
                         }
                     }
+                });
+
+            };
+            const createOrUpdateBarChart = () => {
+                // If a previous Chart instance exists, destroy it
+                const canvas = document.getElementById('canvas-2');
+                if (!canvas) {
+                    console.error("Canvas element for bar chart not found");
+                    return;
                 }
-            });
-        };
-        const createOrUpdateBarChart = () => {
-            // If a previous Chart instance exists, destroy it
-            if (barChart) {
-                barChart.destroy();
-            }
 
-            // Extracting data for the chart
-            const labels = profit.map(profit => profit.Month);
-            const data = profit.map(profit => parseFloat(profit.Monthly_profit));
+                if (barChart) {
+                    barChart.destroy();
+                }
 
-            // Create the bar chart
-            barChart = new Chart(document.getElementById('canvas-2'), {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [
-                        {
-                            label: 'Monthly Profit',
-                            data: data,
-                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                            borderColor: 'rgba(255, 99, 132, 1)',
-                            borderWidth: 1
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true
+                // Extracting data for the chart
+                const labels = profit.map(profit => profit.Month);
+                const data = profit.map(profit => parseFloat(profit.Monthly_profit));
+
+                // Create the bar chart
+                barChart = new Chart(document.getElementById('canvas-2'), {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Monthly Profit',
+                                data: data,
+                                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                borderColor: 'rgba(255, 99, 132, 1)',
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
                         }
                     }
-                }
-            });
-        };
+                });
+                console.log("Creating or updating charts...");
+            };
 
-        createOrUpdateLineChart();
-        createOrUpdateBarChart();
+            // Cleanup function to destroy the charts when the component unmounts
+            if (profit.length > 0) {
+                // Introduce a slight delay before rendering the charts
+                setTimeout(() => {
+                    createOrUpdateLineChart();
+                    createOrUpdateBarChart();
+                }, 100);
 
-        // Cleanup function to destroy the charts when the component unmounts
-        return () => {
-            if (lineChart) {
-                lineChart.destroy();
+                // Cleanup function to destroy the charts when the component unmounts
+                return () => {
+                    if (lineChart) {
+                        lineChart.destroy();
+                    }
+                    if (barChart) {
+                        barChart.destroy();
+                    }
+                };
             }
-            if (barChart) {
-                barChart.destroy();
-            }
-        };
-    }, [otherExpenses, monthlyProfit]);
+        }
+    }, [profit]);
 
     const [month, setMonth] = useState({ Month: '' });
 
@@ -173,7 +196,7 @@ const FinanceDash = () => {
     const submit = (e) => {
         e.preventDefault();
         // Redirect to the page where total amount is fetched for the entered month
-        window.location.href = `/profit/${month.Month}`;
+        window.location.href = `/dashboard/finance/profit/add/${month.Month}`;
     };
 
     const getCurrentMonth = () => {
@@ -324,20 +347,42 @@ const FinanceDash = () => {
 
     const fixedCardColor = `linear-gradient(to right, rgba(0, 123, 255, 0.8), rgba(255, 0, 123, 0.8))`;
 
+    const [dateTime, setDateTime] = useState(new Date());
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setDateTime(new Date());
+        }, 1000); // Update every second
+
+        // Cleanup function
+        return () => clearInterval(timer);
+    }, []);
+
+    // Format the date and time
+    const formattedDate = dateTime.toLocaleDateString();
+    const formattedTime = dateTime.toLocaleTimeString();
+
+
     return (
         <Layout>
-        <div className="container">
-                <nav aria-label="breadcrumb mb-3" style={{ marginTop: '20px' }}>
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/">Home</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Finance Dashboard</li>
-                    </ol>
-                </nav>
-                <h2 className="text-left mb-4" >Finance Dashboard</h2>
+            <div className="container">
+                <div className="row">
+                    <div className="col-md-8">
+                        <nav aria-label="breadcrumb mb-3">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item active" aria-current="page">Finance Dashboard</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div className="col-md-4 d-flex justify-content-end">
+                        <p>{formattedDate} | {formattedTime}</p>
+                    </div>
+                </div>
+                <h2 className="text-left mb-4">Finance Dashboard</h2>
                 <div class="container">
                     <div class="row mt-4">
                         <div class="col-lg-4 col-md-6 mb-3">
-                            <div class="card l-bg-cherry">
+                            <div class="card">
                                 <div class="card-statistic-3 p-4">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="col-8">
@@ -349,13 +394,13 @@ const FinanceDash = () => {
                                         <i className="bi bi-cash-coin h1"></i>
                                     </div>
                                     <div class="progress mt-1 " data-height="8" style={{ height: '8px' }}>
-                                        <div class="progress-bar l-bg-cyan" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '25%' }}></div>
+                                        <div class="progress-bar l-bg-orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '50%' }}></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-6 mb-3">
-                            <div class="card l-bg-green-dark">
+                            <div class="card">
                                 <div class="card-statistic-3 p-4">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="col-8">
@@ -367,13 +412,13 @@ const FinanceDash = () => {
                                         <i className="bi bi-cart4 h1"></i>
                                     </div>
                                     <div class="progress mt-1" data-height="8" style={{ height: '8px' }}>
-                                        <div class="progress-bar l-bg-orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '25%' }}></div>
+                                        <div class="progress-bar l-bg-orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '50%' }}></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-6 mb-3">
-                            <div class="card l-bg-orange-dark">
+                            <div class="card">
                                 <div class="card-statistic-3 p-4">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="col-8">
@@ -385,7 +430,7 @@ const FinanceDash = () => {
                                         <i className="bi bi-currency-dollar h1"></i>
                                     </div>
                                     <div class="progress mt-1 " data-height="8" style={{ height: '8px' }}>
-                                        <div class="progress-bar l-bg-cyan" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '25%' }}></div>
+                                        <div class="progress-bar l-bg-orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '50%' }}></div>
                                     </div>
                                 </div>
                             </div>
@@ -407,14 +452,11 @@ const FinanceDash = () => {
                                 <div className="card" style={{ borderRadius: '20px' }}>
                                     <div className="card-body">
                                         <form onSubmit={submit}>
-                                            <div className="mb-3">
-                                                <h6>Create Monthly profit log in order to analyze sales vs expenses</h6>
+                                            <div className="mb-2">
+                                                <h5>Add new Profit log</h5>
                                                 <div className="row mb-3" style={{ marginTop: '15px' }}>
-                                                    <div className="col-md-4">
-                                                        <label htmlFor="Month" className="form-label">Select Month</label>
-                                                    </div>
-                                                    <div className="col-md-8">
-                                                        <select className="form-select" id="Month" name="Month" value={month.Month} onChange={handleChange}>
+                                                    <div className="col-md-12">
+                                                        <select className="form-select" id="Month" name="Month" value={month.Month} onChange={handleChange} required>
                                                             <option value="">Select Month</option>
                                                             <option value="January">January</option>
                                                             <option value="February">February</option>
@@ -433,9 +475,9 @@ const FinanceDash = () => {
                                                 </div>
                                             </div>
                                             <div className="row mb-2">
-                                                <div className="col">
+                                                <div className="col mt-2">
                                                     <div className="btn-group">
-                                                        <button type="submit" className="btn btn-primary" style={{ width: '200px', marginTop: '10px' }}>Add Profit</button>
+                                                        <button type="submit" className="btn btn-outline-primary" style={{ width: '200px' }}><i className="ri-add-line"></i>  Add Profit</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -444,12 +486,19 @@ const FinanceDash = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="row" style={{ marginTop: '0px' }}>
+                            <div className="row">
                                 <div className="card mb-3" style={{ borderRadius: '20px' }}>
                                     <div className="card-body">
-                                        <h5 className="card-title">Other Expenses</h5>
-                                        <p className="card-text">Add your repairing, transportational and constructional expenses.</p>
-                                        <Link to={`/otherExpense`} className="btn btn-primary me-2" style={{ width: '200px' }}>Add</Link>
+                                        <h5 className="card-title">Add Other expenses</h5>
+                                        <Link to={`/dashboard/finance/otherExpense`} className="btn btn-outline-primary me-2" style={{ width: '200px' }}><i className="ri-add-line"></i>  Add expenses</Link>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="card mb-3" style={{ borderRadius: '20px' }}>
+                                    <div className="card-body">
+                                        <h5 className="card-title">Add new Tax Document</h5>
+                                        <Link to={`/dashboard/finance/tax/add`} className="btn btn-outline-primary me-2" style={{ width: '200px' }}><i className="ri-add-line"></i>  Add Tax</Link>
                                     </div>
                                 </div>
                             </div>
@@ -464,7 +513,7 @@ const FinanceDash = () => {
                         </div>
                     </div>
                 </div>
-        </div>
+            </div>
         </Layout>
 
     );

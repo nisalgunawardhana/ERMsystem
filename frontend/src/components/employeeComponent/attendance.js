@@ -1,7 +1,6 @@
-// AttendanceForm.jsx
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Layout from "../Layout";
 
 const AttendanceForm = () => {
   const [employeeId, setEmployeeId] = useState("");
@@ -25,23 +24,29 @@ const AttendanceForm = () => {
       });
   };
 
-
-
   return (
-    <div>
+    <Layout>
+    <div className="card">
+    <div className="card-body">
+      <h2 className="card-title">Add Attendance</h2>
       <form onSubmit={handleSubmit}>
-        <label>
-          Employee ID:
-          <input type="text" value={employeeId} onChange={(e) => setEmployeeId(e.target.value)} />
-        </label>
-        <button type="submit">Add Attendance</button>
+        <div className="form-group">
+          <label htmlFor="employeeId">Employee ID:</label>
+          <input 
+            type="text" 
+            id="employeeId" 
+            className="form-control" 
+            value={employeeId} 
+            onChange={(e) => setEmployeeId(e.target.value)} 
+          />
+        </div>
+        <button type="submit" className="btn btn-primary">Add Attendance</button>
       </form>
     </div>
-    
-    
-  );
-  
-
+  </div>
+  </Layout>
+);
 };
+
 
 export default AttendanceForm;

@@ -10,6 +10,9 @@ const CustomerR = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [filteredCustomers, setFilteredCustomers] = useState([]);
     const [showModal, setShowModal] = useState(false);
+    const [totalCus, setTotalCus] = useState(0);
+    const [currentDateTime, setCurrentDateTime] = useState('');
+    const [error, setError] = useState('');
     const [customerData, setCustomerData] = useState({
         customer_id: "",
         customer_name: "",
@@ -80,19 +83,19 @@ const CustomerR = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const { customer_id, customer_name, email, point, gender } = customerData;
-            if (!customer_id || !customer_name || !email || !point || !gender) {
+            const { customer_id, customer_name, email, gender } = customerData;
+            if (!customer_id || !customer_name || !email  || !gender) {
                 console.error("All fields are required");
                 return;
             }
-            await axios.post("http://localhost:8080/customer/add", { customer_id, customer_name, email, point, gender });
+            await axios.post("http://localhost:8080/customer/add", { customer_id, customer_name, email, point:0, gender });
             setShowModal(false);
             fetchCustomers();
             setCustomerData({
                 customer_id: "",
                 customer_name: "",
                 email: "",
-                point: "",
+                point: 0,
                 gender: "Male" // Reset gender to Male after adding
             });
         } catch (error) {
@@ -211,28 +214,64 @@ const CustomerR = () => {
     };
 
 
+    useEffect(() => {
+
+        // Fetch total amount
+        axios.get("http://localhost:8080/customer/count")
+            .then((res) => {
+                setTotalCus(res.data.totalCustomers);
+            })
+            .catch((err) => {
+                setError(err.message);
+            });
+
+             const intervalId = setInterval(() => {
+            const now = new Date();
+            setCurrentDateTime(now.toLocaleString());
+        }, 1000);
+
+        // Cleanup interval
+        return () => clearInterval(intervalId);
+    }, []);
+
+
     return (
         <Layout>
         <div className="container">
-            <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/dashboard/cashier">Cashier Dashboard</a></li>
+            
+                <div className="row">
+        {/* Breadcrumb navigation */}
+        <nav className="col-md-6" aria-label="breadcrumb">
+            <ol className="breadcrumb">
+            <li class="breadcrumb-item"><a href="/dashboard/cashier">Cashier Dashboard</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Customer Management </li>
-                    </ol>
-                </nav>
+            </ol>
+        </nav>
+        {/* Current Date and Time */}
+        <div className="col-md-6 text-md-end mb-3">
+                        <div className="date-time">
+                            <span className="date">{currentDateTime.split(',')[0]}</span>
+                            <span className="time"> | {currentDateTime.split(',')[1]}</span>
+                        </div>
+                    </div>
+    </div>
             <h1>Customer Management</h1>
-            <Row className="mb-3">
+            <Row className="mb-4">
     <Col>
         <div className="card shadow" style={{ backgroundColor: 'white' }}>
             <div className="card-statistic-3 p-4">
                 <div className="d-flex justify-content-between align-items-center">
                     <div className="col-8">
                         <h3 className="d-flex align-items-center mb-5" style={{ color: 'black' }}>
-                            Generate Report
+                            Customer Report
                         </h3>
                         
                     </div>
-                    <Button variant="light" onClick={handleGenerateReport}>Generate Report</Button>
+                    <i className="bi bi-bar-chart h1"></i>
+                </div>
+                <Button className="btn btn-dark" onClick={handleGenerateReport}>Generate Report</Button>
+                <div className="progress mt-1" data-height="8" style={{ height: '8px' }}>
+                    <div className="progress-bar bg-orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '75%', backgroundColor: 'orange' }}></div>
                 </div>
             </div>
         </div>
@@ -243,13 +282,21 @@ const CustomerR = () => {
                 <div className="d-flex justify-content-between align-items-center">
                     <div className="col-8">
                         <h3 className="d-flex align-items-center mb-5" style={{ color: 'black' }}>
-                            Add Customer
+                            Total Customers
                         </h3>
                         
                     </div>
-                    <Button variant="light" onClick={() => setShowModal(true)}>Add Customer</Button>
+                    <h1>{totalCus}</h1>
+                    
                 </div>
+                <Button className="btn btn-dark" onClick={() => setShowModal(true)}>Add Customer</Button>
+                <div className="progress mt-1" data-height="8" style={{ height: '8px' }}>
+                    <div className="progress-bar bg-orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '75%', backgroundColor: 'orange' }}></div>
+                
+                </div>
+                
             </div>
+            
         </div>
     </Col>
     <Col>
@@ -262,11 +309,17 @@ const CustomerR = () => {
                         </h3>
                        
                     </div>
-                    <Button variant="light" onClick={handleDeleteAllPoints}>Delete All Points</Button>
+                    <i className="bi bi-trash h1"></i>
+                </div>
+                <Button className="btn btn-dark" onClick={handleDeleteAllPoints}>Delete All Points</Button>
+                <div className="progress mt-1" data-height="8" style={{ height: '8px' }}>
+                    <div className="progress-bar bg-orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '75%', backgroundColor: 'orange' }}></div>
                 </div>
             </div>
         </div>
     </Col>
+    
+    
 </Row>
 
 
@@ -298,10 +351,10 @@ const CustomerR = () => {
                                     <p className="card-text">Point: {customer.point}</p>
                                     <p className="card-text">Gender: {customer.gender}</p>
                                     <div className="btn-group">
-                                        <Link to={`/customer/update/${customer.customer_id}`} className="btn btn-primary me-2">
+                                        <Link to={`/customer/update/${customer.customer_id}`} className="btn btn-outline-primary  me-2">
                                             <i className="bi bi-pencil-fill"></i> Update
                                         </Link>
-                                        <button className="btn btn-danger" onClick={() => handleDelete(customer.customer_id)}>
+                                        <button className="btn btn-outline-danger" onClick={() => handleDelete(customer.customer_id)}>
                                             <i className="bi bi-trash-fill"></i> Delete
                                         </button>
 

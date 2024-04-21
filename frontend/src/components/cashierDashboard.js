@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 import Layout from './Layout';
 
 const CashierDashboard = () => {
     // State variables to hold data
-    const [salesData, setSalesData] = useState([]);
-    const [totalSales, setTotalSales] = useState(0);
     const [error, setError] = useState('');
     const [totalAmount, setTotalAmount] = useState(0);
     const [totalCus, setTotalCus] = useState(0);

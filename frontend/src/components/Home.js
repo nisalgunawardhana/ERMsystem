@@ -183,13 +183,30 @@ if (user) {
 
       case user.isFinanceManager:
       financeComponent = (
-        navigate('/finance')
+        navigate('/dashboard/finance')
       );
       break;
 
+      case user.isTrainingCoordinator:
+      financeComponent = (
+        navigate('/dashboard/trainee')
+      );
+      break;
 
       case user.isLogisticManager:
+      financeComponent = (
+        navigate('/dashboard/logistics')
+      );
       break;
+
+      case user.isStaffManager:
+        financeComponent = (
+          navigate('/dashboard/employee')
+        );
+        break;
+
+
+      
 
 
       case user.isStaffManager:
