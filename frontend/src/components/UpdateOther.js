@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate, Link } from 'react-router-dom';
+import Layout from './Layout';
 
 export default function UpdateOther() {
     const { id } = useParams(); // Get the expense ID from the URL params
@@ -227,63 +228,8 @@ export default function UpdateOther() {
     };
 
     return (
-        <div className="container" style={{ marginTop: '80px', marginBottom: '40px' }}>
-            <ul class="nav nav-tabs mb-3" id="myTab0" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <Link
-                        className="nav-link"
-                        id="contact-tab0"
-                        to="/otherExpense"
-                        role="tab"
-                        aria-controls="contact"
-                        aria-selected="false"
-                    >
-                        Dashboard
-                    </Link>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button
-                        data-mdb-tab-init
-                        class="nav-link"
-                        id="profile-tab0"
-                        type="button"
-                        role="tab"
-                        aria-controls="profile"
-                        aria-selected="false"
-                        onClick={handleClick}
-                    >
-                        Profit Log
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <Link
-                        className="nav-link active"
-                        id="contact-tab0"
-                        to="/otherExpense"
-                        role="tab"
-                        aria-controls="contact"
-                        aria-selected="false"
-                        style={{ borderBottom: '2px solid #007bff', borderTop: 'none' }}
-                    >
-                        <i className="bi bi-wallet"></i> Other Expenses
-                    </Link>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button
-                        data-mdb-tab-init
-                        class="nav-link"
-                        id="contact-tab0"
-                        data-mdb-target="#contact0"
-                        type="button"
-                        role="tab"
-                        aria-controls="contact"
-                        aria-selected="false"
-                        onClick={handleClickTax}
-                    >
-                        Tax Document
-                    </button>
-                </li>
-            </ul>
+        <Layout>
+        <div className="container" style={{ marginTop: '20px', marginBottom: '40px' }}>
             {/*Breadcrumb*/}
             <nav aria-label="breadcrumb" style={{ marginTop: '20px' }}>
                 <ol class="breadcrumb">
@@ -350,6 +296,6 @@ export default function UpdateOther() {
                 </div>
             </div>
         </div>
-
+        </Layout>
     );
 }

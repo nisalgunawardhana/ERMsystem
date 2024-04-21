@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
+import Layout from './Layout';
 
 function AddTax({ EPF, ETF }) {
     const [totalProfit, setTotalProfit] = useState(0);
@@ -203,7 +204,8 @@ function AddTax({ EPF, ETF }) {
     };
 
     return (
-        <div className="container" style={{ marginTop: '100px' }}>
+        <Layout>
+        <div className="container" style={{ marginTop: '20px' }}>
             <div className="row justify-content-center">
                 <div className="col-lg-8">
                     <form onSubmit={sendData}>
@@ -286,6 +288,7 @@ function AddTax({ EPF, ETF }) {
                 </div>
             </div>
         </div>
+        </Layout>
     );
 }
 

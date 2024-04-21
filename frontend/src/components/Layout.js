@@ -92,7 +92,7 @@ function Layout({children}) {
         },
         {
             name: 'Profit Log',
-            path: `/profit/get/profitlog`,
+            path: `/profit`,
             icon: 'ri-currency-line'
         },
         {
@@ -102,7 +102,7 @@ function Layout({children}) {
         },
         {
             name: 'Tax Document',
-            path: '/profile',
+            path: '/tax',
             icon: 'ri-article-line'
         },
     ];
