@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './Employee.css';
 import Layout from '../Layout';
 
 export default function Employees() {
+    
     const [employees, setEmployees] = useState([]);
+    const [selectedEmployees, setSelectedEmployees] = useState([]);
+    const [selectAll, setSelectAll] = useState(false); 
     const [searchQuery, setSearchQuery] = useState('');
     const [showAddModal, setShowAddModal] = useState(false);
     const [showUpdateModal, setShowUpdateModal] = useState(false);
@@ -111,6 +113,21 @@ export default function Employees() {
         employee.employee_Id.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
+    const handleEmployeeSelect = (employeeId) => {
+        const index = selectedEmployees.indexOf(employeeId);
+        if (index === -1) {
+            setSelectedEmployees([...selectedEmployees, employeeId]);
+        } else {
+            const updatedSelectedEmployees = [...selectedEmployees];
+            updatedSelectedEmployees.splice(index, 1);
+            setSelectedEmployees(updatedSelectedEmployees);
+        }
+    };
+
+    const isEmployeeSelected = (employeeId) => {
+        return selectedEmployees.includes(employeeId);
+    };
+
     const generateReport = () => {
         // Open a new window
         const printWindow = window.open("", "_blank", "width=600,height=600");
@@ -182,7 +199,24 @@ export default function Employees() {
         printWindow.print();
     };
 
+     // Function to handle selecting all employees
+     const handleSelectAll = () => {
+        if (selectAll) {
+            setSelectedEmployees([]);
+        } else {
+            const allEmployeeIds = employees.map(employee => employee.employee_Id);
+            setSelectedEmployees(allEmployeeIds);
+        }
+        setSelectAll(prevState => !prevState);
+    };
 
+    const handleDeleteSelected = () => {
+        selectedEmployees.forEach(employeeId => {
+            handleDeleteEmployee(employeeId);
+        });
+    };
+
+    
 
     
 
@@ -230,99 +264,8 @@ export default function Employees() {
                 <div className="flex-grow-1">
                     <input type="text" className="form-control" placeholder="Search by Employee ID" value={searchQuery} onChange={handleSearch} />
                 </div>
-                
-            </div>
-
-            <div className="modal-backdrop" style={{ display: showAddModal || showUpdateModal ? 'block' : 'none' }}></div>
-
-            
-            <div className="modal" style={{ display: showAddModal ? 'block' : 'none' }}>
-                <div className="modal-dialog">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title">Add New Employee</h5>
-                            <button type="button" className="close" style={{ position: 'absolute', right: '10px', top: '10px' }} onClick={() => setShowAddModal(false)}>
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div className="modal-body">
-                            <form onSubmit={handleFormSubmit}>
-                                {error && <div className="alert alert-danger" role="alert">{error}</div>}
-                                <div className="form-group">
-                                <label>Employee ID</label>
-                                <input type="text" className="form-control" onChange={(e) => setEmployeeId(e.target.value)} pattern="^EMP\d+$" title="EMPXXXX" required/>
-                            <small className="form-text text-muted">EMPXXXX</small>
-                            </div>
-                        <div className="form-group">
-                                <label>First Name</label>
-                                <input type="text" className="form-control" onChange={(e) => setFirstName(e.target.value)} required/>
-                            </div>
-                        <div className="form-group">
-                            <label>Last Name</label>
-                            <input type="text" className="form-control" onChange={(e) => setLastName(e.target.value)} required/>
-                            </div>
-                        <div className="form-group">
-                            <label>NIC</label>
-                            <input type="text" className="form-control" onChange={(e) => setNic(e.target.value)} required/>
-                            </div>
-                        <div className="form-group">
-                            <label>Contact</label>
-                            <input type="tel" className="form-control" onChange={(e) => setContact(e.target.value)} pattern="[0-9]{10}" title="Contact must be a 10-digit number" required/>
-                        </div>
-                        <div className="form-group">
-                            <label>Email</label>
-                            <input type="email" className="form-control" onChange={(e) => setEmail(e.target.value)} required/>
-                        </div>
-                        <button type="submit" className="btn btn-primary">Add Employee</button>
-                        <button type="button" className="btn btn-secondary" onClick={() => setShowAddModal(false)}>Close</button>
-                        </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Modal for updating employee */}
-            <div className="modal" style={{ display: showUpdateModal ? 'block' : 'none' }}>
-                <div className="modal-dialog">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title">Update Employee</h5>
-                            <button type="button" className="close" style={{ position: 'absolute', right: '10px', top: '10px' }} onClick={() => setShowUpdateModal(false)}>
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div className="modal-body">
-                            <form onSubmit={handleFormSubmit}>
-                                {error && <div className="alert alert-danger" role="alert">{error}</div>}
-                                <div className="form-group">
-                                    <label>Employee ID</label>
-                                    <input type="text" className="form-control" onChange={(e) => setEmployeeId(e.target.value)} pattern="^EMP\d+$" title="EMPXXXX" required/>
-                            <small className="form-text text-muted">EMPXXXX</small>
-                                </div>
-                                <div className="form-group">
-                                    <label>First Name</label>
-                                    <input type="text" className="form-control" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
-                                </div>
-                                <div className="form-group">
-                                    <label>Last Name</label>
-                                    <input type="text" className="form-control" value={lastName} onChange={(e) => setLastName(e.target.value)} />
-                                </div>
-                                <div className="form-group">
-                                    <label>NIC</label>
-                                    <input type="text" className="form-control" value={nic} onChange={(e) => setNic(e.target.value)} />
-                                </div>
-                                <div className="form-group">
-                                    <label>Contact</label>
-                                    <input type="tel" className="form-control" onChange={(e) => setContact(e.target.value)} pattern="[0-9]{10}" title="Contact must be a 10-digit number" required/>                                </div>
-                                <div className="form-group">
-                                    <label>Email</label>
-                                    <input type="email" className="form-control" value={email} onChange={(e) => setEmail(e.target.value)} />
-                                </div>
-                                <button type="submit" className="btn btn-primary">Update Employee</button>
-                                <button type="button" className="btn btn-secondary" onClick={() => setShowUpdateModal(false)}>Close</button>
-                            </form>
-                        </div>
-                    </div>
+                <div>
+                    <button className="btn btn-primary" onClick={handleDeleteSelected}>Delete Selected</button>
                 </div>
             </div>
 
@@ -330,7 +273,7 @@ export default function Employees() {
             <table className="table">
                 <thead className="table-dark">
                     <tr>
-                        <th>#</th>
+                        <th>Select</th>
                         <th>Employee ID</th>
                         <th>First Name</th>
                         <th>Last Name</th>
@@ -343,7 +286,13 @@ export default function Employees() {
                 <tbody>
                     {filteredEmployees.map((employee, index) => (
                         <tr key={employee._id}>
-                            <td>{index + 1}</td>
+                            <td>
+                                <input
+                                    type="checkbox"
+                                    checked={isEmployeeSelected(employee.employee_Id)}
+                                    onChange={() => handleEmployeeSelect(employee.employee_Id)}
+                                />
+                            </td>
                             <td>{employee.employee_Id}</td>
                             <td>{employee.name[0].FirstName}</td>
                             <td>{employee.name[0].LastName}</td>
@@ -359,6 +308,99 @@ export default function Employees() {
                 </tbody>
             </table>
             </div>
+
+            <div className="modal-backdrop" style={{ display: showAddModal || showUpdateModal ? 'block' : 'none' }}></div>
+
+            
+<div className="modal" style={{ display: showAddModal ? 'block' : 'none' }}>
+    <div className="modal-dialog">
+        <div className="modal-content">
+            <div className="modal-header">
+                <h5 className="modal-title">Add New Employee</h5>
+                <button type="button" className="close" style={{ position: 'absolute', right: '10px', top: '10px' }} onClick={() => setShowAddModal(false)}>
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div className="modal-body">
+                <form onSubmit={handleFormSubmit}>
+                    {error && <div className="alert alert-danger" role="alert">{error}</div>}
+                    <div className="form-group">
+                    <label>Employee ID</label>
+                    <input type="text" className="form-control" onChange={(e) => setEmployeeId(e.target.value)} pattern="^EMP\d+$" title="EMPXXXX" required/>
+                <small className="form-text text-muted">EMPXXXX</small>
+                </div>
+            <div className="form-group">
+                    <label>First Name</label>
+                    <input type="text" className="form-control" onChange={(e) => setFirstName(e.target.value)} required/>
+                </div>
+            <div className="form-group">
+                <label>Last Name</label>
+                <input type="text" className="form-control" onChange={(e) => setLastName(e.target.value)} required/>
+                </div>
+            <div className="form-group">
+                <label>NIC</label>
+                <input type="text" className="form-control" onChange={(e) => setNic(e.target.value)} required/>
+                </div>
+            <div className="form-group">
+                <label>Contact</label>
+                <input type="tel" className="form-control" onChange={(e) => setContact(e.target.value)} pattern="[0-9]{10}" title="Contact must be a 10-digit number" required/>
+            </div>
+            <div className="form-group">
+                <label>Email</label>
+                <input type="email" className="form-control" onChange={(e) => setEmail(e.target.value)} required/>
+            </div>
+            <button type="submit" className="btn btn-primary">Add Employee</button>
+            <button type="button" className="btn btn-secondary" onClick={() => setShowAddModal(false)}>Close</button>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{/* Modal for updating employee */}
+<div className="modal" style={{ display: showUpdateModal ? 'block' : 'none' }}>
+    <div className="modal-dialog">
+        <div className="modal-content">
+            <div className="modal-header">
+                <h5 className="modal-title">Update Employee</h5>
+                <button type="button" className="close" style={{ position: 'absolute', right: '10px', top: '10px' }} onClick={() => setShowUpdateModal(false)}>
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div className="modal-body">
+                <form onSubmit={handleFormSubmit}>
+                    {error && <div className="alert alert-danger" role="alert">{error}</div>}
+                    <div className="form-group">
+                        <label>Employee ID</label>
+                        <input type="text" className="form-control" onChange={(e) => setEmployeeId(e.target.value)} pattern="^EMP\d+$" title="EMPXXXX" required/>
+                <small className="form-text text-muted">EMPXXXX</small>
+                    </div>
+                    <div className="form-group">
+                        <label>First Name</label>
+                        <input type="text" className="form-control" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+                    </div>
+                    <div className="form-group">
+                        <label>Last Name</label>
+                        <input type="text" className="form-control" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+                    </div>
+                    <div className="form-group">
+                        <label>NIC</label>
+                        <input type="text" className="form-control" value={nic} onChange={(e) => setNic(e.target.value)} />
+                    </div>
+                    <div className="form-group">
+                        <label>Contact</label>
+                        <input type="tel" className="form-control" onChange={(e) => setContact(e.target.value)} pattern="[0-9]{10}" title="Contact must be a 10-digit number" required/>                                </div>
+                    <div className="form-group">
+                        <label>Email</label>
+                        <input type="email" className="form-control" value={email} onChange={(e) => setEmail(e.target.value)} />
+                    </div>
+                    <button type="submit" className="btn btn-primary">Update Employee</button>
+                    <button type="button" className="btn btn-secondary" onClick={() => setShowUpdateModal(false)}>Close</button>
+                </form>
+            </div>
+        </div>
+        </div>
+        </div>
 
         </Layout>   
     );
