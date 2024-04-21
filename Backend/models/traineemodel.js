@@ -33,7 +33,12 @@ const TraineeSchema = new Schema({
     trainee_rating: {
         type: Number,
         required: true
-    } 
+    },
+
+    trainee_date: {
+        type: Date,
+        required: true
+    }
     
 })
 
