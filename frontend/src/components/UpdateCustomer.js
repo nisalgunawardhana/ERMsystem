@@ -108,7 +108,7 @@ function UpdateCustomer() {
     Update Customer
   </Button>
   <span style={{ marginLeft: '10px' }}></span>
-  <Button variant="secondary" onClick={() => navigate('/customer')}>
+  <Button variant="secondary" onClick={() => navigate('/dashboard/cashier/Customer')}>
     Back
   </Button>
 </div>
