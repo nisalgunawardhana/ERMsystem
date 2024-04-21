@@ -479,7 +479,7 @@ export default function Clothes() {
         </div>
     </div>
 
-    // Modal for delete confirmation
+    {/* Modal for delete confirmation*/}
 <div className="modal" style={{ display: selectedItemForDelete ? 'block' : 'none' }}>
     <div className="modal-dialog">
         <div className="modal-content">
