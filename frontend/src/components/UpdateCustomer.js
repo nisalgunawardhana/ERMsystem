@@ -49,7 +49,7 @@ function UpdateCustomer() {
     <Layout>
     <div className="custom-form-container">
       <div className="d-flex justify-content-end mb-3">
-        <Button variant="secondary" onClick={() => navigate('/customer')}>Back</Button>
+       
       </div>
       <h2>Update Customer</h2>
       <Form onSubmit={handleSubmit}>
@@ -103,9 +103,11 @@ function UpdateCustomer() {
             <option value="other">Other</option>
           </Form.Control>
         </Form.Group>
-        <Button variant="primary" type="submit">
+        <div className="mb-3"></div>
+        <Button variant="primary" className="me-2" type="submit">
           Update Customer
         </Button>
+        <Button variant="secondary" onClick={() => navigate('/customer')}>Back</Button>
       </Form>
     </div>
     </Layout>
