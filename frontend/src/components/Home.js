@@ -199,7 +199,7 @@ if (user) {
 
       case user.isLogisticManager:
       financeComponent = (
-        navigate('/dashboard/trainee')
+        navigate('/dashboard/logistics')
       );
       break;
 
