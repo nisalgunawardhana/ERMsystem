@@ -269,7 +269,7 @@ function CreateBill() {
 
 
   const handleBack = () => {
-    navigate("/bill/");
+    navigate("/dashboard/cashier/billing");
   };
 
   return (
