@@ -15,7 +15,8 @@ export default function Trainee() {
         trainee_email: '',
         trainee_gender: '',
         trainee_contact: '',
-        trainee_rating: ''
+        trainee_rating: '',
+        trainee_date: ''
     });
     const [meetingFormData, setMeetingFormData] = useState({
         meeting_id: '',
@@ -27,7 +28,7 @@ export default function Trainee() {
     });
     const [selectedMeetingId, setSelectedMeetingId] = useState(null);
     const [selectedTraineeId, setselectedTraineeId] = useState(null);
-    const [dailyAverageRatings, setDailyAverageRatings] = useState([]);
+    const [dailyAverages, setdailyAverage] = useState({});
     const [currentDateTime, setCurrentDateTime] = useState('');
 
 
@@ -43,7 +44,6 @@ export default function Trainee() {
         axios.get('http://localhost:8080/trainees/')
             .then(res => {
                 setTrainees(res.data);
-                calculateDailyAverageRatings(res.data);
             })
             .catch(err => {
                 console.error('Error fetching trainees:', err);
@@ -63,7 +63,6 @@ export default function Trainee() {
         axios.get('http://localhost:8080/trainees/')
             .then(res => {
                 setTrainees(res.data);
-                calculateDailyAverageRatings(res.data);
             })
             .catch(err => {
                 console.error('Error fetching trainees:', err);
@@ -71,7 +70,15 @@ export default function Trainee() {
             });
     }, []);
 
-
+    useEffect(() => {
+        axios.post('http://localhost:8080/trainees/calculate/average')
+            .then(res => {
+                setdailyAverage(res.data.dailyAverages);
+            })
+            .catch(err => {
+                console.error('Error fetching average ratings:', err);
+            });
+    }, []);
 
     function handleDelete(id) {
         axios.delete(`http://localhost:8080/meetings/delete/${id}`)
@@ -162,7 +169,8 @@ export default function Trainee() {
             trainee_email: '',
             trainee_gender: '',
             trainee_contact: '',
-            trainee_rating: ''
+            trainee_rating: '',
+            trainee_date: ''
         });
     }
 
@@ -193,14 +201,16 @@ export default function Trainee() {
     }
 
     function editTrainee(trainee) {
-        setselectedTraineeId(trainee._id); // Corrected line
-        setFormData({  // Corrected line
+        console.log(trainee);
+        setselectedTraineeId(trainee._id);
+        setFormData({  // Set form data to the selected trainee's data
             trainee_id: trainee.trainee_id,
             trainee_name: trainee.trainee_name,
             trainee_email: trainee.trainee_email,
             trainee_gender: trainee.trainee_gender,
             trainee_contact: trainee.trainee_contact,
-            trainee_rating: trainee.trainee_rating
+            trainee_rating: trainee.trainee_rating,
+            trainee_date: trainee.trainee_date
         });
         setShowForm(true);
     }
@@ -277,41 +287,6 @@ export default function Trainee() {
         trainee.trainee_name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    // Function to calculate daily average ratings
-    const calculateDailyAverageRatings = (traineesData) => {
-        const dailyRatings = {};
-        traineesData.forEach(trainee => {
-            const date = new Date(trainee.createdAt).toLocaleDateString(); // Assuming trainee data has a createdAt field
-            if (!dailyRatings[date]) {
-                dailyRatings[date] = [];
-            }
-            dailyRatings[date].push(parseFloat(trainee.trainee_rating));
-        });
-
-        const dailyAverages = {};
-        for (const date in dailyRatings) {
-            const totalRating = dailyRatings[date].reduce((acc, rating) => acc + rating, 0);
-            dailyAverages[date] = totalRating / dailyRatings[date].length;
-        }
-
-        setDailyAverageRatings(dailyAverages);
-    };
-
-    // Prepare data for Chart.js
-    const chartData = {
-        labels: Object.keys(dailyAverageRatings), // Dates as labels
-        datasets: [
-            {
-                label: 'Average Ratings',
-                data: Object.values(dailyAverageRatings), // Average ratings as data points
-                fill: false,
-                backgroundColor: 'rgba(75,192,192,0.2)',
-                borderColor: 'rgba(75,192,192,1)',
-                borderWidth: 2
-            }
-        ]
-    };
-
     useEffect(() => {
         let lineChart = null;
 
@@ -323,8 +298,11 @@ export default function Trainee() {
             }
 
             // Extracting data for the chart
-            const dates = Object.keys(dailyAverageRatings);
-            const dailyAverages = Object.values(dailyAverageRatings);
+            const dates = Object.keys(dailyAverages).map(date => {
+                const formattedDate = new Date(date).toLocaleDateString(undefined, { month: 'short', day: '2-digit' });
+                return formattedDate;
+            });
+            const dailyAverage = Object.values(dailyAverages);
 
             // Create the line chart
             lineChart = new Chart(document.getElementById('canvas-1'), {
@@ -334,7 +312,7 @@ export default function Trainee() {
                     datasets: [
                         {
                             label: 'Daily Average Ratings',
-                            data: dailyAverages, // Use daily averages as data
+                            data: dailyAverage, // Use daily averages as data
                             borderColor: 'rgba(75, 192, 192, 1)',
                             backgroundColor: 'rgba(75, 192, 192, 0.2)',
                             borderWidth: 1
@@ -360,7 +338,7 @@ export default function Trainee() {
                 lineChart.destroy();
             }
         };
-    }, [dailyAverageRatings]);
+    }, [dailyAverages]);
 
     return (
         <Layout>
@@ -418,8 +396,16 @@ export default function Trainee() {
                     </div>
                 </div>
                 <br></br>
+                <h2 className="card-title">Average Ratings Over Time</h2>
+                <br></br>
+                <div className="card">
+                    <div className="card-body">
 
-                <canvas id="canvas-1"></canvas>
+                        <canvas id="canvas-1"></canvas>
+                    </div>
+                </div>
+
+
                 <br></br>
 
                 {showForm && (
@@ -459,6 +445,10 @@ export default function Trainee() {
                                         <div className="mb-3">
                                             <label className="form-label">Ratings</label>
                                             <input type="number" className="form-control" name="trainee_rating" value={formData.trainee_rating} onChange={handleChange} required />
+                                        </div>
+                                        <div className="mb-3">
+                                            <label className="form-label">Date</label>
+                                            <input type="date" className="form-control" name="trainee_date" value={formData.trainee_date ? new Date(formData.trainee_date).toISOString().split('T')[0] : ''} onChange={handleChange} required />
                                         </div>
                                         <button type="submit" className="btn btn-primary">{selectedTraineeId ? 'Update' : 'Submit'}</button>
                                     </form>
@@ -510,11 +500,13 @@ export default function Trainee() {
                     </div>
                 )}
 
+                <h2 className="card-title">Scheduled Meetings</h2>
+                <br></br>
                 <div className="row">
                     <div className="col-md-12">
                         <div className="card">
                             <div className="card-body">
-                                <h4 className="card-title">Scheduled Meetings</h4>
+
                                 <br></br>
                                 <div className="table-responsive">
                                     <table className="table">
@@ -558,7 +550,7 @@ export default function Trainee() {
                         <div className="card">
                             <div className="card-body">
                                 <div className="d-flex justify-content-between align-items-center">
-                                    <h4 className="card-title">Trainees' Details</h4>
+                                    <h3 className="card-title">Trainees' Details</h3>
                                     <div className="col-sm-4">
                                         <input
                                             type="text"
