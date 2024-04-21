@@ -235,10 +235,10 @@ function AddProfit() {
                                                     <i className="bi bi-calculator me-2"></i>Epf and Etf
                                                 </label>
                                                 <div className="row">
-                                                    <div className="col-md-9">
+                                                    <div className="col-md-8">
                                                         <input type="text" className="form-control" id="other" value={(totalEPF + totalETF).toFixed(2)} onChange={(e) => setOther(e.target.value)} readOnly />
                                                     </div>
-                                                    <div className="col-md-3">
+                                                    <div className="col-md-4">
                                                         <button type="button" className="btn btn-outline-primary" onClick={handleShow}><i className="ri-add-line"></i>Add</button>
                                                     </div>
                                                 </div>

@@ -512,7 +512,7 @@ function TaxDetails() {
                                             <div className="row mb-3">
                                                 <div className="col">
                                                     <div className="btn-group">
-                                                        <button type="submit" className="btn btn-dark mb-3" style={{ marginTop: '10px', width: '200px' }}><i className="ri-add-line"></i>  Add Tax Document</button>
+                                                        <button type="submit" className="btn btn-dark mb-3" style={{ marginTop: '10px', width: '200px' }}><i className="ri-add-line"></i>Add Tax Document</button>
                                                     </div>
                                                 </div>
                                             </div>

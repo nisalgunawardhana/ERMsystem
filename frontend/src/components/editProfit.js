@@ -227,7 +227,7 @@ function EditProfit() {
                                             <label htmlFor="sales" className="form-label">
                                                 <i className="bi bi-currency-dollar me-2"></i>Sales income
                                             </label>
-                                            <input type="text" className="form-control" id="sales" name="Sales_income" value={totalAmount} onChange={handleChanges} readOnly />
+                                            <input type="text" className="form-control" id="sales" name="Sales_income" value={totalAmount.toFixed(2)} onChange={handleChanges} readOnly />
                                         </div>
                                         <div className="mb-3">
                                             <label htmlFor="supplier" className="form-label">
@@ -254,10 +254,10 @@ function EditProfit() {
                                                 <i className="bi bi-calculator me-2"></i>Epf and Etf
                                             </label>
                                             <div className="row">
-                                                <div className="col-md-9">
-                                                    <input type="text" className="form-control" id="epfetf" name="EPF_ETF" value={total} onChange={handleChanges} readOnly />
+                                                <div className="col-md-8">
+                                                    <input type="text" className="form-control" id="epfetf" name="EPF_ETF" value={total.toFixed(2)} onChange={handleChanges} readOnly />
                                                 </div>
-                                                <div className="col-md-3">
+                                                <div className="col-md-4">
                                                     <button type="button" className="btn btn-outline-primary" onClick={handleShow}><i className="ri-add-line"></i>Add</button>
                                                 </div>
                                             </div>
@@ -315,7 +315,7 @@ function EditProfit() {
                                 <div className="row">
                                     <div>
                                         <div className="mb-3">
-                                            <input type="text" className="form-control" id="salary" name="Date" value={totalSalary} />
+                                            <input type="text" className="form-control" id="salary" name="Date" value={totalSalary.toFixed(2)} />
                                         </div>
                                     </div>
                                 </div>
@@ -323,13 +323,13 @@ function EditProfit() {
                                     <label htmlFor="epf" className="form-label">
                                         <i className="bi bi-calculator me-2"></i>EPF Value
                                     </label>
-                                    <input type="text" className="form-control" id="epf" value={totalEPF} />
+                                    <input type="text" className="form-control" id="epf" value={totalEPF.toFixed(2)} />
                                 </div>
                                 <div className="mb-3">
                                     <label htmlFor="etf" className="form-label">
                                         <i className="bi bi-calculator me-2"></i>ETF Value
                                     </label>
-                                    <input type="text" className="form-control" id="etf" value={totalETF} />
+                                    <input type="text" className="form-control" id="etf" value={totalETF.toFixed(2)} />
                                 </div>
                                 {/* Submit button */}
                                 <button type="submit" className="btn btn-outline-primary" style={{ marginLeft: '180px' }}>
