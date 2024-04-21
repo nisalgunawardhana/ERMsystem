@@ -83,7 +83,7 @@ const CustomerR = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const { customer_id, customer_name, email, point, gender } = customerData;
+            const { customer_id, customer_name, email, gender } = customerData;
             if (!customer_id || !customer_name || !email  || !gender) {
                 console.error("All fields are required");
                 return;
