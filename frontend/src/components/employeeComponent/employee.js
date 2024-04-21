@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Layout from '../Layout';
+import { Modal, Button, Form } from 'react-bootstrap';
 
 export default function Employees() {
     
     const [employees, setEmployees] = useState([]);
     const [selectedEmployees, setSelectedEmployees] = useState([]);
-    const [selectAll, setSelectAll] = useState(false); 
     const [searchQuery, setSearchQuery] = useState('');
     const [showAddModal, setShowAddModal] = useState(false);
     const [showUpdateModal, setShowUpdateModal] = useState(false);
@@ -18,6 +18,7 @@ export default function Employees() {
     const [contact, setContact] = useState('');
     const [email, setEmail] = useState('');
     const [error, setError] = useState('');
+    const [selectAll, setSelectAll] = useState(false);
 
 
     useEffect(() => {
@@ -31,6 +32,7 @@ export default function Employees() {
     }, []);
 
     const handleDeleteEmployee = (id) => {
+        console.log("Deleting employee with ID:", id); // Add this line
         axios.delete(`http://localhost:8080/employee/delete/${id}`)
             .then(() => {
                 // Fetch the updated list of employees from the server after deletion
@@ -80,6 +82,13 @@ export default function Employees() {
                 return;
             }
 
+            // Check if the Employee ID already exists
+            const existingEmployee = employees.find(emp => emp.employee_Id === employeeId);
+            if (existingEmployee && existingEmployee._id !== selectedEmployee?._id) {
+                setError('Employee ID already exists. Please choose a unique Employee ID.');
+                return;
+            }
+
             if (selectedEmployee) {
                 await axios.put(`http://localhost:8080/employee/update/${selectedEmployee._id}`, {
                     employee_Id: employeeId,
@@ -102,6 +111,14 @@ export default function Employees() {
                 setShowAddModal(false);
             }
 
+            setEmployeeId('');
+            setFirstName('');
+            setLastName('');
+            setNic('');
+            setContact('');
+            setEmail('');
+
+            // Fetch the updated list of employees from the server
             const res = await axios.get('http://localhost:8080/employee/');
             setEmployees(res.data);
         } catch (err) {
@@ -185,9 +202,7 @@ export default function Employees() {
                         </tbody>
                     </table>
                     
-                    <div class="back-button">
-                        <button onclick="window.close()" class="btn btn-secondary">Back</button>
-                    </div>
+                
                 </body>
             </html>
         `);
@@ -210,11 +225,24 @@ export default function Employees() {
         setSelectAll(prevState => !prevState);
     };
 
-    const handleDeleteSelected = () => {
-        selectedEmployees.forEach(employeeId => {
-            handleDeleteEmployee(employeeId);
-        });
+    // Function to delete all selected employees
+    const handleDeleteAll = async () => {
+        try {
+            // Send a request to delete multiple employees
+            const response = await axios.delete('http://localhost:8080/employee/deleteMultiple', {
+                data: { employeeId: selectedEmployees }
+            });
+            // Clear selected employees after deletion
+            setSelectedEmployees([]);
+            // Reset Select All checkbox state
+            setSelectAll(false);
+            console.log(response.data.message); // Log success message
+        } catch (err) {
+            console.error("Error deleting employees:", err);
+        }
     };
+
+   
 
     
 
@@ -244,26 +272,31 @@ export default function Employees() {
                     <div className="card">
                         <div className="card-body">
                             <h5 className="card-title">Generate Report</h5>
-                            <p className="card-text">Here's the comprehensive report summarizing all trainees,</p>
+                            <p className="card-text">Here's the comprehensive report summarizing all Employee,</p>
                             <button onClick={generateReport} className="btn btn-primary">Generate Report</button>
                         </div>
                     </div>
                 </div>
           
-    <div className="col-md-6 mb-3">
-        <div className="d-flex justify-content-between align-items-center">
-            <div className="flex-grow-1">
-                <input type="text" className="form-control" placeholder="Search by Employee ID" value={searchQuery} onChange={handleSearch} />
-            </div>
-            <div>
-                <button className="btn btn-primary" onClick={handleDeleteSelected}>Delete Selected</button>
-            </div>
-        </div>
-    </div>
+                <div className="col-md-6 mb-3">
+                    <div className="d-flex justify-content-between align-items-center">
+                        <div className="flex-grow-1">
+                            <input type="text" className="form-control" placeholder="Search by Employee ID" value={searchQuery} onChange={handleSearch} />
+                        </div>
+                        <div>
+                            <button className="btn btn-primary" onClick={handleDeleteAll} style={{ margin: '0 5px' }}>Delete Selected</button>
+                            <button className="btn btn-secondary ml-2" onClick={handleSelectAll}>
+                                {selectAll ? 'Deselect All' : 'Select All'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
 
             {/* Employees table */}
+    <div className="card">
+        <div className="card-body">        
             <table className="table">
-                <thead className="table-dark">
+                <thead className="table"  text-align ="center">
                     <tr>
                         <th>Select</th>
                         <th>Employee ID</th>
@@ -302,7 +335,8 @@ export default function Employees() {
             </div>
 
             <div className="modal-backdrop" style={{ display: showAddModal || showUpdateModal ? 'block' : 'none' }}></div>
-
+</div>
+</div>
             
 <div className="modal" style={{ display: showAddModal ? 'block' : 'none' }}>
     <div className="modal-dialog">
@@ -314,36 +348,37 @@ export default function Employees() {
                 </button>
             </div>
             <div className="modal-body">
-                <form onSubmit={handleFormSubmit}>
-                    {error && <div className="alert alert-danger" role="alert">{error}</div>}
-                    <div className="form-group">
-                    <label>Employee ID</label>
-                    <input type="text" className="form-control" onChange={(e) => setEmployeeId(e.target.value)} pattern="^EMP\d+$" title="EMPXXXX" required/>
-                <small className="form-text text-muted">EMPXXXX</small>
-                </div>
-            <div className="form-group">
-                    <label>First Name</label>
-                    <input type="text" className="form-control" onChange={(e) => setFirstName(e.target.value)} required/>
-                </div>
-            <div className="form-group">
-                <label>Last Name</label>
-                <input type="text" className="form-control" onChange={(e) => setLastName(e.target.value)} required/>
-                </div>
-            <div className="form-group">
-                <label>NIC</label>
-                <input type="text" className="form-control" onChange={(e) => setNic(e.target.value)} required/>
-                </div>
-            <div className="form-group">
-                <label>Contact</label>
-                <input type="tel" className="form-control" onChange={(e) => setContact(e.target.value)} pattern="[0-9]{10}" title="Contact must be a 10-digit number" required/>
-            </div>
-            <div className="form-group">
-                <label>Email</label>
-                <input type="email" className="form-control" onChange={(e) => setEmail(e.target.value)} required/>
-            </div>
-            <button type="submit" className="btn btn-primary">Add Employee</button>
-            <button type="button" className="btn btn-secondary" onClick={() => setShowAddModal(false)}>Close</button>
-            </form>
+            <form onSubmit={handleFormSubmit}>
+    {error && <div className="alert alert-danger" role="alert">{error}</div>}
+    <div className="form-group">
+        <label>Employee ID</label>
+        <input type="text" className="form-control" value={employeeId} onChange={(e) => setEmployeeId(e.target.value)} pattern="^EMP\d+$" title="EMPXXXX" required />
+        <small className="form-text text-muted">EMPXXXX</small>
+    </div>
+    <div className="form-group">
+        <label>First Name</label>
+        <input type="text" className="form-control" value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
+    </div>
+    <div className="form-group">
+        <label>Last Name</label>
+        <input type="text" className="form-control" value={lastName} onChange={(e) => setLastName(e.target.value)} required />
+    </div>
+    <div className="form-group">
+        <label>NIC</label>
+        <input type="text" className="form-control" value={nic} onChange={(e) => setNic(e.target.value)} required />
+    </div>
+    <div className="form-group">
+        <label>Contact</label>
+        <input type="tel" className="form-control" value={contact} onChange={(e) => setContact(e.target.value)} pattern="[0-9]{10}" title="Contact must be a 10-digit number" required />
+    </div>
+    <div className="form-group">
+        <label>Email</label>
+        <input type="email" className="form-control" value={email} onChange={(e) => setEmail(e.target.value)} required />
+    </div>
+    <button type="submit" className="btn btn-primary">Add Employee</button>
+    <button type="button" className="btn btn-secondary" onClick={() => setShowAddModal(false)}>Close</button>
+</form>
+
             </div>
         </div>
     </div>
@@ -364,7 +399,7 @@ export default function Employees() {
                     {error && <div className="alert alert-danger" role="alert">{error}</div>}
                     <div className="form-group">
                         <label>Employee ID</label>
-                        <input type="text" className="form-control" onChange={(e) => setEmployeeId(e.target.value)} pattern="^EMP\d+$" title="EMPXXXX" required/>
+                        <input type="text" className="form-control" value={employeeId} onChange={(e) => setEmployeeId(e.target.value)} pattern="^EMP\d+$" title="EMPXXXX" required/>
                 <small className="form-text text-muted">EMPXXXX</small>
                     </div>
                     <div className="form-group">
@@ -381,7 +416,7 @@ export default function Employees() {
                     </div>
                     <div className="form-group">
                         <label>Contact</label>
-                        <input type="tel" className="form-control" onChange={(e) => setContact(e.target.value)} pattern="[0-9]{10}" title="Contact must be a 10-digit number" required/>                                </div>
+                        <input type="tel" className="form-control" value={contact} onChange={(e) => setContact(e.target.value)} pattern="[0-9]{10}" title="Contact must be a 10-digit number" required/>                                </div>
                     <div className="form-group">
                         <label>Email</label>
                         <input type="email" className="form-control" value={email} onChange={(e) => setEmail(e.target.value)} />
