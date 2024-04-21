@@ -109,7 +109,7 @@ if (user) {
                         <i className="ri-store-3-fill function-icon" style={{ fontSize: '40px', color: '#080a3c' }}></i>
                       </div>
                       <div>
-                        <h2 className="text-center mb-3" style={{ fontSize: '24px', color: '#080a3c' }}>Supplier</h2>
+                        <h2 className="text-center mb-3" style={{ fontSize: '24px', color: '#080a3c' }}>Suppliers</h2>
                       </div>
                     </div>
                   </a>
@@ -123,7 +123,7 @@ if (user) {
                         <i className="bi bi-person-lines-fill function-icon" style={{ fontSize: '40px', color: '#080a3c' }}></i>
                       </div>
                       <div>
-                        <h2 className="text-center mb-3" style={{ fontSize: '24px', color: '#080a3c' }}>User</h2>
+                        <h2 className="text-center mb-3" style={{ fontSize: '24px', color: '#080a3c' }}>Users</h2>
                       </div>
                     </div>
                   </a>
@@ -137,7 +137,7 @@ if (user) {
                         <i className="bi bi-people-fill function-icon" style={{ fontSize: '40px', color: '#080a3c' }}></i>
                       </div>
                       <div>
-                        <h2 className="text-center mb-3" style={{ fontSize: '24px', color: '#080a3c' }}>Employee</h2>
+                        <h2 className="text-center mb-3" style={{ fontSize: '24px', color: '#080a3c' }}>Employees</h2>
                       </div>
                     </div>
                   </a>
@@ -151,7 +151,7 @@ if (user) {
                         <i className="bi bi-person-check-fill function-icon" style={{ fontSize: '40px', color: '#080a3c' }}></i>
                       </div>
                       <div>
-                        <h2 className="text-center mb-3" style={{ fontSize: '24px', color: '#080a3c' }}>Customer</h2>
+                        <h2 className="text-center mb-3" style={{ fontSize: '24px', color: '#080a3c' }}>Customers</h2>
                       </div>
                     </div>
                   </a>
@@ -177,6 +177,7 @@ if (user) {
       );
       break;
 
+      
       case user.isCashier:
       cashierComponent = (
         navigate('/dashboard/cashier')
@@ -214,128 +215,7 @@ if (user) {
 
       case user.isStaffManager:
       staffComponent = (
-        <div className="row">
-
-            {/* billing */}
-            <div className="col-md-4">
-              <div className="card mb-3" 
-                  style={{ background: `linear-gradient(to right, rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8), rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8))`, 
-                  color: 'white', 
-                  borderRadius: '20px',
-                  filter: 'blur(3px)',
-                   }}>
-                <div className="card-body">
-                  <h5 className="card-title">Billing</h5>
-                  <Link to={``} className="btn btn-primary" style={{ color: '#fff' }}>Go to Billing</Link>
-                </div>
-              </div>
-            </div>
-
-            {/* finance */}
-            <div className="col-md-4">
-              <div className="card mb-3" 
-                  style={{ background: `linear-gradient(to right, rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8), rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8))`, 
-                  color: 'white', 
-                  borderRadius: '20px',
-                  filter: 'blur(3px)' 
-                  }}>
-                <div className="card-body">
-                  <h5 className="card-title">Finance</h5>
-                  <Link to={``} className="btn btn-primary" style={{ color: '#fff' }}>Go to Finance</Link>
-                </div>
-              </div>
-            </div>
-
-            {/* customer */}
-            <div className="col-md-4">
-              <div className="card mb-3" 
-                  style={{ background: `linear-gradient(to right, rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8), rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8))`, 
-                  color: 'white', 
-                  borderRadius: '20px',
-                  filter: 'blur(3px)' 
-                  }}>
-                <div className="card-body">
-                  <h5 className="card-title">Customer</h5>
-                  <Link to={``} className="btn btn-primary" style={{ color: '#fff' }}>Go to Customer</Link>
-                </div>
-              </div>
-            </div>
-
-            {/* employee */}
-            <div className="col-md-4">
-              <div className="card mb-3" 
-                  style={{ background: `linear-gradient(to right, rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8), rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8))`, 
-                  color: 'white', 
-                  borderRadius: '20px',
-                  }}>
-                <div className="card-body">
-                  <h5 className="card-title">Employee</h5>
-                  <Link to={`/employee`} className="btn btn-primary" style={{ color: '#fff' }}>Go to Employee</Link>
-                </div>
-              </div>
-            </div>
-
-            {/* users */}
-            <div className="col-md-4">
-              <div className="card mb-3" 
-                  style={{ background: `linear-gradient(to right, rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8), rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8))`, 
-                  color: 'white', 
-                  borderRadius: '20px',
-                  filter: 'blur(3px)' 
-                  }}>
-                <div className="card-body">
-                  <h5 className="card-title">Users</h5>
-                  <Link to={``} className="btn btn-primary" style={{ color: '#fff' }}>Go to Users</Link>
-                </div>
-              </div>
-            </div>
-
-            {/* supplier */}
-            <div className="col-md-4">
-              <div className="card mb-3" 
-                  style={{ background: `linear-gradient(to right, rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8), rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8))`, 
-                  color: 'white', 
-                  borderRadius: '20px',
-                  filter: 'blur(3px)' 
-                  }}>
-                <div className="card-body">
-                  <h5 className="card-title">Supplier</h5>
-                  <Link to={``} className="btn btn-primary" style={{ color: '#fff' }}>Go to Supplier</Link>
-                </div>
-              </div>
-            </div>
-
-            {/* stock */}
-            <div className="col-md-4">
-              <div className="card mb-3"    
-                  style={{ background: `linear-gradient(to right, rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8), rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8))`, 
-                  color: 'white', 
-                  borderRadius: '20px',
-                  filter: 'blur(3px)' 
-                  }}>
-                <div className="card-body">
-                  <h5 className="card-title">Stock</h5>
-                  <Link to={``} className="btn btn-primary" style={{ color: '#fff' }}>Go to Stock</Link>
-                </div>
-              </div>
-            </div>
-
-            {/* trainee */}
-            <div className="col-md-4">
-              <div className="card mb-3" 
-                  style={{ background: `linear-gradient(to right, rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8), rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.8))`, 
-                  color: 'white', 
-                  borderRadius: '20px',
-                  filter: 'blur(3px)' 
-                  }}>
-                <div className="card-body">
-                  <h5 className="card-title">Staff Training</h5>
-                  <Link to={``} className="btn btn-primary" style={{ color: '#fff' }}>Go to Staff Training</Link>
-                </div>
-              </div>
-            </div>
-
-        </div>
+        navigate('/employee')
       );
       break;
 
