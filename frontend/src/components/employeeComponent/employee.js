@@ -250,12 +250,6 @@ export default function Employees() {
         }
     };
 
-   
-
-    
-
-    
-
     return (
         <Layout>
             <div className="container">
@@ -275,42 +269,45 @@ export default function Employees() {
                     </div>
     </div>
          {/* Page title */}
-         <h2 className="text-left mb-4">Employee Dashboard</h2>
-    <div className="col-lg-6 col-md-6 mb-3">
+         <h2 className="text-left mb-4">Employee Dashboard</h2>   
+         <div className="row">
+    <div className="col-lg-7 col-md-3 mb-3">
         <div className="card shadow" style={{ backgroundColor: 'white' }}>
-                <div className="card-statistic-3 p-4">
-                    <div className="d-flex justify-content-between align-items-center">
+            <div className="card-statistic-3 p-4">
+                <div className="d-flex justify-content-between align-items-center">
                     <div className="col-8">
                         <h1 className="d-flex align-items-center mb-5" style={{ color: 'black' }}>
                             {employees.length}
                         </h1>  
-                        <h5 className="card-title" style={{ color: 'black', marginTop: '25px' }}>Total Employee</h5>
+                        <h3 className="card-title" style={{ color: 'black', marginTop: '25px' }}>Total Employee</h3>
                     </div> 
                     <i className="bi bi-person fs-1 mb-3" style={{ color: 'black' }}></i>
                 </div>
                 <div className="progress mt-1" data-height="8" style={{ height: '8px' }}>
                     <div className="progress-bar bg-orange" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '75%', backgroundColor: 'orange' }}></div>
-                        </div>         
-                            <button onClick={handleOpenAddModal} className="btn btn-outline-success"><i class="bi bi-plus-circle-fill me-2"></i>Add New Employee</button>
-                        </div>
-                        
+                </div>   
+                <br />
+                <button onClick={handleOpenAddModal} className="btn btn-outline-success"><i class="bi bi-plus-circle-fill me-2"></i>Add New Employee</button>
             </div>
         </div>
+    </div>
         
-        <div className="col-lg-6 col-md-6 mb-3">
+    <div className="col-lg-5 col-md-6 mb-3">
         <div className="card shadow" style={{ backgroundColor: 'white' }}>
-                <div className="card-statistic-3 p-4">
-                    <div className="d-flex justify-content-between align-items-center">
+            <div className="card-statistic-3 p-4">
+                <div className="d-flex justify-content-between align-items-center">
                     <div className="col-8">
-                            <h5 className="card-title">Generate Report</h5>
+                        <h5 className="card-title">Generate Report</h5>
                             <p className="card-text">Here's the comprehensive report summarizing all Employee,</p>
-                            <button onClick={generateReport} className="btn btn-outline-danger">Generate Report</button>
-                        </div>
+                        <button onClick={generateReport} className="btn btn-outline-danger"><i className="bi bi-file-earmark-bar-graph-fill me-2"></i>Generate Report</button>
                     </div>
                 </div>
             </div>
-         </div>
-          
+        </div>
+    </div>
+</div>
+
+    
                 <div className="col-md-6 mb-3">
                     <div className="d-flex justify-content-between align-items-center">
                         <div className="flex-grow-1">
