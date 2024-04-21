@@ -84,18 +84,18 @@ const CustomerR = () => {
         e.preventDefault();
         try {
             const { customer_id, customer_name, email, point, gender } = customerData;
-            if (!customer_id || !customer_name || !email || !point || !gender) {
+            if (!customer_id || !customer_name || !email  || !gender) {
                 console.error("All fields are required");
                 return;
             }
-            await axios.post("http://localhost:8080/customer/add", { customer_id, customer_name, email, point, gender });
+            await axios.post("http://localhost:8080/customer/add", { customer_id, customer_name, email, point:0, gender });
             setShowModal(false);
             fetchCustomers();
             setCustomerData({
                 customer_id: "",
                 customer_name: "",
                 email: "",
-                point: "",
+                point: 0,
                 gender: "Male" // Reset gender to Male after adding
             });
         } catch (error) {
