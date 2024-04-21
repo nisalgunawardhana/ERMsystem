@@ -353,7 +353,7 @@ export default function Clothes() {
                     {/* Breadcrumb navigation */}
                     <nav className="col-md-6" aria-label="breadcrumb">
                         <ol className="breadcrumb">
-                            <li class="breadcrumb-item"><a href="/dashboard/stock">Stock Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="/dashboard/logistics/stock">Stock Dashboard</a></li>
                             <li class="breadcrumb-item active" aria-current="page">Clothes</li>
                         </ol>
                     </nav>

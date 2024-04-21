@@ -38,7 +38,7 @@ const StockManagement = () => {
                                     Add new clothes items to the stock.
                                     
                                 </Card.Text>
-                                <Link to={`/dashboard/stock/clothes`} className="btn btn-dark" style={{ margin: '0 5px' }}>Go To Clothes</Link>
+                                <Link to={`/dashboard/logistics/stock/clothes`} className="btn btn-dark" style={{ margin: '0 5px' }}>Go To Clothes</Link>
                                 <div className="progress mt-1" data-height="8" style={{ height: '8px' }}>
                                         <div className="progress-bar bg-orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '75%', backgroundColor: 'orange' }}></div>
                                     </div>
@@ -52,7 +52,7 @@ const StockManagement = () => {
                                 <Card.Text>
                                     Add new toy items to the stock.
                                 </Card.Text>
-                                <Link to={`/dashboard/stock/toys`} className="btn btn-dark" style={{ margin: '0 5px' }}>Go To Toys</Link>
+                                <Link to={`/dashboard/logistics/stock/toys`} className="btn btn-dark" style={{ margin: '0 5px' }}>Go To Toys</Link>
                                 <div className="progress mt-1" data-height="8" style={{ height: '8px' }}>
                                         <div className="progress-bar bg-orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '75%', backgroundColor: 'orange' }}></div>
                                     </div>
