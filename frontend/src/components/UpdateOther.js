@@ -68,7 +68,7 @@ export default function UpdateOther() {
         axios.put(`http://localhost:8080/otherExpense/update/${id}`, expense)
             .then((res) => {
                 console.log(res.data);
-                navigate('/otherExpense');
+                navigate('/dashboard/finance/otherExpense');
             })
             .catch((err) => {
                 console.log(err);

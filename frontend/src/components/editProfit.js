@@ -183,7 +183,7 @@ function EditProfit() {
         axios.put(`http://localhost:8080/profit/update/${Profit._id}`, newProfit)
             .then((res) => {
                 console.log(res.data);
-                navigate(`/profit/get/${Profit.Profit_ID}`);
+                navigate(`/dashboard/finance/profit`);
             })
             .catch((err) => {
                 console.log(err);

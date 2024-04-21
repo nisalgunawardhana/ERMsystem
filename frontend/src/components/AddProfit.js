@@ -123,7 +123,7 @@ function AddProfit() {
                 setOther(0);
                 setDate("");
                 setDesc("");
-                navigate(`/profit/get/${Profit_ID}`);
+                navigate(`/dashboard/finance/profit`);
             }
         } catch (error) {
             console.error("Error:", error);
