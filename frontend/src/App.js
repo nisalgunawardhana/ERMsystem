@@ -27,14 +27,15 @@ import UpdatePurchaseOrder from './components/supplierComponents/updatePO';
 import CustomerR from './components/Customer';
 import UpdateCustomer from './components/UpdateCustomer';
 import Trainees from'./components/Trainee';
+
 //billing
 import CashierDashboard from './components/cashierDashboard';
 import Bill from './components/billingComponents/bill';
 import CreateBill from './components/billingComponents/createBill';
 import UpdateBill from './components/billingComponents/updateBill';
+
 //discount
 import Discounts from './components/discountComponents/Discount';
-import Employees from './components/employeeComponent/employee';
 import Stock from './components/stockComponent/stock';
 import Clothe from './components/stockComponent/clothes';
 import Toy from './components/stockComponent/toys';
@@ -49,6 +50,9 @@ import { Toaster } from 'react-hot-toast'
 import ProtectedRoute from './components/ProtectedRoute';
 import SystemUsers from './pages/SystemUsers';
 import Notes from './pages/Notes';
+
+//employee management
+import Employees from './components/employeeComponent/employee';
 import Attendance from './components/employeeComponent/attendancelist';
 import Attendform from './components/employeeComponent/attendance';
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Layout from '../Layout';
 
-export default function Trainee() {
+export default function Employee() {
     const [employeeIds, setEmployeeIds] = useState([]);
     const [selectedDate, setSelectedDate] = useState('');
     const [link, setLink] = useState('http://localhost:3000/dashboard/employee/attendence/form');
@@ -33,8 +33,8 @@ export default function Trainee() {
     }, [selectedDate]);
     const copyLink = () => {
         navigator.clipboard.writeText(link);
-        alert('Link copied to clipboard!');
-      };
+        alert('Link copied to successfully!');
+    };
 
     return (
         <Layout>
@@ -49,7 +49,7 @@ export default function Trainee() {
                                     <label htmlFor="dateInput" className="form-label">Select Date:</label>
                                     <input type="date" id="dateInput" className="form-control" value={selectedDate} onChange={handleDateChange} />
                                 </div>
-                                <button className="btn btn-primary" onClick={fetchEmployeeIds}>Fetch Employee IDs</button>
+                                <button className="btn btn-primary" onClick={fetchEmployeeIds}>Show Employee Attendance</button>
                             </div>
                         </div>
                     </div>
@@ -72,18 +72,18 @@ export default function Trainee() {
                 </div>
 
                 <div className="card m-3">
-      <div className="card-body">
-        <p className="card-text">This is the content of your card.</p>
-      </div>
-      <div className="card-footer">
-        <div className="input-group">
-          <input type="text" className="form-control" value={link} readOnly />
-          <div className="input-group-append">
-            <button className="btn btn-primary" onClick={copyLink}>Copy Link</button>
-          </div>
-        </div>
-      </div>
-    </div>
+                    <div className="card-body">
+                        <p className="card-text">This is the Employee Taken Link</p>
+                    </div>
+                    <div className="card-footer">
+                        <div className="input-group">
+                            <input type="text" className="form-control" value={link} readOnly />
+                            <div className="input-group-append">
+                                <button className="btn btn-primary" onClick={copyLink}>Copy Link</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </Layout>
     );
