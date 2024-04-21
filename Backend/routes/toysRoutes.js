@@ -98,7 +98,7 @@ router.route("/:id").get((req, res) => {
 
 // nisal 
 
-router.route("/quantitys/:item_code").get(async (req, res) => {
+router.route("/price/:item_code").get(async (req, res) => {
     let itm_code = req.params.item_code;
 
     try {
@@ -107,8 +107,8 @@ router.route("/quantitys/:item_code").get(async (req, res) => {
 
         if (foundtoys) {
             // Retrieve and send the quantitys of the found toys
-            const quantitys = foundtoys.quantity;
-            res.status(200).send({ quantitys });
+            const price = foundtoys.price;
+            res.status(200).send({ price });
         } else {
             res.status(404).send({ status: "toys not found" });
         }

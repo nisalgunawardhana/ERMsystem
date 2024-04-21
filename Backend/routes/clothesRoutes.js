@@ -101,7 +101,7 @@ router.route("/:id").get((req, res) => {
 
 
 
-router.route("/quantitys/:item_code").get(async (req, res) => {
+router.route("/price/:item_code").get(async (req, res) => {
     let itm_code = req.params.item_code;
 
     try {
@@ -110,8 +110,8 @@ router.route("/quantitys/:item_code").get(async (req, res) => {
 
         if (foundclothes) {
             // Retrieve and send the quantitys of the found clothes
-            const quantitys = foundclothes.quantity;
-            res.status(200).send({ quantitys });
+            const price = foundclothes.price;
+            res.status(200).send({ price });
         } else {
             res.status(404).send({ status: "clothes not found" });
         }

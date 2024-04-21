@@ -23,18 +23,49 @@ function CreateBill() {
 
 
   useEffect(() => {
-    if (itemCode) {
-      axios.get(`http://localhost:8080/item/price/${itemCode}`)
-        .then(response => {
+  if (itemCode) {
+    axios.get(`http://localhost:8080/clothes/price/${itemCode}`)
+      .then(response => {
+        if (response.data.price !== undefined) {
           setItemPrice(response.data.price);
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    } else {
-      setItemPrice(0);
-    }
-  }, [itemCode]);
+        } else {
+          // If item is not found in clothes database, fetch from toys database
+          axios.get(`http://localhost:8080/toys/price/${itemCode}`)
+            .then(response => {
+              if (response.data.price !== undefined) {
+                setItemPrice(response.data.price);
+              } else {
+                console.log("Item not found in both databases");
+                setItemPrice(0);
+              }
+            })
+            .catch(error => {
+              console.log("Error fetching item price from toys database:", error);
+              setItemPrice(0);
+            });
+        }
+      })
+      .catch(error => {
+        console.log("Error fetching item price from clothes database:", error);
+        // If an error occurs while fetching from clothes database, try fetching from toys database
+        axios.get(`http://localhost:8080/toys/price/${itemCode}`)
+          .then(response => {
+            if (response.data.price !== undefined) {
+              setItemPrice(response.data.price);
+            } else {
+              console.log("Item not found in both databases");
+              setItemPrice(0);
+            }
+          })
+          .catch(error => {
+            console.log("Error fetching item price from toys database:", error);
+            setItemPrice(0);
+          });
+      });
+  } else {
+    setItemPrice(0);
+  }
+}, [itemCode]);
 
   useEffect(() => {
     // Fetch discount rules when the component mounts
@@ -130,6 +161,26 @@ function CreateBill() {
       items: convertedItems,
       total_amount: totalAmount
     };
+    items.forEach(item => {
+  axios.put(`http://localhost:8080/clothes/decrement/${item.code}`, { quantity: item.quantity })
+    .then(response => {
+      console.log(`Stock updated for item ${item.code} in clothes database`);
+    })
+    .catch(error => {
+      console.error(`Error updating stock for item ${item.code} in clothes database:`, error);
+    });
+});
+
+// Update stock in toys database
+items.forEach(item => {
+  axios.put(`http://localhost:8080/toys/decrement/${item.code}`, { quantity: item.quantity })
+    .then(response => {
+      console.log(`Stock updated for item ${item.code} in toys database`);
+    })
+    .catch(error => {
+      console.error(`Error updating stock for item ${item.code} in toys database:`, error);
+    });
+});
 
     axios
       .get(`http://localhost:8080/customer/calculate-loyalty-points/${customer_id}`)
@@ -158,6 +209,8 @@ function CreateBill() {
         console.error("Error while submitting form:", err);
         alert("Error occurred while submitting the form. Please try again later.");
       });
+
+      
   };
 
 
