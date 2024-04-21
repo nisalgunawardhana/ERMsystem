@@ -440,7 +440,7 @@ export default function Trainee() {
                                         </div>
                                         <div className="mb-3">
                                             <label className="form-label">Contact No</label>
-                                            <input type="text" className="form-control" name="trainee_contact" value={formData.trainee_contact} onChange={handleChange} required />
+                                            <input type="number" className="form-control" name="trainee_contact" pattern="[0-9]{10}" value={formData.trainee_contact} onChange={handleChange} required />
                                         </div>
                                         <div className="mb-3">
                                             <label className="form-label">Ratings</label>
