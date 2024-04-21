@@ -7,7 +7,7 @@ router.route("/add").post((req,res)=>{
     const trainee_gender = req.body.trainee_gender;
     const trainee_contact = req.body.trainee_contact;
     const trainee_rating = req.body.trainee_rating;
-    const trainee_email = req.body.trainee_email; // Add trainee_email
+    const trainee_email = req.body.trainee_email; 
 
     const newTrainee = new trainees({
         trainee_id,
@@ -15,7 +15,7 @@ router.route("/add").post((req,res)=>{
         trainee_gender,
         trainee_contact,
         trainee_rating,
-        trainee_email // Include trainee_email in the new trainee object
+        trainee_email 
     })
     
     newTrainee.save().then(()=>{
@@ -35,7 +35,7 @@ router.route("/").get((req,res)=>{
 
 router.route("/update/:id").put(async (req,res)=>{
     let traineeId = req.params.id;
-    const {trainee_id, trainee_name, trainee_gender, trainee_contact, trainee_rating, trainee_email} = req.body; // Include trainee_email
+    const {trainee_id, trainee_name, trainee_gender, trainee_contact, trainee_rating, trainee_email} = req.body; 
 
     const updateTrainees = {
         trainee_id,
@@ -43,7 +43,7 @@ router.route("/update/:id").put(async (req,res)=>{
         trainee_gender,
         trainee_contact,
         trainee_rating,
-        trainee_email // Include trainee_email in the update object
+        trainee_email 
     }
 
     const update = await trainees.findByIdAndUpdate(traineeId, updateTrainees).then(() => {
