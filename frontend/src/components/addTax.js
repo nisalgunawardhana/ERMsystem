@@ -115,7 +115,7 @@ function AddTax({ EPF, ETF }) {
                 setModified(0);
                 setStatus("");
                 setFinal("");
-                navigate(`/tax/get/${Tax_ID}`);
+                navigate(`/dashboard/finance/tax`);
             }
         } catch (error) {
             console.error("Error:", error);

@@ -110,7 +110,7 @@ function UpdateTax() {
         axios.put(`http://localhost:8080/tax/update/${Tax._id}`, newTax)
             .then((res) => {
                 console.log(res.data);
-                navigate(`/tax/get/${Tax.Tax_ID}`);
+                navigate(`/dashboard/finance/tax`);
             })
             .catch((err) => {
                 console.log(err);
