@@ -5,6 +5,7 @@ router.route("/add").post((req,res)=>{
     const item_code = req.body.item_code;
     const item_name = req.body.item_name;
     const category = req.body.category;
+    const price = req.body.price;
     const quantity = req.body.quantity;
     const alert_quantity = req.body.alert_quantity;
     
@@ -14,6 +15,7 @@ router.route("/add").post((req,res)=>{
         item_code,
         item_name,
         category,
+        price,
         quantity,
         alert_quantity
     })
@@ -35,12 +37,13 @@ router.route("/").get((req,res)=>{
 
 router.route("/update/:item_code").put(async (req, res) => {
     let itm_code = req.params.item_code;
-    const { item_code, item_name, category, quantity, alert_quantity } = req.body;
+    const { item_code, item_name, category, price, quantity, alert_quantity } = req.body;
 
     const updateclothes = {
         item_code,
         item_name,
         category,
+        price,
         quantity,
         alert_quantity
     }

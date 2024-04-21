@@ -26,6 +26,11 @@ const stockSchema = new Schema({
         required: true
     },
 
+    price:{
+        type: Number,
+        required: true
+    },
+
     alert_quantity:{
         type: Number,
         required: true
