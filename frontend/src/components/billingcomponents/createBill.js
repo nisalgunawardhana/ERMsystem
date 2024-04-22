@@ -19,6 +19,7 @@ function CreateBill() {
   const navigate = useNavigate();
   const [discountRules, setDiscountRules] = useState([]);
   const [discountAmount, setDiscountAmount] = useState(0);
+  const [errors, setErrors] = useState({});
   
 
 
@@ -143,7 +144,10 @@ function CreateBill() {
   const sendData = (e) => {
     e.preventDefault();
     console.log("Submitting form...");
-
+if (!validateForm()) {
+      // If form validation fails, return early
+      return;
+    }
 
 
 
@@ -284,7 +288,7 @@ items.forEach(item => {
             <div class="bill-details">
               <p><strong>Customer ID:</strong> ${billToPrint.customer_id}</p>
               <p><strong>Billing Date:</strong> ${billToPrint.billing_date}</p>
-              <p><strong>Total Amount:</strong> ${billToPrint.total_amount}</p>
+              <p><strong>Total Amount:</strong> ${billToPrint.total_amount.toFixed(2)}</p>
             </div>
             <div class="bill-items">
               <table>
@@ -325,6 +329,21 @@ items.forEach(item => {
   window.history.back();
 };
 
+const validateForm = () => {
+  const errors = {};
+
+  if (!customer_id.trim()) {
+    errors.customer_id = "Customer ID is required";
+  } else if (!/^\d{10}$/.test(customer_id)) {
+    errors.customer_id = "Customer ID must be 10 digits";
+  }
+
+
+
+  setErrors(errors);
+  return Object.keys(errors).length === 0; // Return true if no errors
+};
+
   return (
     <Layout>
 
@@ -343,7 +362,11 @@ items.forEach(item => {
                   placeholder="Enter Customer ID"
                   value={customer_id}
                   onChange={(e) => setCustomerId(e.target.value)}
-                />
+                  isInvalid={!!errors.customer_id} // Apply validation styling
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.customer_id}
+                  </Form.Control.Feedback>
               </Form.Group>
 
               <Form.Group className="mb-3" controlId="formBasicBillingDate">

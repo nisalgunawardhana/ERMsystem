@@ -20,7 +20,7 @@ function Login() {
 
             if (response.data.success) {
                 toast.success(response.data.message)
-                toast("Redirecting ...")
+                
 
                 // Extract role information from response data
                 const role = response.data.role;
