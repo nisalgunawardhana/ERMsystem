@@ -140,11 +140,6 @@ function Layout({children}) {
             icon: 'ri-user-settings-line'
         },
         {
-            name: 'Add Employee',
-            path: '/signup',
-            icon: 'ri-add-circle-line'
-        },
-        {
             name: 'Attendance',
             path: '/dashboard/employee/attendence',
             icon: 'ri-check-double-line'
