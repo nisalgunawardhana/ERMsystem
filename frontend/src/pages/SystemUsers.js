@@ -246,9 +246,6 @@ function SystemUsers() {
         printWindow.print();
     };
 
-   
-
-    
     return (
         <Layout>
 
@@ -348,11 +345,11 @@ function SystemUsers() {
                         />
                     </div>
                     <div className="three-buttons" style={{ marginLeft: 'auto' }}>
-                    <Button variant="danger" onClick={handleDeleteSelected}>Delete Selected</Button>
-                    <Button variant="dark" onClick={handleSelectAll} style={{ marginLeft: '10px' }}>
+                    <Button variant="btn btn-outline-danger" onClick={handleDeleteSelected}>Delete Selected</Button>
+                    <Button variant="btn btn-outline-dark" onClick={handleSelectAll} style={{ marginLeft: '10px' }}>
                         {selectAll ? 'Deselect All' : 'Select All'}
                     </Button>
-                    <Button variant="dark" onClick={handleClearSelection} style={{ marginLeft: '10px' }}>Clear Selection</Button>
+                    <Button variant="btn btn-outline-danger" onClick={handleClearSelection} style={{ marginLeft: '10px' }}>Clear Selection</Button>
                     </div> 
                 </div>
                 <br/>
