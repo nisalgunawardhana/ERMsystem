@@ -49,6 +49,7 @@ import { Toaster } from 'react-hot-toast'
 import ProtectedRoute from './components/ProtectedRoute';
 import SystemUsers from './pages/SystemUsers';
 import Notes from './pages/Notes';
+import Profile from './pages/Profile';
 
 function App() {
   const {loading} = useSelector(state => state.alerts);
@@ -86,6 +87,8 @@ function App() {
           <Route path="/" element={<ProtectedRoute><Home/></ProtectedRoute>}/>
           <Route path="/users" element={<ProtectedRoute><SystemUsers/></ProtectedRoute>}/>
           <Route path="/notes" element={<ProtectedRoute><Notes/></ProtectedRoute>}/>
+          <Route path="/profile" element={<ProtectedRoute><Profile/></ProtectedRoute>}/>
+
           <Route path="/dashboard/finance/otherExpense" element={<ProtectedRoute><AllOther/></ProtectedRoute>}/>
           <Route path="/dashboard/finance/otherExpense/update/:id" element={<ProtectedRoute><UpdateOther/></ProtectedRoute>}/>
           <Route path="/dashboard/finance/" element={<ProtectedRoute><FinanceDash/></ProtectedRoute>}/>
