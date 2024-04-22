@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Layout from '../Layout';
 
-export default function Employee() {
+export default function Trainee() {
     const [employeeIds, setEmployeeIds] = useState([]);
     const [selectedDate, setSelectedDate] = useState('');
     const [link, setLink] = useState('http://localhost:3000/dashboard/employee/attendence/form');
@@ -24,6 +24,8 @@ export default function Employee() {
                 // Handle error (e.g., show error message)
             });
     };
+
+    
 
     useEffect(() => {
         // Fetch employee IDs when the component mounts or when the selected date changes
