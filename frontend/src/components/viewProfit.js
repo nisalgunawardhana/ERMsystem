@@ -416,7 +416,7 @@ function ProfitDetails() {
                                         <h6>Create Monthly profit log in order to analyze sales vs expenses</h6>
                                         <div className="row mb-3" style={{ marginTop: '15px' }}>
                                             <div className="col-md-12">
-                                                <select className="form-select" id="Month" name="Month" value={month.Month} onChange={handleChange}>
+                                                <select className="form-select" id="Month" name="Month" value={month.Month} onChange={handleChange} required>
                                                     <option value="">Select Month</option>
                                                     <option value="January">January</option>
                                                     <option value="February">February</option>
