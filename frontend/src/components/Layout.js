@@ -43,7 +43,7 @@ function Layout({children}) {
             icon: 'ri-home-4-line'
         },
         {
-            name: 'Dashboard',
+            name: 'Admin Dashboard',
             path: '/users',
             icon: 'ri-user-settings-line'
         },
@@ -54,7 +54,7 @@ function Layout({children}) {
         },
         {
             name: 'Notes',
-            path: '/notes',
+            path: '/users/notes',
             icon: 'ri-task-line'
         },
     ];
@@ -117,7 +117,7 @@ function Layout({children}) {
         },
         {
             name: 'Stock',
-            path: '/dashboard/stock',
+            path: '/dashboard/logistics/stock',
             icon: 'ri-archive-line',
         },
         {
@@ -140,6 +140,11 @@ function Layout({children}) {
             icon: 'ri-user-settings-line'
         },
         {
+            name: 'Add Employee',
+            path: '/signup',
+            icon: 'ri-add-circle-line'
+        },
+        {
             name: 'Attendance',
             path: '/dashboard/employee/attendence',
             icon: 'ri-check-double-line'
@@ -158,7 +163,6 @@ function Layout({children}) {
             path: '/dashboard/trainee',
             icon: 'ri-home-4-line'
         },
-        
         {
             name: 'Employee Management',
             path: '/dashboard/employee',
@@ -204,10 +208,13 @@ function Layout({children}) {
     }
 
     const handleLogout = () => {
+        const confirmLogout = window.confirm('Are you sure you want to logout?');
         // Show a confirmation message before logging out
-        localStorage.clear();
-        dispatch(setUser(null)); // Clear user state in Redux store
-        navigate('/login');
+        if (confirmLogout) {
+            localStorage.clear();
+            dispatch(setUser(null)); // Clear user state in Redux store
+            navigate('/login');
+        }
     };
 
     const getData = async () => {
@@ -222,7 +229,6 @@ function Layout({children}) {
             console.log(error);
         }
     };
-
 
     // Conditionally render children based on user role
     const renderChildren = () => {
