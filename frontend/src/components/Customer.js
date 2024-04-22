@@ -201,18 +201,17 @@ const CustomerR = () => {
         try {
             const isConfirmed = window.confirm("Are you sure you want to delete all loyalty points?");
             if (isConfirmed) {
-                // Proceed with deleting loyalty points
                 console.log("Deleting all loyalty points...");
+                await axios.delete("http://localhost:8080/customer/delete-all-points");
+                fetchCustomers(); // Refresh the customer list
+                alert("All customer loyalty points deleted successfully.");
             }
-            await axios.delete("http://localhost:8080/customer/delete-all-points");
-            fetchCustomers(); // Refresh the customer list
-            alert("All customer loyalty points deleted successfully.");
         } catch (error) {
             console.error("Error deleting all customer loyalty points:", error);
             alert("Error deleting all customer loyalty points. Please try again later.");
         }
     };
-
+    
 
     useEffect(() => {
 
