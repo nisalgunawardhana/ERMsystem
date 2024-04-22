@@ -29,7 +29,7 @@ import UpdateCustomer from './components/UpdateCustomer';
 import Trainees from'./components/Trainee';
 
 //billing
-import CashierDashboard from './components/cashierDashboard';
+import CashierDashboard from './components/billingComponents/cashierDashboard';
 import Bill from './components/billingComponents/bill';
 import CreateBill from './components/billingComponents/createBill';
 import UpdateBill from './components/billingComponents/updateBill';
