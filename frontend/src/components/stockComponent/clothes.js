@@ -118,6 +118,8 @@ export default function Clothes() {
             .catch((err) => {
                 alert(err.message);
             });
+
+            window.location.reload();
     };
 
     // Function to handle search
@@ -174,6 +176,13 @@ export default function Clothes() {
 
                 setShowUpdateModal(false);
             } else {
+                // Check if the item code already exists
+                const isDuplicate = clothes.some(clothes => clothes.item_code === itemCode);
+                if (isDuplicate) {
+                    setError('Item code already exists.');
+                    return;
+                }
+
                 await axios.post('http://localhost:8080/clothes/add', {
                     item_code: itemCode,
                     item_name: itemName,
@@ -434,6 +443,7 @@ export default function Clothes() {
                         <div className="form-group">
                             <label>Category: F-Female M-Male</label>
                             <select className="form-control" value={category} onChange={(e) => setCategory(e.target.value)}>
+                                <option value="">select one</option>
                                 <option value="F">F</option>
                                 <option value="M">M</option>
                             </select>

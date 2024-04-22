@@ -95,6 +95,8 @@ export default function Toys() {
             .catch((err) => {
                 alert(err.message);
             });
+
+            window.location.reload();
     };
 
     // Function to handle search
@@ -151,6 +153,13 @@ export default function Toys() {
 
                 setShowUpdateModal(false);
             } else {
+                // Check if the item code already exists
+                const isDuplicate = toys.some(toys => toys.item_code === itemCode);
+                if (isDuplicate) {
+                    setError('Item code already exists.');
+                    return;
+                }
+                
                 await axios.post('http://localhost:8080/toys/add', {
                     item_code: itemCode,
                     item_name: itemName,
@@ -350,6 +359,7 @@ export default function Toys() {
                         <div className="form-group">
                             <label>Category: 8+, 12+, 16+, 18+</label>
                             <select className="form-control" value={category} onChange={(e) => setCategory(e.target.value)}>
+                                <option value="">select one</option>
                                 <option value="8+">8+</option>
                                 <option value="12+">12+</option>
                                 <option value="16+">16+</option>
