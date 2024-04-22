@@ -292,7 +292,7 @@ function AddPurchaseOrder() {
                     </Row>
                     
                     <div className="mt-3">
-                        <h6>Order Items</h6>
+                        <h6><i className="bi bi-magic me-2"></i>Order Items</h6>
                         <Form.Group controlId="orderItemName">
                             <Form.Label>Item Name</Form.Label>
                             <Form.Control type="text" name="order_item_name"  
@@ -368,11 +368,11 @@ function AddPurchaseOrder() {
                             </div>
                         </div>
 
-                        <h5 className="my-5">Order Amount : Rs. {order_amount}</h5>
+                        <h5 className="my-5"><i className="bi bi-cash-coin me-2"></i>Order Amount : Rs. {order_amount}</h5>
                     </div>
 
                     <div className="mt-3">
-                        <h6>Delivery Information</h6>
+                        <h6><i className="bi bi-truck me-2"></i>Delivery Information</h6>
                         <Row>
                             <Col>
                             <Form.Group >
@@ -397,7 +397,7 @@ function AddPurchaseOrder() {
                     </div>
 
                     <div className="mt-4">
-                        <h6>Payment Information</h6>
+                        <h6><i className="bi bi-credit-card-2-front me-2"></i>Payment Information</h6>
                         <Row>
                             <Col>
                             <Form.Group >
@@ -443,7 +443,7 @@ function AddPurchaseOrder() {
                     </div>
 
                     <div>
-                    <h3 className="my-5">Total Order Amount : Rs. {total_order_amount}</h3>
+                    <h3 className="my-5"><i class="bi bi-currency-exchange me-2"></i>Total Order Amount : Rs. {total_order_amount}</h3>
                     </div>
 
                     <div className="mt-3 text-center">
