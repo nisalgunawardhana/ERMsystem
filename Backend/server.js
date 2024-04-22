@@ -86,8 +86,9 @@ app.use("/discounts", discounts);
 
 //user management
 const userRoute = require("./routes/userRoute.js");
-app.use("/api/user", userRoute);
-app.use("/api/users", userRoute);
+app.use("/api/user", userRoute);    //fetch user
+app.use("/api/users", userRoute);   //fetch user details
+app.use("/users/notes", userRoute);  
 
 const clothes = require("./routes/clothesRoutes.js");
 app.use("/clothes", clothes);
