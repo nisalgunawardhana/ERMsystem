@@ -142,6 +142,13 @@ export default function Toys() {
                     alert_quantity: alertQuantity
                 });
 
+                setItemCode('');
+                setItemName('');
+                setCategory('');
+                setPrice('');
+                setQuantity('');
+                setAlertQuantity('');
+
                 setShowUpdateModal(false);
             } else {
                 await axios.post('http://localhost:8080/toys/add', {
@@ -156,6 +163,8 @@ export default function Toys() {
                 setShowAddModal(false);
             }
 
+            window.location.reload();
+
             const res = await axios.get('http://localhost:8080/toys/');
             setToys(res.data);
         } catch (err) {
@@ -165,7 +174,7 @@ export default function Toys() {
 
     // Filter toys based on search query
     const filteredToys = toys.filter(toys =>
-        toys.item_name.toLowerCase().includes(searchQuery.toLowerCase())
+        toys.item_code.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     const generateReport = () => {
@@ -219,6 +228,7 @@ export default function Toys() {
                             `).join('')}
                         </tbody>
                     </table>
+                    <h3>Total Toys Items: ${toys.length}</h3>
                     <h3>Total Quantity: ${totalQuantity}</h3>
                     <div class="button-container">
                         <button onclick="window.print()" class="btn btn-primary">Print</button>
@@ -292,13 +302,23 @@ export default function Toys() {
                             </Card.Body>
                         </Card>
                     </Col>
+                    <div className="col-md-4">
+                        <div className="card">
+                            <div className="card-body">
+                                <h4 className="card-title">Total Items</h4>
+                                <div className="text-center my-auto">
+                                    <h1 className="card-text">{toys.length}</h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 
                 </Row>
 
                 {/* Search input */}
                 <div className="d-flex justify-content-between align-items-center mb-3">
                     <div className="flex-grow-1">
-                        <input type="text" className="form-control" placeholder="Search by Item Name" value={searchQuery} onChange={handleSearch} />
+                        <input type="text" className="form-control" placeholder="Search by Item Code" value={searchQuery} onChange={handleSearch} />
                     </div>
                     <div>
                         <button onClick={handleOpenAddModal} className="btn btn-outline-success">Add New Toys</button>
@@ -329,7 +349,12 @@ export default function Toys() {
                         </div>
                         <div className="form-group">
                             <label>Category: 8+, 12+, 16+, 18+</label>
-                            <input type="text" className="form-control" value={category} onChange={(e) => setCategory(e.target.value)} />
+                            <select className="form-control" value={category} onChange={(e) => setCategory(e.target.value)}>
+                                <option value="F">8+</option>
+                                <option value="M">12+</option>
+                                <option value="M">16+</option>
+                                <option value="M">18+</option>
+                            </select>
                         </div>
                         <div className="form-group">
                             <label>Price</label>
@@ -374,7 +399,12 @@ export default function Toys() {
                         </div>
                         <div className="form-group">
                             <label>Category: 8+, 12+, 16+, 18+</label>
-                            <input type="text" className="form-control" value={category} onChange={(e) => setCategory(e.target.value)} />
+                            <select className="form-control" value={category} onChange={(e) => setCategory(e.target.value)}>
+                                <option value="F">8+</option>
+                                <option value="M">12+</option>
+                                <option value="M">16+</option>
+                                <option value="M">18+</option>
+                            </select>
                         </div>
                         <div className="form-group">
                             <label>Price</label>

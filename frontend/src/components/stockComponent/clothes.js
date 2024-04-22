@@ -165,6 +165,13 @@ export default function Clothes() {
                     alert_quantity: alertQuantity
                 });
 
+                setItemCode('');
+                setItemName('');
+                setCategory('');
+                setPrice('');
+                setQuantity('');
+                setAlertQuantity('');
+
                 setShowUpdateModal(false);
             } else {
                 await axios.post('http://localhost:8080/clothes/add', {
@@ -179,6 +186,8 @@ export default function Clothes() {
                 setShowAddModal(false);
             }
 
+            window.location.reload();
+
             const res = await axios.get('http://localhost:8080/clothes/');
             setClothes(res.data);
         } catch (err) {
@@ -188,7 +197,7 @@ export default function Clothes() {
 
     // Filter clothes based on search query
     const filteredClothes = clothes.filter(clothes =>
-        clothes.item_name.toLowerCase().includes(searchQuery.toLowerCase())
+        clothes.item_code.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     const generateReport = () => {
@@ -242,6 +251,7 @@ export default function Clothes() {
                             `).join('')}
                         </tbody>
                     </table>
+                    <h3>Total Clothes Items: ${clothes.length}</h3>
                     <h3>Total Quantity: ${totalQuantity}</h3>
                     <div class="button-container">
                         <button onclick="window.print()" class="btn btn-primary">Print</button>
@@ -375,13 +385,24 @@ export default function Clothes() {
                             </Card.Body>
                         </Card>
                     </Col>
+                    <div className="col-md-4">
+                        <div className="card">
+                            <div className="card-body">
+                                <h4 className="card-title">Total Items</h4>
+                                <div className="text-center my-auto">
+                                    <h1 className="card-text">{clothes.length}</h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 
                 </Row>
+                
 
                 {/* Search input */}
                 <div className="d-flex justify-content-between align-items-center mb-3">
                     <div className="flex-grow-1">
-                        <input type="text" className="form-control" placeholder="Search by Item Name" value={searchQuery} onChange={handleSearch} />
+                        <input type="text" className="form-control" placeholder="Search by Item Code" value={searchQuery} onChange={handleSearch} />
                     </div>
                     <div>
                         <button onClick={handleOpenAddModal} className="btn btn-outline-success">Add New Clothes</button>
@@ -412,7 +433,10 @@ export default function Clothes() {
                         </div>
                         <div className="form-group">
                             <label>Category: F-Female M-Male</label>
-                            <input type="text" className="form-control" value={category} onChange={(e) => setCategory(e.target.value)} />
+                            <select className="form-control" value={category} onChange={(e) => setCategory(e.target.value)}>
+                                <option value="F">F</option>
+                                <option value="M">M</option>
+                            </select>
                         </div>
                         <div className="form-group">
                             <label>Price</label>
@@ -457,7 +481,10 @@ export default function Clothes() {
                         </div>
                         <div className="form-group">
                             <label>Category: F-Female M-Male</label>
-                            <input type="text" className="form-control" value={category} onChange={(e) => setCategory(e.target.value)} />
+                            <select className="form-control" value={category} onChange={(e) => setCategory(e.target.value)}>
+                                <option value="F">F</option>
+                                <option value="M">M</option>
+                            </select>
                         </div>
                         <div className="form-group">
                             <label>Price</label>
