@@ -66,7 +66,7 @@ export default function Employee() {
                                 <h2 className="card-title">Show Related Attendance</h2>
                                 <ul>
                                     {employeeIds.map(employeeId => (
-                                        <li key={employeeId}>{employeeId}</li>
+                                        <li key={employeeId}>{employeeId} - {date}</li>
                                     ))}
                                 </ul>
                             </div>
