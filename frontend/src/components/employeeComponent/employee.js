@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Layout from '../Layout';
-import { Modal, Button, Form } from 'react-bootstrap';
+import toast, { Toaster } from 'react-hot-toast';
+import { Modal } from 'react-bootstrap';
 
 export default function Employees() {
 
@@ -39,10 +40,15 @@ export default function Employees() {
         return () => clearInterval(intervalId);
     }, []);
 
-    const handleDeleteEmployee = (id) => {
-        console.log("Deleting employee with ID:", id); // Add this line
-        axios.delete(`http://localhost:8080/employee/delete/${id}`)
+    const handleDeleteEmployee = async () => {
+        console.log("Deleting employee with ID:", expenseToDelete); // Add this line
+        axios.delete(`http://localhost:8080/employee/delete/${expenseToDelete}`)
             .then(() => {
+                setTimeout(() => {
+                    // Display success toast message
+                    toast.success('Employee deleted successfully!');
+                }, 2000);
+
                 // Fetch the updated list of employees from the server after deletion
                 axios.get('http://localhost:8080/employee/')
                     .then((res) => {
@@ -55,8 +61,21 @@ export default function Employees() {
             .catch((err) => {
                 alert(err.message);
             });
+
+        setShowDeletePrompt(false);
     };
 
+    const [expenseToDelete, setExpenseToDelete] = useState(null);
+    const [showDeletePrompt, setShowDeletePrompt] = useState(false);
+
+    const handleDelete = async (id) => {
+        setExpenseToDelete(id);
+        setShowDeletePrompt(true);
+    };
+
+    const cancelDelete = () => {
+        setShowDeletePrompt(false);
+    };
 
 
     const handleSearch = (e) => {
@@ -90,8 +109,11 @@ export default function Employees() {
                 return;
             }
 
+             // Calculate the next available Employee ID
+             const nextEmployeeId = getNextEmployeeId();
+
             // Check if the Employee ID already exists
-            const existingEmployee = employees.find(emp => emp.employee_Id === employeeId);
+            const existingEmployee = employees.find(emp => emp.employee_Id === nextEmployeeId);
             if (existingEmployee && existingEmployee._id !== selectedEmployee?._id) {
                 setError('Employee ID already exists. Please choose a unique Employee ID.');
                 return;
@@ -132,6 +154,14 @@ export default function Employees() {
         } catch (err) {
             setError(err.response?.data?.error || 'An error occurred.');
         }
+    };
+
+    // Function to calculate the next available Employee ID
+    const getNextEmployeeId = () => {
+        const employeeIds = employees.map(emp => parseInt(emp.employee_Id.replace('EMP', ''), 10));
+        const maxEmployeeId = Math.max(...employeeIds);
+        const nextEmployeeId = maxEmployeeId >= 0 ? maxEmployeeId + 1 : 0;
+        return `EMP${nextEmployeeId.toString().padStart(4, '0')}`;
     };
 
     const filteredEmployees = employees.filter(employee =>
@@ -356,13 +386,29 @@ export default function Employees() {
                                         <td>{employee.employee_Email}</td>
                                         <td>
                                             <button onClick={() => handleOpenUpdateModal(employee)} className="btn btn-outline-primary" style={{ margin: '0 5px' }} >Update</button>
-                                            <button onClick={() => handleDeleteEmployee(employee._id)} className="btn btn-outline-danger" style={{ margin: '0 5px' }}>Delete</button>
+                                            <button onClick={() => handleDelete(employee._id)} className="btn btn-outline-danger" style={{ margin: '0 5px' }}>Delete</button>
                                         </td>
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
                     </div>
+
+                    {/*Modal to confirm expense deletion*/}
+                    {showDeletePrompt && (
+                        <Modal show={showDeletePrompt} onHide={cancelDelete}>
+                            <Modal.Header closeButton>
+                                <Modal.Title>Confirm Deletion</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                                Are you sure you want to delete this expense?
+                            </Modal.Body>
+                            <Modal.Footer>
+                                <button className="btn btn-outline-danger" onClick={handleDeleteEmployee}><i className="ri-check-line"></i>  Yes</button>
+                                <button className="btn btn-outline-secondary" onClick={cancelDelete}><i className="ri-close-line"></i>  No</button>
+                            </Modal.Footer>
+                        </Modal>
+                    )}
 
                     <div className="modal-backdrop" style={{ display: showAddModal || showUpdateModal ? 'block' : 'none' }}></div>
                 </div>
