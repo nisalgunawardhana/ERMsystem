@@ -82,6 +82,7 @@ app.use("/discounts", discounts);
 const userRoute = require("./routes/userRoute.js");
 app.use("/api/user", userRoute);
 app.use("/api/users", userRoute);
+app.use("/api/notes", userRoute);
 
 const clothes = require("./routes/clothesRoutes.js");
 app.use("/clothes", clothes);

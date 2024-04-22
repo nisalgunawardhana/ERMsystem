@@ -31,10 +31,13 @@ function Profile() {
         }
     };
 
+    
     return (
         <Layout>
             <div className="profile">
                 <h2>User Profile</h2>
+
+                
                 
                 {userDetails ? (
                     <div>

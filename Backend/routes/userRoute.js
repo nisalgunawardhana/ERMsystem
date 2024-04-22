@@ -141,27 +141,25 @@ router.delete('/delete-multiple', async (req, res) => {
 
 //--notes--
 // to get all notes
-router.get('/read-all', async (req, res) => {
+router.get('/all-notes', async (req, res) => {
     try {
         const notes = await Note.find();
-        res.json(notes); // Change tasks to notes
+        res.status(200).json(notes);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 });
 
 // to create a new note
-router.post('/', async (req, res) => {
+router.post('create-note', async (req, res) => {
     try {
-    const note = new Note({
+    const newNote = new Note({
         note_no: req.body.note_no,
         note_title: req.body.note_title,
         note_description: req.body.note_description
     });
-    await newnote.save()
-    
-        const newnote = await note.save();
-        res.status(201).json(newnote);
+        await newNote.save()
+        res.status(201).json(newNote);
     } catch (error) {
         console.log(error)
         res.status(400).json({ message: error.message });
@@ -169,40 +167,45 @@ router.post('/', async (req, res) => {
 });
 
 // to get a single note by ID
-router.get('/read-one/:id', getNote, (req, res) => {
-    res.json(res.note);
-});
-
-// update a note
-router.patch('/update/:id', getNote, async (req, res) => {
-    if (req.body.note_no != null) {
-        res.task.note_no = req.body.note_no;
-    }
-    if (req.body.note_title != null) {
-        res.task.note_title = req.body.note_title;
-    }
-    if (req.body.note_description != null) {
-        res.task.note_description = req.body.note_description;
-    }
-
+router.get('/note/:id', async (req, res) => {
     try {
-        const updatedNote = await res.note.save();
-        res.json(updatedNote);
+        const note = await Note.findById(req.params.id);
+        if (!note) {
+            return res.status(404).json({ message: 'Note not found' });
+        }
+        res.status(200).json(note);
     } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
-});
-
-// to delete a note
-router.delete('/delete/:id', getNote, async (req, res) => {
-    try {
-        await res.note.remove();
-        res.json({ message: 'Note deleted' });
-    } catch (error) {
+        console.error(error);
         res.status(500).json({ message: error.message });
     }
 });
 
+// update a note
+router.put('/update-note/:id', async (req, res) => {
+    try {
+        const updatedNote = await Note.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (!updatedNote) {
+            return res.status(404).json({ message: "Note not found" });
+        }
+        res.status(200).json(updatedNote);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error updating note", error });
+    }
+});
+
+// to delete a note
+router.delete('/delete-note/:id', async (req, res) => {
+    try {
+        await Note.findByIdAndDelete(req.params.id);
+        res.status(200).json({ message: 'Note deleted' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: error.message });
+    }
+});
+
+/*
 // Middleware function to get a single note by ID
 async function getNote(req, res, next) {
     let note;
@@ -217,7 +220,7 @@ async function getNote(req, res, next) {
 
     res.note = note;
     next();
-}
+}*/
 
 module.exports = router;
   

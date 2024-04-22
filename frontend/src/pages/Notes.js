@@ -14,8 +14,7 @@ const CreateNoteForm = () => {
     const onFinish = async(values) => {
         try {
             dispatch(showLoading())
-            const response = await axios.post('/api/notes', values);
-
+            const response = await axios.post('/notes', values);
 
             dispatch(hideLoading())
             if (response.data.success) {
