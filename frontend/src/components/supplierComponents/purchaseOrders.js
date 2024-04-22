@@ -364,9 +364,9 @@ function PurchaseOrder() {
                 <h2><span className="fw-light fs-6 ">Purchase Order Management</span><br></br>Purchase Orders</h2>
                 
                 <div className="mt-3">
-                    <Link to="/supplier/"><Button className="back-btn " variant="secondary"><i className="bi bi-arrow-left me-2"></i><span>Back</span></Button></Link>
+                    <Link to="/dashboard/logistics/supplier/"><Button className="back-btn " variant="secondary"><i className="bi bi-arrow-left me-2"></i><span>Back</span></Button></Link>
             
-                    <Link to="/purchaseOrder/add"><Button className=" ms-3 text-white" id="up-btn-btn" ><i className="bi bi-cart3 me-2"></i>Create Purchase Order</Button></Link>
+                    <Link to="/dashboard/logistics/purchaseOrder/add"><Button className=" ms-3 text-white" id="up-btn-btn" ><i className="bi bi-cart3 me-2"></i>Create Purchase Order</Button></Link>
                 </div>
             </div>
 
@@ -382,7 +382,7 @@ function PurchaseOrder() {
                                     </h2>
                                     <h5 className="card-title fs-4" >Order supplies to restock</h5>
                                     <div>
-                                        <Link to="/purchaseOrder/add">
+                                        <Link to="/dashboard/logistics/purchaseOrder/add">
                                             <Button variant="dark" className="side-btn mt-5 mb-2 ">
                                                 <span>
                                                 Create a purchase Orders
@@ -746,11 +746,11 @@ function PurchaseOrder() {
                             <td>
 
                             <div className="position-relative" >
-                                <Link to={`/purchaseOrder/get/${order._id}`}>
+                                <Link to={`/dashboard/logistics/purchaseOrder/get/${order._id}`}>
                                     <Button id="up-btn" variant="dark" size="sm" style={{ fontSize: "small"}}  className="my-2 text-white"><i class="bi bi-file-earmark-text me-1"></i>View PO</Button>
                                 </Link>
-                                <Link to={`/purchaseOrder/addPerformance/${order._id}`}>
-                                    <Button id="up-btn" variant="secondary" size="sm" style={{ fontSize: "small"}}  className="my-2 text-white"><i class="bi bi-file-earmark-text me-1"></i>Performance</Button>
+                                <Link to={`/dashboard/logistics/purchaseOrder/addPerformance/${order._id}`}>
+                                    <Button id="up-btn" variant="secondary" size="sm" style={{ fontSize: "small"}}  className="my-2 text-white"><i class="bi bi-graph-up-arrow me-1"></i>Performance</Button>
                                 </Link>
                                 
                             </div>

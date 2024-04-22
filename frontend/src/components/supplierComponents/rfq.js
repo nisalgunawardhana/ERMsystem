@@ -286,7 +286,7 @@ function RFQ() {
                         <h2><span><h6 className="fw-light">RFQ management</h6></span>Requests For Quotations
                             <small className="text-body-secondary"> RFQ</small>
                         </h2>
-                        <Link to="/rfq/add">
+                        <Link to="/dashboard/logistics/rfq/add">
                             <Button className="fs-6 my-3 text-white" id="up-btn" variant="success"><i class="bi bi-send-plus-fill me-1"></i>Create an Request For Quotations</Button>
                         </Link>
                     </div>

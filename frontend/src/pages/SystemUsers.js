@@ -15,10 +15,20 @@ function SystemUsers() {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectAll, setSelectAll] = useState(false);
     const [totalUsers, setTotalUsers] = useState(0);
+    const [currentDateTime, setCurrentDateTime] = useState('');
 
     useEffect(() => {
         // Fetch users data when the component mounts
         fetchUsers(); 
+    }, []);
+
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            const currentDate = new Date();
+            setCurrentDateTime(currentDate.toLocaleString());
+        }, 1000); // Update every second
+    
+        return () => clearInterval(intervalId); // Cleanup on component unmount
     }, []);
 
     const fetchUsers = async () => {
@@ -235,48 +245,97 @@ function SystemUsers() {
         printWindow.document.close();
         printWindow.print();
     };
-    
+
+   
+
     
     return (
         <Layout>
-            <div className="system-users p-3">
-            <h2>System Users</h2>
-            <hr />
-            <br/>
+
+        <div className="row">
+            {/* System Users Text */}
+            <div className="col-md-6">
+                <div className="system-users p-3">
+                    <h2>System Users</h2>
+                </div>
+            </div>
                 
-            <div className="cards d-flex justify-content-between">
-                <div className="col-md-4">
-                    <div className="card mb-3" 
-                        style={{ background: 'white', 
-                        color: 'black', 
-                        borderRadius: '15px'}}>
+            {/* Current Date and Time */}
+            <div className="col-md-6 text-md-end mb-6">
+                <div className="date-time p-4">
+                    <span className="date">{currentDateTime.split(',')[0]}</span>
+                    <span className="time"> | {currentDateTime.split(',')[1]}</span>
+                </div>                     
+            </div>
+        </div>
 
-                        <div className="card-body p-4">
-                            <h5 className="card-title" style={{ textAlign: 'center' }}>Total Number of System Users</h5>
-                            <p style={{ fontSize: '40px', textAlign: 'center', fontWeight: 'bold' }}>{totalUsers}</p>
+        <div class="container">
+            <div className="row">
+
+                {/*number of users*/}
+                <div className="col-lg-6 col-md-6 mb-1">
+                    <div className="card shadow" style={{ backgroundColor: 'white' }}>
+                        <div className="card-statistic-3 p-4">
+                            <div className="d-flex justify-content-between align-items-center">
+                                <div className="card-body p-">
+                                    <h5 className="card-title" 
+                                     style={{ fontSize: '32px', textAlign: 'center' }}>Total Number of System Users
+                                    </h5>
+                                    <p style={{ fontSize: '40px', textAlign: 'center', fontWeight: 'bold' }}>{totalUsers}</p>
+                                </div>
+                                <i className="ri-account-circle-line h1"></i>
+                            </div>
+                    
+                            <div className="progress mt-1" 
+                                data-height="8" 
+                                style={{ height: '8px' }}>
+                                <div className="progress-bar bg-orange" 
+                                    role="progressbar" 
+                                    data-width="25%" 
+                                    aria-valuenow="25" 
+                                    aria-valuemin="0" 
+                                    aria-valuemax="100" 
+                                    style={{ width: '100%', backgroundColor: 'orange' }}>                                       
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div className="col-md-4">
-                    <div className="card mb-3" 
-                        style={{ background: 'white', 
-                        color: 'black', 
-                        borderRadius: '15px' }}>
-
-                        <div className="card-body p-4">
-                            <h5 className="card-title">Generate Reports</h5>
-                            <p className="card-text">Generate and download System Users report</p>
-                            <button onClick={generateReport} className="btn btn-dark">Generate Report</button>
+                {/*generate report*/}
+                <div className="col-lg-6 col-md-6 mb-3">
+                    <div className="card shadow" style={{ backgroundColor: 'white' }}>
+                        <div className="card-statistic-3 p-4">
+                            <div className="d-flex justify-content-between align-items-center">
+                                <div className="col-8">
+                                    <h3 className="d-flex align-items-center mb-4">
+                                        Generate Report
+                                    </h3>
+                                    <p className="card-text">Generate and download report on System Users </p>
+                                    <h5 className="card-title" style={{ marginTop: '25px' }}>
+                                    <button onClick={generateReport} className="btn btn-dark" style={{ backgroundColor: 'black', color: 'white', borderColor: 'black' }}>Generate Report</button>
+                                    </h5>
+                                </div>
+                                <i className="ri-file-chart-line h1"></i>
+                            </div>
+                            <div className="progress mt-1" data-height="8" style={{ height: '8px' }}>
+                                <div className="progress-bar bg-orange" 
+                                    role="progressbar" 
+                                    data-width="25%" 
+                                    aria-valuenow="25" 
+                                    aria-valuemin="0" 
+                                     aria-valuemax="100" 
+                                    style={{ width: '100%', backgroundColor: 'orange' }}>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+            
 
-            </div>
-
-            <div className="card p-3">
-                <br/>
+        <div className="card" style={{ padding: '30px 20px 20px 20px' }}>
                 <div className="button-group mb-3 d-flex align-items-center">
                    
                     {/* search */}
@@ -310,6 +369,7 @@ function SystemUsers() {
                             <th>User created date</th>
                         </tr>
                     </thead>
+
                     <tbody>
                     {filteredUsers.map((user, index) => (
                             <tr key={user._id}>
@@ -325,11 +385,11 @@ function SystemUsers() {
                                 <td>{new Date(user.createdAt).toLocaleDateString('en-GB')}</td>
                                 
                                 <td>
-                                    <Button variant="primary" onClick={() => handleUpdate(user)} style={{ marginLeft: '20px' }}>Update</Button>
+                                    <Button variant="btn btn-outline-primary" onClick={() => handleUpdate(user)} style={{ marginLeft: '20px' }}>Update</Button>
                                 </td>
 
                                 <td>
-                                    <Button variant="danger" onClick={() => handleDelete(user._id)} style={{ marginLeft: '20px' }}>Delete</Button>
+                                    <Button variant="btn btn-outline-danger" onClick={() => handleDelete(user._id)} style={{ marginLeft: '20px' }}>Delete</Button>
                                 </td>
                             </tr>
                         ))}

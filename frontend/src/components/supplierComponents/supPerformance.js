@@ -265,10 +265,10 @@ function AddSupplierPerformance() {
                         <div >
                             <p className="fw-light layout-blue">Purchase order Management
                             <h2 >Purchase Order {purchaseOrder.purchaseOrder_id}</h2></p>
-                            <Link to="/purchaseOrder">
+                            <Link to="/dashboard/logistics/purchaseOrder">
                                 <Button className="back-btn" variant="secondary" ><i className="bi bi-arrow-left me-2"></i><span>Back</span></Button>
                             </Link>
-                            <Link to="/purchaseOrder/add">
+                            <Link to="/dashboard/logistics/purchaseOrder/add">
                             <Button className="ms-2 text-white layout-blue-bg" variant="secondary" id="up-btn" ><i className="bi bi-filetype-pdf me-2"></i>Create New Purchase Order</Button>
                             </Link>
                         </div>

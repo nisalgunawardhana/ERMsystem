@@ -9,7 +9,7 @@ function AddPurchaseOrder() {
 
     const navigate = useNavigate();
 
-    const [purchaseOrder_id, setPOid] = useState("");
+    const [purchaseOrder_id, setPOid] = useState("PO");
     const [order_date, setPurchaseOrderDate] = useState("");
     const [deliver_date, setDeliveryDate] = useState("");
     const [item_name, setItemName] = useState("");
@@ -42,7 +42,7 @@ function AddPurchaseOrder() {
     const [supplier_id, setSupId] = useState("");
     const [showDeliveryCostsPopover, setShowDeliveryCostsPopover] = useState(false);
     const [showOrderDatePopover, setShowOrderDatePopover] = useState(false);
-    
+    const [showPOIDPopover, setShowPOIDPopover] = useState(false);
     
     function sendDataPO(e) {
         e.preventDefault();
@@ -89,7 +89,7 @@ function AddPurchaseOrder() {
     
         axios.post("http://localhost:8080/purchaseOrder/add", newPurchaseOrder).then(() => {
             alert("New purchase Order added");
-            navigate("/purchaseOrder");
+            navigate("/dashboard/logistics/purchaseOrder");
         }).catch((err) => {
             console.error("Error adding purchase order:", err);
             alert(err);
@@ -153,6 +153,20 @@ function AddPurchaseOrder() {
         }
     };
 
+    //order date
+    // const togglePOIDpopover = () => setShowPOIDPopover(!showPOIDPopover);
+
+    // const handlePOChange = (e) => {
+    //     const value = e.target.value;
+    //     if (value.length === 5 && /^\d+$/.test(value)) {
+    //         setPOid(value);
+    //         setShowPOIDPopover(false);
+    //     } else {
+    //         togglePOIDpopover();
+    //     }
+    // };
+      
+
 
     //Add Order Items and display Total Amount
     const handleAddOrderItems = () => {
@@ -199,6 +213,24 @@ function AddPurchaseOrder() {
                             setPOid(e.target.value)
                         }} />
                     </Form.Group>
+
+                    {/* <Form.Group controlId="POid">
+                        <Form.Label>Purchase Order ID</Form.Label>
+                        <OverlayTrigger
+                            trigger="focus"
+                            placement="bottom"
+                            show={showPOIDPopover}
+                            overlay={<Popover id="po-id-popover" style={{ padding: "15px" }}>PO ID should contain exactly 5 characters</Popover>}
+                        >
+                            <Form.Control
+                                type="text"
+                                name="purchaseOrder_id"
+                                required
+                                value={purchaseOrder_id}
+                                onChange={handlePOChange}
+                            />
+                        </OverlayTrigger>
+                    </Form.Group> */}
 
                     <Form.Group controlId="supplierName" className="mt-3">
                         <Form.Label>Supplier Name</Form.Label>

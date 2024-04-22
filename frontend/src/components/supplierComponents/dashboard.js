@@ -29,7 +29,7 @@ function LogisticDashboard() {
                                             </h6>
                                             <h5 className="card-title fs-3" >Stock Management </h5>
                                             <div>
-                                                <Link to="/stock">
+                                                <Link to="/dashboard/logistics/stock">
                                                 <Button variant="dark" className="side-btn mt-5 mb-2 ">
                                                     <span>
                                                     Stock Management
@@ -56,7 +56,7 @@ function LogisticDashboard() {
                                             </h6>
                                             <h5 className="card-title fs-3" >Supplier Management </h5>
                                             <div>
-                                                <Link to="/supplier">
+                                                <Link to="/dashboard/logistics/supplier">
                                                     <Button variant="dark" className="side-btn mt-5 mb-2">
                                                         <span>
                                                         Supplier Management
@@ -98,7 +98,7 @@ function LogisticDashboard() {
                                         <div className="text-secondary fw-light fs-6">Stock Management</div>
                                         <h5 className="card-title fs-4 " >Toys<br></br> Management </h5>
                                         <div>
-                                            <Link to="/stock">
+                                            <Link to="/dashboard/logistics/stock/toys">
                                             <Button variant="dark" className="side-btn mt-5 mb-2 ">
                                                 Toys Management
                                             </Button>
@@ -121,7 +121,7 @@ function LogisticDashboard() {
                                         <div className="text-secondary fw-light fs-6">Stock Management</div>
                                         <h5 className="card-title fs-4 " >Clothes Management </h5>
                                         <div>
-                                            <Link to="/stock">
+                                            <Link to="/dashboard/logistics/stock/clothes">
                                             <Button variant="dark" className="side-btn mt-5 mb-2 ">
                                                 Clothes Management
                                             </Button>
@@ -144,7 +144,7 @@ function LogisticDashboard() {
                                         <div className="text-secondary fw-light fs-6">Supplier Management</div>
                                         <h5 className="card-title fs-4 " >Purchase Orders Management </h5>
                                         <div>
-                                            <Link to="/purchaseOrder" >
+                                            <Link to="/dashboard/logistics/purchaseOrder" >
                                             <Button variant="dark" className="side-btn mt-5 mb-2 " style={{padding:"8px", width:"245px"}}>
                                                 Purchase Order Management
                                             </Button>
@@ -167,7 +167,7 @@ function LogisticDashboard() {
                                         <div className="text-secondary fw-light fs-6">Supplier Management</div>
                                         <h5 className="card-title fs-4 " >RFQ <br></br>Management </h5>
                                         <div>
-                                            <Link to="/rfq" >
+                                            <Link to="/dashboard/logistics/rfq" >
                                             <Button variant="dark" className="side-btn mt-5 mb-2 " style={{padding:"8px", width:"245px"}}>
                                                 RFQ Management
                                             </Button>

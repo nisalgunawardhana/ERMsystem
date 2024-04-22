@@ -147,10 +147,10 @@ function ViewSupplier() {
                     <Row>
                         <Col>   
                             <div>
-                                <Link to="/supplier">
+                                <Link to="/dashboard/logistics/supplier">
                                     <Button className="back-btn" variant="secondary" ><i className="bi bi-arrow-left me-2"></i><span>Back</span></Button>
                                 </Link>
-                                <Link to="/rfq"><Button id="up-btn" variant="success"><i className="bi bi-shop me-2"></i>Call new Suppliers?</Button></Link>
+                                <Link to="/dashboard/logistics/rfq"><Button id="up-btn" variant="success"><i className="bi bi-shop me-2"></i>Call new Suppliers?</Button></Link>
                             </div>
 
 
@@ -249,7 +249,7 @@ function ViewSupplier() {
                         
 
                 <div className="mt-4">
-                    <Link to={`/supplier/update/${supplier._id}`} >
+                    <Link to={`/dashboard/logistics/supplier/update/${supplier._id}`} >
                         <Button variant="outline-primary"  className="me-1 ">
                         <i className="bi bi-pen"></i> Edit Supplier
                         </Button>
@@ -260,7 +260,7 @@ function ViewSupplier() {
                     <Button variant="outline-info"   onClick={printPdfSupplier}>
                             <i className="bi bi-download me-2"></i> Download
                     </Button>
-                    <Link to={`/supplier/add`} >
+                    <Link to={`/dashboard/logistics/supplier/add`} >
                         <Button variant="primary" id="up-btn" className="me-1 ">
                         <i className="bi bi-shop"></i> Add a Supplier
                         </Button>

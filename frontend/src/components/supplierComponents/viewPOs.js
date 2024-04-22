@@ -113,7 +113,7 @@ function ViewPO() {
             axios.delete(`http://localhost:8080/purchaseOrder/delete/${id}`)
                 .then(response => {
                     alert("Order deleted successfully");
-                    navigate('/purchaseOrder'); 
+                    navigate('/dashboard/logistics/purchaseOrder'); 
                 })
                 .catch(error => {
                     console.error("Error deleting purchase order:", error);
@@ -393,7 +393,7 @@ function ViewPO() {
                     <div className="layout-blue">
                         <p className="fw-light">Purchase order Management
                         <h2 >Purchase Order {purchaseOrder.purchaseOrder_id}</h2></p>
-                        <Link to="/purchaseOrder">
+                        <Link to="/dashboard/logistics/purchaseOrder">
                             <Button className="back-btn" variant="secondary" ><i className="bi bi-arrow-left me-2"></i><span>Back</span></Button>
                         </Link>
 
@@ -608,7 +608,7 @@ function ViewPO() {
                         <div className="d-flex justify-content-start me-3 mt-4">
                             <Button variant="info" className="ms-2 text-white" id="up-btn" onClick={printPO}><i className="bi bi-printer-fill me-2"></i>Print as a document</Button>
 
-                            <Link to={`/purchaseOrder/update/${purchaseOrder._id}`} >
+                            <Link to={`/dashboard/logistics/purchaseOrder/update/${purchaseOrder._id}`} >
                                 <Button variant="white" className="ms-2 text-white " id="up-btn" style={{backgroundColor:"#334eac"}}><i className="bi bi-pen me-2"></i>Edit Order details</Button>
                             </Link>
 

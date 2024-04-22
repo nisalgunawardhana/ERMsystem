@@ -52,7 +52,7 @@ function AddSupplier() {
 
         axios.post("http://localhost:8080/supplier/add", NewSupplier).then(() => {
             alert("sUPPLIER IS Added");
-            navigate("/supplier");
+            navigate("/dashboard/logistics/supplier");
         }).catch((err) => {
             alert(err)
         })
@@ -392,7 +392,7 @@ function AddSupplier() {
                     <div className="mt-5 d-flex  justify-content-center">
                         <Row >
                             <Col xs={4} >
-                                <Link to="/supplier/" className="d-flex align-items-center">
+                                <Link to="/dashboard/logistics/supplier" className="d-flex align-items-center">
                                     <Button className="back-btn" variant="secondary" style={{ height: '40px', fontSize: '16px' }}>
                                         <i className="bi bi-arrow-left me-2"></i>
                                         <span>Back</span>
