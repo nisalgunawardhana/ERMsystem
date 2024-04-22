@@ -71,7 +71,7 @@ function Register() {
                         <Row gutter={[50, 13]}>  
                             <Col span={12}>
                                 <Form.Item required label='Email' name='email'>
-                                    <Input placeholder='Email'/>
+                                    <Input placeholder='Email' type='email'/>
                                 </Form.Item>
                             </Col>
                             

@@ -54,7 +54,7 @@ function Layout({children}) {
         },
         {
             name: 'Notes',
-            path: '/notes',
+            path: '/users/notes',
             icon: 'ri-task-line'
         },
     ];

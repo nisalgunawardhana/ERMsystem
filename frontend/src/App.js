@@ -50,6 +50,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import SystemUsers from './pages/SystemUsers';
 import Notes from './pages/Notes';
 import Profile from './pages/Profile';
+import AddNotes from './pages/AddNotes';
 
 function App() {
   const {loading} = useSelector(state => state.alerts);
@@ -86,7 +87,8 @@ function App() {
           <Route path="/register" element={<ProtectedRoute><Register/></ProtectedRoute>}/>
           <Route path="/" element={<ProtectedRoute><Home/></ProtectedRoute>}/>
           <Route path="/users" element={<ProtectedRoute><SystemUsers/></ProtectedRoute>}/>
-          <Route path="/notes" element={<ProtectedRoute><Notes/></ProtectedRoute>}/>
+          <Route path="/users/notes" element={<ProtectedRoute><Notes/></ProtectedRoute>}/>
+          <Route path="/users/notes/create-note" element={<ProtectedRoute><AddNotes/></ProtectedRoute>}/>
           <Route path="/profile" element={<ProtectedRoute><Profile/></ProtectedRoute>}/>
 
           <Route path="/dashboard/finance/otherExpense" element={<ProtectedRoute><AllOther/></ProtectedRoute>}/>

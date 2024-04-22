@@ -246,13 +246,7 @@ function SystemUsers() {
         printWindow.print();
     };
 
-    const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        const year = date.getFullYear();
-        const month = (date.getMonth() + 1).toString().padStart(2, '0');
-        const day = date.getDate().toString().padStart(2, '0');
-        return `${year}-${month}-${day}`;
-    };
+   
 
     
     return (
@@ -375,6 +369,7 @@ function SystemUsers() {
                             <th>User created date</th>
                         </tr>
                     </thead>
+
                     <tbody>
                     {filteredUsers.map((user, index) => (
                             <tr key={user._id}>
