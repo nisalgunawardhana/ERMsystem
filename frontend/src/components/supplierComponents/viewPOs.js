@@ -419,17 +419,43 @@ function ViewPO() {
                                 </div>
 
                                 <div>
-                                    <Row className="ms-3 mt-5">
-                                        <Col xs={4}>
-                                            <p className="fs-6 p-3 text-center fw-light text-light rounded" style={{backgroundColor:"#334eac"}}>Order date: <br></br><span className="fw-semibold fs-5">{purchaseOrder.order_date}</span></p>
+                                    <Row className="ms-3 me-2 mt-5">
+                                        <Col>
+                                            {/* <p className="fs-6 p-3 text-center fw-light text-light rounded" style={{backgroundColor:"#334eac"}}>Order date: <br></br><span className="fw-semibold fs-5">{purchaseOrder.order_date}</span></p> */}
+                                            <div class="card">
+                                                <div class="card-statistic-3 p-3">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <div>
+                                                            <div><i className="bi bi-box-arrow-in-up me-1"></i>Order date</div>
+                                                            <h3 class="d-flex align-items-center mb-5">
+                                                            {purchaseOrder.order_date}
+                                                            </h3>
+                                                        </div>
+                                                        <i className="bi bi-box-arrow-in-up h1"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </Col>
-                                        <Col xs={4} className="ms-5">
-                                            <p className="fs-6 p-3 text-center fw-light text-light rounded" style={{backgroundColor:"#334eac"}}>Delivery date: <br></br><span className="fw-semibold fs-5">{purchaseOrder.deliver_date}</span></p>
+                                        <Col >
+                                            {/* <p className="fs-6 p-3 text-center fw-light text-light rounded" style={{backgroundColor:"#334eac"}}>Delivery date: <br></br><span className="fw-semibold fs-5">{purchaseOrder.deliver_date}</span></p> */}
+                                            <div class="card">
+                                                <div class="card-statistic-3 p-3">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <div>
+                                                            <div><i className="bi bi-box-arrow-in-down me-1"></i>Deliver date</div>
+                                                            <h3 class="d-flex align-items-center mb-5">
+                                                            {purchaseOrder.deliver_date}
+                                                            </h3>
+                                                        </div>
+                                                        <i className="bi bi-box-arrow-in-down h1"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </Col>
                                     </Row>
                                 </div>
 
-                                <div className="p-4 mt-3 rounded " >
+                                <div className="p-4 mt-1 rounded " >
                                     <h6 >Ordered Items</h6>
                                     <Row xs={4} className="g-4">
                                         {purchaseOrder.order_items.map((item, index) => (
@@ -453,14 +479,45 @@ function ViewPO() {
                                 <div>
                                     <p className="fw-light  mb-4">Total Amount of the ordered items : <span className="fw-semibold fs-3"> Rs. {purchaseOrder.total_order_amount}</span></p>
 
-                                    <div className="text-center my-5 ms-5 ">
+                                    <div className=" my-5 ms-3 me-1 ">
                                         <p className="text-start">Current status of the order</p>
                                         <Row>
-                                            <Col xs={4}>
-                                                <p className="fs-6 p-3 fw-light rounded text-light" style={{backgroundColor:"#334eac"}}>Payment Status<br></br><span className="fs-5 ">{purchaseOrder.payment_status}</span></p>
+                                            <Col>
+                                                <div class="card">
+                                                    <div class="card-statistic-3 p-4">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <div>
+                                                                <div><i className="bi bi-coin me-1"></i>Payment Status</div>
+                                                                <h3 class="d-flex align-items-center mb-5">
+                                                                {purchaseOrder.payment_status}
+                                                                </h3>
+                                                            </div>
+                                                            <i className="bi bi-coin h1"></i>
+                                                        </div>
+                                                        <div class="progress mt-1 " data-height="8" style={{ height: '8px' }}>
+                                                            <div class="progress-bar orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '50%' }}></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </Col>
-                                            <Col xs={4}>
-                                                <p className="ms-3 fs-6 p-3 fw-light rounded text-light"  style={{backgroundColor:"#334eac"}}>Order Status<br></br><span className="fs-5 ">{purchaseOrder.order_status}</span></p>
+                                            <Col>
+                                                {/* <p className="ms-3 fs-6 p-3 fw-light rounded text-light"  style={{backgroundColor:"#334eac"}}>Order Status<br></br><span className="fs-5 ">{purchaseOrder.order_status}</span></p> */}
+                                                <div class="card">
+                                                    <div class="card-statistic-3 p-4">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <div>
+                                                                <div><i className="bi bi-truck me-1"></i>Order Status</div>
+                                                                <h3 class="d-flex align-items-center mb-5">
+                                                                {purchaseOrder.order_status}
+                                                                </h3>
+                                                            </div>
+                                                            <i className="bi bi-truck h1"></i>
+                                                        </div>
+                                                        <div class="progress mt-1 " data-height="8" style={{ height: '8px' }}>
+                                                            <div class="progress-bar orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '50%' }}></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </Col>
                                         </Row>                    
                                     </div>
@@ -470,7 +527,7 @@ function ViewPO() {
                         <Col xs={5} >
                             <Row>
                                 <div className=" p-3 rounded shadow-lg rounded ">
-                                    <p className="mb-4 ms-2 layout-blue fw-light text-center">Supplier<br></br><span className="fw-normal  fs-3">{supplier.supplier_name}</span></p>
+                                    <p className="mb-4 ms-2 layout-blue fw-light text-center"><i className="bi bi-shop fw-light me-2"></i>Supplier<br></br><span className="fw-normal  fs-3">{supplier.supplier_name}</span></p>
                                     <div className="text-center">
                                         <p className="mt-5">Supplier ID: {supplier.supplier_id}</p>
                                         <p>Email: {supplier.email}</p>
@@ -492,11 +549,11 @@ function ViewPO() {
                                     </Link> */}
 
 
-                                    <p className="mt-5">Supplier selling product items:</p>
+                                    <p className="mt-5 fw-semibold">Supplier selling product items:</p>
                                     <ul>
                                         {supplier.product_items && supplier.product_items.map((item, index) => (
                                             <li key={index}>
-                                                {item.product_name} - ${item.unit_price}
+                                                <i className="bi bi-hash "></i>{item.product_name} - ${item.unit_price}
                                             </li>
                                         ))}
                                     </ul>

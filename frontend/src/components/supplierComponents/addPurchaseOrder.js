@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from "react";
-import {Form, Row, Col, Button } from "react-bootstrap";
+import {Form, Row, Col, Button, Popover, OverlayTrigger } from "react-bootstrap";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Layout from '../Layout';
@@ -40,6 +40,9 @@ function AddPurchaseOrder() {
     const [supplierNames, setSupplierNames] = useState([]);
     const [selectedSupplier, setSelectedSupplier] = useState("");
     const [supplier_id, setSupId] = useState("");
+    const [showDeliveryCostsPopover, setShowDeliveryCostsPopover] = useState(false);
+    const [showOrderDatePopover, setShowOrderDatePopover] = useState(false);
+    
     
     function sendDataPO(e) {
         e.preventDefault();
@@ -123,6 +126,33 @@ function AddPurchaseOrder() {
             });
     };
 
+    //FORM VALIDATIONS
+    //delivery costs
+    const toggleDeliveryCostsPopover = () => setShowDeliveryCostsPopover(!showDeliveryCostsPopover);
+
+    const handleDeliveryCostsChange = (e) => {
+      const value = e.target.value;
+      if (!isNaN(value)) {
+        setDeliveryCosts(parseFloat(value));
+        setShowDeliveryCostsPopover(false); 
+      } else {
+        toggleDeliveryCostsPopover(); 
+      }
+    };
+
+    //order date
+    const toggleOrderDatePopover = () => setShowOrderDatePopover(!showOrderDatePopover);
+
+    const handleOrderDateChange = (e) => {
+        const selectedDate = e.target.value;
+        if (selectedDate < new Date().toISOString().split('T')[0]) {
+        toggleOrderDatePopover(); // Show popover if date is before today
+        } else {
+        setPurchaseOrderDate(selectedDate);
+        setShowOrderDatePopover(false); // Hide popover if date is valid
+        }
+    };
+
 
     //Add Order Items and display Total Amount
     const handleAddOrderItems = () => {
@@ -201,10 +231,20 @@ function AddPurchaseOrder() {
                         <Col>
                         <Form.Group controlId="orderDate">
                             <Form.Label>Order date</Form.Label>
-                            <Form.Control type="date" name="order-Date" value={order_date}required 
-                            onChange={(e) => {
-                                setPurchaseOrderDate(e.target.value);
-                            }}/>
+                            <OverlayTrigger
+                            trigger="focus"
+                            placement="bottom"
+                            show={showOrderDatePopover}
+                            overlay={<Popover id="order-date-popover" style={{ padding: "15px" }}>Order date should not be a past value.</Popover>}
+                            >
+                            <Form.Control
+                                type="date"
+                                name="order-Date"
+                                value={order_date}
+                                required
+                                onChange={handleOrderDateChange}
+                            />
+                            </OverlayTrigger>
                         </Form.Group>
                         </Col>
 

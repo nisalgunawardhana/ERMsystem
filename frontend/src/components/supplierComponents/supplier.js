@@ -165,9 +165,9 @@ function Supplier () {
                             <div className="card-statistic-3 p-4">
                                 <div className="d-flex justify-content-between align-items-center">
                                     <div className="col-8">
-                                        <h2 className="d-flex align-items-center text-secondary fs-6 mb-1">
+                                        <h6 className="d-flex align-items-center text-secondary mb-1">
                                             Supplier details
-                                        </h2>
+                                        </h6>
                                         <h5 className="card-title fs-4" >Enhance Supplier Network</h5>
                                         <div>
                                             <Row>
@@ -180,12 +180,12 @@ function Supplier () {
                                                     </Button>
                                                     </Link>
                                                 </Col>
-                                                <Col >
+                                                <Col xs={6}>
                                                     <Link to="/rfq">
-                                                    <Button variant="success" className="side-btn mt-5 mb-2">
+                                                    <Button variant="outline-success" className="side-btn mt-5 mb-2">
                                                         <span>
                                                         Create a <br></br>RFQ
-                                                        <i className="bi bi-file"></i></span>
+                                                        <i className="bi bi-calculator"></i></span>
                                                     </Button>
                                                     </Link>
                                                 </Col>
@@ -207,9 +207,9 @@ function Supplier () {
                             <div className="card-statistic-3 p-4 ">
                                 <div className="d-flex justify-content-between align-items-center mb-1">
                                     <div className="col-8">
-                                        <h2 className="d-flex align-items-center text-secondary fs-6 mb-1">
+                                        <h6 className="d-flex align-items-center text-secondary  mb-1">
                                             Supplier report
-                                        </h2>
+                                        </h6>
                                         <h5 className="card-title " >Generate supplier report for financial processes</h5>
                                         <div>
                                             <Button className="mb-2 mt-5 position-relative bottom-0 start-0 text-white" variant="dark" onClick={handleSupplierReport}>Supplier report</Button>
@@ -281,7 +281,7 @@ function Supplier () {
                                     <div>
                                         <div className="mt-4 d-flex flex-column justify-content-between align-items-center">
                                             <Link to={`/supplier/get/${supplier._id}`} style={{ textDecoration: 'none' }}>
-                                                <Button variant="dark" id="up-btn" size="sm" className="mt-2 border-0">
+                                                <Button variant="dark" id="up-btn" size="sm" className="mt-2">
                                                     <i className="bi bi-shop-window me-2"></i> View Supplier
                                                 </Button>
                                             </Link>
