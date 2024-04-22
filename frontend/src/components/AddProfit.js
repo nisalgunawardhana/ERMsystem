@@ -208,7 +208,7 @@ function AddProfit() {
                                                 <label htmlFor="sales" className="form-label">
                                                     <i className="bi bi-currency-dollar me-2"></i>Sales income
                                                 </label>
-                                                <input type="text" className="form-control" id="sales" value={totalAmount.toFixed(2)} onChange={(e) => setIncome(e.target.value)} readOnly />
+                                                <input type="text" className="form-control" id="sales" value={totalAmount} onChange={(e) => setIncome(e.target.value)} readOnly />
                                             </div>
                                             <div className="mb-3">
                                                 <label htmlFor="supplier" className="form-label">
