@@ -168,7 +168,7 @@ export default function Bills() {
             <tr>
                 <td>${bill.customer_id}</td>
                 <td>${bill.billing_date}</td>
-                <td>${bill.total_amount}</td>
+                <td>${bill.total_amount.toFixed(2)}</td>
             </tr>
         `).join('')}
         </tbody>
