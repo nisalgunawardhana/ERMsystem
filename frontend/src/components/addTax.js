@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
 import Layout from './Layout';
 
@@ -16,17 +16,13 @@ function AddTax({ EPF, ETF }) {
     const [Status, setStatus] = useState();
     const [Final_profit, setFinal] = useState(0);
     const [currentDate, setCurrentDate] = useState('');
-    const [isValidTaxId, setIsValidTaxId] = useState(true);
     const [rateError, setRateError] = useState('');
     const navigate = useNavigate();
-    const { epfetf } = useParams();
 
     const getCurrentYear = () => {
         const currentDate = new Date();
         return currentDate.getFullYear();
     };
-
-    const [EPF_ETF, setEpf] = useState(epfetf);
 
     useEffect(() => {
         let currentYear = getCurrentYear();
@@ -140,69 +136,6 @@ function AddTax({ EPF, ETF }) {
         setID(value);
     };
 
-    const getPreviousYear = () => {
-        const currentDate = new Date();
-        const currentYear = currentDate.getFullYear();
-        const previousYear = currentYear - 1;
-        return previousYear;
-    };
-
-    const getCurrentTaxId = async () => {
-        try {
-            let currentYear = getCurrentYear();
-            let response = await axios.get(`http://localhost:8080/tax/search/${currentYear}`);
-            let tax = response.data;
-
-            if (tax.length > 0) {
-                // Filter tax records based on date_created column
-                const currentYearTax = tax.find(item => {
-                    const dateCreated = new Date(item.Date_created);
-                    return dateCreated.getFullYear() === currentYear;
-                });
-
-                if (currentYearTax) {
-                    // Assuming the first tax record for the current year is the relevant one
-                    return currentYearTax.Tax_ID;
-                }
-            }
-
-            // If there's no tax record for the current year, try fetching the tax details for the previous year
-            let previousYear = getPreviousYear();
-            response = await axios.get(`http://localhost:8080/tax/search/${previousYear}`);
-            tax = response.data;
-
-            if (tax.length > 0) {
-                // Filter tax records based on date_created column
-                const previousYearTax = tax.find(item => {
-                    const dateCreated = new Date(item.Date_created);
-                    return dateCreated.getFullYear() === previousYear;
-                });
-
-                if (previousYearTax) {
-                    // Assuming the first tax record for the previous year is the relevant one
-                    return previousYearTax.Tax_ID;
-                }
-            }
-
-            // If there's no tax record for the previous year as well, or if it's not related to the current year, return null
-            window.location.href = `/tax/get/T#`;
-            return null;
-        } catch (error) {
-            console.error('Error fetching tax details:', error);
-            return null;
-        }
-    };
-
-    const handleClickTax = async () => {
-        const taxId = await getCurrentTaxId();
-        if (taxId) {
-            window.location.href = `/tax/get/${taxId}`;
-        } else {
-            console.log('No profit record found for the current and previous months of the current year.');
-            // Handle the case where there's no profit record for the current and previous months of the current year
-        }
-    };
-
     return (
         <Layout>
         <div className="container" style={{ marginTop: '20px' }}>
@@ -277,7 +210,7 @@ function AddTax({ EPF, ETF }) {
                                 <div className="row">
                                     <div className="col">
                                         <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-                                            <button type="submit" className="btn btn-primary me-5 rounded">Add Tax Details</button>
+                                            <button type="submit" className="btn btn-outline-primary me-5"><i className="ri-add-line"></i>  Add Tax Details</button>
                                         </div>
                                     </div>
                                 </div>

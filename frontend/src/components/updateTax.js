@@ -5,19 +5,6 @@ import Layout from './Layout';
 
 function UpdateTax() {
     const { id } = useParams(); // Get the expense ID from the URL params
-    const [isOpen, setIsOpen] = useState(false);
-    const [totalEPF, setTotalEPF] = useState(0);
-    const [totalETF, setTotalETF] = useState(0);
-    const [total, setTotal] = useState(0);
-    const [profit, setTotalProfits] = useState(0);
-    const [totalAmount, setTotalAmount] = useState(0);
-    const [totalOther, setTotalOther] = useState(0);
-    const [totalSupp, setTotalSupp] = useState(0);
-    const [totalSalary, setTotalSalary] = useState(0);
-    const [Profit_ID, setID] = useState("");
-    const [Month, setMonth] = useState("");
-    const [Date_created, setDate] = useState("");
-    const [Description, setDesc] = useState("");
     const [currentDate, setCurrentDate] = useState('');
     const [totalProfit, setTotalProfit] = useState(0);
     const [rateError, setRateError] = useState('');
@@ -118,10 +105,6 @@ function UpdateTax() {
             });
     };
 
-    const handleBack = () => {
-        navigate(`/profit/get/${Tax.Tax_ID}`); // Reset specificExpense to null to display all expenses
-    };
-
     useEffect(() => {
         const getCurrentDate = () => {
             const today = new Date();
@@ -202,7 +185,7 @@ function UpdateTax() {
                                 <div className="row">
                                     <div className="col">
                                         <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-                                            <button type="submit" className="btn btn-primary me-5 rounded">Update Tax Details</button>
+                                            <button type="submit" className="btn btn-outline-primary me-5"><i className="ri-edit-line"></i>  Update Tax Details</button>
                                         </div>
                                     </div>
                                 </div>

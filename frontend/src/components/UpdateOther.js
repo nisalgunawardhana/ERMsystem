@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate} from 'react-router-dom';
 import Layout from './Layout';
 
 export default function UpdateOther() {
@@ -76,170 +76,10 @@ export default function UpdateOther() {
             });
     };
 
-    //function to go back
-    const handleBack = () => {
-        navigate('/otherExpense'); // Reset specificExpense to null to display all expenses
-    };
-
-    const getCurrentMonth = () => {
-        const months = [
-            'January', 'February', 'March', 'April', 'May', 'June',
-            'July', 'August', 'September', 'October', 'November', 'December'
-        ];
-        const currentDate = new Date();
-        const monthIndex = currentDate.getMonth();
-        return months[monthIndex];
-    };
-
-    const getPreviousMonth = () => {
-        const months = [
-            'January', 'February', 'March', 'April', 'May', 'June',
-            'July', 'August', 'September', 'October', 'November', 'December'
-        ];
-        const currentDate = new Date();
-        const monthIndex = (currentDate.getMonth() - 1 + 12) % 12; // Handling December as previous month
-        return months[monthIndex];
-    };
-
-    const getCurrentYear = () => {
-        const currentDate = new Date();
-        return currentDate.getFullYear();
-    };
-
-    const getPreviousYear = () => {
-        const currentDate = new Date();
-        const currentYear = currentDate.getFullYear();
-        const previousYear = currentYear - 1;
-        return previousYear;
-    };
-
-    const getCurrentMonthProfitId = async () => {
-        try {
-            let currentMonth = getCurrentMonth();
-            let currentYear = getCurrentYear();
-            let response = await axios.get(`http://localhost:8080/profit/search/${currentMonth}`);
-            let profit = response.data;
-
-            if (profit.length > 0) {
-                // Filter profit records based on date_created column
-                const currentYearProfit = profit.find(item => {
-                    const dateCreated = new Date(item.Date_created);
-                    return dateCreated.getFullYear() === currentYear;
-                });
-
-                if (currentYearProfit) {
-                    // Assuming the first profit record for the current month and year is the relevant one
-                    return currentYearProfit.Profit_ID;
-                }
-            }
-
-            // If there's no profit record for the current month of the current year,
-            // try fetching the previous month's profit of the current year
-            let previousMonth = getPreviousMonth();
-            response = await axios.get(`http://localhost:8080/profit/search/${previousMonth}`);
-            profit = response.data;
-
-            if (profit.length > 0) {
-                // Filter profit records based on date_created column
-                const currentYearProfit = profit.find(item => {
-                    const dateCreated = new Date(item.Date_created);
-                    return dateCreated.getFullYear() === currentYear;
-                });
-
-                if (currentYearProfit) {
-                    // Assuming the first profit record for the previous month of the current year is the relevant one
-                    return currentYearProfit.Profit_ID;
-                }
-            }
-
-            // If there's no profit record for the previous month as well, or if it's not related to the current year, return null
-            window.location.href = `/profit/get/PL#`;
-            return null;
-        } catch (error) {
-            console.error('Error fetching profit details:', error);
-            return null;
-        }
-    };
-
-    const handleClick = async () => {
-        const profitId = await getCurrentMonthProfitId();
-        if (profitId) {
-            window.location.href = `/profit/get/${profitId}`;
-        } else {
-            console.log('No profit record found for the current and previous months of the current year.');
-            // Handle the case where there's no profit record for the current and previous months of the current year
-        }
-    };
-
-    const getCurrentTaxId = async () => {
-        try {
-            let currentYear = getCurrentYear();
-            let response = await axios.get(`http://localhost:8080/tax/search/${currentYear}`);
-            let tax = response.data;
-
-            if (tax.length > 0) {
-                // Filter tax records based on date_created column
-                const currentYearTax = tax.find(item => {
-                    const dateCreated = new Date(item.Date_created);
-                    return dateCreated.getFullYear() === currentYear;
-                });
-
-                if (currentYearTax) {
-                    // Assuming the first tax record for the current year is the relevant one
-                    return currentYearTax.Tax_ID;
-                }
-            }
-
-            // If there's no tax record for the current year, try fetching the tax details for the previous year
-            let previousYear = getPreviousYear();
-            response = await axios.get(`http://localhost:8080/tax/search/${previousYear}`);
-            tax = response.data;
-
-            if (tax.length > 0) {
-                // Filter tax records based on date_created column
-                const previousYearTax = tax.find(item => {
-                    const dateCreated = new Date(item.Date_created);
-                    return dateCreated.getFullYear() === previousYear;
-                });
-
-                if (previousYearTax) {
-                    // Assuming the first tax record for the previous year is the relevant one
-                    return previousYearTax.Tax_ID;
-                }
-            }
-
-            // If there's no tax record for the previous year as well, or if it's not related to the current year, return null
-            window.location.href = `/tax/get/T#`;
-            return null;
-        } catch (error) {
-            console.error('Error fetching tax details:', error);
-            return null;
-        }
-    };
-
-    const handleClickTax = async () => {
-        const taxId = await getCurrentTaxId();
-        if (taxId) {
-            window.location.href = `/tax/get/${taxId}`;
-        } else {
-            console.log('No profit record found for the current and previous months of the current year.');
-            // Handle the case where there's no profit record for the current and previous months of the current year
-        }
-    };
-
     return (
         <Layout>
         <div className="container" style={{ marginTop: '20px', marginBottom: '40px' }}>
-            {/*Breadcrumb*/}
-            <nav aria-label="breadcrumb" style={{ marginTop: '20px' }}>
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="/">Home</a></li>
-                    <li class="breadcrumb-item"><a href="/finance">Finance Dashboard</a></li>
-                    <li class="breadcrumb-item active"><a href="/otherExpense">Other Expenses</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Update</li>
-                </ol>
-            </nav>
-            <div className="row justify-content-center" style={{ marginTop: '40px' }}>
+            <div className="row justify-content-center">
                 <div className="col-md-6">
                     <div className="card">
                         <div className="card-body">
@@ -286,7 +126,7 @@ export default function UpdateOther() {
                                 <div className="row mb-3">
                                     <div className="col">
                                         <div className="btn-group" style={{ marginLeft: '220px' }}>
-                                            <button type="submit" className="btn btn-primary me-5 rounded">Update Expense</button>{/*Update button*/}
+                                            <button type="submit" className="btn btn-outline-primary me-5"><i className="ri-edit-line"></i>  Update Expense</button>{/*Update button*/}
                                         </div>
                                     </div>
                                 </div>

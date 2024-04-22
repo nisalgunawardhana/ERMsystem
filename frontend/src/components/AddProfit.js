@@ -183,147 +183,147 @@ function AddProfit() {
 
     return (
         <Layout>
-        <div className="container" style={{ marginTop: '10px' }}>
-            <div className="row justify-content-center">
-                <div className="col-lg-8">
-                    <form onSubmit={sendData}>
-                        <div className="card">
-                            <div className="card-body">
-                                <h2 class="card-title text-center mb-5">Profit Details</h2>
-                                <div className="row">
-                                    <div className="col-md-6">
-                                        <div className="mb-3">
-                                            <label htmlFor="id" className="form-label">
-                                                <i className="bi bi-card-list me-2"></i>Profit Log ID
-                                            </label>
-                                            <input type="text" className="form-control" id="id" value={Profit_ID} onChange={(e) => setID(e.target.value)} readOnly/>
-                                        </div>
-                                        <div className="mb-3">
-                                            <label htmlFor="month" className="form-label">
-                                                <i className="bi bi-calendar3 me-2"></i>Month
-                                            </label>
-                                            <input type="text" className="form-control" id="month" value={month} onChange={(e) => setMonth(e.target.value)} readOnly/>
-                                        </div>
-                                        <div className="mb-3">
-                                            <label htmlFor="sales" className="form-label">
-                                                <i className="bi bi-currency-dollar me-2"></i>Sales income
-                                            </label>
-                                            <input type="text" className="form-control" id="sales" value={totalAmount.toFixed(2)} onChange={(e) => setIncome(e.target.value)} readOnly/>
-                                        </div>
-                                        <div className="mb-3">
-                                            <label htmlFor="supplier" className="form-label">
-                                                <i className="bi bi-people me-2"></i>Supplier Expenses
-                                            </label>
-                                            <input type="text" className="form-control" id="supplier" value={totalSupp.toFixed(2)} onChange={(e) => setSupplier(e.target.value)} readOnly/>
-                                        </div>
-                                        <div className="mb-3">
-                                            <label htmlFor="salaries" className="form-label">
-                                                <i className="bi bi-people-fill me-2"></i>Employee salaries
-                                            </label>
-                                            <input type="text" className="form-control" id="salaries" value={totalSalary.toFixed(2)} onChange={(e) => setSalary(e.target.value)} readOnly/>
-                                        </div>
-                                        <div className="mb-3">
-                                            <label htmlFor="other" className="form-label">
-                                                <i className="bi bi-journal me-2"></i>Other Expenses
-                                            </label>
-                                            <input type="text" className="form-control" id="other" value={totalOther.toFixed(2)} onChange={(e) => setOther(e.target.value)} readOnly/>
-                                        </div>
-                                    </div>
-                                    <div className="col-md-6">
-                                        <div className="mb-3">
-                                            <label htmlFor="epfetf" className="form-label">
-                                                <i className="bi bi-calculator me-2"></i>Epf and Etf
-                                            </label>
-                                            <div className="row">
-                                                <div className="col-md-9">
-                                                    <input type="text" className="form-control" id="other" value={(totalEPF + totalETF).toFixed(2)} onChange={(e) => setOther(e.target.value)} readOnly/>
-                                                </div>
-                                                <div className="col-md-3">
-                                                    <button type="button" className="btn btn-primary" onClick={handleShow}><i className="ri-add-line"></i>Add</button>
-                                                </div>
+            <div className="container" style={{ marginTop: '10px' }}>
+                <div className="row justify-content-center">
+                    <div className="col-lg-8">
+                        <form onSubmit={sendData}>
+                            <div className="card">
+                                <div className="card-body">
+                                    <h2 class="card-title text-center mb-5">Profit Details</h2>
+                                    <div className="row">
+                                        <div className="col-md-6">
+                                            <div className="mb-3">
+                                                <label htmlFor="id" className="form-label">
+                                                    <i className="bi bi-card-list me-2"></i>Profit Log ID
+                                                </label>
+                                                <input type="text" className="form-control" id="id" value={Profit_ID} onChange={(e) => setID(e.target.value)} readOnly />
+                                            </div>
+                                            <div className="mb-3">
+                                                <label htmlFor="month" className="form-label">
+                                                    <i className="bi bi-calendar3 me-2"></i>Month
+                                                </label>
+                                                <input type="text" className="form-control" id="month" value={month} onChange={(e) => setMonth(e.target.value)} readOnly />
+                                            </div>
+                                            <div className="mb-3">
+                                                <label htmlFor="sales" className="form-label">
+                                                    <i className="bi bi-currency-dollar me-2"></i>Sales income
+                                                </label>
+                                                <input type="text" className="form-control" id="sales" value={totalAmount.toFixed(2)} onChange={(e) => setIncome(e.target.value)} readOnly />
+                                            </div>
+                                            <div className="mb-3">
+                                                <label htmlFor="supplier" className="form-label">
+                                                    <i className="bi bi-people me-2"></i>Supplier Expenses
+                                                </label>
+                                                <input type="text" className="form-control" id="supplier" value={totalSupp.toFixed(2)} onChange={(e) => setSupplier(e.target.value)} readOnly />
+                                            </div>
+                                            <div className="mb-3">
+                                                <label htmlFor="salaries" className="form-label">
+                                                    <i className="bi bi-people-fill me-2"></i>Employee salaries
+                                                </label>
+                                                <input type="text" className="form-control" id="salaries" value={totalSalary.toFixed(2)} onChange={(e) => setSalary(e.target.value)} readOnly />
+                                            </div>
+                                            <div className="mb-3">
+                                                <label htmlFor="other" className="form-label">
+                                                    <i className="bi bi-journal me-2"></i>Other Expenses
+                                                </label>
+                                                <input type="text" className="form-control" id="other" value={totalOther.toFixed(2)} onChange={(e) => setOther(e.target.value)} readOnly />
                                             </div>
                                         </div>
-                                        <div className="mb-3">
-                                            <label htmlFor="profit" className="form-label">
-                                                <i className="bi bi-cash me-2"></i>Monthly Profit [Income tax rate: {Rate}%]
-                                            </label>
-                                            <input type="text" className="form-control" id="profit" value={((totalAmount - (totalOther + totalSupp + totalSalary)) - ((totalAmount - (totalOther + totalSupp + totalSalary)) * Rate / 100.0)).toFixed(2)} onChange={(e) => setProfit(e.target.value)} readOnly/>
-                                        </div>
-                                        <div className="mb-3">
-                                            <label htmlFor="date" className="form-label">
-                                                <i className="bi bi-calendar2 me-2"></i>Date modified
-                                            </label>
-                                            <input type="date" className="form-control" id="date" value={Date_modified} onChange={(e) => setDate(e.target.value)} readOnly/>
-                                        </div>
-                                        <div className="mb-3">
-                                            <label htmlFor="desc" className="form-label">
-                                                <i className="bi bi-chat-dots me-2"></i>Description
-                                            </label>
-                                            <textarea className="form-control" id="desc" value={Description} onChange={(e) => setDesc(e.target.value)} rows={5} required/>
+                                        <div className="col-md-6">
+                                            <div className="mb-3">
+                                                <label htmlFor="epfetf" className="form-label">
+                                                    <i className="bi bi-calculator me-2"></i>Epf and Etf
+                                                </label>
+                                                <div className="row">
+                                                    <div className="col-md-8">
+                                                        <input type="text" className="form-control" id="other" value={(totalEPF + totalETF).toFixed(2)} onChange={(e) => setOther(e.target.value)} readOnly />
+                                                    </div>
+                                                    <div className="col-md-4">
+                                                        <button type="button" className="btn btn-outline-primary" onClick={handleShow}><i className="ri-add-line"></i>Add</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="mb-3">
+                                                <label htmlFor="profit" className="form-label">
+                                                    <i className="bi bi-cash me-2"></i>Monthly Profit [Income tax rate: {Rate}%]
+                                                </label>
+                                                <input type="text" className="form-control" id="profit" value={((totalAmount - (totalOther + totalSupp + totalSalary)) - ((totalAmount - (totalOther + totalSupp + totalSalary)) * Rate / 100.0)).toFixed(2)} onChange={(e) => setProfit(e.target.value)} readOnly />
+                                            </div>
+                                            <div className="mb-3">
+                                                <label htmlFor="date" className="form-label">
+                                                    <i className="bi bi-calendar2 me-2"></i>Date modified
+                                                </label>
+                                                <input type="date" className="form-control" id="date" value={Date_modified} onChange={(e) => setDate(e.target.value)} readOnly />
+                                            </div>
+                                            <div className="mb-3">
+                                                <label htmlFor="desc" className="form-label">
+                                                    <i className="bi bi-chat-dots me-2"></i>Description
+                                                </label>
+                                                <textarea className="form-control" id="desc" value={Description} onChange={(e) => setDesc(e.target.value)} rows={5} required />
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="row">
-                                    <div className="col">
-                                        <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-                                            <button type="submit" className="btn btn-primary me-5 rounded">Submit</button>
+                                    <div className="row">
+                                        <div className="col">
+                                            <div className="d-grid gap-2 d-md-flex justify-content-md-end">
+                                                <button type="submit" className="btn btn-outline-primary me-5"><i className="ri-check-line"></i>  Submit</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </form>
-                    <Toaster />
-                    <div className="modal-backdrop" style={{ display: isOpen ? 'block' : 'none', backdropFilter: isOpen ? 'blur(5px)' : 'none' }}></div>
-                    <Modal show={isOpen} onHide={handleClose} style={{ marginTop: '60px' }}>
-                        <Modal.Header closeButton>
-                            <Modal.Title>Add EPF and ETF</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <form onSubmit={handleSubmit}>
-                                {/* Form fields */}
-                                <div className="row">
-                                    <div>
-                                        <div className="mb-3 d-flex align-items-center">
-                                            <label htmlFor="salary" className="form-label col-md-4">
-                                                <i className="bi bi-cash me-2"></i>Total Salaries
-                                            </label>
-                                            <button type="button" onClick={handleCalculateEPFETF} className="btn btn-primary" style={{ marginLeft: '160px' }}>
-                                                <i className="bi bi-check2-square me-2"></i> Add EPF_ETF
-                                            </button>
+                        </form>
+                        <Toaster />
+                        <div className="modal-backdrop" style={{ display: isOpen ? 'block' : 'none', backdropFilter: isOpen ? 'blur(5px)' : 'none' }}></div>
+                        <Modal show={isOpen} onHide={handleClose} style={{ marginTop: '60px' }}>
+                            <Modal.Header closeButton>
+                                <Modal.Title>Add EPF and ETF</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                                <form onSubmit={handleSubmit}>
+                                    {/* Form fields */}
+                                    <div className="row">
+                                        <div>
+                                            <div className="mb-3 d-flex align-items-center">
+                                                <label htmlFor="salary" className="form-label col-md-4">
+                                                    <i className="bi bi-cash me-2"></i>Total Salaries
+                                                </label>
+                                                <button type="button" onClick={handleCalculateEPFETF} className="btn btn-outline-primary" style={{ marginLeft: '160px' }}>
+                                                    <i className="ri-add-line"></i>  Add EPF/ETF
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="row">
-                                    <div>
-                                        <div className="mb-3">
-                                            <input type="text" className="form-control" id="salary" name="Date" value={totalSalary.toFixed(2)} readOnly/>
+                                    <div className="row">
+                                        <div>
+                                            <div className="mb-3">
+                                                <input type="text" className="form-control" id="salary" name="Date" value={totalSalary.toFixed(2)} readOnly />
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="mb-3">
-                                    <label htmlFor="epf" className="form-label">
-                                        <i className="bi bi-calculator me-2"></i>EPF Value
-                                    </label>
-                                    <input type="text" className="form-control" id="epf" value={totalEPF.toFixed(2)} readOnly/>
-                                </div>
-                                <div className="mb-3">
-                                    <label htmlFor="etf" className="form-label">
-                                        <i className="bi bi-calculator me-2"></i>ETF Value
-                                    </label>
-                                    <input type="text" className="form-control" id="etf" value={totalETF.toFixed(2)} readOnly/>
-                                </div>
-                                {/* Submit button */}
-                                <button type="submit" className="btn btn-primary" style={{ marginLeft: '160px' }}>
-                                    <i className="bi bi-arrow-right-circle me-2"></i> Submit
-                                </button>
+                                    <div className="mb-3">
+                                        <label htmlFor="epf" className="form-label">
+                                            <i className="bi bi-calculator me-2"></i>EPF Value
+                                        </label>
+                                        <input type="text" className="form-control" id="epf" value={totalEPF.toFixed(2)} readOnly />
+                                    </div>
+                                    <div className="mb-3">
+                                        <label htmlFor="etf" className="form-label">
+                                            <i className="bi bi-calculator me-2"></i>ETF Value
+                                        </label>
+                                        <input type="text" className="form-control" id="etf" value={totalETF.toFixed(2)} readOnly />
+                                    </div>
+                                    {/* Submit button */}
+                                    <button type="submit" className="btn btn-outline-primary" style={{ marginLeft: '180px' }}>
+                                    <i className="ri-check-line"></i>  Submit
+                                    </button>
 
-                            </form>
-                        </Modal.Body>
-                    </Modal>
+                                </form>
+                            </Modal.Body>
+                        </Modal>
+                    </div>
                 </div>
             </div>
-        </div>
         </Layout>
     );
 }
