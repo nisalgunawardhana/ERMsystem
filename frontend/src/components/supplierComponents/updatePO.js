@@ -95,7 +95,7 @@ function UpdatePurchaseOrder() {
         axios.put(`http://localhost:8080/purchaseOrder/update/${id}`, purchaseOrder)
             .then(() => {
                 alert("Purchase Order updated successfully");
-                navigate("/purchaseOrder");
+                navigate("/dashboard/logistics/purchaseOrder");
             })
             .catch(error => {
                 console.error("Error updating purchase order:", error);

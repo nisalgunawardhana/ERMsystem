@@ -65,7 +65,7 @@ function UpdateSupplier() {
           .then(response => {
             console.log('Supplier updated successfully:', response.data);
             alert("Supplier successfully updated");
-            navigate("/supplier/");
+            navigate("/dashboard/logistics/supplier/");
         })
         .catch(error => {
             console.error('Error updating supplier:', error);
@@ -416,7 +416,7 @@ function UpdateSupplier() {
                                     <Button className="px-4 luxery-yellow" variant="secondary" onClick={handleUpdate} type="submit">Update {supplier_name}</Button>
                                 </Col>
                                 <Col xs={1} >
-                                    <Link to={`/supplier/`}><Button className=" me-3" variant="secondary">Back</Button></Link>
+                                    <Link to={`/dashboard/logistics/supplier/`}><Button className=" me-3" variant="secondary">Back</Button></Link>
                                 </Col>
                             </Row>
                         </div>

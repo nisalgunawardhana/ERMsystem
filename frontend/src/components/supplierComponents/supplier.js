@@ -172,7 +172,7 @@ function Supplier () {
                                         <div>
                                             <Row>
                                                 <Col xs={6}>
-                                                    <Link to="/supplier/add">
+                                                    <Link to="/dashboard/logistics/supplier/add">
                                                     <Button variant="dark" className="side-btn mt-5 mb-2 ">
                                                         <span>
                                                         Add a new Supplier
@@ -181,7 +181,7 @@ function Supplier () {
                                                     </Link>
                                                 </Col>
                                                 <Col xs={6}>
-                                                    <Link to="/rfq">
+                                                    <Link to="/dashboard/logistics/rfq">
                                                     <Button variant="outline-success" className="side-btn mt-5 mb-2">
                                                         <span>
                                                         Create a <br></br>RFQ
@@ -280,7 +280,7 @@ function Supplier () {
                                     
                                     <div>
                                         <div className="mt-4 d-flex flex-column justify-content-between align-items-center">
-                                            <Link to={`/supplier/get/${supplier._id}`} style={{ textDecoration: 'none' }}>
+                                            <Link to={`/dashboard/logistics/supplier/get/${supplier._id}`} style={{ textDecoration: 'none' }}>
                                                 <Button variant="dark" id="up-btn" size="sm" className="mt-2">
                                                     <i className="bi bi-shop-window me-2"></i> View Supplier
                                                 </Button>

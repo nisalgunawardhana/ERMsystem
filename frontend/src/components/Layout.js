@@ -122,12 +122,12 @@ function Layout({children}) {
         },
         {
             name: 'Suppliers',
-            path: '/supplier',
+            path: '/dashboard/logistics/supplier',
             icon: 'ri-truck-line', 
         },
         {
             name: 'Purchase Orders',
-            path: '/purchaseOrder',
+            path: '/dashboard/logistics/purchaseOrder',
             icon: 'ri-store-2-line', 
         }
     ];
