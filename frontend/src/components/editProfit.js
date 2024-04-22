@@ -227,7 +227,7 @@ function EditProfit() {
                                             <label htmlFor="sales" className="form-label">
                                                 <i className="bi bi-currency-dollar me-2"></i>Sales income
                                             </label>
-                                            <input type="text" className="form-control" id="sales" name="Sales_income" value={totalAmount.toFixed(2)} onChange={handleChanges} readOnly />
+                                            <input type="text" className="form-control" id="sales" name="Sales_income" value={totalAmount ? totalAmount.toFixed(2) : ''} onChange={handleChanges} readOnly />
                                         </div>
                                         <div className="mb-3">
                                             <label htmlFor="supplier" className="form-label">
@@ -255,7 +255,7 @@ function EditProfit() {
                                             </label>
                                             <div className="row">
                                                 <div className="col-md-8">
-                                                    <input type="text" className="form-control" id="epfetf" name="EPF_ETF" value={total.toFixed(2)} onChange={handleChanges} readOnly />
+                                                    <input type="text" className="form-control" id="epfetf" name="EPF_ETF" value={total ? total.toFixed(2) : ''} onChange={handleChanges} readOnly />
                                                 </div>
                                                 <div className="col-md-4">
                                                     <button type="button" className="btn btn-outline-primary" onClick={handleShow}><i className="ri-add-line"></i>Add</button>
