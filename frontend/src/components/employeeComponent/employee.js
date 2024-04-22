@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Layout from '../Layout';
 import toast, { Toaster } from 'react-hot-toast';
-import { Modal } from 'react-bootstrap';
+import { Modal, Button, Form } from 'react-bootstrap';
 
 export default function Employees() {
 
@@ -62,7 +62,7 @@ export default function Employees() {
                 alert(err.message);
             });
 
-        setShowDeletePrompt(false);
+            setShowDeletePrompt(false);
     };
 
     const [expenseToDelete, setExpenseToDelete] = useState(null);
@@ -109,11 +109,8 @@ export default function Employees() {
                 return;
             }
 
-             // Calculate the next available Employee ID
-             const nextEmployeeId = getNextEmployeeId();
-
             // Check if the Employee ID already exists
-            const existingEmployee = employees.find(emp => emp.employee_Id === nextEmployeeId);
+            const existingEmployee = employees.find(emp => emp.employee_Id === employeeId);
             if (existingEmployee && existingEmployee._id !== selectedEmployee?._id) {
                 setError('Employee ID already exists. Please choose a unique Employee ID.');
                 return;
@@ -154,15 +151,11 @@ export default function Employees() {
         } catch (err) {
             setError(err.response?.data?.error || 'An error occurred.');
         }
+
+
     };
 
-    // Function to calculate the next available Employee ID
-    const getNextEmployeeId = () => {
-        const employeeIds = employees.map(emp => parseInt(emp.employee_Id.replace('EMP', ''), 10));
-        const maxEmployeeId = Math.max(...employeeIds);
-        const nextEmployeeId = maxEmployeeId >= 0 ? maxEmployeeId + 1 : 0;
-        return `EMP${nextEmployeeId.toString().padStart(4, '0')}`;
-    };
+    
 
     const filteredEmployees = employees.filter(employee =>
         employee.employee_Id.toLowerCase().includes(searchQuery.toLowerCase())
@@ -401,7 +394,7 @@ export default function Employees() {
                                 <Modal.Title>Confirm Deletion</Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
-                                Are you sure you want to delete this expense?
+                                Are you sure you delete this employee?
                             </Modal.Body>
                             <Modal.Footer>
                                 <button className="btn btn-outline-danger" onClick={handleDeleteEmployee}><i className="ri-check-line"></i>  Yes</button>
