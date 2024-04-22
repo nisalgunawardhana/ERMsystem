@@ -291,15 +291,10 @@ export default function Bills() {
 
         // Verify the secret code
         if (secretCode === actualSecretCode) {
-            // Show toaster message before initiating delete
             toast.promise(
-                // Promise to delete all selected bills
                 new Promise((resolve, reject) => {
-                    // Perform delete operation
                     const selectedBills = bill.filter(b => b.selected).map(b => b._id);
-                    // Check if any bills are selected
                     if (selectedBills.length > 0) {
-                        // Delete all selected bills
                         Promise.all(selectedBills.map(id => axios.delete(`http://localhost:8080/bills/delete/${id}`)))
                             .then(() => {
                                 resolve("Bills deleted successfully!");
@@ -310,16 +305,14 @@ export default function Bills() {
                                 reject(err.message);
                             });
                     } else {
-                        // If no bills are selected, reject with a message
                         reject("No bills selected for deletion.");
                     }
                 }),
-                // Toast options
                 {
                     loading: 'Deleting...',
                     success: (msg) => {
-                        handleCloseDeleteAllConfirmation(); // Close confirmation modal
-                        return msg; // Show success message
+                        handleCloseDeleteAllConfirmation();
+                        return msg;
                     },
                     error: (err) => {
                         handleCloseDeleteAllConfirmation(); // Close confirmation modal
@@ -533,6 +526,7 @@ export default function Bills() {
                     </Modal.Footer>
                 </Modal>
 
+                {/* Delete confirmation   modal for delete all */}
                 <Modal show={showDeleteAllConfirmation} onHide={handleCloseDeleteAllConfirmation}>
                     <Modal.Header closeButton>
                         <Modal.Title>Confirm Delete All</Modal.Title>
@@ -552,7 +546,7 @@ export default function Bills() {
                     </Modal.Footer>
                 </Modal>
 
-                {/* Modal for inputting start and end dates */}
+                {/* Modal for repo gen start and end dates */}
                 <Modal show={showModal} onHide={() => setShowModal(false)}>
                     <Modal.Header closeButton>
                         <Modal.Title>Generate Report</Modal.Title>

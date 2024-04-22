@@ -330,7 +330,8 @@ function AddSupplierPerformance() {
                 </Col>
                 <Col>
                     <div className="my-3 border border-secondary rounded card-shadow-1">
-                        <h3 className="text-center mt-4 layout-blue">Supplier Performance<br></br><span className="fw-light fs-5 ">based on purchase order {purchaseOrder.purchaseOrder_id}</span></h3>
+                        <h3 className="text-center mt-4 layout-blue">
+                            <i className="bi bi-graph-up-arrow me-2"></i>Supplier Performance<br></br><span className="fw-light fs-5 ">based on purchase order {purchaseOrder.purchaseOrder_id}</span></h3>
 
                         <div className="d-flex justify-content-center">
                             <div className="container custom-container-supPerformance">
@@ -355,10 +356,22 @@ function AddSupplierPerformance() {
                                         />
                                     </Form.Group>
 
-                                    <div className="text-center p-3 my-3 bg-warning rounded-4">
-                                        <div className="p-3 ">Days Difference <br></br><span className="fw-semibold fs-4">{calculateDateDifference()} days</span></div>
+                                    <div className="text-center p-3 my-4 shadow rounded-4">
+                                        <div className="p-3 ">
+                                            <h5><i className="bi bi-hourglass-bottom"></i></h5>
+                                            Days Difference <br></br>
+                                            <span className="fw-semibold fs-4">{calculateDateDifference()} days</span>
+                                        </div>
 
-                                        <div className="p-3 ">Lead Time<br></br><span className="fw-semibold fs-4"> {calculateLeadTime()} days</span></div>                               
+                                        <div className="p-3 ">
+                                            <h5><i className="bi bi-stopwatch"></i></h5>
+                                            Lead Time<br></br>
+                                            <span className="fw-semibold fs-4"> {calculateLeadTime()} days</span>
+                                        </div>                               
+
+                                        <div class="progress mt-1 " data-height="8" style={{ height: '8px' }}>
+                                            <div class="progress-bar orange" role="progressbar" data-width="25%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style={{ width: '75%' }}></div>
+                                        </div>
                                     </div>
 
                                     <Form.Group controlId="noofDamages" className="mt-2">
@@ -371,10 +384,13 @@ function AddSupplierPerformance() {
                                         />
                                     </Form.Group>
 
-                                    <div className="mt-3 text-center bg-warning p-3 rounded-4">
+                                    <div className="mt-4 text-center shadow p-3 rounded-4">
                                         <p className="mt-3">Total Number of Order Items: {calculateTotalQuantity()}</p>
                                         <p>Number of Damaged Items: {noofDamages}</p>
-                                        <p className="mt-4"><b>Quality of Goods<br></br><span className="fw-semibold fs-4">{calculateQualityOfGoods()}%</span></b></p>
+                                        <p className="mt-4">
+                                        <h5><i className="bi bi-patch-check"></i></h5>
+                                        <b>Quality of Goods<br></br>
+                                        <span className="fw-semibold fs-4">{calculateQualityOfGoods()}%</span></b></p>
 
                                         <div class="progress mt-1 " data-height="8" style={{ height: '8px' }}>
                                             <div class="progress-bar orange" role="progressbar" data-width="25%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style={{ width: '75%' }}></div>
@@ -391,8 +407,11 @@ function AddSupplierPerformance() {
                                         />
                                     </Form.Group>
 
-                                    <div>
-                                        <p className="mt-4 text-center"><b>Quantity Accuracy<br></br><span className="fw-semibold fs-4"> {calculateQuantityAccuracy()}%</span></b></p>
+                                    <div className="shadow p-3 my-4 rounded-4">
+                                        <p className="mt-2 text-center">
+                                            <h5><i className="bi bi-bar-chart-line"></i></h5>
+                                            <b>Quantity Accuracy<br></br>
+                                            <span className="fw-semibold fs-4"> {calculateQuantityAccuracy()}%</span></b></p>
 
                                         <div class="progress mt-1 " data-height="8" style={{ height: '8px' }}>
                                             <div class="progress-bar orange" role="progressbar" data-width="25%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style={{ width: '75%' }}></div>

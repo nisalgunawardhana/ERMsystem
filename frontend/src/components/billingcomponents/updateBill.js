@@ -5,6 +5,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { useNavigate } from "react-router-dom";
 import Layout from '../Layout';
+import { Toaster, toast } from 'react-hot-toast';
 
 
 function UpdateBill() {
@@ -20,6 +21,8 @@ function UpdateBill() {
     axios.get(`http://localhost:8080/bills/${id}`)
       .then(response => {
         console.log('Response:', response.data);
+        
+
         const { customer_id, billing_date, items, total_amount } = response.data;
         setCustomerId(customer_id);
         setBillingDate(formatDate(billing_date));
@@ -54,12 +57,14 @@ function UpdateBill() {
       items,
       total_amount
     };
+   
 
     // Send a PUT request to update the bill
     axios.put(`http://localhost:8080/bills/update/${id}`, updatedBill)
       .then(response => {
         console.log('Bill updated successfully:', response.data);
         navigate("/dashboard/cashier/billing");
+        toast.success("Bill updated successfully!");
       })
       .catch(error => {
         console.error('Error updating bill:', error);
