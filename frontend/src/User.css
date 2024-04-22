@@ -134,12 +134,6 @@ label {
   overflow: hidden; 
 }
 
-.register-background img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; 
-}
-
 
 @keyframes App-logo-spin {
 from {

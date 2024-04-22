@@ -217,8 +217,9 @@ function ViewPO() {
                         <div class="container">
                             <div class="ms-2 container-fluid mb-5">
                                 <div class="ms-4">
+                                <h2>Diyana Fashion</h2>
                                     <p class="fw-light">Purchase order Management</p>
-                                    <h3>Purchase Order {id}</h3>
+                                    <h2>Purchase Order ${purchaseOrder.purchaseOrder_id}</h2>
                                 </div>
                             
                                 <div class="mt-5 container-fluid "> 
@@ -226,10 +227,17 @@ function ViewPO() {
                                     <div class="row">
                                         <div class="col-md-7"> 
                                             <div class="pe-4 bg-warning"> 
-                                                <p class="fs-5">Purchase Order ID: ${purchaseOrder.purchaseOrder_id}</p>
+                                                <p class="fs-3">Purchase Order ID: ${purchaseOrder.purchaseOrder_id}</p>
                                                 <p class="fs-6">Mongo DB database ID: ${id}</p>
+
+                                                <h4>Supplier Details</h4>
                                                 <p>Supplier ID: ${purchaseOrder.supplier_id}</p>
+                                                <p>Supplier Name: ${supplier.supplier_name}</p>
+                                                <p>Address: ${supplier.address}</p>
+                                                <p>Contact Number: ${supplier.contact}</p>
+                                                <p>Email: ${supplier.email}</p>
                                                 
+                                                <h4 class="mt-5">Order date and Deliver date</h4>
                                                 <div class="row ms-5 mt-5 mb-4">
                                                     <div class="col-xs-4">
                                                         <p class="fs-6 p-3 text-center fw-light bg-info-dates">Order date: <br><span class="fw-semibold fs-5">${purchaseOrder.order_date}</span></p>
@@ -239,14 +247,14 @@ function ViewPO() {
                                                     </div>
                                                 </div>
                             
-                                                <div >
-                                                    <h6>Delivery Information</h6>
+                                                <div class="mt-4">
+                                                    <h3>Delivery Information</h3>
                                                     <p class="ms-3">Delivery Method :  ${purchaseOrder.delivery_information.delivery_method}</p>
                                                     <p class="ms-3">Delivery costs for the order :  ${purchaseOrder.delivery_information.delivery_costs}</p>
                                                 </div>
                             
                                                 <div class="mt-4">
-                                                    <h6>Payment details of the order</h6>
+                                                    <h3>Payment details of the order</h3>
                                                     <p class="ms-3">Payment terms :  ${purchaseOrder.payment_information.payment_terms}</p>
                                                     <p class="ms-3">Payment Method :  ${purchaseOrder.payment_information.payment_method}</p>
                                                 </div>
@@ -256,7 +264,7 @@ function ViewPO() {
                                     
                             
                                     <div class="p-4 bg-info w-75 mt-3 rounded">
-                                        <h6 class="mt-2">Ordered Items</h6>
+                                        <h3 class="mt-2 ">Ordered Items</h3>
                                         <table>
                                             <thead>
                                                 <tr>
@@ -282,10 +290,11 @@ function ViewPO() {
                                     </div>
         
                             
-                                    <p class="fw-light mt-5 mb-4">Total Amount of the ordered items : <span class="fw-semibold fs-4"> Rs. ${purchaseOrder.total_order_amount}</span></p>
+                                    <h3 class="fw-light fs-4 mt-5 mb-4">Total Amount of the ordered items : <span class="print-bold"> Rs.${purchaseOrder.total_order_amount}</span></h3>
+
                             
                                     <div class="text-center ms-5 ">
-                                        <p class="text-start">Current status of the order</p>
+                                        <h3 class="text-start">Current status of the order</h3>
                                         <div class="row">
                                             <div class="col-xs-2">
                                                 <p class="fs-6 p-3 fw-light bg-warning">Payment Status<br><span>${purchaseOrder.payment_status}</span></p>
@@ -298,7 +307,7 @@ function ViewPO() {
                             
                                     <p class="text-secondary mt-4 bg-success-subtle p-3 me-3 ">If payment is done,<br><span class="ms-3 text-dark">Invoice number : ${purchaseOrder.invoice_no}</span></p>
                             
-                                    <p class="mt-4 fw-semibold"> Additional instructions to follow: <br><span class="fw-normal">${purchaseOrder.additional_infomation}</span></p>
+                                    <h3 class="mt-4 fw-semibold"> Additional instructions to follow: <br><span class="fw-normal">${purchaseOrder.additional_infomation}</span></h3>
                                     
                                 
                                 </div>

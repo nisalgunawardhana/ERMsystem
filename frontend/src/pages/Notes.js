@@ -128,7 +128,23 @@ const NotesPage = () => {
 
     return (
         <Layout>
-            <h2>Notes</h2>
+            <div className="row">
+                <div className="col-md-6">
+                    <div className="system-users p-3">
+                        <h2>Notes : Keep track on the Reminders!</h2>
+                    </div>
+                </div>
+                
+                {/* Current Date and Time */}
+                <div className="col-md-6 text-md-end mb-6">
+                    <div className="date-time p-4">
+                        <span className="date">{currentDateTime.split(',')[0]}</span>
+                        <span className="time"> | {currentDateTime.split(',')[1]}</span>
+                    </div>                     
+                </div>
+
+            </div>
+            
             <Button onClick={handleAddNote}>Add New Note</Button>
 
             <Table columns={columns} dataSource={notes} rowKey="_id" /> {/* Render the table with notes data */}
@@ -151,9 +167,6 @@ const NotesPage = () => {
                     <Form.Item label="Note Description">
                         <Input.TextArea name="note_description" value={noteToUpdate.note_description} onChange={handleInputChange} />
                     </Form.Item>
-
-
-
                 </Form>
             </Modal>
 
