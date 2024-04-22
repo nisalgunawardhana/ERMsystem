@@ -167,9 +167,6 @@ const NotesPage = () => {
                     <Form.Item label="Note Description">
                         <Input.TextArea name="note_description" value={noteToUpdate.note_description} onChange={handleInputChange} />
                     </Form.Item>
-
-
-
                 </Form>
             </Modal>
 

@@ -17,6 +17,9 @@ function SystemUsers() {
     const [totalUsers, setTotalUsers] = useState(0);
     const [currentDateTime, setCurrentDateTime] = useState('');
 
+    // Add a state to hold the count of filtered users
+    const [filteredUserCount, setFilteredUserCount] = useState(0);
+
     useEffect(() => {
         // Fetch users data when the component mounts
         fetchUsers(); 
@@ -174,7 +177,11 @@ function SystemUsers() {
     const handleSearch = (e) => {
         const query = e.target.value;
         setSearchQuery(query);
+
+        // Update filtered user count based on the number of filtered users
+        setFilteredUserCount(filteredUsers.length);
     };
+
     const filteredUsers = users.filter(user =>
         user.first_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         user.last_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -183,10 +190,28 @@ function SystemUsers() {
     );
 
     //generate report
-    const generateReport = () => {
+    const generateReport = (reportType) => {
+
+        let reportData = [];
+        let reportTitle = '';
+
+        // Check the report type and prepare data accordingly
+        if (reportType === 'totalUsers') {
+            reportData = users;
+            reportTitle = 'Total Number of System Users';
+        } else if (reportType === 'filteredUsers') {
+            reportData = filteredUsers;
+            reportTitle = 'Filtered Users';
+        } else {
+            // Handle invalid report type
+            console.error('Invalid report type');
+            return;
+        }
+
+        // Generate report based on the report data
         const printWindow = window.open("", "_blank", "width=600,height=600");
         printWindow.document.write(`
-            <html>
+            <html>w
                 <head>
                     <title>System User Report</title>
                     <style>
@@ -210,10 +235,11 @@ function SystemUsers() {
                         th {
                             background-color: #f2f2f2;
                         }
+                        
                     </style>
                 </head>
                 <body>
-                    <h1>System User Report</h1>
+                    <h1>${reportTitle}</h1>
                     <table>
                         <thead>
                             <tr>
@@ -225,7 +251,7 @@ function SystemUsers() {
                             </tr>
                         </thead>
                         <tbody>
-                            ${users.map((user, index) => `
+                            ${reportData.map((user, index) => `
                                 <tr>
                                     <td>${index + 1}</td>
                                     <td>${user.first_name}</td>
@@ -243,7 +269,7 @@ function SystemUsers() {
             </html>
         `);
         printWindow.document.close();
-        printWindow.print();
+        printWindow.print();   
     };
 
     return (
@@ -299,38 +325,81 @@ function SystemUsers() {
                     </div>
                 </div>
 
-                {/*generate report*/}
-                <div className="col-lg-6 col-md-6 mb-3">
+                {/* Number of filtered users */}      
+                <div className="col-lg-6 col-md-6 mb-1">
                     <div className="card shadow" style={{ backgroundColor: 'white' }}>
                         <div className="card-statistic-3 p-4">
                             <div className="d-flex justify-content-between align-items-center">
-                                <div className="col-8">
-                                    <h3 className="d-flex align-items-center mb-4">
-                                        Generate Report
-                                    </h3>
-                                    <p className="card-text">Generate and download report on System Users </p>
-                                    <h5 className="card-title" style={{ marginTop: '25px' }}>
-                                    <button onClick={generateReport} className="btn btn-dark" style={{ backgroundColor: 'black', color: 'white', borderColor: 'black' }}>Generate Report</button>
-                                    </h5>
+                                <div className="card-body p-">
+                                    <h5 className="card-title" style={{ fontSize: '32px', textAlign: 'center' }}>Filtered Users</h5>
+                                    <p style={{ fontSize: '40px', textAlign: 'center', fontWeight: 'bold' }}>{filteredUserCount}</p>
                                 </div>
-                                <i className="ri-file-chart-line h1"></i>
+                                <i className="ri-account-circle-line h1"></i>
                             </div>
+                    
                             <div className="progress mt-1" data-height="8" style={{ height: '8px' }}>
                                 <div className="progress-bar bg-orange" 
                                     role="progressbar" 
                                     data-width="25%" 
                                     aria-valuenow="25" 
                                     aria-valuemin="0" 
-                                     aria-valuemax="100" 
-                                    style={{ width: '100%', backgroundColor: 'orange' }}>
+                                    aria-valuemax="100" 
+                                    style={{ width: '100%', backgroundColor: 'orange' }}>                                       
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                {/*generate report for total users*/}
+                <div className="col-lg-6 col-md-6 mb-3">
+                <div className="card shadow" style={{ backgroundColor: 'white' }}>
+                    <div className="card-statistic-3 p-4">
+                        <div className="d-flex justify-content-between align-items-center">
+                            <div className="col-8">
+                                <h3 className="d-flex align-items-center mb-4">
+                                    Generate Report (Total Users)
+                                </h3>
+                                <p className="card-text">Generate and download report on all System Users</p>
+                                <h5 className="card-title" style={{ marginTop: '25px' }}>
+                                    <button onClick={() => generateReport('totalUsers')} className="btn btn-dark" style={{ backgroundColor: 'black', color: 'white', borderColor: 'black' }}>Generate Report</button>
+                                </h5>
+                            </div>
+                            <i className="ri-file-chart-line h1"></i>
+                        </div>
+                        <div className="progress mt-1" data-height="8" style={{ height: '8px' }}>
+                            <div className="progress-bar bg-orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '100%', backgroundColor: 'orange' }}></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                    {/*generate report for total users*/}
+                    <div className="col-lg-6 col-md-6 mb-3">
+                    <div className="card shadow" style={{ backgroundColor: 'white' }}>
+                        <div className="card-statistic-3 p-4">
+                            <div className="d-flex justify-content-between align-items-center">
+                                <div className="col-8">
+                                    <h3 className="d-flex align-items-center mb-4">
+                                        Generate Report (Filtered Users)
+                                    </h3>
+                                    <p className="card-text">Generate and download report on Filtered Users</p>
+                                    <h5 className="card-title" style={{ marginTop: '25px' }}>
+                                        <button onClick={() => generateReport('filteredUsers')} className="btn btn-dark" style={{ backgroundColor: 'black', color: 'white', borderColor: 'black' }}>Generate Report</button>
+                                    </h5>
+                                </div>
+                                <i className="ri-file-chart-line h1"></i>
+                            </div>
+                            <div className="progress mt-1" data-height="8" style={{ height: '8px' }}>
+                                <div className="progress-bar bg-orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '100%', backgroundColor: 'orange' }}></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>     
             </div>
         </div>
             
+        
 
         <div className="card" style={{ padding: '30px 20px 20px 20px' }}>
                 <div className="button-group mb-3 d-flex align-items-center">
@@ -343,7 +412,10 @@ function SystemUsers() {
                             value={searchQuery}
                             onChange={handleSearch}
                         />
+                        <span className="filtered-count" style={{ marginLeft: '10px' }}>{filteredUserCount} users filtered</span>
                     </div>
+
+    
                     <div className="three-buttons" style={{ marginLeft: 'auto' }}>
                     <Button variant="btn btn-outline-danger" onClick={handleDeleteSelected}>Delete Selected</Button>
                     <Button variant="btn btn-outline-dark" onClick={handleSelectAll} style={{ marginLeft: '10px' }}>
