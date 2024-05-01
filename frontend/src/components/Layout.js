@@ -145,6 +145,11 @@ function Layout({children}) {
             icon: 'ri-check-double-line'
         },
         {
+            name: 'Salary',
+            path: '/dashboard',
+            icon: 'ri-currency-line'
+        },
+        {
             name: 'Tranee management',
             path: '/dashboard/trainee',
             icon: 'ri-home-4-line'
