@@ -16,12 +16,17 @@ function SystemUsers() {
     const [selectAll, setSelectAll] = useState(false);
     const [totalUsers, setTotalUsers] = useState(0);
     const [currentDateTime, setCurrentDateTime] = useState('');
+<<<<<<< Updated upstream
+=======
+    const [filteredUserCount, setFilteredUserCount] = useState(0);
+>>>>>>> Stashed changes
 
     useEffect(() => {
         // Fetch users data when the component mounts
         fetchUsers(); 
     }, []);
 
+    //displaying date and time
     useEffect(() => {
         const intervalId = setInterval(() => {
             const currentDate = new Date();
@@ -30,6 +35,7 @@ function SystemUsers() {
     
         return () => clearInterval(intervalId); // Cleanup on component unmount
     }, []);
+
 
     const fetchUsers = async () => {
         try {
@@ -103,7 +109,6 @@ function SystemUsers() {
         toast.error("No users selected");
         return;
     }
-
         try {
             await axios.delete("/api/users/delete-multiple", { data: { userIds: selectedUserIds } });
             toast.success("Selected users deleted successfully");
@@ -251,7 +256,6 @@ function SystemUsers() {
     
     return (
         <Layout>
-
         <div className="row">
             {/* System Users Text */}
             <div className="col-md-6">
@@ -331,6 +335,55 @@ function SystemUsers() {
                         </div>
                     </div>
                 </div>
+<<<<<<< Updated upstream
+=======
+
+                {/*generate report for total users*/}
+                <div className="col-lg-6 col-md-6 mb-3">
+                <div className="card shadow" style={{ backgroundColor: 'white' }}>
+                    <div className="card-statistic-3 p-4">
+                        <div className="d-flex justify-content-between align-items-center">
+                            <div className="col-8">
+                                <h3 className="d-flex align-items-center mb-4">
+                                    Generate Report (Total Users)
+                                </h3>
+                                <p className="card-text">Generate and download report on System Users</p>
+                                <h5 className="card-title" style={{ marginTop: '25px' }}>
+                                    <button onClick={() => generateReport('totalUsers')} className="btn btn-dark" style={{ backgroundColor: 'black', color: 'white', borderColor: 'black' }}>Generate Report</button>
+                                </h5>
+                            </div>
+                            <i className="ri-file-chart-line h1"></i>
+                        </div>
+                        <div className="progress mt-1" data-height="8" style={{ height: '8px' }}>
+                            <div className="progress-bar bg-orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '100%', backgroundColor: 'orange' }}></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                    {/*generate report for total users*/}
+                    <div className="col-lg-6 col-md-6 mb-3">
+                    <div className="card shadow" style={{ backgroundColor: 'white' }}>
+                        <div className="card-statistic-3 p-4">
+                            <div className="d-flex justify-content-between align-items-center">
+                                <div className="col-8">
+                                    <h3 className="d-flex align-items-center mb-4">
+                                        Generate Report (Filtered Users)
+                                    </h3>
+                                    <p className="card-text">Generate and download report on Filtered Users</p>
+                                    <h5 className="card-title" style={{ marginTop: '25px' }}>
+                                        <button onClick={() => generateReport('filteredUsers')} className="btn btn-dark" style={{ backgroundColor: 'black', color: 'white', borderColor: 'black' }}>Generate Report</button>
+                                    </h5>
+                                </div>
+                                <i className="ri-file-chart-line h1"></i>
+                            </div>
+                            <div className="progress mt-1" data-height="8" style={{ height: '8px' }}>
+                                <div className="progress-bar bg-orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '100%', backgroundColor: 'orange' }}></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>     
+>>>>>>> Stashed changes
             </div>
         </div>
             

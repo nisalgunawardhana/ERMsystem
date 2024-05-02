@@ -6,9 +6,19 @@ import Layout from "./Layout";
 import "../User.css";
 
 function Home() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const { user } = useSelector((state) => state.user);
   const [departmentComponents, setDepartmentComponents] = useState("");
+  const [currentDateTime, setCurrentDateTime] = useState('');
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+        const currentDate = new Date();
+        setCurrentDateTime(currentDate.toLocaleString());
+    }, 1000); // Update every second
+
+    return () => clearInterval(intervalId); // Cleanup on component unmount
+}, []);
 
   const getData = async () => {
     try {
@@ -355,7 +365,7 @@ if (user) {
 }
 
   return (
-      <Layout>
+      <Layout>            
         <div className="departments" style={{ padding: '20px' }}>
           <div className="card-body">
             <h3 className="card-title" style={{ textAlign: "center" }}>All Departments</h3>

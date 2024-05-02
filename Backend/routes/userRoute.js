@@ -211,6 +211,18 @@ router.delete('/delete-note/:id', async (req, res) => {
     }
 });
 
+// Route to delete multiple notes
+router.delete('/delete-multiple', async (req, res) => {
+    try {
+        const { NoteIds } = req.body;
+        await Note.deleteMany({ _id: { $in: NoteIds } });
+        res.json({ message: 'Selected notes deleted successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error deleting selected notes", error });
+    }
+});
+
 /*
 // Middleware function to get a single note by ID
 async function getNote(req, res, next) {
