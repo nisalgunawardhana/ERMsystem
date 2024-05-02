@@ -16,10 +16,7 @@ function SystemUsers() {
     const [selectAll, setSelectAll] = useState(false);
     const [totalUsers, setTotalUsers] = useState(0);
     const [currentDateTime, setCurrentDateTime] = useState('');
-<<<<<<< Updated upstream
-=======
     const [filteredUserCount, setFilteredUserCount] = useState(0);
->>>>>>> Stashed changes
 
     useEffect(() => {
         // Fetch users data when the component mounts
@@ -335,8 +332,6 @@ function SystemUsers() {
                         </div>
                     </div>
                 </div>
-<<<<<<< Updated upstream
-=======
 
                 {/*generate report for total users*/}
                 <div className="col-lg-6 col-md-6 mb-3">
@@ -383,7 +378,6 @@ function SystemUsers() {
                         </div>
                     </div>
                 </div>     
->>>>>>> Stashed changes
             </div>
         </div>
             

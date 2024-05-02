@@ -196,10 +196,9 @@ const NotesPage = () => {
 
     return (
         <Layout>
-<<<<<<< Updated upstream
+
             <h2>Notes</h2>
             <Button onClick={handleAddNote}>Add New Note</Button>
-=======
             <div className="row">
                 <div className="col-md-6">
                     <div className="notes p-3">
@@ -215,7 +214,7 @@ const NotesPage = () => {
                     </div>                     
                 </div>
             </div>
->>>>>>> Stashed changes
+
 
             <div className="three-buttons" style={{ marginLeft: 'auto' }}>
                     <Button variant="btn btn-outline-dark" onClick={handleAddNote} style={{ marginRight: '10px' }}>Add New Note</Button>
