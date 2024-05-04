@@ -9,7 +9,6 @@ const FinanceDash = () => {
 
     const [otherExpenses, setOtherExpenses] = useState([]);
     const [profit, setProfit] = useState([]);
-    const monthlyProfit = useState(0);
     const [profitLastYear, setProfitLastYear] = useState([]);
 
     useEffect(() => {
@@ -50,16 +49,6 @@ const FinanceDash = () => {
 
         fetchData();
     }, []);
-
-    const calculateTotalProfitLastYear = () => {
-        let totalProfit = 0;
-        profitLastYear.forEach((item) => {
-            totalProfit += parseFloat(item.Monthly_profit);
-        });
-        return totalProfit;
-    };
-
-    const TotalLastYear = calculateTotalProfitLastYear();
 
     const TotalProfit = profit.reduce((acc, curr) => acc + parseFloat(curr.Monthly_profit), 0);
     const TotalSales = profit.reduce((acc, curr) => acc + parseFloat(curr.Sales_income), 0);
@@ -199,154 +188,6 @@ const FinanceDash = () => {
         window.location.href = `/dashboard/finance/profit/add/${month.Month}`;
     };
 
-    const getCurrentMonth = () => {
-        const months = [
-            'January', 'February', 'March', 'April', 'May', 'June',
-            'July', 'August', 'September', 'October', 'November', 'December'
-        ];
-        const currentDate = new Date();
-        const monthIndex = currentDate.getMonth();
-        return months[monthIndex];
-    };
-
-    const getPreviousMonth = () => {
-        const months = [
-            'January', 'February', 'March', 'April', 'May', 'June',
-            'July', 'August', 'September', 'October', 'November', 'December'
-        ];
-        const currentDate = new Date();
-        const monthIndex = (currentDate.getMonth() - 1 + 12) % 12; // Handling December as previous month
-        return months[monthIndex];
-    };
-
-    const getCurrentYear = () => {
-        const currentDate = new Date();
-        return currentDate.getFullYear();
-    };
-
-    const getPreviousYear = () => {
-        const currentDate = new Date();
-        const currentYear = currentDate.getFullYear();
-        const previousYear = currentYear - 1;
-        return previousYear;
-    };
-
-    const getCurrentMonthProfitId = async () => {
-        try {
-            let currentMonth = getCurrentMonth();
-            let currentYear = getCurrentYear();
-            let response = await axios.get(`http://localhost:8080/profit/search/${currentMonth}`);
-            let profit = response.data;
-
-            if (profit.length > 0) {
-                // Filter profit records based on date_created column
-                const currentYearProfit = profit.find(item => {
-                    const dateCreated = new Date(item.Date_modified);
-                    return dateCreated.getFullYear() === currentYear;
-                });
-
-                if (currentYearProfit) {
-                    // Assuming the first profit record for the current month and year is the relevant one
-                    return currentYearProfit.Profit_ID;
-                }
-            }
-
-            // If there's no profit record for the current month of the current year,
-            // try fetching the previous month's profit of the current year
-            let previousMonth = getPreviousMonth();
-            response = await axios.get(`http://localhost:8080/profit/search/${previousMonth}`);
-            profit = response.data;
-
-            if (profit.length > 0) {
-                // Filter profit records based on date_created column
-                const currentYearProfit = profit.find(item => {
-                    const dateCreated = new Date(item.Date_modified);
-                    return dateCreated.getFullYear() === currentYear;
-                });
-
-                if (currentYearProfit) {
-                    // Assuming the first profit record for the previous month of the current year is the relevant one
-                    return currentYearProfit.Profit_ID;
-                }
-            }
-
-            // If there's no profit record for the previous month as well, or if it's not related to the current year, return null
-            window.location.href = `/profit/get/PL#`;
-            return null;
-        } catch (error) {
-            console.error('Error fetching profit details:', error);
-            return null;
-        }
-    };
-
-    const handleClick = async () => {
-        const profitId = await getCurrentMonthProfitId();
-        if (profitId) {
-            window.location.href = `/profit/get/${profitId}`;
-        } else {
-            console.log('No profit record found for the current and previous months of the current year.');
-            // Handle the case where there's no profit record for the current and previous months of the current year
-        }
-    };
-
-    const getCurrentTaxId = async () => {
-        try {
-            let currentYear = getCurrentYear();
-            let response = await axios.get(`http://localhost:8080/tax/search/${currentYear}`);
-            let tax = response.data;
-
-            if (tax.length > 0) {
-                // Filter tax records based on date_created column
-                const currentYearTax = tax.find(item => {
-                    const dateCreated = new Date(item.Date_modified);
-                    return dateCreated.getFullYear() === currentYear;
-                });
-
-                if (currentYearTax) {
-                    // Assuming the first tax record for the current year is the relevant one
-                    return currentYearTax.Tax_ID;
-                }
-            }
-
-            // If there's no tax record for the current year, try fetching the tax details for the previous year
-            let previousYear = getPreviousYear();
-            response = await axios.get(`http://localhost:8080/tax/search/${previousYear}`);
-            tax = response.data;
-
-            if (tax.length > 0) {
-                // Filter tax records based on date_created column
-                const previousYearTax = tax.find(item => {
-                    const dateCreated = new Date(item.Date_modified);
-                    return dateCreated.getFullYear() === previousYear;
-                });
-
-                if (previousYearTax) {
-                    // Assuming the first tax record for the previous year is the relevant one
-                    return previousYearTax.Tax_ID;
-                }
-            }
-
-            // If there's no tax record for the previous year as well, or if it's not related to the current year, return null
-            window.location.href = `/tax/get/T#`;
-            return null;
-        } catch (error) {
-            console.error('Error fetching tax details:', error);
-            return null;
-        }
-    };
-
-    const handleClickTax = async () => {
-        const taxId = await getCurrentTaxId();
-        if (taxId) {
-            window.location.href = `/tax/get/${taxId}`;
-        } else {
-            console.log('No profit record found for the current and previous months of the current year.');
-            // Handle the case where there's no profit record for the current and previous months of the current year
-        }
-    };
-
-    const fixedCardColor = `linear-gradient(to right, rgba(0, 123, 255, 0.8), rgba(255, 0, 123, 0.8))`;
-
     const [dateTime, setDateTime] = useState(new Date());
 
     useEffect(() => {
@@ -440,7 +281,7 @@ const FinanceDash = () => {
                 <div className="mt-2">
                     <div className="row">
                         <div className="col-lg-8 col-md-12 mb-3">
-                            <div className="card" style={{ borderRadius: '20px' }}>
+                            <div className="card">
                                 <div className="card-body">
                                     <h5 className="card-title">Sales vs Expenses</h5>
                                     <canvas id="canvas-1"></canvas>
@@ -449,7 +290,7 @@ const FinanceDash = () => {
                         </div>
                         <div className="col-lg-4 col-md-12 mb-3">
                             <div className="row">
-                                <div className="card" style={{ borderRadius: '20px' }}>
+                                <div className="card">
                                     <div className="card-body">
                                         <form onSubmit={submit}>
                                             <div className="mb-2">
@@ -477,7 +318,7 @@ const FinanceDash = () => {
                                             <div className="row mb-2">
                                                 <div className="col mt-2">
                                                     <div className="btn-group">
-                                                        <button type="submit" className="btn btn-outline-primary" style={{ width: '200px' }}><i className="ri-add-line"></i>  Add Profit</button>
+                                                        <button type="submit" className="btn btn-dark" style={{ width: '200px' }}><i className="ri-add-line"></i>  Add Profit</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -486,26 +327,26 @@ const FinanceDash = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="row">
-                                <div className="card mb-3" style={{ borderRadius: '20px' }}>
+                            <div className="row" style={{ marginTop: '-10px'}}>
+                                <div className="card mb-3">
                                     <div className="card-body">
                                         <h5 className="card-title">Add Other expenses</h5>
-                                        <Link to={`/dashboard/finance/otherExpense`} className="btn btn-outline-primary me-2" style={{ width: '200px' }}><i className="ri-add-line"></i>  Add expenses</Link>
+                                        <Link to={`/dashboard/finance/otherExpense`} className="btn btn-dark me-2" style={{ width: '200px', marginTop: '10px' }}><i className="ri-add-line"></i>  Add expenses</Link>
                                     </div>
                                 </div>
                             </div>
                             <div className="row">
-                                <div className="card mb-3" style={{ borderRadius: '20px' }}>
+                                <div className="card mb-3">
                                     <div className="card-body">
                                         <h5 className="card-title">Add new Tax Document</h5>
-                                        <Link to={`/dashboard/finance/tax/add`} className="btn btn-outline-primary me-2" style={{ width: '200px' }}><i className="ri-add-line"></i>  Add Tax</Link>
+                                        <Link to={`/dashboard/finance/tax/add`} className="btn btn-dark me-2" style={{ width: '200px', marginTop: '10px' }}><i className="ri-add-line"></i>  Add Tax</Link>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div className="row-md-4" style={{ marginTop: '40px', marginBottom: '40px' }}>
-                        <div className="card" style={{ borderRadius: '20px' }}>
+                    <div className="row" style={{ marginTop: '40px'}}>
+                        <div className="card" style={{ marginLeft: '12px', width: '1200px' }}>
                             <div className="card-body">
                                 <h5 className="card-title">Annual Profit breakdown</h5>
                                 <canvas id="canvas-2"></canvas>

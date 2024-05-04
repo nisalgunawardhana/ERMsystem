@@ -4,6 +4,8 @@ import Form from "react-bootstrap/Form";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Layout from '../Layout';
+import { Toaster, toast } from 'react-hot-toast';
+
 
 
 
@@ -19,10 +21,12 @@ function CreateBill() {
   const navigate = useNavigate();
   const [discountRules, setDiscountRules] = useState([]);
   const [discountAmount, setDiscountAmount] = useState(0);
+  const [errors, setErrors] = useState({});
+  
   
 
 
-  useEffect(() => {
+  useEffect(() => { 
   if (itemCode) {
     axios.get(`http://localhost:8080/clothes/price/${itemCode}`)
       .then(response => {
@@ -128,11 +132,26 @@ function CreateBill() {
 
 
   const addItem = () => {
-    const newItem = { code: itemCode, price: itemPrice, quantity: itemQuantity };
-    setItems([...items, newItem]);
-    setItemCode("");
-    setItemQuantity(1);
-  };
+  // Fetch item quantity based on item code
+  axios.get(`http://localhost:8080/clothes/${itemCode}`)
+    .then(response => {
+      const availableQuantity = response.data.quantity;
+      if (availableQuantity >= itemQuantity) {
+        // Item is available, proceed to add it to the bill
+        const newItem = { code: itemCode, price: itemPrice, quantity: itemQuantity };
+        setItems([...items, newItem]);
+        setItemCode("");
+        setItemQuantity(1);
+      } else {
+        // Item is not available in desired quantity, show error message
+        toast.error(`Item ${itemCode} is not available .`);
+      }
+    })
+    .catch(error => {
+      console.error("Error fetching item quantity:", error);
+      alert("An error occurred while checking item availability. Please try again later.");
+    });
+};
 
   const removeItem = (index) => {
     const updatedItems = [...items];
@@ -143,7 +162,10 @@ function CreateBill() {
   const sendData = (e) => {
     e.preventDefault();
     console.log("Submitting form...");
-
+if (!validateForm()) {
+      // If form validation fails, return early
+      return;
+    }
 
 
 
@@ -284,7 +306,7 @@ items.forEach(item => {
             <div class="bill-details">
               <p><strong>Customer ID:</strong> ${billToPrint.customer_id}</p>
               <p><strong>Billing Date:</strong> ${billToPrint.billing_date}</p>
-              <p><strong>Total Amount:</strong> ${billToPrint.total_amount}</p>
+              <p><strong>Total Amount:</strong> ${billToPrint.total_amount.toFixed(2)}</p>
             </div>
             <div class="bill-items">
               <table>
@@ -325,6 +347,21 @@ items.forEach(item => {
   window.history.back();
 };
 
+const validateForm = () => {
+  const errors = {};
+
+  if (!customer_id.trim()) {
+    errors.customer_id = "Customer ID is required";
+  } else if (!/^\d{10}$/.test(customer_id)) {
+    errors.customer_id = "Customer ID must be 10 digits";
+  }
+
+
+
+  setErrors(errors);
+  return Object.keys(errors).length === 0; // Return true if no errors
+};
+
   return (
     <Layout>
 
@@ -343,7 +380,11 @@ items.forEach(item => {
                   placeholder="Enter Customer ID"
                   value={customer_id}
                   onChange={(e) => setCustomerId(e.target.value)}
-                />
+                  isInvalid={!!errors.customer_id} // Apply validation styling
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.customer_id}
+                  </Form.Control.Feedback>
               </Form.Group>
 
               <Form.Group className="mb-3" controlId="formBasicBillingDate">

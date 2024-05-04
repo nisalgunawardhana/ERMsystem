@@ -55,6 +55,11 @@ app.use("/profit", profitRouter);
 const employeeRouter = require("./routes/employeeroutes.js");
 app.use("/employee", employeeRouter);
 
+//attendance func
+const attendance = require("./routes/attendanceroute.js");
+app.use("/attendance", attendance);
+
+
 //supplier func
 const supplierRouter = require("./routes/supplierroutes.js");
 app.use("/supplier", supplierRouter);
@@ -77,6 +82,7 @@ app.use("/customer", customer);
 
 const discounts = require("./routes/discounttoute.js");
 app.use("/discounts", discounts);
+
 
 //user management
 const userRoute = require("./routes/userRoute.js");

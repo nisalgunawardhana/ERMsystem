@@ -410,12 +410,14 @@ const handleDeleteAllSelected = () => {
                                             <input type="text" className="form-control" id="discountPercentage" value={discountPercentage} onChange={(e) => setDiscountPercentage(e.target.value)} />
                                             <span className="input-group-text">%</span>
                                         </div>
+                                        {/*validation discount percentage */}
                                         {discountPercentage && isNaN(discountPercentage) && <div className="text-danger mt-2">Discount percentage must be a number</div>}
                                         {discountPercentage && !isNaN(discountPercentage) && (discountPercentage < 1 || discountPercentage > 44) && <div className="text-danger mt-2">Discount percentage must be between 1 and 40</div>}
                                     </div>
                                     <div className="mb-3">
                                         <label htmlFor="ruleCon" className="form-label">Minimum Spend Amount</label>
                                         <input type="number" className="form-control" id="ruleCon" value={ruleCon} onChange={(e) => setRuleCon(e.target.value)} min="10000" step="1" />
+                                        {/*validation for minimum spend amount*/}
                                         {ruleCon && ruleCon < 10000 && <div className="text-danger mt-2">Minimum spend amount must be at least 10000</div>}
                                     </div>
                                     <button type="submit" className="btn btn-primary"><i className="bi bi-pencil-fill me-2"></i> Update Discount</button>

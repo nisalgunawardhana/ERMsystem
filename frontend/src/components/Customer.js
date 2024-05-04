@@ -4,6 +4,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { Pagination } from "react-bootstrap"; // Import Pagination component
 import Layout from './Layout';
+import toast, { Toaster } from 'react-hot-toast';
 
 const CustomerR = () => {
     const [customers, setCustomers] = useState([]);
@@ -68,10 +69,18 @@ const CustomerR = () => {
         try {
             await axios.delete(`http://localhost:8080/customer/delete/${customerToDelete}`);
             setCustomers(customers.filter(customer => customer.customer_id !== customerToDelete));
-            alert("Customer deleted successfully.");
+            setTimeout(() => {
+                // Display success toast message
+                toast.success('Customer deleted successfully.');
+            }, 2000);
+           
         } catch (error) {
             console.error("Error deleting customer:", error);
-            alert("Error deleting customer. Please try again later.");
+            setTimeout(() => {
+                // Display success toast message
+                toast.success('Error deleting customer. Please try again later.');
+            }, 2000);
+           
         }
         setShowDeleteCustomerPrompt(false);
     };
@@ -201,18 +210,25 @@ const CustomerR = () => {
         try {
             const isConfirmed = window.confirm("Are you sure you want to delete all loyalty points?");
             if (isConfirmed) {
-                // Proceed with deleting loyalty points
                 console.log("Deleting all loyalty points...");
+                await axios.delete("http://localhost:8080/customer/delete-all-points");
+                fetchCustomers(); // Refresh the customer list
+                setTimeout(() => {
+                    // Display success toast message
+                    toast.success('All customer loyalty points deleted successfully.');
+                }, 2000);
+               
             }
-            await axios.delete("http://localhost:8080/customer/delete-all-points");
-            fetchCustomers(); // Refresh the customer list
-            alert("All customer loyalty points deleted successfully.");
         } catch (error) {
             console.error("Error deleting all customer loyalty points:", error);
-            alert("Error deleting all customer loyalty points. Please try again later.");
+            setTimeout(() => {
+                // Display success toast message
+                toast.success('Error deleting all customer loyalty points. Please try again later.');
+            }, 2000);
+            
         }
     };
-
+    
 
     useEffect(() => {
 
@@ -255,6 +271,7 @@ const CustomerR = () => {
                         </div>
                     </div>
     </div>
+    <Toaster />
             <h1>Customer Management</h1>
             <Row className="mb-4">
     <Col>
@@ -270,7 +287,7 @@ const CustomerR = () => {
                     <i className="bi bi-bar-chart h1"></i>
                 </div>
                 <Button className="btn btn-dark" onClick={handleGenerateReport}>Generate Report</Button>
-                <div className="progress mt-1" data-height="8" style={{ height: '8px' }}>
+                <div className="progress mt-3" data-height="8" style={{ height: '8px' }}>
                     <div className="progress-bar bg-orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '75%', backgroundColor: 'orange' }}></div>
                 </div>
             </div>
@@ -290,7 +307,7 @@ const CustomerR = () => {
                     
                 </div>
                 <Button className="btn btn-dark" onClick={() => setShowModal(true)}>Add Customer</Button>
-                <div className="progress mt-1" data-height="8" style={{ height: '8px' }}>
+                <div className="progress mt-3" data-height="8" style={{ height: '8px' }}>
                     <div className="progress-bar bg-orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '75%', backgroundColor: 'orange' }}></div>
                 
                 </div>
@@ -312,7 +329,7 @@ const CustomerR = () => {
                     <i className="bi bi-trash h1"></i>
                 </div>
                 <Button className="btn btn-dark" onClick={handleDeleteAllPoints}>Delete All Points</Button>
-                <div className="progress mt-1" data-height="8" style={{ height: '8px' }}>
+                <div className="progress mt-3" data-height="8" style={{ height: '8px' }}>
                     <div className="progress-bar bg-orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '75%', backgroundColor: 'orange' }}></div>
                 </div>
             </div>
@@ -351,7 +368,7 @@ const CustomerR = () => {
                                     <p className="card-text">Point: {customer.point}</p>
                                     <p className="card-text">Gender: {customer.gender}</p>
                                     <div className="btn-group">
-                                        <Link to={`/customer/update/${customer.customer_id}`} className="btn btn-outline-primary  me-2">
+                                        <Link to={`/dashboard/cashier/Customer/update/${customer.customer_id}`} className="btn btn-outline-primary  me-2">
                                             <i className="bi bi-pencil-fill"></i> Update
                                         </Link>
                                         <button className="btn btn-outline-danger" onClick={() => handleDelete(customer.customer_id)}>

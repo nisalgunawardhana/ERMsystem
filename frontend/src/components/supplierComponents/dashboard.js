@@ -16,115 +16,170 @@ function LogisticDashboard() {
                     <h1>Logistics Management</h1>
                 </div>
 
-                <p className="fw-light fs-4 mt-5  ">Stock Management</p>
-
                 <div>
-                    <Card className="h-100 text-white card-large card-shadow-1 luxery-yellow" >
-                        <Card.Header>Stock Management</Card.Header>
-                        <Card.Body className="d-flex flex-column">
-                            <Card.Title>Stock Network</Card.Title>
-                            <Card.Text>
-                            Meet demand, minimize costs, and maximize operational efficiency in stock management
-                            </Card.Text>
-                            <div className=" mt-auto ml-auto">
-                                <div className="mb-1 mt-4 ">Replenish inventory</div>
-                                <Link to="/dashboard/stock">
-                                    <Button variant="secondary" className="side-btn">
-                                        <span>
-                                        View supplies
-                                        <i className="bi bi-cart4"></i></span>
-                                    </Button>
-                                </Link>
-                            </div>   
-                        </Card.Body>
-                    </Card>
+                    <div className="mt-5">
+                        <Row>
+                            <Col>
+                            <div className="card">
+                                <div className="card-statistic-3 p-4">
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        <div className="col-8">
+                                            <h6 className="d-flex align-items-center text-secondary mb-1">
+                                                Meet demand, minimize costs, and maximize operational efficiency in stock management
+                                            </h6>
+                                            <h5 className="card-title fs-3" >Stock Management </h5>
+                                            <div>
+                                                <Link to="/dashboard/logistics/stock">
+                                                <Button variant="dark" className="side-btn mt-5 mb-2 ">
+                                                    <span>
+                                                    Stock Management
+                                                    <i className="bi bi-basket"></i></span>
+                                                </Button>
+                                                </Link>
+                                            </div>
+                                        </div>
+                                        <i className="bi bi-basket h1"></i>
+                                    </div>
+                                    <div className="progress mt-1 " data-height="8" style={{ height: '8px' }}>
+                                        <div className="progress-bar orange" role="progressbar" data-width="25%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style={{ width: '75%' }}></div>
+                                    </div>
+                                </div>
+                            </div>
+                            </Col>
+                            <Col>
+                            <div className="card ">
+                                <div className="card-statistic-3 p-4 ">
+                                    <div className="d-flex justify-content-between align-items-center mb-1">
+                                        <div className="col-8">
+                                            <h6 className="d-flex align-items-center text-secondary mb-1">
+                                            Focuses on fostering strong partnerships with suppliers to optimize cost, quality, and delivery.
+                                            </h6>
+                                            <h5 className="card-title fs-3" >Supplier Management </h5>
+                                            <div>
+                                                <Link to="/dashboard/logistics/supplier">
+                                                    <Button variant="dark" className="side-btn mt-5 mb-2">
+                                                        <span>
+                                                        Supplier Management
+                                                        <i className="bi bi-cart4"></i></span>
+                                                    </Button>
+                                                </Link>
+                                            </div>
+                                        </div>
+                                        <i className="bi bi-shop h1"></i>
+                                    </div>
+                                    <div className="progress mt-1  " data-height="8" style={{ height: '8px' }}>
+                                        <div className="progress-bar orange" role="progressbar" data-width="25%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style={{ width: '75%' }}></div>
+                                    </div>
+                                </div>
+                            </div>
+                            </Col>
+                        </Row>
+                    </div>
                 </div>
 
-                <p className="fw-light fs-4 mt-5">Supplier Management</p>
 
-                <Row >
-                    <Col xs={4}>
-                        <Card className="h-100 text-white card-large card-shadow-1 luxery-yellow" >
-                            <Card.Header>Supplier Management</Card.Header>
-                            <Card.Body className="d-flex flex-column">
-                                <Card.Title>Supplier Network</Card.Title>
-                                <Card.Text>
-                                Manage supplier network and safeguard sensitive details
-                                </Card.Text>
-                                <div className=" mt-auto ml-auto">
-                                    <div className="mb-1 ">Add new suppliers to the system</div>
-                                    <Link to="/supplier">
-                                        <Button variant="secondary" className="side-btn">
-                                            <span>
-                                            View Suppliers
-                                            <i className="bi bi-cart4"></i></span>
-                                        </Button>
-                                    </Link>
-                                </div>   
-                            </Card.Body>
-                        </Card>
+                
+                <Row className="mt-4">
+                    <div className="fw-semibold">Quick References</div>
+                    <Col >
+                        <p className="fw-light fs-4  ">Stock Management</p>
                     </Col>
-                    <Col xs={5}>
-                        <Card className="h-100 text-white card-large card-shadow-1 dark-blue" >
-                            <Card.Header>Purchase Order Management</Card.Header>
-                            <Card.Body className="d-flex flex-column">
-                                <Card.Title>Purchase Orders</Card.Title>
-                                <Card.Text>
-                                    Simplify purchase order management process for streamlined efficiency
-                                </Card.Text>
-                                <div className=" mt-auto ml-auto">
-                                    <div className="mb-1 ">Restock Inventory by making a order</div>
-                                    <Link to="/purchaseOrder">
-                                        <Button variant="primary" className="side-btn">
-                                            <span>
-                                            Manage Purchase Orders
-                                            <i className="bi bi-cart4"></i></span>
-                                        </Button>
-                                    </Link>
-                                </div>   
-                            </Card.Body>
-                        </Card>
+                    <Col >
+                        <p className="fw-light fs-4">Supplier Management</p>
                     </Col>
-
-                    <Col xs={3}>
-                    {/* <Card  className="h-100 card-large card-shadow-1 middle-green">
-                        <Card.Body  className="d-flex flex-column">
-                            <Card.Title>RFQ</Card.Title>
-                            <Card.Subtitle className="mb-2 text-muted">Requests For Quotations</Card.Subtitle>
-                            <Card.Text>
-                            Ready to connect with new suppliers? Send a request to access their price lists and more
-                            </Card.Text>
-                            <div className=" mt-auto ml-auto">
-                                <div className="mb-1  text-success">Want to call new suppliers?</div>
-                                <Link to="/rfq">
-                                    <Button variant="success" className="side-btn">
-                                        <span>
-                                        Call a supplier<i className="bi bi-send"></i>
-                                        </span>
-                                    </Button>
-                                </Link>
-                            </div>  
-                        </Card.Body>
-                    </Card> */}
-                    <Card className="h-100 text-white card-large card-shadow-1 middle-green" >
-                        <Card.Header>RFQ Management</Card.Header>
-                        <Card.Body className="d-flex flex-column">
-                            <Card.Title>RFQ</Card.Title>
-                            <Card.Text>
-                            Ready to connect with new suppliers? Send a request to access their price lists and more
-                            </Card.Text>
-                            <div className=" mt-auto ml-auto">
-                                <div className="mb-1 ">Want to call new suppliers?</div>
-                                <Link to="/rfq">
-                                    <Button variant="success" className="side-btn">
-                                        <span>
-                                        Call a new supplier
-                                        <i className="bi bi-cart4"></i></span>
-                                    </Button>
-                                </Link>
-                            </div>   
-                        </Card.Body>
-                    </Card>
+                </Row>
+                <Row>
+                    <Col >
+                        <div className="card " style={{height:"90%"}}>
+                            <div className="card-statistic-3 p-4 ">
+                                <div className="text-center">
+                                    <div className="mt-4">
+                                        <h3 ><i className="bi bi-car-front-fill"></i></h3>
+                                        <div className="text-secondary fw-light fs-6">Stock Management</div>
+                                        <h5 className="card-title fs-4 " >Toys<br></br> Management </h5>
+                                        <div>
+                                            <Link to="/dashboard/logistics/stock/toys">
+                                            <Button variant="dark" className="side-btn mt-5 mb-2 ">
+                                                Toys Management
+                                            </Button>
+                                            </Link>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="progress mt-1 " data-height="8" style={{ height: '8px' }}>
+                                    <div className="progress-bar orange" role="progressbar" data-width="25%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style={{ width: '50%' }}></div>
+                                </div>
+                            </div>
+                        </div>
+                    </Col>
+                    <Col> 
+                        <div className="card " style={{height:"90%"}}>
+                            <div className="card-statistic-3 p-4 ">
+                                <div className="text-center">
+                                    <div className="mt-4">
+                                        <h3 >< i className="ri-shirt-fill"></i></h3>
+                                        <div className="text-secondary fw-light fs-6">Stock Management</div>
+                                        <h5 className="card-title fs-4 " >Clothes Management </h5>
+                                        <div>
+                                            <Link to="/dashboard/logistics/stock/clothes">
+                                            <Button variant="dark" className="side-btn mt-5 mb-2 ">
+                                                Clothes Management
+                                            </Button>
+                                            </Link>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="progress mt-1 " data-height="8" style={{ height: '8px' }}>
+                                    <div className="progress-bar orange" role="progressbar" data-width="25%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style={{ width: '50%' }}></div>
+                                </div>
+                            </div>
+                        </div>
+                    </Col>
+                    <Col>
+                     <div className="card " style={{height:"90%"}}>
+                            <div className="card-statistic-3 p-4 ">
+                                <div className="text-center">
+                                    <div className="mt-4">
+                                        <h3 >< i className="bi bi-file-earmark-text-fill"></i></h3>
+                                        <div className="text-secondary fw-light fs-6">Supplier Management</div>
+                                        <h5 className="card-title fs-4 " >Purchase Orders Management </h5>
+                                        <div>
+                                            <Link to="/dashboard/logistics/purchaseOrder" >
+                                            <Button variant="dark" className="side-btn mt-5 mb-2 " style={{padding:"8px", width:"245px"}}>
+                                                Purchase Order Management
+                                            </Button>
+                                            </Link>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="progress mt-1 " data-height="8" style={{ height: '8px' }}>
+                                    <div className="progress-bar orange" role="progressbar" data-width="25%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style={{ width: '50%' }}></div>
+                                </div>
+                            </div>
+                        </div>
+                    </Col>
+                    <Col>
+                    <div className="card " style={{height:"90%"}}>
+                            <div className="card-statistic-3 p-4 ">
+                                <div className="text-center">
+                                    <div className="mt-4">
+                                        <h3 >< i className="bi bi-mailbox2-flag"></i></h3>
+                                        <div className="text-secondary fw-light fs-6">Supplier Management</div>
+                                        <h5 className="card-title fs-4 " >RFQ <br></br>Management </h5>
+                                        <div>
+                                            <Link to="/dashboard/logistics/rfq" >
+                                            <Button variant="dark" className="side-btn mt-5 mb-2 " style={{padding:"8px", width:"245px"}}>
+                                                RFQ Management
+                                            </Button>
+                                            </Link>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="progress mt-1 " data-height="8" style={{ height: '8px' }}>
+                                    <div className="progress-bar orange" role="progressbar" data-width="25%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style={{ width: '50%' }}></div>
+                                </div>
+                            </div>
+                        </div>
                     </Col>
                 </Row>
             </div>

@@ -1,19 +1,8 @@
-/* global chart */
+/* global Chart */
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Row, Col, Card, Button } from 'react-bootstrap';
 import Layout from '../Layout';
-/*import { Chart, LinearScale, CategoryScale, LineController, LineElement, Title } from 'chart.js';
-
-// Register the necessary components and scales
-Chart.register(LinearScale, CategoryScale, LineController, LineElement, Title);*/
-
-
-
-
-
-
-
 
 export default function Clothes() {
     const [clothes, setClothes] = useState([]);
@@ -24,12 +13,13 @@ export default function Clothes() {
     const [itemCode, setItemCode] = useState('');
     const [itemName, setItemName] = useState('');
     const [category, setCategory] = useState('');
+    const [price, setPrice] = useState('');
     const [quantity, setQuantity] = useState('');
     const [alertQuantity, setAlertQuantity] = useState('');
     const [error, setError] = useState('');
     const [quantityChartData, setQuantityChartData] = useState(null);
 
-    /*useEffect(() => {
+   /* useEffect(() => {
         // Function to generate quantity chart data
         const generateQuantityChartData = () => {
             const labels = clothes.map(clothes => clothes.item_name);
@@ -48,26 +38,28 @@ export default function Clothes() {
         return () => {
             setQuantityChartData(null);
         };
-    }, [clothes]);
+    }, [clothes]);*/
 
     useEffect(() => {
-        let quantityChart;
-
+        let quantityChart = null;
+    
         // Function to create or update the quantity line chart
         const createOrUpdateQuantityChart = () => {
-            const ctx = document.getElementById('quantityChart').getContext('2d');
-        
-            // Check if quantityChartData is null, and if so, return early or provide a default value
-            if (!quantityChartData) {
-                console.error('quantityChartData is null');
-                return; // Return early or provide a default value
+            const canvas = document.getElementById('canvas-1');
+    
+            // Check if canvas or clothes array is null or empty, and if so, return early
+            if (!canvas || !Array.isArray(clothes) || clothes.length === 0) {
+                console.error('Canvas is null or clothes array is empty');
+                return;
             }
-        
-            // Destructure quantityChartData or provide default values if it's null
-            const { labels = [], data = [] } = quantityChartData;
-        
+            
+    
+            // Extract labels and data from the clothes array
+            const labels = clothes.map(clothes => clothes.item_name);
+            const data = clothes.map(clothes => clothes.quantity);
+    
             // Create the new chart instance
-            const quantityChart = new Chart(ctx, {
+            quantityChart = new Chart(document.getElementById('canvas-1'), {
                 type: 'line',
                 data: {
                     labels: labels,
@@ -88,12 +80,24 @@ export default function Clothes() {
                     }
                 }
             });
-        };        
-        
+        };
+    
+        // Call the function to create or update the quantity chart
+        const timeoutId = setTimeout(() => {
+            createOrUpdateQuantityChart();
+        }, 100);
+    
+        // Cleanup function
+        return () => {
+            clearTimeout(timeoutId);
+            if (quantityChart) {
+                quantityChart.destroy();
+            }
+        };
 
-        // Create or update quantity chart
-        createOrUpdateQuantityChart();
-    }, [quantityChartData]);*/
+    }, [clothes]);
+    
+    
 
     useEffect(() => {
         axios.get('http://localhost:8080/clothes/')
@@ -114,6 +118,8 @@ export default function Clothes() {
             .catch((err) => {
                 alert(err.message);
             });
+
+            window.location.reload();
     };
 
     // Function to handle search
@@ -133,6 +139,7 @@ export default function Clothes() {
         setItemCode(clothes.item_code);
         setItemName(clothes.item_name);
         setCategory(clothes.category);
+        setPrice(clothes.price);
         setQuantity(clothes.quantity);
         setAlertQuantity(clothes.alert_quantity);
         setShowUpdateModal(true);
@@ -145,7 +152,7 @@ export default function Clothes() {
         try {
             setError('');
 
-            if (!itemCode || !itemName || !category || !quantity || !alertQuantity) {
+            if (!itemCode || !itemName || !category || !price || !quantity || !alertQuantity) {
                 setError('All fields are required.');
                 return;
             }
@@ -155,22 +162,40 @@ export default function Clothes() {
                     item_code: itemCode,
                     item_name: itemName,
                     category: category,
+                    price: price,
                     quantity: quantity,
                     alert_quantity: alertQuantity
                 });
 
+                setItemCode('');
+                setItemName('');
+                setCategory('');
+                setPrice('');
+                setQuantity('');
+                setAlertQuantity('');
+
                 setShowUpdateModal(false);
             } else {
+                // Check if the item code already exists
+                const isDuplicate = clothes.some(clothes => clothes.item_code === itemCode);
+                if (isDuplicate) {
+                    setError('Item code already exists.');
+                    return;
+                }
+
                 await axios.post('http://localhost:8080/clothes/add', {
                     item_code: itemCode,
                     item_name: itemName,
                     category: category,
+                    price: price,
                     quantity: quantity,
                     alert_quantity: alertQuantity
                 });
 
                 setShowAddModal(false);
             }
+
+            window.location.reload();
 
             const res = await axios.get('http://localhost:8080/clothes/');
             setClothes(res.data);
@@ -181,7 +206,7 @@ export default function Clothes() {
 
     // Filter clothes based on search query
     const filteredClothes = clothes.filter(clothes =>
-        clothes.item_name.toLowerCase().includes(searchQuery.toLowerCase())
+        clothes.item_code.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     const generateReport = () => {
@@ -235,6 +260,7 @@ export default function Clothes() {
                             `).join('')}
                         </tbody>
                     </table>
+                    <h3>Total Clothes Items: ${clothes.length}</h3>
                     <h3>Total Quantity: ${totalQuantity}</h3>
                     <div class="button-container">
                         <button onclick="window.print()" class="btn btn-primary">Print</button>
@@ -258,6 +284,27 @@ export default function Clothes() {
             printWindow.close();
         };
     };
+
+    const [selectedItemForDelete, setSelectedItemForDelete] = useState(null);
+
+    // Function to open delete confirmation modal
+    const handleOpenDeleteConfirmationModal = (clothes) => {
+        setSelectedItemForDelete(clothes);
+    };
+
+    // Function to handle canceling deletion
+    const handleCancelDelete = () => {
+        setSelectedItemForDelete(null);
+    };
+
+    // Function to handle confirming deletion
+    const handleConfirmDelete = () => {
+        if (selectedItemForDelete) {
+            handleDeleteClothes(selectedItemForDelete.item_code);
+            setSelectedItemForDelete(null); // Close the modal after deletion
+        }
+    };
+    
     /*
     useEffect(() => {
         let lineChart = null;
@@ -325,7 +372,7 @@ export default function Clothes() {
                     {/* Breadcrumb navigation */}
                     <nav className="col-md-6" aria-label="breadcrumb">
                         <ol className="breadcrumb">
-                            <li class="breadcrumb-item"><a href="/dashboard/stock">Stock Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="/dashboard/logistics/stock">Stock Dashboard</a></li>
                             <li class="breadcrumb-item active" aria-current="page">Clothes</li>
                         </ol>
                     </nav>
@@ -347,13 +394,24 @@ export default function Clothes() {
                             </Card.Body>
                         </Card>
                     </Col>
+                    <div className="col-md-4">
+                        <div className="card">
+                            <div className="card-body">
+                                <h4 className="card-title">Total Items</h4>
+                                <div className="text-center my-auto">
+                                    <h1 className="card-text">{clothes.length}</h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 
                 </Row>
+                
 
                 {/* Search input */}
                 <div className="d-flex justify-content-between align-items-center mb-3">
                     <div className="flex-grow-1">
-                        <input type="text" className="form-control" placeholder="Search by Item Name" value={searchQuery} onChange={handleSearch} />
+                        <input type="text" className="form-control" placeholder="Search by Item Code" value={searchQuery} onChange={handleSearch} />
                     </div>
                     <div>
                         <button onClick={handleOpenAddModal} className="btn btn-outline-success">Add New Clothes</button>
@@ -383,8 +441,16 @@ export default function Clothes() {
                             <input type="text" className="form-control" value={itemName} onChange={(e) => setItemName(e.target.value)} />
                         </div>
                         <div className="form-group">
-                            <label>Category : F-Female M-Male</label>
-                            <input type="text" className="form-control" value={category} onChange={(e) => setCategory(e.target.value)} />
+                            <label>Category: F-Female M-Male</label>
+                            <select className="form-control" value={category} onChange={(e) => setCategory(e.target.value)}>
+                                <option value="">select one</option>
+                                <option value="F">F</option>
+                                <option value="M">M</option>
+                            </select>
+                        </div>
+                        <div className="form-group">
+                            <label>Price</label>
+                            <input type="number" className="form-control" value={price} onChange={(e) => setPrice(e.target.value)} />
                         </div>
                         <div className="form-group">
                             <label>Quantity</label>
@@ -424,8 +490,15 @@ export default function Clothes() {
                             <input type="text" className="form-control" value={itemName} onChange={(e) => setItemName(e.target.value)} />
                         </div>
                         <div className="form-group">
-                            <label>Category</label>
-                            <input type="text" className="form-control" value={category} onChange={(e) => setCategory(e.target.value)} />
+                            <label>Category: F-Female M-Male</label>
+                            <select className="form-control" value={category} onChange={(e) => setCategory(e.target.value)}>
+                                <option value="F">F</option>
+                                <option value="M">M</option>
+                            </select>
+                        </div>
+                        <div className="form-group">
+                            <label>Price</label>
+                            <input type="number" className="form-control" value={price} onChange={(e) => setPrice(e.target.value)} />
                         </div>
                         <div className="form-group">
                             <label>Quantity</label>
@@ -443,6 +516,27 @@ export default function Clothes() {
         </div>
     </div>
 
+    {/* Modal for delete confirmation*/}
+<div className="modal" style={{ display: selectedItemForDelete ? 'block' : 'none' }}>
+    <div className="modal-dialog">
+        <div className="modal-content">
+            <div className="modal-header">
+                <h5 className="modal-title">Confirm Delete</h5>
+                <button type="button" className="close" style={{ position: 'absolute', right: '10px', top: '10px' }} onClick={handleCancelDelete}>
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div className="modal-body">
+                <p>Are you sure you want to delete {selectedItemForDelete?.item_name}?</p>
+            </div>
+            <div className="modal-footer">
+                <button type="button" className="btn btn-danger" onClick={handleConfirmDelete}>Delete</button>
+                <button type="button" className="btn btn-secondary" onClick={handleCancelDelete}>Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
                 {/* Clothes table */}
                 <table className="table">
                     <thead className="table-dark">
@@ -450,7 +544,8 @@ export default function Clothes() {
                             <th>#</th>
                             <th>Item Code</th>
                             <th>Item Name</th>
-                            <th>Category</th>
+                            <th>Category: F-Female M-Male</th>
+                            <th>Price</th>
                             <th>Quantity</th>
                             <th>Alert Quantity</th>
                             <th>Action</th>
@@ -463,11 +558,12 @@ export default function Clothes() {
                                 <td>{clothes.item_code}</td>
                                 <td>{clothes.item_name}</td>
                                 <td>{clothes.category}</td>
+                                <td>{clothes.price}</td>
                                 <td>{clothes.quantity}</td>
                                 <td>{clothes.alert_quantity}</td>
                                 <td>
                                     <button className="btn btn-outline-primary me-2" onClick={() => handleOpenUpdateModal(clothes)}>Update</button>
-                                    <button onClick={() => handleDeleteClothes(clothes.item_code)} className="btn btn-outline-danger">Delete</button>
+                                    <button className="btn btn-outline-danger me-2" onClick={() => handleOpenDeleteConfirmationModal(clothes)}>Delete</button>
                                 </td>
                                 {/* Check if quantity is less than or equal to the alert quantity */}
                                 {clothes.quantity <= clothes.alert_quantity && (
@@ -482,7 +578,7 @@ export default function Clothes() {
                     </tbody>
                 </table>
 
-                {/*<Row className="mb-3">
+                <Row className="mb-3">
                     <Col>
                         <Card className="h-100">
                             <Card.Body>
@@ -490,11 +586,11 @@ export default function Clothes() {
                                 <Card.Text>
                                     Track the quantity of clothes over time.
                                 </Card.Text>
-                                <canvas id="quantityChart"></canvas>
+                                <canvas id="canvas-1"></canvas>
                             </Card.Body>
                         </Card>
                     </Col>
-                    </Row>*/}
+                    </Row>
             </div>
             
         </Layout>

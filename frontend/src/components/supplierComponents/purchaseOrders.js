@@ -15,6 +15,7 @@ function PurchaseOrder() {
     const [month, setMonth] = useState("");
     const [purchaseOrderIDs, setPurchaseOrderIDs] = useState([]);
     const [totalOrderAmountForMonth, setTotalOrderAmountForMonth] = useState(0);
+    const [totalOrderAmountForCurrentMonth, setTotalOrderAmountForCurrentMonth] = useState(0);
     const [todaysPurchaseOrders, setTodaysPurchaseOrders] = useState([]);
     const [todaysTotalAmount, setTodaysTotalAmount] = useState(0);
     const [currentDate, setCurrentDate] = useState("");
@@ -65,6 +66,19 @@ function PurchaseOrder() {
         };
         getCurrentDate();
     }, []);
+
+
+    //GET CURRENT MONTH, YEAR
+    const getCurrentMonthAndYear = () => {
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const currentDate = new Date();
+        const currentYear = currentDate.getFullYear();
+        const currentMonthIndex = currentDate.getMonth();
+        const currentMonthName = months[currentMonthIndex];
+        return { currentMonth: currentMonthName, currentYear: currentYear };
+    };
+    
+    const { currentMonth, currentYear } = getCurrentMonthAndYear();
 
 
     //TODAY'S PURCHASE ORDERS - USEEFFECT
@@ -124,6 +138,30 @@ function PurchaseOrder() {
 
     const renderPurchaseOrders =
     searchQuery === "" && searchDate === "" ? purchaseOrders : searchResults;
+
+
+    //TOTAL AMOUNT OF CURRENT MONTH
+    useEffect(() => {
+        const getCurrentMonth = () => {
+            const dateObj = new Date();
+            const year = dateObj.getFullYear();
+            const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+            return `${year}-${month}`;
+        };
+
+        const currentMonth = getCurrentMonth();
+
+        const filteredPurchaseOrders = purchaseOrders.filter(order => {
+            const orderMonth = order.order_date.slice(0, 7);
+            return orderMonth === currentMonth;
+        });
+
+        const totalAmountForCurrentMonth = filteredPurchaseOrders.reduce((total, order) => {
+            return total + parseFloat(order.total_order_amount);
+        }, 0);
+
+        setTotalOrderAmountForCurrentMonth(totalAmountForCurrentMonth);
+    }, [purchaseOrders]);
 
 
     //SEARCH BY PO_ID
@@ -326,9 +364,9 @@ function PurchaseOrder() {
                 <h2><span className="fw-light fs-6 ">Purchase Order Management</span><br></br>Purchase Orders</h2>
                 
                 <div className="mt-3">
-                    <Link to="/supplier/"><Button className="back-btn " variant="secondary"><i className="bi bi-arrow-left me-2"></i><span>Back</span></Button></Link>
+                    <Link to="/dashboard/logistics/supplier/"><Button className="back-btn " variant="secondary"><i className="bi bi-arrow-left me-2"></i><span>Back</span></Button></Link>
             
-                    <Link to="/purchaseOrder/add"><Button className=" ms-3 text-white" id="up-btn-btn" ><i className="bi bi-cart3 me-2"></i>Create Purchase Order</Button></Link>
+                    <Link to="/dashboard/logistics/purchaseOrder/add"><Button className=" ms-3 text-white" id="up-btn-btn" ><i className="bi bi-cart3 me-2"></i>Create Purchase Order</Button></Link>
                 </div>
             </div>
 
@@ -344,7 +382,7 @@ function PurchaseOrder() {
                                     </h2>
                                     <h5 className="card-title fs-4" >Order supplies to restock</h5>
                                     <div>
-                                        <Link to="/purchaseOrder/add">
+                                        <Link to="/dashboard/logistics/purchaseOrder/add">
                                             <Button variant="dark" className="side-btn mt-5 mb-2 ">
                                                 <span>
                                                 Create a purchase Orders
@@ -371,12 +409,12 @@ function PurchaseOrder() {
                                     </h2>
                                     <h5 className="card-title " >Generate purchase order report for financial processes</h5>
                                     <div>
-                                        <Button className="mb-2 mt-4 position-relative bottom-0 start-0 text-white" variant="dark" onClick={handlePOReport}>All Purchase Order report</Button>
+                                        <Button className="mb-2 mt-4 position-relative bottom-0 start-0 text-white side-btn" variant="dark" onClick={handlePOReport}><span>All Purchase Order report<i className="bi bi-journals"></i></span></Button>
                                     </div>
                                 </div>
                                 <i className="bi bi-file-earmark-bar-graph-fill h1"></i>
                             </div>
-                            <div className="progress mt-1  " data-height="8" style={{ height: '8px' }}>
+                            <div className="progress mt-1" data-height="8" style={{ height: '8px' }}>
                                 <div className="progress-bar orange" role="progressbar" data-width="25%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style={{ width: '75%' }}></div>
                             </div>
                         </div>
@@ -384,8 +422,143 @@ function PurchaseOrder() {
                     </Col>
                 </Row>
             </div>
-                
 
+            <div className="shadow p-3 rounded"> 
+            <div>
+                <div className="fs-5 mt-3 fw-semibold"><i className="bi bi-bar-chart-steps me-2"></i>Order Summery</div>
+                <div className="text-secondary mb-4">Quick reference and analysis to condensed overview of recent purchasing transactions, with metrics like total order count.</div>
+            </div>
+
+
+               
+            <div>
+                <div className="row ">
+                    <div className="col-lg-4 col-md-6 mb-3">
+                        <div className="card ">
+                            <div className="card-statistic-3 p-4">
+                                <div className="d-flex justify-content-between align-items-center">
+                                    <div className="col-8">
+                                        <h2 className="d-flex align-items-center mb-5">
+                                            Rs.{totalAmount}
+                                        </h2>
+                                        <h5 className="card-title" style={{ marginTop: '25px' }}>Total Order Amount of all POs</h5>
+                                    </div>
+                                    <i className="bi bi-cash-coin h1"></i>
+                                </div>
+                                <div className="progress mt-1 " data-height="8" style={{ height: '8px' }}>
+                                    <div className="progress-bar l-bg-cyan" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '25%' }}></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 mb-3">
+                        <div className="card ">
+                            <div className="card-statistic-3 p-4">
+                                <div className="d-flex justify-content-between align-items-center">
+                                    <div className="col-8">
+                                        <h2 className="d-flex align-items-center mb-5">
+                                            Rs.{todaysTotalAmount}
+                                            {/* <span className="fw-light fs-6 mt-3 ms-2">Today {currentDate}</span> */}
+                                        </h2>
+                                        <h5 className="card-title" style={{ marginTop: '25px' }}>Total Order Amount for Today 
+                                        <span className="fw-light fs-6"> {todaysPurchaseOrders.length} order/s </span></h5>
+                                    </div>
+                                    <i className="bi bi-cash-coin h1"></i>
+                                </div>
+                                <div className="progress mt-1 " data-height="8" style={{ height: '8px' }}>
+                                    <div className="progress-bar l-bg-cyan" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '25%' }}></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 mb-3">
+                        <div className="card ">
+                            <div className="card-statistic-3 p-4">
+                                <div className="d-flex justify-content-between align-items-center">
+                                    <div className="col-8">
+                                        <h2 className="d-flex align-items-center mb-5">
+                                            Rs. {totalOrderAmountForCurrentMonth}
+                                        </h2>
+                                        <h5 className="card-title" style={{ marginTop: '25px' }}>Total Order Amount for current month <span className="fw-light">{currentMonth} {currentYear}</span></h5>
+                                    </div>
+                                    <i className="bi bi-cash-coin h1"></i>
+                                </div>
+                                <div className="progress mt-1 " data-height="8" style={{ height: '8px' }}>
+                                    <div className="progress-bar l-bg-cyan" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '25%' }}></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div >
+                <Row>
+                    <Col>
+                    <div className="card" style={{height:"90%"}}>
+                        <div className="card-header  fw-semibold">
+                        <i className="bi bi-calendar2-event me-2"></i>Monthly Orders
+                        </div>
+                        <div className="card-statistic-3 p-3">
+                            <div className="d-flex justify-content-between align-items-center">
+                                <div className="col-8">
+                                <Form className="text-center">
+                                    <Form.Group controlId="formSearchPO">
+                                        <Form.Label>Search Purchase order by month</Form.Label>
+                                        <Row>
+                                            <Col xs={11}>
+                                                <Form.Control
+                                                    type="text"
+                                                    placeholder="Enter month"
+                                                    aria-label="formSearchmonth"
+                                                    aria-describedby="basic-addon1"
+                                                    value={month}
+                                                    onChange={(e) => setMonth(e.target.value)}
+                                                />
+                                            </Col>
+                                            <Col xs={1}>
+                                                <Button variant="outline-secondary search-button" style={{width:"20px", height:"40px"}} onClick={handleSearchByMonth}>
+                                                    <i className="bi bi-search search-button d-flex justify-content-center"></i>
+                                                </Button>
+                                            </Col>
+                                        </Row>
+                                        <p className="mt-4 fw-light">Number of POs in month of {month}: <span className="fw-semibold"> {purchaseOrderIDs.length}</span> </p>
+                                        <p className="mt-4 fw-light">Total Order Amount for that month: <br></br><span className="fs-4 d-block text-center fw-semibold">Rs. {totalOrderAmountForMonth}</span></p>
+                                    </Form.Group>
+                                </Form>
+                                </div>
+                                <h1><i className="bi bi-calendar2-event me-2"></i></h1>
+                            </div>
+                        </div>
+                    </div>
+                    </Col>
+                    <Col>
+                    <div className="card " style={{height:"90%"}}>
+                        <div className="card-header  fw-semibold">
+                        <i className="bi bi-truck me-2"></i>Pending payments and orders
+                        </div>
+                        <div className="card-statistic-3 p-3">
+                            <div className="d-flex justify-content-between align-items-center">
+                                <div className="col-8">
+                                    <div>
+                                        <div className="fw-light fs-6">pending orders</div>
+                                        <h4>Number of delivering orders: {getDeliveringOrders().length}</h4>
+                                    </div>
+                                    <div className="mt-5">
+                                        <div className="fw-light fs-6">payment not done orders</div>
+                                        <h4 >Number of payment not done orders: {getPaymentUndoneOrders().length}</h4>
+                                    </div>
+                                </div>
+                                <h1><i className="bi bi-truck me-2"></i></h1>
+                            </div>
+                        </div>
+                    </div>
+                    </Col>
+                </Row>
+            </div>
+        </div>
+{/* 
             <div > 
                 <Row >
                     <Col xs={3}>
@@ -462,9 +635,9 @@ function PurchaseOrder() {
                         </Card>
                     </Col>
                 </Row>
-            </div>
+            </div> */}
 
-            <div>
+            <div className="mt-4">
                 <div className="ms-2 fs-4 layout-blue" >All Purchase Orders</div>
                 <Row>
                     <Col xs={5} >
@@ -519,7 +692,7 @@ function PurchaseOrder() {
             </div>
 
             <div>
-                <Table striped bordered hover className="shadow">
+                <Table striped bordered hover  className="shadow">
                     <thead>
                         <tr>
                         <th>Purchase Order ID</th>
@@ -573,11 +746,11 @@ function PurchaseOrder() {
                             <td>
 
                             <div className="position-relative" >
-                                <Link to={`/purchaseOrder/get/${order._id}`}>
+                                <Link to={`/dashboard/logistics/purchaseOrder/get/${order._id}`}>
                                     <Button id="up-btn" variant="dark" size="sm" style={{ fontSize: "small"}}  className="my-2 text-white"><i class="bi bi-file-earmark-text me-1"></i>View PO</Button>
                                 </Link>
-                                <Link to={`/purchaseOrder/addPerformance/${order._id}`}>
-                                    <Button id="up-btn" variant="secondary" size="sm" style={{ fontSize: "small"}}  className="my-2 text-white"><i class="bi bi-file-earmark-text me-1"></i>Performance</Button>
+                                <Link to={`/dashboard/logistics/purchaseOrder/addPerformance/${order._id}`}>
+                                    <Button id="up-btn" variant="secondary" size="sm" style={{ fontSize: "small"}}  className="my-2 text-white"><i class="bi bi-graph-up-arrow me-1"></i>Performance</Button>
                                 </Link>
                                 
                             </div>

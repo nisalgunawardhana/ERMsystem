@@ -147,10 +147,10 @@ function ViewSupplier() {
                     <Row>
                         <Col>   
                             <div>
-                                <Link to="/supplier">
+                                <Link to="/dashboard/logistics/supplier">
                                     <Button className="back-btn" variant="secondary" ><i className="bi bi-arrow-left me-2"></i><span>Back</span></Button>
                                 </Link>
-                                <Link to="/rfq"><Button id="up-btn" variant="success"><i className="bi bi-shop me-2"></i>Call new Suppliers?</Button></Link>
+                                <Link to="/dashboard/logistics/rfq"><Button id="up-btn" variant="success"><i className="bi bi-shop me-2"></i>Call new Suppliers?</Button></Link>
                             </div>
 
 
@@ -176,7 +176,7 @@ function ViewSupplier() {
                                 <h4 className="fw-light mb-4 layout-blue">More Details of <span className="fw-semibold">{supplier.supplier_name}</span></h4>
 
                                 <div>
-                                    <h5>Product Items</h5>
+                                    <h5><i className="bi bi-duffle me-2"></i>Product Items</h5>
                                     <div className="d-flex bg-secondary mt-4 justify-content-center">
                                         <table className=" table p-3 mt-3 ">
                                             <thead>
@@ -201,6 +201,7 @@ function ViewSupplier() {
 
                                 <div className="">
                                     <h5 className="mt-4">
+                                        <i className="bi bi-bank2 me-2"></i>
                                         Bank details 
                                         <Button
                                         className="ms-3 side-btn collapsed"
@@ -228,7 +229,7 @@ function ViewSupplier() {
                                 </div>
 
                                 <div>
-                                    <h5 className=" my-3">Contract Details</h5>
+                                    <h5 className=" my-3"><i className="bi bi-person-check me-2"></i>Contract Details</h5>
                                     <div className="fw-semibold">Contract starts on</div>
                                     <div>{supplier.contract.start_date}</div>
                                     <div className="fw-semibold">Contract ends on</div>
@@ -248,18 +249,18 @@ function ViewSupplier() {
                         
 
                 <div className="mt-4">
-                    <Link to={`/supplier/update/${supplier._id}`} >
-                        <Button variant="primary" id="up-btn" className="me-1 ">
+                    <Link to={`/dashboard/logistics/supplier/update/${supplier._id}`} >
+                        <Button variant="outline-primary"  className="me-1 ">
                         <i className="bi bi-pen"></i> Edit Supplier
                         </Button>
                     </Link>
-                    <Button variant="danger" id="up-btn" className="me-1 " onClick={() => handleDeleteSupplier(supplier._id)} >
+                    <Button variant="outline-danger"  className="me-1 " onClick={() => handleDeleteSupplier(supplier._id)} >
                         <i className="bi bi-trash"></i> Delete
                     </Button>
-                    <Button variant="info" id="up-btn"  onClick={printPdfSupplier}>
+                    <Button variant="outline-info"   onClick={printPdfSupplier}>
                             <i className="bi bi-download me-2"></i> Download
                     </Button>
-                    <Link to={`/supplier/add`} >
+                    <Link to={`/dashboard/logistics/supplier/add`} >
                         <Button variant="primary" id="up-btn" className="me-1 ">
                         <i className="bi bi-shop"></i> Add a Supplier
                         </Button>

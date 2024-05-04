@@ -136,7 +136,7 @@ function Layout({children}) {
     const staffManagerMenu = [
         {
             name: 'Dashboard',
-            path: '/employee',
+            path: '/dashboard/employee',
             icon: 'ri-user-settings-line'
         },
         {
@@ -146,19 +146,14 @@ function Layout({children}) {
         },
         {
             name: 'Attendance',
-            path: '/attendance',
+            path: '/dashboard/employee/attendence',
             icon: 'ri-check-double-line'
         },
         {
-            name: 'Bonus Points',
-            path: '/bonus-points',
-            icon: 'ri-medal-line'
+            name: 'Tranee management',
+            path: '/dashboard/trainee',
+            icon: 'ri-home-4-line'
         },
-        {
-            name: 'Salaries',
-            path: '/salaries',
-            icon: 'ri-money-dollar-circle-line'
-        }
     ];
     
     //6.training coordinator

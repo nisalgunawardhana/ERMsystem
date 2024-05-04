@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from "react";
-import {Form, Row, Col, Button } from "react-bootstrap";
+import {Form, Row, Col, Button, Popover, OverlayTrigger } from "react-bootstrap";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Layout from '../Layout';
@@ -9,7 +9,7 @@ function AddPurchaseOrder() {
 
     const navigate = useNavigate();
 
-    const [purchaseOrder_id, setPOid] = useState("");
+    const [purchaseOrder_id, setPOid] = useState("PO");
     const [order_date, setPurchaseOrderDate] = useState("");
     const [deliver_date, setDeliveryDate] = useState("");
     const [item_name, setItemName] = useState("");
@@ -40,6 +40,9 @@ function AddPurchaseOrder() {
     const [supplierNames, setSupplierNames] = useState([]);
     const [selectedSupplier, setSelectedSupplier] = useState("");
     const [supplier_id, setSupId] = useState("");
+    const [showDeliveryCostsPopover, setShowDeliveryCostsPopover] = useState(false);
+    const [showOrderDatePopover, setShowOrderDatePopover] = useState(false);
+    const [showPOIDPopover, setShowPOIDPopover] = useState(false);
     
     function sendDataPO(e) {
         e.preventDefault();
@@ -86,7 +89,7 @@ function AddPurchaseOrder() {
     
         axios.post("http://localhost:8080/purchaseOrder/add", newPurchaseOrder).then(() => {
             alert("New purchase Order added");
-            navigate("/purchaseOrder");
+            navigate("/dashboard/logistics/purchaseOrder");
         }).catch((err) => {
             console.error("Error adding purchase order:", err);
             alert(err);
@@ -122,6 +125,47 @@ function AddPurchaseOrder() {
                 console.error("Error fetching supplier ID:", error);
             });
     };
+
+    //FORM VALIDATIONS
+    //delivery costs
+    const toggleDeliveryCostsPopover = () => setShowDeliveryCostsPopover(!showDeliveryCostsPopover);
+
+    const handleDeliveryCostsChange = (e) => {
+      const value = e.target.value;
+      if (!isNaN(value)) {
+        setDeliveryCosts(parseFloat(value));
+        setShowDeliveryCostsPopover(false); 
+      } else {
+        toggleDeliveryCostsPopover(); 
+      }
+    };
+
+    //order date
+    const toggleOrderDatePopover = () => setShowOrderDatePopover(!showOrderDatePopover);
+
+    const handleOrderDateChange = (e) => {
+        const selectedDate = e.target.value;
+        if (selectedDate < new Date().toISOString().split('T')[0]) {
+        toggleOrderDatePopover(); // Show popover if date is before today
+        } else {
+        setPurchaseOrderDate(selectedDate);
+        setShowOrderDatePopover(false); // Hide popover if date is valid
+        }
+    };
+
+    //order date
+    // const togglePOIDpopover = () => setShowPOIDPopover(!showPOIDPopover);
+
+    // const handlePOChange = (e) => {
+    //     const value = e.target.value;
+    //     if (value.length === 5 && /^\d+$/.test(value)) {
+    //         setPOid(value);
+    //         setShowPOIDPopover(false);
+    //     } else {
+    //         togglePOIDpopover();
+    //     }
+    // };
+      
 
 
     //Add Order Items and display Total Amount
@@ -170,6 +214,24 @@ function AddPurchaseOrder() {
                         }} />
                     </Form.Group>
 
+                    {/* <Form.Group controlId="POid">
+                        <Form.Label>Purchase Order ID</Form.Label>
+                        <OverlayTrigger
+                            trigger="focus"
+                            placement="bottom"
+                            show={showPOIDPopover}
+                            overlay={<Popover id="po-id-popover" style={{ padding: "15px" }}>PO ID should contain exactly 5 characters</Popover>}
+                        >
+                            <Form.Control
+                                type="text"
+                                name="purchaseOrder_id"
+                                required
+                                value={purchaseOrder_id}
+                                onChange={handlePOChange}
+                            />
+                        </OverlayTrigger>
+                    </Form.Group> */}
+
                     <Form.Group controlId="supplierName" className="mt-3">
                         <Form.Label>Supplier Name</Form.Label>
                         <Form.Control
@@ -201,10 +263,20 @@ function AddPurchaseOrder() {
                         <Col>
                         <Form.Group controlId="orderDate">
                             <Form.Label>Order date</Form.Label>
-                            <Form.Control type="date" name="order-Date" value={order_date}required 
-                            onChange={(e) => {
-                                setPurchaseOrderDate(e.target.value);
-                            }}/>
+                            <OverlayTrigger
+                            trigger="focus"
+                            placement="bottom"
+                            show={showOrderDatePopover}
+                            overlay={<Popover id="order-date-popover" style={{ padding: "15px" }}>Order date should not be a past value.</Popover>}
+                            >
+                            <Form.Control
+                                type="date"
+                                name="order-Date"
+                                value={order_date}
+                                required
+                                onChange={handleOrderDateChange}
+                            />
+                            </OverlayTrigger>
                         </Form.Group>
                         </Col>
 
@@ -220,7 +292,7 @@ function AddPurchaseOrder() {
                     </Row>
                     
                     <div className="mt-3">
-                        <h6>Order Items</h6>
+                        <h6><i className="bi bi-magic me-2"></i>Order Items</h6>
                         <Form.Group controlId="orderItemName">
                             <Form.Label>Item Name</Form.Label>
                             <Form.Control type="text" name="order_item_name"  
@@ -296,11 +368,11 @@ function AddPurchaseOrder() {
                             </div>
                         </div>
 
-                        <h5 className="my-5">Order Amount : Rs. {order_amount}</h5>
+                        <h5 className="my-5"><i className="bi bi-cash-coin me-2"></i>Order Amount : Rs. {order_amount}</h5>
                     </div>
 
                     <div className="mt-3">
-                        <h6>Delivery Information</h6>
+                        <h6><i className="bi bi-truck me-2"></i>Delivery Information</h6>
                         <Row>
                             <Col>
                             <Form.Group >
@@ -325,7 +397,7 @@ function AddPurchaseOrder() {
                     </div>
 
                     <div className="mt-4">
-                        <h6>Payment Information</h6>
+                        <h6><i className="bi bi-credit-card-2-front me-2"></i>Payment Information</h6>
                         <Row>
                             <Col>
                             <Form.Group >
@@ -371,7 +443,7 @@ function AddPurchaseOrder() {
                     </div>
 
                     <div>
-                    <h3 className="my-5">Total Order Amount : Rs. {total_order_amount}</h3>
+                    <h3 className="my-5"><i class="bi bi-currency-exchange me-2"></i>Total Order Amount : Rs. {total_order_amount}</h3>
                     </div>
 
                     <div className="mt-3 text-center">

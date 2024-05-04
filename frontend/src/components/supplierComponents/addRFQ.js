@@ -49,7 +49,7 @@ function AddRFQss() {
 
         axios.post("http://localhost:8080/rfq/add", newRFQ).then(() => {
             alert("RFQ is Added");
-            navigate("/rfq");
+            navigate("/dashboard/logistics/rfq");
         }).catch((err) => {
             alert(err)
         })
@@ -188,7 +188,7 @@ function AddRFQss() {
                     </Form.Group>
 
                     <div className=" text-center mt-5">
-                        <Link to="/rfq">
+                        <Link to="/dashboard/logistics/rfq">
                             <Button variant="secondary mx-2">Back</Button>
                         </Link>
                         <Button variant="success" className = "fs-6 w-50" type="submit">Create a Request</Button>

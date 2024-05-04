@@ -3,6 +3,10 @@
   background-color: white;
 }
 
+ul {
+  list-style: none;
+}
+
 .dark-blue{
   background-color: #225874;
 }
@@ -12,7 +16,7 @@
 }
 
 .orange{
-  background-color: #FF5F0F;
+  background-color: orange
 }
 
 .luxery-yellow{
@@ -230,7 +234,6 @@
   padding-right: 10px;
   width: auto;
   border-radius: 6px;
-  color: white;
 }
 
 #up-btn span {
@@ -350,14 +353,18 @@
   color: #6c757d; 
   padding: 6px; 
   transition: color 0.3s ease;
-  
+  border-radius: 20px;
 }
 
 .search-button:hover .search-icon {
   color: white; 
   transition: color 0.3s ease;
+  
 }
 
+.search-button:hover{
+  border-radius: 20px;
+}
 .search-button {
   border-radius: 20px;
   transition: background-color 0.3s ease;

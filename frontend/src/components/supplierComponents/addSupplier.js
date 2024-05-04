@@ -23,6 +23,8 @@ function AddSupplier() {
     const [contract, setContract] = useState({ start_date: null, end_date: null });
 
     const [showPopover, setShowPopover] = useState(false);
+    const [showContactPopover, setShowContactPopover] = useState(false);
+    const [showEmailPopover, setShowEmailPopover] = useState(false);
 
 
     function sendData(e) {
@@ -50,18 +52,42 @@ function AddSupplier() {
 
         axios.post("http://localhost:8080/supplier/add", NewSupplier).then(() => {
             alert("sUPPLIER IS Added");
-            navigate("/supplier");
+            navigate("/dashboard/logistics/supplier");
         }).catch((err) => {
             alert(err)
         })
     }
 
- const popover = (
-  <Popover id="popover-basic">
-    <Popover.Body>No '@' sign found. Please enter a valid email address.</Popover.Body>
-  </Popover>
-);
+    //Validate contact
+    const validateContactNumber = () => {
+        if (contact.length !== 10) {
+            setShowContactPopover(true);
+        } else {
+            setShowContactPopover(false);
+        }
+    };
 
+    //Validate email
+    const validateEmail = () => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            setShowEmailPopover(true);
+        } else {
+            setShowEmailPopover(false);
+        }
+    };
+
+    const contactPopover = (
+        <Popover id="contact-popover">
+            <Popover.Body>Contact number must have 10 digits.</Popover.Body>
+        </Popover>
+    );
+
+    const emailPopover = (
+        <Popover id="email-popover">
+            <Popover.Body>Please enter a @ valid email address.</Popover.Body>
+        </Popover>
+    );
 
     //Product Check boxes
     const handleProductCheckBox = (e) => {
@@ -128,20 +154,32 @@ function AddSupplier() {
 
                     <Form.Group className="mt-2" controlId="supplierContact">
                         <Form.Label>Contact Number</Form.Label>
-                        <Form.Control type="text" name="supplier_contact"  required
-                        value={contact}  
-                        onChange={(e) => {
-                            setContactNumber(e.target.value);
-                        }}/>
+                        <OverlayTrigger
+                            trigger="focus"
+                            placement="top"
+                            show={showContactPopover}
+                            overlay={contactPopover}
+                        >
+                            <Form.Control
+                                type="text"
+                                name="supplier_contact"
+                                required
+                                value={contact}
+                                onBlur={validateContactNumber}
+                                onChange={(e) => {
+                                    setContactNumber(e.target.value);
+                                }}
+                            />
+                        </OverlayTrigger>
                     </Form.Group>
 
-                    <Form.Group className="mt-2" controlId="supplierEmail">
+                    {/* <Form.Group className="mt-2" controlId="supplierEmail">
                         <Form.Label htmlFor="emailInput">Email Address</Form.Label>
                         <OverlayTrigger
                             trigger="focus"
                             placement="right"
-                            show={showPopover}
-                            overlay={popover}
+                            show={showEmailPopover}
+                            overlay={emailPopover}
                         >
                             <Form.Control
                             type="email"
@@ -150,15 +188,36 @@ function AddSupplier() {
                             value={email}
                             onChange={(e) => {
                                 setEmail(e.target.value);
-                                setShowPopover(!e.target.value.includes('@'));
+                                setShowEmailPopover(!e.target.value.includes('@'));
                             }}
+                            />
+                        </OverlayTrigger>
+                    </Form.Group> */}
+
+                    <Form.Group className="mt-2" controlId="supplierEmail">
+                        <Form.Label htmlFor="emailInput">Email Address</Form.Label>
+                        <OverlayTrigger
+                            trigger="focus"
+                            placement="top"
+                            show={showEmailPopover}
+                            overlay={emailPopover}
+                        >
+                            <Form.Control
+                                type="email"
+                                name="supplier_email"
+                                required
+                                value={email}
+                                onBlur={validateEmail}
+                                onChange={(e) => {
+                                    setEmail(e.target.value);
+                                }}
                             />
                         </OverlayTrigger>
                     </Form.Group>
 
 
-                    <div className="mt-2">
-                        <h6>Bank Details</h6>
+                    <div className="mt-4">
+                        <h6><i className="bi bi-bank2 me-2"></i>Bank Details</h6>
                         <Form.Group controlId="bank">
                             <Form.Label>Bank</Form.Label>
                             <Form.Control type="text" name="bank" required
@@ -186,7 +245,7 @@ function AddSupplier() {
                             }}/>
                         </Form.Group>
 
-                        <p className="mt-3"><b>Payment Details</b></p>
+                        <p className="mt-4"><i className="bi bi-currency-exchange me-2"></i>Payment Details</p>
                         <Form.Group  controlId="paymentMethod">
                             <Form.Label>Payment Method</Form.Label>
                             <Form.Control type="text" name="payment_method"
@@ -207,7 +266,7 @@ function AddSupplier() {
                     </div>
 
                     <div className="mt-4">
-                        <h6>Product Types</h6>
+                        <h6><i className="bi bi-magic me-2"></i>Product Types</h6>
                         <Row>
                         {['Mens-Shirts', 'Mens-Trousers', 'Mens T-Shirt', 'Suits', 'Shorts', 'Jackets and Blazers', 'Traditional wear',
                         'Tops and Blouses', 'Dresses','Party dresses', 'Skirts', 'Trousers and Denims', 'Office wear',
@@ -228,7 +287,7 @@ function AddSupplier() {
                     </div>
 
                     <div>
-                        <h6 className="mt-4">Product Details</h6>
+                        <h6 className="mt-4"><i className="bi bi-text-left me-2"></i>Product Details</h6>
                         <Row>
                             <Col>
                             <Form.Group >
@@ -277,7 +336,7 @@ function AddSupplier() {
                     </div>
                 
                     <div>
-                        <h6 className="mt-2">Average Supplier Performance</h6>
+                        <h6 className="mt-2"><i className="bi bi-percent me-2 "></i>Average Supplier Performance</h6>
                         <Row>
                             <Col>
                             <Form.Group controlId="supplierQuality">
@@ -304,7 +363,7 @@ function AddSupplier() {
                     </div>
 
                     <div >
-                        <h6 className="mt-4">Contract Details</h6>
+                        <h6 className="mt-4"><i className="bi bi-person-check me-2"></i>Contract Details</h6>
                         <Row>
                             <Col>
                             <Form.Group >
@@ -333,7 +392,7 @@ function AddSupplier() {
                     <div className="mt-5 d-flex  justify-content-center">
                         <Row >
                             <Col xs={4} >
-                                <Link to="/supplier/" className="d-flex align-items-center">
+                                <Link to="/dashboard/logistics/supplier" className="d-flex align-items-center">
                                     <Button className="back-btn" variant="secondary" style={{ height: '40px', fontSize: '16px' }}>
                                         <i className="bi bi-arrow-left me-2"></i>
                                         <span>Back</span>
@@ -341,7 +400,7 @@ function AddSupplier() {
                                 </Link>
                             </Col>
                             <Col>
-                                <Button className="text-white luxery-yellow " variant="white" type="submit" >Add new Supplier</Button>
+                                <Button className="text-white " variant="dark" type="submit" >Add new Supplier</Button>
                             </Col>
                             
                         </Row>

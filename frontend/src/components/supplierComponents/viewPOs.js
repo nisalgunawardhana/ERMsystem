@@ -113,7 +113,7 @@ function ViewPO() {
             axios.delete(`http://localhost:8080/purchaseOrder/delete/${id}`)
                 .then(response => {
                     alert("Order deleted successfully");
-                    navigate('/purchaseOrder'); 
+                    navigate('/dashboard/logistics/purchaseOrder'); 
                 })
                 .catch(error => {
                     console.error("Error deleting purchase order:", error);
@@ -217,8 +217,9 @@ function ViewPO() {
                         <div class="container">
                             <div class="ms-2 container-fluid mb-5">
                                 <div class="ms-4">
+                                <h2>Diyana Fashion</h2>
                                     <p class="fw-light">Purchase order Management</p>
-                                    <h3>Purchase Order {id}</h3>
+                                    <h2>Purchase Order ${purchaseOrder.purchaseOrder_id}</h2>
                                 </div>
                             
                                 <div class="mt-5 container-fluid "> 
@@ -226,10 +227,17 @@ function ViewPO() {
                                     <div class="row">
                                         <div class="col-md-7"> 
                                             <div class="pe-4 bg-warning"> 
-                                                <p class="fs-5">Purchase Order ID: ${purchaseOrder.purchaseOrder_id}</p>
+                                                <p class="fs-3">Purchase Order ID: ${purchaseOrder.purchaseOrder_id}</p>
                                                 <p class="fs-6">Mongo DB database ID: ${id}</p>
+
+                                                <h4>Supplier Details</h4>
                                                 <p>Supplier ID: ${purchaseOrder.supplier_id}</p>
+                                                <p>Supplier Name: ${supplier.supplier_name}</p>
+                                                <p>Address: ${supplier.address}</p>
+                                                <p>Contact Number: ${supplier.contact}</p>
+                                                <p>Email: ${supplier.email}</p>
                                                 
+                                                <h4 class="mt-5">Order date and Deliver date</h4>
                                                 <div class="row ms-5 mt-5 mb-4">
                                                     <div class="col-xs-4">
                                                         <p class="fs-6 p-3 text-center fw-light bg-info-dates">Order date: <br><span class="fw-semibold fs-5">${purchaseOrder.order_date}</span></p>
@@ -239,14 +247,14 @@ function ViewPO() {
                                                     </div>
                                                 </div>
                             
-                                                <div >
-                                                    <h6>Delivery Information</h6>
+                                                <div class="mt-4">
+                                                    <h3>Delivery Information</h3>
                                                     <p class="ms-3">Delivery Method :  ${purchaseOrder.delivery_information.delivery_method}</p>
                                                     <p class="ms-3">Delivery costs for the order :  ${purchaseOrder.delivery_information.delivery_costs}</p>
                                                 </div>
                             
                                                 <div class="mt-4">
-                                                    <h6>Payment details of the order</h6>
+                                                    <h3>Payment details of the order</h3>
                                                     <p class="ms-3">Payment terms :  ${purchaseOrder.payment_information.payment_terms}</p>
                                                     <p class="ms-3">Payment Method :  ${purchaseOrder.payment_information.payment_method}</p>
                                                 </div>
@@ -256,7 +264,7 @@ function ViewPO() {
                                     
                             
                                     <div class="p-4 bg-info w-75 mt-3 rounded">
-                                        <h6 class="mt-2">Ordered Items</h6>
+                                        <h3 class="mt-2 ">Ordered Items</h3>
                                         <table>
                                             <thead>
                                                 <tr>
@@ -282,10 +290,11 @@ function ViewPO() {
                                     </div>
         
                             
-                                    <p class="fw-light mt-5 mb-4">Total Amount of the ordered items : <span class="fw-semibold fs-4"> Rs. ${purchaseOrder.total_order_amount}</span></p>
+                                    <h3 class="fw-light fs-4 mt-5 mb-4">Total Amount of the ordered items : <span class="print-bold"> Rs.${purchaseOrder.total_order_amount}</span></h3>
+
                             
                                     <div class="text-center ms-5 ">
-                                        <p class="text-start">Current status of the order</p>
+                                        <h3 class="text-start">Current status of the order</h3>
                                         <div class="row">
                                             <div class="col-xs-2">
                                                 <p class="fs-6 p-3 fw-light bg-warning">Payment Status<br><span>${purchaseOrder.payment_status}</span></p>
@@ -298,7 +307,7 @@ function ViewPO() {
                             
                                     <p class="text-secondary mt-4 bg-success-subtle p-3 me-3 ">If payment is done,<br><span class="ms-3 text-dark">Invoice number : ${purchaseOrder.invoice_no}</span></p>
                             
-                                    <p class="mt-4 fw-semibold"> Additional instructions to follow: <br><span class="fw-normal">${purchaseOrder.additional_infomation}</span></p>
+                                    <h3 class="mt-4 fw-semibold"> Additional instructions to follow: <br><span class="fw-normal">${purchaseOrder.additional_infomation}</span></h3>
                                     
                                 
                                 </div>
@@ -393,7 +402,7 @@ function ViewPO() {
                     <div className="layout-blue">
                         <p className="fw-light">Purchase order Management
                         <h2 >Purchase Order {purchaseOrder.purchaseOrder_id}</h2></p>
-                        <Link to="/purchaseOrder">
+                        <Link to="/dashboard/logistics/purchaseOrder">
                             <Button className="back-btn" variant="secondary" ><i className="bi bi-arrow-left me-2"></i><span>Back</span></Button>
                         </Link>
 
@@ -419,17 +428,43 @@ function ViewPO() {
                                 </div>
 
                                 <div>
-                                    <Row className="ms-3 mt-5">
-                                        <Col xs={4}>
-                                            <p className="fs-6 p-3 text-center fw-light text-light rounded" style={{backgroundColor:"#334eac"}}>Order date: <br></br><span className="fw-semibold fs-5">{purchaseOrder.order_date}</span></p>
+                                    <Row className="ms-3 me-2 mt-5">
+                                        <Col>
+                                            {/* <p className="fs-6 p-3 text-center fw-light text-light rounded" style={{backgroundColor:"#334eac"}}>Order date: <br></br><span className="fw-semibold fs-5">{purchaseOrder.order_date}</span></p> */}
+                                            <div class="card">
+                                                <div class="card-statistic-3 p-3">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <div>
+                                                            <div><i className="bi bi-box-arrow-in-up me-1"></i>Order date</div>
+                                                            <h3 class="d-flex align-items-center mb-5">
+                                                            {purchaseOrder.order_date}
+                                                            </h3>
+                                                        </div>
+                                                        <i className="bi bi-box-arrow-in-up h1"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </Col>
-                                        <Col xs={4} className="ms-5">
-                                            <p className="fs-6 p-3 text-center fw-light text-light rounded" style={{backgroundColor:"#334eac"}}>Delivery date: <br></br><span className="fw-semibold fs-5">{purchaseOrder.deliver_date}</span></p>
+                                        <Col >
+                                            {/* <p className="fs-6 p-3 text-center fw-light text-light rounded" style={{backgroundColor:"#334eac"}}>Delivery date: <br></br><span className="fw-semibold fs-5">{purchaseOrder.deliver_date}</span></p> */}
+                                            <div class="card">
+                                                <div class="card-statistic-3 p-3">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <div>
+                                                            <div><i className="bi bi-box-arrow-in-down me-1"></i>Deliver date</div>
+                                                            <h3 class="d-flex align-items-center mb-5">
+                                                            {purchaseOrder.deliver_date}
+                                                            </h3>
+                                                        </div>
+                                                        <i className="bi bi-box-arrow-in-down h1"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </Col>
                                     </Row>
                                 </div>
 
-                                <div className="p-4 mt-3 rounded " >
+                                <div className="p-4 mt-1 rounded " >
                                     <h6 >Ordered Items</h6>
                                     <Row xs={4} className="g-4">
                                         {purchaseOrder.order_items.map((item, index) => (
@@ -453,14 +488,45 @@ function ViewPO() {
                                 <div>
                                     <p className="fw-light  mb-4">Total Amount of the ordered items : <span className="fw-semibold fs-3"> Rs. {purchaseOrder.total_order_amount}</span></p>
 
-                                    <div className="text-center my-5 ms-5 ">
+                                    <div className=" my-5 ms-3 me-1 ">
                                         <p className="text-start">Current status of the order</p>
                                         <Row>
-                                            <Col xs={4}>
-                                                <p className="fs-6 p-3 fw-light rounded text-light" style={{backgroundColor:"#334eac"}}>Payment Status<br></br><span className="fs-5 ">{purchaseOrder.payment_status}</span></p>
+                                            <Col>
+                                                <div class="card">
+                                                    <div class="card-statistic-3 p-4">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <div>
+                                                                <div><i className="bi bi-coin me-1"></i>Payment Status</div>
+                                                                <h3 class="d-flex align-items-center mb-5">
+                                                                {purchaseOrder.payment_status}
+                                                                </h3>
+                                                            </div>
+                                                            <i className="bi bi-coin h1"></i>
+                                                        </div>
+                                                        <div class="progress mt-1 " data-height="8" style={{ height: '8px' }}>
+                                                            <div class="progress-bar orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '50%' }}></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </Col>
-                                            <Col xs={4}>
-                                                <p className="ms-3 fs-6 p-3 fw-light rounded text-light"  style={{backgroundColor:"#334eac"}}>Order Status<br></br><span className="fs-5 ">{purchaseOrder.order_status}</span></p>
+                                            <Col>
+                                                {/* <p className="ms-3 fs-6 p-3 fw-light rounded text-light"  style={{backgroundColor:"#334eac"}}>Order Status<br></br><span className="fs-5 ">{purchaseOrder.order_status}</span></p> */}
+                                                <div class="card">
+                                                    <div class="card-statistic-3 p-4">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <div>
+                                                                <div><i className="bi bi-truck me-1"></i>Order Status</div>
+                                                                <h3 class="d-flex align-items-center mb-5">
+                                                                {purchaseOrder.order_status}
+                                                                </h3>
+                                                            </div>
+                                                            <i className="bi bi-truck h1"></i>
+                                                        </div>
+                                                        <div class="progress mt-1 " data-height="8" style={{ height: '8px' }}>
+                                                            <div class="progress-bar orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '50%' }}></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </Col>
                                         </Row>                    
                                     </div>
@@ -470,7 +536,7 @@ function ViewPO() {
                         <Col xs={5} >
                             <Row>
                                 <div className=" p-3 rounded shadow-lg rounded ">
-                                    <p className="mb-4 ms-2 layout-blue fw-light text-center">Supplier<br></br><span className="fw-normal  fs-3">{supplier.supplier_name}</span></p>
+                                    <p className="mb-4 ms-2 layout-blue fw-light text-center"><i className="bi bi-shop fw-light me-2"></i>Supplier<br></br><span className="fw-normal  fs-3">{supplier.supplier_name}</span></p>
                                     <div className="text-center">
                                         <p className="mt-5">Supplier ID: {supplier.supplier_id}</p>
                                         <p>Email: {supplier.email}</p>
@@ -492,11 +558,11 @@ function ViewPO() {
                                     </Link> */}
 
 
-                                    <p className="mt-5">Supplier selling product items:</p>
+                                    <p className="mt-5 fw-semibold">Supplier selling product items:</p>
                                     <ul>
                                         {supplier.product_items && supplier.product_items.map((item, index) => (
                                             <li key={index}>
-                                                {item.product_name} - ${item.unit_price}
+                                                <i className="bi bi-hash "></i>{item.product_name} - ${item.unit_price}
                                             </li>
                                         ))}
                                     </ul>
@@ -551,7 +617,7 @@ function ViewPO() {
                         <div className="d-flex justify-content-start me-3 mt-4">
                             <Button variant="info" className="ms-2 text-white" id="up-btn" onClick={printPO}><i className="bi bi-printer-fill me-2"></i>Print as a document</Button>
 
-                            <Link to={`/purchaseOrder/update/${purchaseOrder._id}`} >
+                            <Link to={`/dashboard/logistics/purchaseOrder/update/${purchaseOrder._id}`} >
                                 <Button variant="white" className="ms-2 text-white " id="up-btn" style={{backgroundColor:"#334eac"}}><i className="bi bi-pen me-2"></i>Edit Order details</Button>
                             </Link>
 

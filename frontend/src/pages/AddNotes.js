@@ -84,7 +84,7 @@ const CreateNoteForm = () => {
 
                     <Button className='create-note-button my-2' htmlType='submit'>Create Note</Button>
                     <br/>
-                    <Link to='/all-notes' className='anchor mt-1'>Back to Notes</Link>
+                    <Link to='/users/notes' className='anchor mt-1'>Back to Notes</Link>
                 </Form>
             </div>
         </Layout>

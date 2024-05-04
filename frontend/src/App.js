@@ -27,14 +27,15 @@ import UpdatePurchaseOrder from './components/supplierComponents/updatePO';
 import CustomerR from './components/Customer';
 import UpdateCustomer from './components/UpdateCustomer';
 import Trainees from'./components/Trainee';
+
 //billing
-import CashierDashboard from './components/cashierDashboard';
+import CashierDashboard from './components/billingComponents/cashierDashboard';
 import Bill from './components/billingComponents/bill';
 import CreateBill from './components/billingComponents/createBill';
 import UpdateBill from './components/billingComponents/updateBill';
+
 //discount
 import Discounts from './components/discountComponents/Discount';
-import Employees from './components/employeeComponent/employee';
 import Stock from './components/stockComponent/stock';
 import Clothe from './components/stockComponent/clothes';
 import Toy from './components/stockComponent/toys';
@@ -51,6 +52,11 @@ import SystemUsers from './pages/SystemUsers';
 import Notes from './pages/Notes';
 import Profile from './pages/Profile';
 import AddNotes from './pages/AddNotes';
+
+//employee management
+import Employees from './components/employeeComponent/employee';
+import Attendance from './components/employeeComponent/attendancelist';
+import Attendform from './components/employeeComponent/attendance';
 
 function App() {
   const {loading} = useSelector(state => state.alerts);
@@ -116,14 +122,17 @@ function App() {
           <Route path="/dashboard/cashier/Customer/update/:id" element={<ProtectedRoute><UpdateCustomer/></ProtectedRoute>}/>
           <Route path="/dashboard/trainee" element={<ProtectedRoute><Trainees/></ProtectedRoute>}/>
           <Route path="/dashboard/cashier/billing" element={<ProtectedRoute><Bill/></ProtectedRoute>}/>
-          <Route path="/dashboard/cashier/bill/CreateBill" element={<ProtectedRoute><CreateBill/></ProtectedRoute>}/>
-          <Route path="/dashboard/cashier/bill/update/:id" element={<ProtectedRoute><UpdateBill/></ProtectedRoute>}/>
+          <Route path="/dashboard/cashier/billing/CreateBill" element={<ProtectedRoute><CreateBill/></ProtectedRoute>}/>
+          <Route path="/dashboard/cashier/billing/update/:id" element={<ProtectedRoute><UpdateBill/></ProtectedRoute>}/>
           <Route path="/dashboard/cashier/discounts" element={<ProtectedRoute><Discounts/></ProtectedRoute>} />
           <Route path="/dashboard/cashier" element={<ProtectedRoute><CashierDashboard/></ProtectedRoute>}/>
           <Route path="/dashboard/employee" element={<ProtectedRoute><Employees/></ProtectedRoute>}/>
           <Route path="/dashboard/logistics/stock" element={<ProtectedRoute><Stock/></ProtectedRoute>}/>
           <Route path="/dashboard/logistics/stock/clothes" element={<ProtectedRoute><Clothe/></ProtectedRoute>}/>
           <Route path="/dashboard/logistics/stock/toys" element={<ProtectedRoute><Toy/></ProtectedRoute>}/>
+          <Route path="/dashboard/employee/attendence" element={<ProtectedRoute><Attendance/></ProtectedRoute>}/>
+          <Route path="/dashboard/employee/attendence/form" element={<ProtectedRoute><Attendform/></ProtectedRoute>}/>
+          
 
         </Routes>  
       
