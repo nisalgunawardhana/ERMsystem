@@ -78,6 +78,10 @@ export default function Bills() {
             .then(() => {
                 setShowDeleteConfirmation(false);
                 setbill(prevBill => prevBill.filter(b => b._id !== id));
+                
+            // Calculate the new total amount after deleting the bill
+            const newTotalAmount = totalAmount - bill.find(b => b._id === id).total_amount;
+            setTotalAmount(newTotalAmount);
                 toast.success("Bill deleted successfully!");
             })
             .catch((err) => {
@@ -299,6 +303,9 @@ export default function Bills() {
                             .then(() => {
                                 resolve("Bills deleted successfully!");
                                 setbill(prevBills => prevBills.filter(b => !b.selected));
+                                // Calculate the new total amount after deleting the selected bills
+                                const newTotalAmount = totalAmount - bill.filter(b => b.selected).reduce((total, b) => total + b.total_amount, 0);
+                                setTotalAmount(newTotalAmount);
                                 resetSecretCode();
                             })
                             .catch((err) => {
