@@ -441,7 +441,7 @@ const generateReport = (reportType) => {
                                 <td>{user.last_name}</td>
                                 <td>{user.email}</td>
                                 <td>{user.userRole}</td>
-                                <td>{user.status}</td>
+                                <td>{user.isActive ? "Online": "Offline"}</td>
                                 <td>{new Date(user.createdAt).toLocaleDateString('en-GB')}</td>
                                 
                                 <td>

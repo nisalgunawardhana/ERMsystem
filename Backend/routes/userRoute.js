@@ -5,8 +5,6 @@ const bcrypt = require('bcrypt')
 const jwt = require("jsonwebtoken")
 const authMiddleware = require("../middlewares/authMiddleware")
 const Note = require('../models/noteModel');
-const socketIo = require('socket.io'); // Import Socket.IO
-
 
 //--system users--
 //register - CREATE
@@ -24,11 +22,6 @@ router.post('/register', async(req, res) => {
         req.body.password = hashedPassword
         const newuser = new User(req.body)
         await newuser.save()
-        
-        /*
-        // Emit login event when a new user is registered
-        io.emit('userLoggedIn', newuser._id);
-        */
 
         //res.status(200) -- success 
         res.status(200).send({ message: "User created successfully", success: true })
@@ -57,12 +50,7 @@ router.post('/login', async(req, res) => {
             const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
                 expiresIn: "1d"
             });
-            
-            /*
-            // Emit login event when a user logs in
-            io.emit('userLoggedIn', user._id);
-            */
-           
+
             res
                 .status(200)
                 .send({ message: "Login successful", success: true, data: token })

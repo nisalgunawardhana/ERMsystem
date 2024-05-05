@@ -1,11 +1,18 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const cors = require("cors");
 const app = express();
 //app.use(express.json())
 const PORT = process.env.PORT || 8080;
+
+const http = require("http");
+const socketIo = require("socket.io");
+
+const server = http.createServer(app);
+const io = socketIo(server);
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -94,9 +101,79 @@ const clothes = require("./routes/clothesRoutes.js");
 app.use("/clothes", clothes);
 
 const toys = require("./routes/toysRoutes.js");
+const userModel = require("./models/userModel.js");
 app.use("/toys", toys);
 
+io.on('connection', (socket) => {
+    console.log(`Socket ${socket.id} connected`);
 
-app.listen(PORT, () => {
+    // Event listener for heartbeat
+    socket.on('heartbeat', async (data) => {
+        const token = socket.handshake.query.token;
+
+        // Verify the token and extract user ID
+        let userId = "";
+        jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+            if (err) {
+                console.error("Error verifying token:", err);
+                return;
+            }
+            userId = decoded.id;
+        });
+
+        // Store the mapping of socket ID to user ID
+        socket.userId = userId;
+        
+        try {
+            // Fetch the user by ID
+            const user = await userModel.findById(userId);
+
+            if (!user) {
+                console.log("User not found");
+                return;
+            }
+
+            // Update isActive field of the user
+            user.isActive = true;
+            const updatedUser = await user.save();
+
+            console.log('Heartbeat received from user:', userId);
+        } catch (error) {
+            console.error("Error updating user:", error);
+        }
+    });
+
+    // Event listener for disconnect
+    socket.on('disconnect', async () => {
+        // Get the user ID corresponding to the socket
+        const userId = socket.userId;
+
+        if (!userId) {
+            console.log("User ID not found for disconnected socket:", socket.id);
+            return;
+        }
+
+        try {
+            // Fetch the user by ID
+            const user = await userModel.findById(userId);
+
+            if (!user) {
+                console.log("User not found");
+                return;
+            }
+
+            // Update isActive field of the user to false when connection is lost
+            user.isActive = false;
+            const updatedUser = await user.save();
+
+            console.log(`User ${userId} connection lost, marked as logged out`);
+        } catch (error) {
+            console.error("Error updating user:", error);
+        }
+    });
+});
+
+
+server.listen(PORT, () => {
     console.log(`Server is up and running on: ${PORT}`);
 });
