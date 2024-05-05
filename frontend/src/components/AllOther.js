@@ -658,7 +658,7 @@ export default function AllOther() {
                                             <p className="card-text"><i class="bi bi-check-circle"></i>  Status: {expense.Status}</p>
                                             <p className="card-text"><i class="bi bi-currency-dollar"></i>  Cost: Rs.{expense.Cost}</p>
                                             <div className="btn-group">
-                                                <Link to={`/dashboard/finance/otherExpense/update/${expense._id}`} className="btn btn-outline-primary me-2" style={{ borderRadius: '8px' }}>
+                                                <Link to={`/dashboard/finance/otherExpense/update/${expense._id}`} className="btn btn-outline-primary me-3" style={{ borderRadius: '8px' }}>
                                                 <i className="ri-edit-line"></i>  Update {/*Update button*/}
                                                 </Link>
                                                 <button className="btn btn-outline-danger" onClick={() => handleDelete(expense._id)} style={{ borderRadius: '8px' }}>
