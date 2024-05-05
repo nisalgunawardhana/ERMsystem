@@ -52,7 +52,7 @@ export default function AddAttendanceForm() {
                   <button type="submit" className="btn btn-primary">Add Attendance</button>
               </form>
           </div>
-      </div>
+      </div> 
   </div>
     );
 }

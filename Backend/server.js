@@ -75,6 +75,8 @@ app.use("/item", itemR);
 const profitRouter = require("./routes/profit.js");
 app.use("/profit", profitRouter);
 
+//employee management
+
 //employee func
 const employeeRouter = require("./routes/employeeroutes.js");
 app.use("/employee", employeeRouter);
@@ -82,6 +84,15 @@ app.use("/employee", employeeRouter);
 //attendance func
 const attendance = require("./routes/attendanceroute.js");
 app.use("/attendance", attendance);
+
+//leave fun
+const leavesRoute = require("./routes/leavesroute.js");
+app.use("/leave", leavesRoute);
+
+//salary fun
+const SalaryRoute = require("./routes/salary.js");
+app.use("/salary",SalaryRoute);
+
 
 
 //supplier func
@@ -118,6 +129,7 @@ const clothes = require("./routes/clothesRoutes.js");
 app.use("/clothes", clothes);
 
 const toys = require("./routes/toysRoutes.js");
+const Leaves = require("./models/leavesmodel.js");
 app.use("/toys", toys);
 
 

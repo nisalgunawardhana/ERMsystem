@@ -57,6 +57,9 @@ import AddNotes from './pages/AddNotes';
 import Employees from './components/employeeComponent/employee';
 import Attendance from './components/employeeComponent/attendancelist';
 import Attendform from './components/employeeComponent/attendance';
+import Leaves from './components/employeeComponent/requestleave';
+import AddSalaryForm from './components/employeeComponent/Salary';
+import Leaveview from './components/employeeComponent/leaveview';
 
 function App() {
   const {loading} = useSelector(state => state.alerts);
@@ -132,6 +135,9 @@ function App() {
           <Route path="/dashboard/logistics/stock/toys" element={<ProtectedRoute><Toy/></ProtectedRoute>}/>
           <Route path="/dashboard/employee/attendence" element={<ProtectedRoute><Attendance/></ProtectedRoute>}/>
           <Route path="/dashboard/employee/attendence/form" element={<ProtectedRoute><Attendform/></ProtectedRoute>}/>
+          <Route path="/dashboard/employee/leaverequest" element={<ProtectedRoute><Leaves/></ProtectedRoute>}/>
+          <Route path="/dashboard/employee/leaveview" element={<ProtectedRoute><Leaveview/></ProtectedRoute>}/>
+          <Route path="/dashboard/employee/salary" element={<ProtectedRoute><AddSalaryForm/></ProtectedRoute>}/>
           
 
         </Routes>  
