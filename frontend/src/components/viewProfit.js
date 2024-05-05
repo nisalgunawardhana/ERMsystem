@@ -339,7 +339,7 @@ function ProfitDetails() {
 
                 {/* Display summary of profit details current month */}
                 {profit && (
-                    <div className="container mt-5">
+                    <div className="container mt-4">
                         <div className="row justify-content-center">
                             <div className="col-lg-4 col-md-6 mb-3">
                                 <div className="card" style={{ background: 'white', color: '#fff' }}>
@@ -394,10 +394,10 @@ function ProfitDetails() {
                     </div>
                 )}
 
-                <div className="row" style={{ marginTop: '5px' }}>
+                <div className="row">
 
                     {/* Generate Monthly Profit Report*/}
-                    <div className="col-lg-6 col-md-12 mb-3">
+                    <div className="col-lg-6 col-md-12 mb-2">
                         <div className="card" style={{ height: '160px' }}>
                             <div className="card-body">
                                 <h5 className="card-title">Generate Monthly Profit Report</h5>
@@ -408,7 +408,7 @@ function ProfitDetails() {
                     </div>
 
                     {/* Button to add new Profit log */}
-                    <div className="col-lg-6 col-md-12 mb-3">
+                    <div className="col-lg-6 col-md-12 mb-2">
                         <div className="card" style={{ height: '160px' }}>
                             <div className="card-body" style={{ padding: '20px' }}>
                                 <form onSubmit={submit}>
