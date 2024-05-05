@@ -8,6 +8,7 @@ router.route("/add").post((req,res)=>{
     const price = req.body.price;
     const quantity = req.body.quantity;
     const alert_quantity = req.body.alert_quantity;
+    const supplier_id = req.body.supplier_id;
     
     
 
@@ -17,7 +18,8 @@ router.route("/add").post((req,res)=>{
         category,
         price,
         quantity,
-        alert_quantity
+        alert_quantity,
+        supplier_id
     })
     
     newToysStock.save().then(()=>{
@@ -37,7 +39,7 @@ router.route("/").get((req,res)=>{
 
 router.route("/update/:item_code").put(async (req, res) => {
     let itm_code = req.params.item_code;
-    const { item_code, item_name, category, price, quantity, alert_quantity } = req.body;
+    const { item_code, item_name, category, price, quantity, alert_quantity, supplier_id } = req.body;
 
     const updatetoys = {
         item_code,
@@ -45,7 +47,8 @@ router.route("/update/:item_code").put(async (req, res) => {
         category,
         price,
         quantity,
-        alert_quantity
+        alert_quantity,
+        supplier_id
     }
 
     try {

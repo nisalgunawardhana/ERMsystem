@@ -34,6 +34,11 @@ const stockSchema = new Schema({
     alert_quantity:{
         type: Number,
         required: true
+    },
+
+    supplier_id: {
+        type : String,
+        required: true
     }
     
 })

@@ -16,6 +16,7 @@ export default function Clothes() {
     const [price, setPrice] = useState('');
     const [quantity, setQuantity] = useState('');
     const [alertQuantity, setAlertQuantity] = useState('');
+    const [supplierId, setSupplierId] = useState('');
     const [error, setError] = useState('');
     const [quantityChartData, setQuantityChartData] = useState(null);
 
@@ -140,6 +141,7 @@ export default function Clothes() {
         setPrice(clothes.price);
         setQuantity(clothes.quantity);
         setAlertQuantity(clothes.alert_quantity);
+        setSupplierId(clothes.supplierId);
         setShowUpdateModal(true);
     };
 
@@ -150,7 +152,7 @@ export default function Clothes() {
         try {
             setError('');
 
-            if (!itemCode || !itemName || !category || !price || !quantity || !alertQuantity) {
+            if (!itemCode || !itemName || !category || !price || !quantity || !alertQuantity || !supplierId) {
                 setError('All fields are required.');
                 return;
             }
@@ -162,7 +164,8 @@ export default function Clothes() {
                     category: category,
                     price: price,
                     quantity: quantity,
-                    alert_quantity: alertQuantity
+                    alert_quantity: alertQuantity,
+                    supplier_id: supplierId
                 });
 
                 setItemCode('');
@@ -171,6 +174,7 @@ export default function Clothes() {
                 setPrice('');
                 setQuantity('');
                 setAlertQuantity('');
+                setSupplierId('');
 
                 setShowUpdateModal(false);
             } else {
@@ -180,7 +184,8 @@ export default function Clothes() {
                     category: category,
                     price: price,
                     quantity: quantity,
-                    alert_quantity: alertQuantity
+                    alert_quantity: alertQuantity,
+                    supplier_id: supplierId
                 });
 
                 setShowAddModal(false);
@@ -450,6 +455,10 @@ export default function Clothes() {
                             <label>Alert Quantity</label>
                             <input type="number" className="form-control" value={alertQuantity} onChange={(e) => setAlertQuantity(e.target.value)} />
                         </div>
+                        <div className="form-group">
+                            <label>Supplier ID</label>
+                            <input type="text" className="form-control" value={supplierId} onChange={(e) => setSupplierId(e.target.value)} />
+                        </div>
                         <button type="submit" className="btn btn-primary">Add Clothes</button>
                         <button type="button" className="btn btn-secondary" onClick={() => setShowAddModal(false)}>Close</button>
                     </form>
@@ -498,6 +507,10 @@ export default function Clothes() {
                             <label>Alert Quantity</label>
                             <input type="number" className="form-control" value={alertQuantity} onChange={(e) => setAlertQuantity(e.target.value)} />
                         </div>
+                        <div className="form-group">
+                            <label>Supplier ID</label>
+                            <input type="text" className="form-control" value={supplierId} onChange={(e) => setSupplierId(e.target.value)} />
+                        </div>
                         <button type="submit" className="btn btn-primary">Update Clothes</button>
                         <button type="button" className="btn btn-secondary" onClick={() => setShowUpdateModal(false)}>Close</button>
                     </form>
@@ -538,6 +551,7 @@ export default function Clothes() {
                             <th>Price</th>
                             <th>Quantity</th>
                             <th>Alert Quantity</th>
+                            <th>Supplier ID</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -551,6 +565,7 @@ export default function Clothes() {
                                 <td>{clothes.price}</td>
                                 <td>{clothes.quantity}</td>
                                 <td>{clothes.alert_quantity}</td>
+                                <td>{clothes.supplier_id}</td>
                                 <td>
                                     <button className="btn btn-outline-primary me-2" onClick={() => handleOpenUpdateModal(clothes)}>Update</button>
                                     <button className="btn btn-outline-danger me-2" onClick={() => handleOpenDeleteConfirmationModal(clothes)}>Delete</button>
