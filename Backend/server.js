@@ -27,8 +27,8 @@ connection.once("open", () => {
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'diyanafaction@gmail.com',
-    pass: 'epyx olzg jabi ttzv'
+    user: 'diyanafashionerm@gmail.com',
+    pass: 'pcgm mxfb jsro qcwi'
   }
 });
 
