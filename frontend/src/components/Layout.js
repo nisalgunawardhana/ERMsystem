@@ -51,7 +51,7 @@ function Layout({children}) {
             icon: 'ri-add-circle-line'
         },
         {
-            name: 'Meetings',
+            name: 'Notes',
             path: '/users/notes',
             icon: 'ri-task-line'
         },

@@ -38,7 +38,6 @@ function SystemUsers() {
         // Update filteredUserCount when filteredUsers array changes
         setFilteredUserCount(filteredUsers.length);
     }, [filteredUsers]);
-    
 
     const fetchUsers = async () => {
         try {
