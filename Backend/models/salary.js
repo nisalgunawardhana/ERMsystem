@@ -6,6 +6,12 @@ const salarySchema = new Schema({
         type : String,
         required: true
     },
+
+    attendance: {
+        type : Number,
+        required: true
+    },
+
     Salary: {
         type : Number,
         required: true
