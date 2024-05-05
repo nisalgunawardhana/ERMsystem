@@ -53,6 +53,9 @@ const FinanceDash = () => {
     const TotalProfit = profit.reduce((acc, curr) => acc + parseFloat(curr.Monthly_profit), 0);
     const TotalSales = profit.reduce((acc, curr) => acc + parseFloat(curr.Sales_income), 0);
     const TotalExpenses = profit.reduce((acc, curr) => acc + parseFloat(curr.Other_expenses + curr.Supplier_expenses + curr.Salaries), 0);
+    const supplier = profit.reduce((acc, curr) => acc + parseFloat(curr.Supplier_expenses), 0);
+    const other = profit.reduce((acc, curr) => acc + parseFloat(curr.Other_expenses), 0);
+    const salary = profit.reduce((acc, curr) => acc + parseFloat(curr.Salaries), 0);
 
     useEffect(() => {
         let barChart = null;
@@ -202,7 +205,9 @@ const FinanceDash = () => {
     // Format the date and time
     const formattedDate = dateTime.toLocaleDateString();
     const formattedTime = dateTime.toLocaleTimeString();
+    const [showModal, setShowModal] = useState(false);
 
+    const toggleModal = () => setShowModal(!showModal);
 
     return (
         <Layout>
@@ -258,9 +263,9 @@ const FinanceDash = () => {
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-4 col-md-6 mb-3">
-                            <div class="card">
-                                <div class="card-statistic-3 p-4">
+                        <div class="col-lg-4 col-md-6 mb-3" onClick={toggleModal}>
+                            <div class="card" style={{ cursor: 'pointer' }}>
+                                <div class="card-statistic-3 p-4" >
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div class="col-8">
                                             <h2 class="d-flex align-items-center mb-5">
@@ -275,6 +280,69 @@ const FinanceDash = () => {
                                     </div>
                                 </div>
                             </div>
+                            {showModal &&
+                                <div className="modal-wrapper">
+                                    <div className="modal fade show" role="dialog" style={{ display: 'block', marginTop: '100px', marginLeft: '250px' }}>
+                                        <div className='row'>
+                                            <div className="col-md-3 me-3">
+                                                <div className="modal-dialog" role="document">
+                                                    <div className="modal-content">
+                                                        <div className="modal-header">
+                                                            <h5 className="modal-title">Total Supplier expenses</h5>
+                                                            <button type="button" className="btn-close" onClick={toggleModal}></button>
+                                                        </div>
+                                                        <div className="modal-body d-flex justify-content-between align-items-center">
+                                                            <h2>{supplier.toFixed(2)}</h2>
+                                                            <i className="bi bi-shop h1"></i>
+                                                        </div>
+                                                        <div class="progress mt-3" data-height="8" style={{ height: '8px', marginBottom: '20px', width: '90%', marginLeft: '15px' }}>
+                                                            <div class="progress-bar l-bg-orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '50%' }}></div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="col-md-3 me-3">
+                                                <div className="modal-dialog" role="document">
+                                                    <div className="modal-content">
+                                                        <div className="modal-header">
+                                                            <h5 className="modal-title">Total Salaries</h5>
+                                                            <button type="button" className="btn-close" onClick={toggleModal}></button>
+                                                        </div>
+                                                        <div className="modal-body d-flex justify-content-between align-items-center">
+                                                            <h2>{salary.toFixed(2)}</h2>
+                                                            <i className="bi bi-person h1"></i>
+                                                        </div>
+                                                        <div class="progress mt-3" data-height="8" style={{ height: '8px', marginBottom: '20px', width: '90%', marginLeft: '15px' }}>
+                                                            <div class="progress-bar l-bg-orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '50%' }}></div>
+                                                        </div>
+                                                    </div>
+                                                   
+                                                </div>
+                                            </div>
+                                            <div className="col-md-3">
+                                                <div className="modal-dialog" role="document">
+                                                    <div className="modal-content">
+                                                        <div className="modal-header">
+                                                            <h5 className="modal-title">Total Other expenses</h5>
+                                                            <button type="button" className="btn-close" onClick={toggleModal}></button>
+                                                        </div>
+                                                        <div className="modal-body d-flex justify-content-between align-items-center">
+                                                            <h2>{other.toFixed(2)}</h2>
+                                                            <i className="bi bi-wallet h1"></i>
+                                                        </div>
+                                                        <div class="progress mt-3" data-height="8" style={{ height: '8px', marginBottom: '20px', width: '90%', marginLeft: '15px' }}>
+                                                            <div class="progress-bar l-bg-orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '50%' }}></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="modal-backdrop" style={{ backdropFilter: 'blur(5px)' }}></div>
+                                </div>
+
+                            }
                         </div>
                     </div>
                 </div>
@@ -283,7 +351,7 @@ const FinanceDash = () => {
                         <div className="col-lg-8 col-md-12 mb-3">
                             <div className="card">
                                 <div className="card-body">
-                                    <h5 className="card-title">Sales vs Expenses</h5>
+                                    <h5 className="card-title mb-3">Sales vs Expenses</h5>
                                     <canvas id="canvas-1"></canvas>
                                 </div>
                             </div>
@@ -327,7 +395,7 @@ const FinanceDash = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="row" style={{ marginTop: '-10px'}}>
+                            <div className="row" style={{ marginTop: '-10px' }}>
                                 <div className="card mb-3">
                                     <div className="card-body">
                                         <h5 className="card-title">Add Other expenses</h5>
@@ -345,7 +413,7 @@ const FinanceDash = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="row" style={{ marginTop: '40px'}}>
+                    <div className="row" style={{ marginTop: '40px' }}>
                         <div className="card" style={{ marginLeft: '12px', width: '1200px' }}>
                             <div className="card-body">
                                 <h5 className="card-title">Annual Profit breakdown</h5>

@@ -459,7 +459,7 @@ export default function AllOther() {
 
     // Pagination state
     const [currentPage, setCurrentPage] = useState(1);
-    const [expensesPerPage] = useState(6); // Change this number based on your preference
+    const [expensesPerPage] = useState(8); // Change this number based on your preference
 
     // Get current expenses
     const indexOfLastExpense = currentPage * expensesPerPage;
@@ -645,11 +645,11 @@ export default function AllOther() {
                 </div>
 
                 {/*All expenses*/}
-                <div style={{ marginTop: '20px' }}>
+                <div style={{ marginTop: '40px' }}>
                     <div className="container">
                         <div className="row">
                             {currentExpenses.map(expense => (
-                                <div key={expense._id} className="col-md-4 mb-4">
+                                <div key={expense._id} className="col-md-3 mb-4">
                                     <div className="card">
                                         <div className="card-body">
                                             <h5 className="card-title"><i class="bi bi-card-list"></i>  Expense ID: {expense.Expense_id}</h5>
