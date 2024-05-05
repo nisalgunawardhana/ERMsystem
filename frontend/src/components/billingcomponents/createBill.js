@@ -4,6 +4,9 @@ import Form from "react-bootstrap/Form";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Layout from '../Layout';
+import { Toaster, toast } from 'react-hot-toast';
+
+
 
 
 
@@ -21,9 +24,10 @@ function CreateBill() {
   const [discountAmount, setDiscountAmount] = useState(0);
   const [errors, setErrors] = useState({});
   
+  
 
 
-  useEffect(() => {
+  useEffect(() => { 
   if (itemCode) {
     axios.get(`http://localhost:8080/clothes/price/${itemCode}`)
       .then(response => {
@@ -129,11 +133,26 @@ function CreateBill() {
 
 
   const addItem = () => {
-    const newItem = { code: itemCode, price: itemPrice, quantity: itemQuantity };
-    setItems([...items, newItem]);
-    setItemCode("");
-    setItemQuantity(1);
-  };
+  // Fetch item quantity based on item code
+  axios.get(`http://localhost:8080/clothes/${itemCode}`)
+    .then(response => {
+      const availableQuantity = response.data.quantity;
+      if (availableQuantity >= itemQuantity) {
+        // Item is available, proceed to add it to the bill
+        const newItem = { code: itemCode, price: itemPrice, quantity: itemQuantity };
+        setItems([...items, newItem]);
+        setItemCode("");
+        setItemQuantity(1);
+      } else {
+        // Item is not available in desired quantity, show error message
+        toast.error(`Item ${itemCode} is not available .`);
+      }
+    })
+    .catch(error => {
+      console.error("Error fetching item quantity:", error);
+      alert("An error occurred while checking item availability. Please try again later.");
+    });
+};
 
   const removeItem = (index) => {
     const updatedItems = [...items];

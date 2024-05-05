@@ -95,6 +95,8 @@ function UpdateBill() {
     window.history.back();
   };
 
+  
+
   return (
     <Layout>
       <div className="container-fluid">

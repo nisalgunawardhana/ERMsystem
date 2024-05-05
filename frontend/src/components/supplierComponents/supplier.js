@@ -141,7 +141,39 @@ function Supplier () {
 
                     </head>
                     <body>
-                        
+                        <div class="container">
+                            <div class="header">
+                                <h2>Supplier Details Report</h2>
+                            </div>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Supplier Name</th>
+                                        <th>Supplier ID</th>
+                                        <th>Address</th>
+                                        <th>Email</th>
+                                        <th>Contact</th>
+                                        <th>Product Types</th>
+                                        <th>Quality</th>
+                                        <th>Delivery Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${renderSuppliers.map(supplier => `
+                                        <tr>
+                                            <td>${supplier.supplier_name}</td>
+                                            <td>${supplier.supplier_id}</td>
+                                            <td>${supplier.address}</td>
+                                            <td>${supplier.email}</td>
+                                            <td>${supplier.contact}</td>
+                                            <td>${supplier.product_types.join(', ')}</td>
+                                            <td>${supplier.sup_performance.quality}</td>
+                                            <td>${supplier.sup_performance.delivery_time}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
                     </body>
             </html>
         `);
