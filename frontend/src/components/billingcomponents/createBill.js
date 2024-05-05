@@ -6,10 +6,6 @@ import { useNavigate } from "react-router-dom";
 import Layout from '../Layout';
 import { Toaster, toast } from 'react-hot-toast';
 
-
-
-
-
 function CreateBill() {
   const [customer_id, setCustomerId] = useState("");
   const [billing_date, setBillingDate] = useState(new Date().toISOString().split('T')[0]);
@@ -23,18 +19,36 @@ function CreateBill() {
   const [discountRules, setDiscountRules] = useState([]);
   const [discountAmount, setDiscountAmount] = useState(0);
   const [errors, setErrors] = useState({});
-  
-  
 
 
-  useEffect(() => { 
-  if (itemCode) {
-    axios.get(`http://localhost:8080/clothes/price/${itemCode}`)
-      .then(response => {
-        if (response.data.price !== undefined) {
-          setItemPrice(response.data.price);
-        } else {
-          // If item is not found in clothes database, fetch from toys database
+
+
+  useEffect(() => {
+    if (itemCode) {
+      axios.get(`http://localhost:8080/clothes/price/${itemCode}`)
+        .then(response => {
+          if (response.data.price !== undefined) {
+            setItemPrice(response.data.price);
+          } else {
+            // If item is not found in clothes database, fetch from toys database
+            axios.get(`http://localhost:8080/toys/price/${itemCode}`)
+              .then(response => {
+                if (response.data.price !== undefined) {
+                  setItemPrice(response.data.price);
+                } else {
+                  console.log("Item not found in both databases");
+                  setItemPrice(0);
+                }
+              })
+              .catch(error => {
+                console.log("Error fetching item price from toys database:", error);
+                setItemPrice(0);
+              });
+          }
+        })
+        .catch(error => {
+          console.log("Error fetching item price from clothes database:", error);
+          // If an error occurs while fetching from clothes database, try fetching from toys database
           axios.get(`http://localhost:8080/toys/price/${itemCode}`)
             .then(response => {
               if (response.data.price !== undefined) {
@@ -48,29 +62,11 @@ function CreateBill() {
               console.log("Error fetching item price from toys database:", error);
               setItemPrice(0);
             });
-        }
-      })
-      .catch(error => {
-        console.log("Error fetching item price from clothes database:", error);
-        // If an error occurs while fetching from clothes database, try fetching from toys database
-        axios.get(`http://localhost:8080/toys/price/${itemCode}`)
-          .then(response => {
-            if (response.data.price !== undefined) {
-              setItemPrice(response.data.price);
-            } else {
-              console.log("Item not found in both databases");
-              setItemPrice(0);
-            }
-          })
-          .catch(error => {
-            console.log("Error fetching item price from toys database:", error);
-            setItemPrice(0);
-          });
-      });
-  } else {
-    setItemPrice(0);
-  }
-}, [itemCode]);
+        });
+    } else {
+      setItemPrice(0);
+    }
+  }, [itemCode]);
 
   useEffect(() => {
     // Fetch discount rules when the component mounts
@@ -102,7 +98,7 @@ function CreateBill() {
         .then(response => {
           const points = response.data.points;
           const calculatedDiscount = points / 10;
-          const newPointcount =  points-calculatedDiscount
+          const newPointcount = points - calculatedDiscount
           setDiscount(calculatedDiscount);
           axios.put(`http://localhost:8080/customer/update/${customer_id}`, { point: newPointcount })
             .then(response => {
@@ -125,7 +121,7 @@ function CreateBill() {
       const total = items.reduce((acc, curr) => acc + (curr.price * curr.quantity), 0);
       const loyaltyPointsDiscount = discount;
       const applicableDiscount = calculateApplicableDiscount(discountRules, total);
-      setTotalAmount(total - applicableDiscount - (total * loyaltyPointsDiscount/ 100));
+      setTotalAmount(total - applicableDiscount - (total * loyaltyPointsDiscount / 100));
       setDiscountAmount(applicableDiscount);
     };
     calculateTotal();
@@ -133,26 +129,26 @@ function CreateBill() {
 
 
   const addItem = () => {
-  // Fetch item quantity based on item code
-  axios.get(`http://localhost:8080/clothes/${itemCode}`)
-    .then(response => {
-      const availableQuantity = response.data.quantity;
-      if (availableQuantity >= itemQuantity) {
-        // Item is available, proceed to add it to the bill
-        const newItem = { code: itemCode, price: itemPrice, quantity: itemQuantity };
-        setItems([...items, newItem]);
-        setItemCode("");
-        setItemQuantity(1);
-      } else {
-        // Item is not available in desired quantity, show error message
-        toast.error(`Item ${itemCode} is not available .`);
-      }
-    })
-    .catch(error => {
-      console.error("Error fetching item quantity:", error);
-      alert("An error occurred while checking item availability. Please try again later.");
-    });
-};
+    // Fetch item quantity based on item code
+    axios.get(`http://localhost:8080/clothes/${itemCode}`)
+      .then(response => {
+        const availableQuantity = response.data.quantity;
+        if (availableQuantity >= itemQuantity) {
+          // Item is available, proceed to add it to the bill
+          const newItem = { code: itemCode, price: itemPrice, quantity: itemQuantity };
+          setItems([...items, newItem]);
+          setItemCode("");
+          setItemQuantity(1);
+        } else {
+          // Item is not available in desired quantity, show error message
+          toast.error(`Item ${itemCode} is not available .`);
+        }
+      })
+      .catch(error => {
+        console.error("Error fetching item quantity:", error);
+        alert("An error occurred while checking item availability. Please try again later.");
+      });
+  };
 
   const removeItem = (index) => {
     const updatedItems = [...items];
@@ -163,7 +159,7 @@ function CreateBill() {
   const sendData = (e) => {
     e.preventDefault();
     console.log("Submitting form...");
-if (!validateForm()) {
+    if (!validateForm()) {
       // If form validation fails, return early
       return;
     }
@@ -185,25 +181,119 @@ if (!validateForm()) {
       total_amount: totalAmount
     };
     items.forEach(item => {
-  axios.put(`http://localhost:8080/clothes/decrement/${item.code}`, { quantity: item.quantity })
-    .then(response => {
-      console.log(`Stock updated for item ${item.code} in clothes database`);
-    })
-    .catch(error => {
-      console.error(`Error updating stock for item ${item.code} in clothes database:`, error);
-    });
-});
+      axios.put(`http://localhost:8080/clothes/decrement/${item.code}`, { quantity: item.quantity })
+        .then(response => {
+          console.log(`Stock updated for item ${item.code} in clothes database`);
+        })
+        .catch(error => {
+          console.error(`Error updating stock for item ${item.code} in clothes database:`, error);
+        });
 
-// Update stock in toys database
-items.forEach(item => {
-  axios.put(`http://localhost:8080/toys/decrement/${item.code}`, { quantity: item.quantity })
-    .then(response => {
-      console.log(`Stock updated for item ${item.code} in toys database`);
-    })
-    .catch(error => {
-      console.error(`Error updating stock for item ${item.code} in toys database:`, error);
+      axios.get(`http://localhost:8080/customer/${customer_id}`)
+        .then(response => {
+          const { email, points } = response.data;
+          const calculatedDiscount = points / 10;
+          const newPointcount = points - calculatedDiscount;
+          setDiscount(calculatedDiscount);
+          axios.put(`http://localhost:8080/customer/update/${customer_id}`, { point: newPointcount })
+            .then(response => {
+              console.log("Customer points updated:", response.data);
+
+              // Compose email content (You can use HTML to style your email)
+              const mailOptions = {
+  from: 'no-reply@diyana.com',
+  to: email,
+  subject: 'Your Bill Details',
+  html: `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Your Bill Details</title>
+      <!-- Bootstrap CSS -->
+      <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+      <style>
+        body {
+          background-color: #f5f5f5;
+          color: #080a3c;
+        }
+        .container {
+          background-color: #ffffff;
+          padding: 30px;
+          border-radius: 10px;
+          box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+          color: #080a3c;
+        }
+        .total {
+          font-weight: bold;
+          color: #ff5f0f;
+        }
+        .footer {
+          margin-top: 20px;
+          text-align: center;
+          color: #6c757d;
+        }
+      </style>
+    </head>
+    <body style="background-color: #f5f5f5;">
+      <div class="container">
+        <h1 class="mb-4">Your Bill Details</h1>
+        <p>Dear Customer,</p>
+        <p>Please find your bill details below:</p>
+        <p><strong>Customer ID:</strong> ${customer_id}</p>
+        <p><strong>Billing Date:</strong> ${billing_date}</p>
+        <p><strong>Total Amount:</strong> Rs${totalAmount.toFixed(2)}</p>
+        <p>Items:</p>
+        <ul class="list-unstyled">
+          ${items.map(item => `<li>${item.code} - Rs${item.price} x ${item.quantity}</li>`).join('')}
+        </ul>
+        <p><strong>Discount:</strong> Rs${discountAmount.toFixed(2)}</p>
+        <p><strong>Loyalty Points Discount:</strong> Rs${discount.toFixed(2)}</p>
+        <p class="total">Final Amount: <strong>Rs${totalAmount.toFixed(2)}</strong></p>
+        <div class="footer">
+          <p>This is an auto-generated email. Please do not reply.</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `
+};
+
+              // Send email
+              axios.post("http://localhost:8080/send-email", mailOptions)
+                .then(response => {
+                  console.log("Email sent successfully:", response.data);
+                  // Proceed with submitting the bill after sending the email
+                  sendData();
+                })
+                .catch(error => {
+                  console.error("Error sending email:", error);
+
+                });
+            })
+            .catch(error => {
+              console.error("Error updating customer points:", error);
+            });
+        })
+        .catch(error => {
+          console.error("Error fetching customer email:", error);
+          alert("An error occurred while fetching customer email. Please try again later.");
+        });
     });
-});
+
+    // Update stock in toys database
+    items.forEach(item => {
+      axios.put(`http://localhost:8080/toys/decrement/${item.code}`, { quantity: item.quantity })
+        .then(response => {
+          console.log(`Stock updated for item ${item.code} in toys database`);
+        })
+        .catch(error => {
+          console.error(`Error updating stock for item ${item.code} in toys database:`, error);
+        });
+    });
 
     axios
       .get(`http://localhost:8080/customer/calculate-loyalty-points/${customer_id}`)
@@ -213,7 +303,7 @@ items.forEach(item => {
       })
       .catch((err) => {
         console.error("Error while submitting form:", err);
-        
+
       });
 
     axios
@@ -233,7 +323,7 @@ items.forEach(item => {
         alert("Error occurred while submitting the form. Please try again later.");
       });
 
-      
+
   };
 
 
@@ -344,173 +434,173 @@ items.forEach(item => {
   };
 
 
- const handleBack = () => {
-  window.history.back();
-};
+  const handleBack = () => {
+    window.history.back();
+  };
 
-const validateForm = () => {
-  const errors = {};
+  const validateForm = () => {
+    const errors = {};
 
-  if (!customer_id.trim()) {
-    errors.customer_id = "Customer ID is required";
-  } else if (!/^\d{10}$/.test(customer_id)) {
-    errors.customer_id = "Customer ID must be 10 digits";
-  }
+    if (!customer_id.trim()) {
+      errors.customer_id = "Customer ID is required";
+    } else if (!/^\d{10}$/.test(customer_id)) {
+      errors.customer_id = "Customer ID must be 10 digits";
+    }
 
 
 
-  setErrors(errors);
-  return Object.keys(errors).length === 0; // Return true if no errors
-};
+    setErrors(errors);
+    return Object.keys(errors).length === 0; // Return true if no errors
+  };
 
   return (
     <Layout>
 
-    <div className="container-fluid">
-      <div className="row">
-        <div className="col-md-6">
-          <div className="card">
-            <Form card-body border rounded p-4 style={{ margin: '30px' }} onSubmit={sendData}>
-              <h2 className="form-title">Bill details</h2>
-              <br />
+      <div className="container-fluid">
+        <div className="row">
+          <div className="col-md-6">
+            <div className="card">
+              <Form card-body border rounded p-4 style={{ margin: '30px' }} onSubmit={sendData}>
+                <h2 className="form-title">Bill details</h2>
+                <br />
 
-              <Form.Group className="mb-3" controlId="formBasicCustomerId">
-                <Form.Label>Customer ID</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter Customer ID"
-                  value={customer_id}
-                  onChange={(e) => setCustomerId(e.target.value)}
-                  isInvalid={!!errors.customer_id} // Apply validation styling
+                <Form.Group className="mb-3" controlId="formBasicCustomerId">
+                  <Form.Label>Customer ID</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter Customer ID"
+                    value={customer_id}
+                    onChange={(e) => setCustomerId(e.target.value)}
+                    isInvalid={!!errors.customer_id} // Apply validation styling
                   />
                   <Form.Control.Feedback type="invalid">
                     {errors.customer_id}
                   </Form.Control.Feedback>
-              </Form.Group>
+                </Form.Group>
 
-              <Form.Group className="mb-3" controlId="formBasicBillingDate">
-                <Form.Label>Billing Date</Form.Label>
-                <Form.Control
-                  type="date"
-                  placeholder="Enter Billing Date"
-                  value={billing_date}
-                  onChange={(e) => setBillingDate(e.target.value)}
-                />
-              </Form.Group>
+                <Form.Group className="mb-3" controlId="formBasicBillingDate">
+                  <Form.Label>Billing Date</Form.Label>
+                  <Form.Control
+                    type="date"
+                    placeholder="Enter Billing Date"
+                    value={billing_date}
+                    onChange={(e) => setBillingDate(e.target.value)}
+                  />
+                </Form.Group>
 
-              <Form.Group className="mb-3" controlId="formBasicItemCode">
-                <Form.Label>Item Code</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter Item Code"
-                  value={itemCode}
-                  onChange={(e) => setItemCode(e.target.value)}
-                />
-              </Form.Group>
+                <Form.Group className="mb-3" controlId="formBasicItemCode">
+                  <Form.Label>Item Code</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter Item Code"
+                    value={itemCode}
+                    onChange={(e) => setItemCode(e.target.value)}
+                  />
+                </Form.Group>
 
-              <Form.Group className="mb-3" controlId="formBasicItemPrice">
-                <Form.Label>Item Price</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Item Price"
-                  value={itemPrice}
-                  readOnly
-                />
-              </Form.Group>
+                <Form.Group className="mb-3" controlId="formBasicItemPrice">
+                  <Form.Label>Item Price</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Item Price"
+                    value={itemPrice}
+                    readOnly
+                  />
+                </Form.Group>
 
-              <Form.Group className="mb-3" controlId="formBasicItemQuantity">
-                <Form.Label>Item Quantity</Form.Label>
-                <Form.Control
-                  type="number"
-                  placeholder="Enter Item Quantity"
-                  value={itemQuantity}
-                  onChange={(e) => setItemQuantity(e.target.value)}
-                />
-              </Form.Group>
+                <Form.Group className="mb-3" controlId="formBasicItemQuantity">
+                  <Form.Label>Item Quantity</Form.Label>
+                  <Form.Control
+                    type="number"
+                    placeholder="Enter Item Quantity"
+                    value={itemQuantity}
+                    onChange={(e) => setItemQuantity(e.target.value)}
+                  />
+                </Form.Group>
 
-              <Button variant="btn btn-outline-primary" onClick={addItem}>
-                Add Item
-              </Button>
+                <Button variant="btn btn-outline-primary" onClick={addItem}>
+                  Add Item
+                </Button>
 
-              <br /><br />
+                <br /><br />
 
-              <div>
-  <h4>Items:</h4>
-  <ul className="list-group">
-    {items.map((item, index) => (
-      <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
-        <div>
-          <span>{item.code} - Rs{item.price} x {item.quantity}</span>
-        </div>
-        <button className="btn btn-danger" onClick={() => removeItem(index)}>Remove</button>
-      </li>
-    ))}
-  </ul>
-</div>
-
-
-
-              <p>Discount: Rs{discountAmount.toFixed(2)}</p>
-              <p>Loyalty points Discount:{discount.toFixed(2)}</p>
-              <h3>Total Amount: Rs{totalAmount.toFixed(2)}</h3>
+                <div>
+                  <h4>Items:</h4>
+                  <ul className="list-group">
+                    {items.map((item, index) => (
+                      <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                          <span>{item.code} - Rs{item.price} x {item.quantity}</span>
+                        </div>
+                        <button className="btn btn-danger" onClick={() => removeItem(index)}>Remove</button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
 
 
-              <div className="submit-btn-container">
-                <div className="row mb-3">
-                  <div className="col">
-                    <div className="btn-group">
-                      <Button variant="btn btn-outline-success" type="submit" className="me-5 rounded">
-                        Submit
-                      </Button>
-                      <button className="btn btn-outline-dark" onClick={handleBack}>
-                        Back
-                      </button>
+
+                <p>Discount: Rs{discountAmount.toFixed(2)}</p>
+                <p>Loyalty points Discount:{discount.toFixed(2)}</p>
+                <h3>Total Amount: Rs{totalAmount.toFixed(2)}</h3>
+
+
+                <div className="submit-btn-container">
+                  <div className="row mb-3">
+                    <div className="col">
+                      <div className="btn-group">
+                        <Button variant="btn btn-outline-success" type="submit" className="me-5 rounded">
+                          Submit
+                        </Button>
+                        <button className="btn btn-outline-dark" onClick={handleBack}>
+                          Back
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
+              </Form>
+            </div>
+          </div>
+          <div className="col-md-6">
+            <div className="card">
+              <div className="card-body">
+                <h3 className="card-title">Instructions:</h3>
+                <p className="card-text">To create a new bill, please follow these steps:</p>
+                <ol>
+                  <li>Enter the <strong>Customer ID</strong> of the customer making the purchase.</li>
+                  <li>Select the <strong>Billing Date</strong> from the calendar.</li>
+                  <li>Enter the <strong>Item Code</strong> of the product being purchased.</li>
+                  <li>The <strong>Item Price</strong> will be automatically fetched based on the entered Item Code.</li>
+                  <li>Enter the <strong>Item Quantity</strong> being purchased.</li>
+                  <li>Click on <strong>Add Item</strong> to add the item to the bill.</li>
+                  <li>Repeat steps 3-6 to add more items to the bill.</li>
+                  <li>The list of added items will be displayed under <strong>Items</strong>.</li>
+                  <li>The <strong>Discount</strong> and <strong>Loyalty Points Discount</strong> will be calculated automatically based on the items added and customer's loyalty points.</li>
+                  <li>The <strong>Total Amount</strong> will be calculated after applying discounts.</li>
+                  <li>Review the bill details.</li>
+                  <li>Click on <strong>Submit</strong> to add the bill.</li>
+                </ol>
               </div>
-            </Form>
-          </div>
-        </div>
-        <div className="col-md-6">
-          <div className="card">
-            <div className="card-body">
-              <h3 className="card-title">Instructions:</h3>
-              <p className="card-text">To create a new bill, please follow these steps:</p>
-              <ol>
-                <li>Enter the <strong>Customer ID</strong> of the customer making the purchase.</li>
-                <li>Select the <strong>Billing Date</strong> from the calendar.</li>
-                <li>Enter the <strong>Item Code</strong> of the product being purchased.</li>
-                <li>The <strong>Item Price</strong> will be automatically fetched based on the entered Item Code.</li>
-                <li>Enter the <strong>Item Quantity</strong> being purchased.</li>
-                <li>Click on <strong>Add Item</strong> to add the item to the bill.</li>
-                <li>Repeat steps 3-6 to add more items to the bill.</li>
-                <li>The list of added items will be displayed under <strong>Items</strong>.</li>
-                <li>The <strong>Discount</strong> and <strong>Loyalty Points Discount</strong> will be calculated automatically based on the items added and customer's loyalty points.</li>
-                <li>The <strong>Total Amount</strong> will be calculated after applying discounts.</li>
-                <li>Review the bill details.</li>
-                <li>Click on <strong>Submit</strong> to add the bill.</li>
-              </ol>
             </div>
-          </div>
-          <div className="card">
-            <div className="card-body">
-              <h3 className="card-title">Stuff Notification:</h3>
-              <p className="card-text"> Upcoming events And other Notice:</p>
-              <ol>
+            <div className="card">
+              <div className="card-body">
+                <h3 className="card-title">Stuff Notification:</h3>
+                <p className="card-text"> Upcoming events And other Notice:</p>
+                <ol>
 
-              </ol>
+                </ol>
+              </div>
             </div>
-          </div>
-          
-        </div>
 
+          </div>
+
+        </div>
+        <br></br>
+        <br></br>
       </div>
-      <br></br>
-      <br></br>
-    </div>
-  </Layout>
-  
+    </Layout>
+
   );
 }
 

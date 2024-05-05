@@ -6,6 +6,7 @@ const cors = require("cors");
 const app = express();
 //app.use(express.json())
 const PORT = process.env.PORT || 8080;
+const nodemailer = require('nodemailer');
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -22,6 +23,29 @@ const connection = mongoose.connection;
 connection.once("open", () => {
     console.log("MongoDB connection successful");
 });
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'diyanafaction@gmail.com',
+    pass: 'epyx olzg jabi ttzv'
+  }
+});
+
+app.post("/send-email", (req, res) => {
+  const mailOptions = req.body;
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error("Error sending email:", error);
+      res.status(500).send("Error sending email");
+    } else {
+      console.log("Email sent:", info.response);
+      res.status(200).send("Email sent successfully");
+    }
+  });
+});
+
 
 //other expenses
 const expenseRouter = require("./routes/expenseroutes.js");

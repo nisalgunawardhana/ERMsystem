@@ -206,5 +206,22 @@ router.get("/calculate-loyalty-points/:customer_id", async (req, res) => {
     }
 });
 
+router.route("/email/:customerId").get(async (req, res) => {
+  const customerId = req.params.customerId;
+
+  try {
+    const customer = await Customer.findOne({ customer_id: customerId });
+    if (customer) {
+      res.json({ email: customer.email });
+    } else {
+      res.status(404).json({ message: 'Customer not found' });
+    }
+  } catch (error) {
+    console.error("Error fetching customer email:", error);
+    res.status(500).json({ message: 'Error fetching customer email' });
+  }
+});
+
+
 
 module.exports = router;
