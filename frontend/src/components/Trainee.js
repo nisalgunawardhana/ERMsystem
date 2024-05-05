@@ -31,6 +31,7 @@ export default function Trainee() {
     const [dailyAverages, setdailyAverage] = useState({});
     const [currentDateTime, setCurrentDateTime] = useState('');
 
+    const [genderSearchTerm, setGenderSearchTerm] = useState('');
 
     useEffect(() => {
         axios.get('http://localhost:8080/meetings/')
@@ -59,6 +60,7 @@ export default function Trainee() {
 
     }, []);
 
+    // Fetching trainees data again when the component mounts or updates
     useEffect(() => {
         axios.get('http://localhost:8080/trainees/')
             .then(res => {
@@ -80,6 +82,7 @@ export default function Trainee() {
             });
     }, []);
 
+    // Function to handle deletion of meetings
     function handleDelete(id) {
         axios.delete(`http://localhost:8080/meetings/delete/${id}`)
             .then(() => {
@@ -100,6 +103,7 @@ export default function Trainee() {
             });
     }
 
+    // Function to handle form input changes for trainees
     function handleChange(e) {
         const { name, value } = e.target;
         setFormData(prevState => ({
@@ -137,7 +141,6 @@ export default function Trainee() {
         }
     }
 
-
     function handleMeetingSubmit(e) {
         e.preventDefault();
         if (selectedMeetingId) {
@@ -159,7 +162,7 @@ export default function Trainee() {
         }
     }
 
-
+    // Function to toggle trainee form visibility
     function toggleForm() {
         setShowForm(prevState => !prevState);
         setselectedTraineeId(null); // Reset selected trainee ID
@@ -215,6 +218,68 @@ export default function Trainee() {
         setShowForm(true);
     }
 
+    // Function to generate filtered trainee report
+    const generateFilteredReport = (filteredTrainees) => {
+        const sortedTrainees = filteredTrainees.sort((a, b) => b.trainee_rating - a.trainee_rating); // Sort filtered trainees array by ratings in descending order
+        const printWindow = window.open("", "_blank", "width=600,height=600");
+        printWindow.document.write(`
+            <html>
+                <head>
+                    <title>Filtered Trainee Report</title>
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;
+                            padding: 20px;
+                        }
+                        h1 {
+                            text-align: center;
+                        }
+                        table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            margin-bottom: 20px;
+                        }
+                        th, td {
+                            border: 1px solid #ccc;
+                            padding: 8px;
+                            text-align: left;
+                        }
+                        th {
+                            background-color: #f2f2f2;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <h1>Filtered Trainee Report</h1>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Trainee ID</th>
+                                <th>Name</th>
+                                <th>Ratings</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${sortedTrainees.map(trainee => `
+                                <tr>
+                                    <td>${trainee.trainee_id}</td>
+                                    <td>${trainee.trainee_name}</td>
+                                    <td>${trainee.trainee_rating}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                    <div class="back-button">
+                        <button onclick="window.close()" class="btn btn-secondary">Back</button>
+                    </div>
+                </body>
+            </html>
+        `);
+        printWindow.document.close();
+        printWindow.print();
+    };
+
+    // Function to generate all trainees report
     const generateReport = () => {
         axios.get('http://localhost:8080/trainees/')
             .then(res => {
@@ -284,14 +349,19 @@ export default function Trainee() {
 
 
     const filteredTrainees = trainees.filter(trainee =>
-        trainee.trainee_name.toLowerCase().includes(searchTerm.toLowerCase())
+        (trainee.trainee_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            searchTerm === '') &&
+        (trainee.trainee_gender.toLowerCase().includes(genderSearchTerm.toLowerCase()) ||
+            genderSearchTerm === '')
     );
 
+    // useEffect to create or update the line chart
     useEffect(() => {
         let lineChart = null;
 
         // Function to create or update the line chart
         const createOrUpdateLineChart = () => {
+
             // If a previous Chart instance exists, destroy it
             if (lineChart) {
                 lineChart.destroy();
@@ -359,7 +429,9 @@ export default function Trainee() {
                         </div>
                     </div>
                 </div>
+
                 <h1>Trainee Management</h1>
+
                 <br></br>
 
                 <div className="row mb-4">
@@ -369,6 +441,7 @@ export default function Trainee() {
                                 <h4 className="card-title">Total Trainees</h4>
                                 <div className="text-center my-auto">
                                     <h1 className="card-text">{trainees.length}</h1>
+                                    <br></br>
                                 </div>
                                 <button onClick={toggleForm} className="btn btn-outline-success">Add New Trainee</button>
                             </div>
@@ -380,6 +453,7 @@ export default function Trainee() {
                                 <h4 className="card-title">Total Sessions</h4>
                                 <div className="text-center my-auto">
                                     <h1 className="card-text">{meetings.length}</h1>
+                                    <br></br>
                                 </div>
                                 <button onClick={toggleMeetingForm} className="btn btn-outline-success">Add New Session</button>
                             </div>
@@ -387,15 +461,18 @@ export default function Trainee() {
                     </div>
                     <div className="col-md-4">
                         <div className="card">
-                            <div className="card-body">
+                            <div className="card-body d-flex flex-column align-items-center">
                                 <h4 className="card-title">Generate Report</h4>
                                 <p className="card-text">Generate a summary of trainee performance.</p>
-                                <button onClick={generateReport} className="btn btn-outline-secondary">Generate Report</button>
+                                <button onClick={generateReport} className="btn btn-outline-secondary mb-2">Generate Overall Report</button>
+                                <button onClick={() => generateFilteredReport(filteredTrainees)} className="btn btn-outline-secondary">Generate Filtered Report</button>
                             </div>
                         </div>
                     </div>
                 </div>
+
                 <br></br>
+
                 <h2 className="card-title">Average Ratings Over Time</h2>
                 <br></br>
                 <div className="card">
@@ -404,7 +481,6 @@ export default function Trainee() {
                         <canvas id="canvas-1"></canvas>
                     </div>
                 </div>
-
 
                 <br></br>
 
@@ -558,6 +634,15 @@ export default function Trainee() {
                                             placeholder="Search by Trainee Name"
                                             value={searchTerm}
                                             onChange={(e) => setSearchTerm(e.target.value)}
+                                        />
+                                    </div>
+                                    <div className="col-md-4">
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            placeholder="Search by Gender"
+                                            value={genderSearchTerm}
+                                            onChange={(e) => setGenderSearchTerm(e.target.value)}
                                         />
                                     </div>
                                 </div>
