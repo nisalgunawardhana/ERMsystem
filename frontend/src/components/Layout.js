@@ -3,8 +3,6 @@ import './Layout.css';
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux" ;
 import { Popover, Space } from 'antd';
-import axios from 'axios';
-import {Button} from 'react-bootstrap';
 import { setUser } from '../redux/userSlice'; 
 
 function Layout({children}) {
@@ -53,7 +51,7 @@ function Layout({children}) {
             icon: 'ri-add-circle-line'
         },
         {
-            name: 'Notes',
+            name: 'Meetings',
             path: '/users/notes',
             icon: 'ri-task-line'
         },
@@ -207,6 +205,7 @@ function Layout({children}) {
             break;
     }
 
+
     const handleLogout = () => {
         const confirmLogout = window.confirm('Are you sure you want to logout?');
         // Show a confirmation message before logging out
@@ -214,19 +213,6 @@ function Layout({children}) {
             localStorage.clear();
             dispatch(setUser(null)); // Clear user state in Redux store
             navigate('/login');
-        }
-    };
-
-    const getData = async () => {
-        try {
-            const response = await axios.post('/api/users/get-employee-info-by-id', {} , {
-                headers: {
-                    Authorization: 'Bearer ' + localStorage.getItem('token')
-                },
-            });
-            console.log(response.data);
-        } catch (error) {
-            console.log(error);
         }
     };
 

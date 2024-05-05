@@ -266,79 +266,6 @@ const generateReport = (reportType) => {
     printWindow.print();
 };
 
-
-    
-/*
-    //generate report on all users
-    const generateReport = () => {
-        const printWindow = window.open("", "_blank", "width=600,height=600");
-        printWindow.document.write(`
-            <html>
-                <head>
-                    <title>System User Report</title>
-                    <style>
-                        body {
-                            font-family: Arial, sans-serif;
-                            padding: 20px;
-                        }
-                        h1 {
-                            text-align: center;
-                        }
-                        table {
-                            width: 100%;
-                            border-collapse: collapse;
-                            margin-bottom: 20px;
-                        }
-                        th, td {
-                            border: 1px solid #ccc;
-                            padding: 8px;
-                            text-align: left;
-                        }
-                        th {
-                            background-color: #f2f2f2;
-                        }
-                    </style>
-                </head>
-                <body>
-                    <h1>System User Report</h1>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>User Role</th>
-                                <th>User created date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${users.map((user, index) => `
-                                <tr>
-                                    <td>${index + 1}</td>
-                                    <td>${user.first_name}</td>
-                                    <td>${user.last_name}</td>
-                                    <td>${user.userRole}</td>
-                                    <td>${new Date(user.createdAt).toLocaleDateString('en-GB')}</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                    <div class="back-button">
-                        <button onclick="window.close()" class="btn btn-secondary">Back</button>
-                    </div>
-                </body>
-            </html>
-        `);
-        printWindow.document.close();
-        printWindow.print();
-    };
-*/
-    
-
-
-
-
-
     return (
         <Layout>
         <div className="row">
@@ -440,9 +367,6 @@ const generateReport = (reportType) => {
                 </div>
             </div>
 
-
-
-
             {/*generate report for filtered users*/}
             <div className="col-lg-6 col-md-6 mb-3">
                     <div className="card shadow" style={{ backgroundColor: 'white' }}>
@@ -468,7 +392,6 @@ const generateReport = (reportType) => {
             </div>
         </div>
       
-    
         <div className="card" style={{ padding: '30px 20px 20px 20px' }}>
                 <div className="button-group mb-3 d-flex align-items-center">
                    
@@ -501,6 +424,7 @@ const generateReport = (reportType) => {
                             <th>Last Name</th>
                             <th>Email</th>
                             <th>User Role</th>
+                            <th>Status</th>
                             <th>User created date</th>
                         </tr>
                     </thead>
@@ -517,6 +441,7 @@ const generateReport = (reportType) => {
                                 <td>{user.last_name}</td>
                                 <td>{user.email}</td>
                                 <td>{user.userRole}</td>
+                                <td>{user.status}</td>
                                 <td>{new Date(user.createdAt).toLocaleDateString('en-GB')}</td>
                                 
                                 <td>

@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt')
 const jwt = require("jsonwebtoken")
 const authMiddleware = require("../middlewares/authMiddleware")
 const Note = require('../models/noteModel');
+const socketIo = require('socket.io'); // Import Socket.IO
 
 
 //--system users--
@@ -23,6 +24,12 @@ router.post('/register', async(req, res) => {
         req.body.password = hashedPassword
         const newuser = new User(req.body)
         await newuser.save()
+        
+        /*
+        // Emit login event when a new user is registered
+        io.emit('userLoggedIn', newuser._id);
+        */
+
         //res.status(200) -- success 
         res.status(200).send({ message: "User created successfully", success: true })
     }catch (error) {
@@ -49,7 +56,13 @@ router.post('/login', async(req, res) => {
         } else {
             const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
                 expiresIn: "1d"
-            })
+            });
+            
+            /*
+            // Emit login event when a user logs in
+            io.emit('userLoggedIn', user._id);
+            */
+           
             res
                 .status(200)
                 .send({ message: "Login successful", success: true, data: token })
@@ -198,7 +211,6 @@ router.get('/note/:id', async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 });
-
 
 // to delete a note
 router.delete('/delete-note/:id', async (req, res) => {

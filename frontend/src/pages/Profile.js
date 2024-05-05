@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Layout from '../components/Layout';
-import { Table } from "react-bootstrap";
 import { useSelector } from "react-redux" ;
 
 function Profile() {
     const [userDetails, setUserDetails] = useState(null);
     const { user } = useSelector((state) => state.user);
 
-    
 
     useEffect(() => {
         // Fetch user details when the component mounts

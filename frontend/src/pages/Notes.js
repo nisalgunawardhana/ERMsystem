@@ -149,12 +149,12 @@ const NotesPage = () => {
 
     const columns = [
         {
-            title: 'Note Number',
+            title: 'Meeting Number',
             dataIndex: 'note_no',
             key: 'note_no',
         },
         {
-            title: 'Note Title',
+            title: 'Meeting Title',
             dataIndex: 'note_title',
             key: 'note_title',
         },
@@ -191,18 +191,15 @@ const NotesPage = () => {
                     />
             ),
         },
- 
     ];
 
     return (
         <Layout>
-
-            <h2>Notes</h2>
-            <Button onClick={handleAddNote}>Add New Note</Button>
+            
             <div className="row">
                 <div className="col-md-6">
                     <div className="notes p-3">
-                        <h2>Notes : Keep track on the Reminders!</h2>
+                        <h2>Meetings</h2>
                     </div>
                 </div>
                 
@@ -215,9 +212,8 @@ const NotesPage = () => {
                 </div>
             </div>
 
-
             <div className="three-buttons" style={{ marginLeft: 'auto' }}>
-                    <Button variant="btn btn-outline-dark" onClick={handleAddNote} style={{ marginRight: '10px' }}>Add New Note</Button>
+                    <Button variant="btn btn-outline-dark" onClick={handleAddNote} style={{ marginRight: '10px' }}>Add New Meeting</Button>
                     <Button variant="btn btn-outline-danger" onClick={handleDeleteSelected}>Delete Selected</Button>
                     <Button variant="btn btn-outline-dark" onClick={handleSelectAll} style={{ marginLeft: '10px' }}>
                         {selectAll ? 'Deselect All' : 'Select All'}
@@ -231,7 +227,7 @@ const NotesPage = () => {
 
             {/* Update Note Modal */}
             <Modal
-                title="Update Note"
+                title="Update Meeting"
                 visible={showUpdateModal}
                 onCancel={handleCloseUpdateModal}
                 footer={[
@@ -248,8 +244,6 @@ const NotesPage = () => {
                         <Input.TextArea name="note_description" value={noteToUpdate.note_description} onChange={handleInputChange} />
                     </Form.Item>
 
-
-
                 </Form>
             </Modal>
 
@@ -262,7 +256,7 @@ const NotesPage = () => {
                 okText="Delete"
                 cancelText="Cancel"
             >
-                Are you sure you want to delete this note?
+                Are you sure you want to delete this meeting?
             </Modal>
 
         </Layout>
