@@ -97,6 +97,7 @@ const toys = require("./routes/toysRoutes.js");
 app.use("/toys", toys);
 
 
+
 app.listen(PORT, () => {
     console.log(`Server is up and running on: ${PORT}`);
 });
