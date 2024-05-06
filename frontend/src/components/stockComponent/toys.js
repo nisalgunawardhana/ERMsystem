@@ -355,10 +355,10 @@ export default function Toys() {
                         <div className="form-group">
                             <label>Category: 8+, 12+, 16+, 18+</label>
                             <select className="form-control" value={category} onChange={(e) => setCategory(e.target.value)}>
-                                <option value="F">8+</option>
-                                <option value="M">12+</option>
-                                <option value="M">16+</option>
-                                <option value="M">18+</option>
+                                <option value="8+">8+</option>
+                                <option value="12+">12+</option>
+                                <option value="16+">16+</option>
+                                <option value="18+">18+</option>
                             </select>
                         </div>
                         <div className="form-group">
