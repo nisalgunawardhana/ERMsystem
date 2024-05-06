@@ -6,6 +6,7 @@ import employeecomponent from './employee'
 export default function Employee() {
     const [employeeIds, setEmployeeIds] = useState([]);
     const [selectedDate, setSelectedDate] = useState('');
+    const [attendanceRecords, setAttendanceRecords] = useState([]);
     const [link, setLink] = useState('http://localhost:3000/dashboard/employee/attendence/form');
 
     // Function to handle date input change
@@ -19,6 +20,7 @@ export default function Employee() {
             .then(res => {
                 console.log('Response from backend:', res.data); // Log response from backend
                 setEmployeeIds(res.data);
+                setAttendanceRecords(res.data);
             })
             .catch(err => {
                 console.error('Error fetching employee IDs:', err);
@@ -66,7 +68,7 @@ export default function Employee() {
                                 <h2 className="card-title">Show Related Attendance</h2>
                                 <ul>
                                     {employeeIds.map(employeeId => (
-                                        <li key={employeeId}>{employeeId} - {selectedDate}</li>
+                                        <li key={employeeId}>{employeeId} - {employeeId.date} </li>
                                     ))}
                                 </ul>
                             </div>

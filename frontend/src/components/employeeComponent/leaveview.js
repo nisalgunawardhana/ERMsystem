@@ -26,6 +26,8 @@ const LeaveRequestView = () => {
         fetchLeaves();
     }, []);
 
+    
+
     const handleApprove = async (id) => {
         try {
             await axios.post("/leave/approverequest", { requestid: id });

@@ -3,7 +3,7 @@ import axios from 'axios';
 
 export default function AddAttendanceForm() {
     const [employeeId, setEmployeeId] = useState('');
-    const [date, setDate] = useState('');
+    const [dateTime, setDateTime] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
 
     // Function to handle form submission
@@ -12,10 +12,10 @@ export default function AddAttendanceForm() {
         
         try {
             // Send POST request to add attendance
-            await axios.post('http://localhost:8080/attendance/add', { employee_Id: employeeId, date: date });
+            await axios.post('http://localhost:8080/attendance/add', { employee_Id: employeeId, dateTime: dateTime });
             // Clear form fields and error message on success
             setEmployeeId('');
-            setDate('');
+            setDateTime('');
             setErrorMessage('');
             alert('Attendance added successfully');
         } catch (error) {
@@ -27,10 +27,16 @@ export default function AddAttendanceForm() {
         }
     };
 
-    // Function to fetch today's date and set it in the state
+    // Function to fetch current date and time and set it in the state
     useEffect(() => {
-        const currentDate = new Date().toISOString().split('T')[0];
-        setDate(currentDate);
+        const currentDateTime = new Date();
+        const year = currentDateTime.getFullYear();
+        const month = currentDateTime.getMonth() + 1 < 10 ? `0${currentDateTime.getMonth() + 1}` : currentDateTime.getMonth() + 1;
+        const day = currentDateTime.getDate() < 10 ? `0${currentDateTime.getDate()}` : currentDateTime.getDate();
+        const hours = currentDateTime.getHours() < 10 ? `0${currentDateTime.getHours()}` : currentDateTime.getHours();
+        const minutes = currentDateTime.getMinutes() < 10 ? `0${currentDateTime.getMinutes()}` : currentDateTime.getMinutes();
+        const formattedDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+        setDateTime(formattedDateTime);
     }, []);
 
     return (
@@ -46,8 +52,8 @@ export default function AddAttendanceForm() {
                       <input type="text" id="employeeId" className="form-control" value={employeeId} onChange={(e) => setEmployeeId(e.target.value)} required />
                   </div>
                   <div className="mb-3">
-                      <label htmlFor="date" className="form-label">Date:</label>
-                      <input type="date" id="date" className="form-control" value={date} onChange={(e) => setDate(e.target.value)} required />
+                      <label htmlFor="dateTime" className="form-label">Date & Time:</label>
+                      <input type="datetime-local" id="dateTime" className="form-control" value={dateTime} onChange={(e) => setDateTime(e.target.value)} required />
                   </div>
                   <button type="submit" className="btn btn-primary">Add Attendance</button>
               </form>
