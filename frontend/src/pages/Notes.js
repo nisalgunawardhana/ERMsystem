@@ -213,7 +213,7 @@ const NotesPage = () => {
             </div>
 
             <div className="three-buttons" style={{ marginLeft: 'auto' }}>
-                    <Button variant="btn btn-outline-dark" onClick={handleAddNote} style={{ marginRight: '10px' }}>Add New Meeting</Button>
+                    <Button variant="btn btn-outline-dark" onClick={handleAddNote} style={{ marginRight: '10px' }}>Add New Note</Button>
                     <Button variant="btn btn-outline-danger" onClick={handleDeleteSelected}>Delete Selected</Button>
                     <Button variant="btn btn-outline-dark" onClick={handleSelectAll} style={{ marginLeft: '10px' }}>
                         {selectAll ? 'Deselect All' : 'Select All'}

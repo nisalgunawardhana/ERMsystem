@@ -7,7 +7,6 @@ import axios from "axios"
 import { useDispatch } from "react-redux"
 import { hideLoading, showLoading } from '../redux/alertsSlice';
 
-
 function Login() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -20,10 +19,11 @@ function Login() {
 
             if (response.data.success) {
                 toast.success(response.data.message)
-                
+                console.log(values)
 
                 // Extract role information from response data
                 const role = response.data.role;
+
 
                 // Redirect based on the role
                 switch (role) {

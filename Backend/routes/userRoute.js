@@ -42,7 +42,7 @@ router.post('/login', async(req, res) => {
             .send({ message: "User does not exist", success: false })
         }
         const isMatch = await bcrypt.compare(req.body.password, user.password)
-        if (!isMatch){
+        if (isMatch){
             return res
             .status(200)
             .send({ message: "Password is incorrect", success: false })

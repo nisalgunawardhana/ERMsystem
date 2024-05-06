@@ -41,7 +41,6 @@ import Stock from './components/stockComponent/stock';
 import Clothe from './components/stockComponent/clothes';
 import Toy from './components/stockComponent/toys';
 
-
 //user management
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -100,7 +99,6 @@ function App() {
     }, 5000);
   };
 
-
   return (
     <BrowserRouter>
       {/* spinner 
@@ -109,7 +107,7 @@ function App() {
         </div>
       </div>)}
       */}
-      
+
       {/* toast message */}
       <Toaster position="top-center" reverseOrder={false} />
 
