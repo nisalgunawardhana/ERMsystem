@@ -184,11 +184,6 @@ router.get("/calculate-loyalty-points/:customer_id", async (req, res) => {
 
             // Fetch current loyalty points of the customer
             const customerData = await customer.findOne({ customer_id });
-
-            if (!customerData) {
-                return res.status(404).json({ error: "Customer not found." });
-            }
-
             const currentPoints = customerData.point;
 
             // Calculate new total points (capped at 100)
@@ -198,19 +193,18 @@ router.get("/calculate-loyalty-points/:customer_id", async (req, res) => {
             const pointsToIncrement = newTotalPoints - currentPoints;
 
             // Update customer's loyalty points in the database
-            await customer.findOneAndUpdate({ customer_id }, { point: newTotalPoints });
+            await customer.findOneAndUpdate({ customer_id }, { $inc: { point: pointsToIncrement } });
 
             // Return the loyalty points
-            res.status(200).json({ loyaltyPoints: pointsToIncrement });
+            res.status(200).json({ loyaltyPoints });
         } else {
             res.status(500).json({ error: "Error calculating loyalty points: Total amount is not a number." });
         }
     } catch (error) {
         console.error("Error calculating loyalty points:", error);
-        res.status(500).json({ error: "Error calculating loyalty points" });
-    }
+        res.status(500).json({ error: "Error calculating loyalty points" });
+    }
 });
-
 
 
 module.exports = router;

@@ -182,16 +182,7 @@ items.forEach(item => {
     });
 });
 
-    axios
-      .get(`http://localhost:8080/customer/calculate-loyalty-points/${customer_id}`)
-      .then((response) => {
-        const { loyaltyPoints } = response.data;
-        console.log(`Points Added: ${loyaltyPoints}`);
-      })
-      .catch((err) => {
-        console.error("Error while submitting form:", err);
-        
-      });
+    
 
     axios
       .post("http://localhost:8080/bills/add", newBill)
@@ -205,11 +196,21 @@ items.forEach(item => {
         handlePrint(newBill);
         navigate("/dashboard/cashier/billing");
       })
+      
       .catch((err) => {
         console.error("Error while submitting form:", err);
         alert("Error occurred while submitting the form. Please try again later.");
       });
-
+      axios
+      .get(`http://localhost:8080/customer/calculate-loyalty-points/${customer_id}`)
+      .then((response) => {
+        const { loyaltyPoints } = response.data;
+        console.log(`Points Added: ${loyaltyPoints}`);
+      })
+      .catch((err) => {
+        console.error("Error while submitting form:", err);
+        
+      });
       
   };
 
