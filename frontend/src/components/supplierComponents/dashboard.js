@@ -28,7 +28,7 @@ function LogisticDashboard() {
                             </Card.Text>
                             <div className=" mt-auto ml-auto">
                                 <div className="mb-1 mt-4 ">Replenish inventory</div>
-                                <Link to="/dashboard/stock">
+                                <Link to="/dashboard/logistics/stock">
                                     <Button variant="secondary" className="side-btn">
                                         <span>
                                         View supplies
