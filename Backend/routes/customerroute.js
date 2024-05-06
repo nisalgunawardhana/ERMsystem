@@ -202,8 +202,8 @@ router.get("/calculate-loyalty-points/:customer_id", async (req, res) => {
         }
     } catch (error) {
         console.error("Error calculating loyalty points:", error);
-        res.status(500).json({ error: "Error calculating loyalty points" });
-    }
+        res.status(500).json({ error: "Error calculating loyalty points" });
+    }
 });
 
 router.route("/email/:customerId").get(async (req, res) => {
