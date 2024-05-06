@@ -31,8 +31,8 @@ const CustomerR = () => {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setCustomerData({ ...customerData, [name]: value });
-    };
+        setCustomerData({ ...customerData, [name]: value });
+    };
 
     useEffect(() => {
         fetchCustomers();
@@ -115,20 +115,84 @@ const CustomerR = () => {
                 return;
             }
             // Validate customer_id: must be exactly 10 digits
-        const isValidCustomerId = /^\d{10}$/.test(customerData.customer_id);
+            const isValidCustomerId = /^\d{10}$/.test(customerData.customer_id);
 
-        if (isValidCustomerId) {
-            // Handle form submission (e.g., send data to backend)
-            console.log('Form submitted:', customerData);
-            // Reset form after submission (if needed)
-            setCustomerData({ customer_id: '' });
-            setFormValid(false); // Reset form validity state
-        } else {
-            // Display error message or handle invalid input
-            alert('Please enter a 10-digit customer ID (phone number).');
-            return;
-        }
+            if (isValidCustomerId) {
+                // Handle form submission (e.g., send data to backend)
+                console.log('Form submitted:', customerData);
+                // Reset form after submission (if needed)
+                setCustomerData({ customer_id: '' });
+                setFormValid(false); // Reset form validity state
+            } else {
+                // Display error message or handle invalid input
+                alert('Please enter a 10-digit customer ID (phone number).');
+                return;
+            }
             await axios.post("http://localhost:8080/customer/add", { customer_id, customer_name, email, point: 0, gender });
+            toast.success('Customer added');
+            const emailResponse = await axios.post('/send-email', {
+                to: email,
+                subject: 'Customer Added',
+                html: `
+                <html>
+                    <head>
+                        <style>
+                            /* Add your CSS styles here */
+                            body {
+                                font-family: Arial, sans-serif;
+                                background-color: #f4f4f4;
+                                margin: 0;
+                                padding: 20px;
+                            }
+                            .container {
+                                max-width: 600px;
+                                margin: 0 auto;
+                                background-color: #ffffff;
+                                padding: 30px;
+                                border-radius: 10px;
+                                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                            }
+                            h1 {
+                                color: #333333;
+                            }
+                            p {
+                                color: #666666;
+                                line-height: 1.6;
+                            }
+                            /* Add more styles as needed */
+                        </style>
+                    </head>
+                    <body>
+                        <div class="container">
+                            <h1>Welcome to Our customer Program</h1>
+                            <p>
+                                Hello ${customer_name},
+                            </p>
+                            <p>
+                                You have been successfully added as a customer. Here are your details:
+                            </p>
+                            <ul>
+                                <li><strong>Customer ID:</strong> ${customer_id}</li>
+                                <li><strong>Name:</strong> ${customer_name}</li>
+                                <li><strong>Email:</strong> ${email}</li>
+                                <li><strong>Gender:</strong> ${gender}</li>
+                            </ul>
+                            <p>
+                                If you have any questions or concerns, feel free to contact us.
+                            </p>
+                            <p>
+                                Best regards,
+                                <br>
+                                Diyana fashion
+                            </p>
+                        </div>
+                    </body>
+                </html>
+            `
+
+            });
+            console.log('Email sent:', emailResponse.data);
+
             setShowModal(false);
             fetchCustomers();
             setCustomerData({
@@ -137,6 +201,7 @@ const CustomerR = () => {
                 email: "",
                 point: 0,
                 gender: "Male" // Reset gender to Male after adding
+
             });
         } catch (error) {
             console.error("Error adding customer:", error);
@@ -448,17 +513,17 @@ const CustomerR = () => {
                     </Modal.Header>
                     <Modal.Body>
                         <Form onSubmit={handleSubmit}>
-                        <Form.Group controlId="customer_id">
-                <Form.Label>Customer ID (Phone Number)</Form.Label>
-                <Form.Control
-                    type="text"
-                    name="customer_id"
-                    onChange={handleInputChange}
-                    value={customerData.customer_id}
-                    placeholder="Enter 10-digit phone number"
-                    required
-                />
-            </Form.Group>
+                            <Form.Group controlId="customer_id">
+                                <Form.Label>Customer ID (Phone Number)</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    name="customer_id"
+                                    onChange={handleInputChange}
+                                    value={customerData.customer_id}
+                                    placeholder="Enter 10-digit phone number"
+                                    required
+                                />
+                            </Form.Group>
                             <Form.Group controlId="customer_name">
                                 <Form.Label>Customer Name</Form.Label>
                                 <Form.Control
