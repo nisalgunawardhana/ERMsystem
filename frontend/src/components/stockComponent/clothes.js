@@ -178,6 +178,13 @@ export default function Clothes() {
 
                 setShowUpdateModal(false);
             } else {
+                // Check if the item code already exists
+                const isDuplicate = clothes.some(clothes => clothes.item_code === itemCode);
+                if (isDuplicate) {
+                    setError('Item code already exists.');
+                    return;
+                }
+
                 await axios.post('http://localhost:8080/clothes/add', {
                     item_code: itemCode,
                     item_name: itemName,

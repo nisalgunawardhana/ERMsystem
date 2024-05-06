@@ -155,6 +155,13 @@ export default function Toys() {
 
                 setShowUpdateModal(false);
             } else {
+                // Check if the item code already exists
+                const isDuplicate = toys.some(toys => toys.item_code === itemCode);
+                if (isDuplicate) {
+                    setError('Item code already exists.');
+                    return;
+                }
+
                 await axios.post('http://localhost:8080/toys/add', {
                     item_code: itemCode,
                     item_name: itemName,
