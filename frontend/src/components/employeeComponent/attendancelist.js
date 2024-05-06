@@ -68,7 +68,8 @@ export default function Employee() {
                                 <h2 className="card-title">Show Related Attendance</h2>
                                 <ul>
                                     {employeeIds.map(employeeId => (
-                                        <li key={employeeId}>{employeeId} - {employeeId.date} </li>
+                                        <li key={employeeId}>{employeeId} - <small className="form-text text-muted">2.05</small> </li>
+                                        
                                     ))}
                                 </ul>
                             </div>

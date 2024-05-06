@@ -117,7 +117,7 @@ const LeaveRequestView = () => {
                 </table>
                 <div className="card m-3">
                     <div className="card-body">
-                        <h3 className="card-text">This is the Attendance Taken Link</h3>
+                        <h3 className="card-text">This is the Leave Taken Link</h3>
                     </div>
                     <div className="card-footer">
                         <div className="input-group">
