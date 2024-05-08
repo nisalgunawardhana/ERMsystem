@@ -1,0 +1,436 @@
+/*background*/
+.bg{
+  background-color: white;
+}
+
+ul {
+  list-style: none;
+}
+
+.dark-blue{
+  background-color: #225874;
+}
+
+.red{
+  background-color: red;
+}
+
+.orange{
+  background-color: orange
+}
+
+.luxery-yellow{
+  background-color: #EBC266;
+  border-color: #EBC266;
+}
+
+.middle-green{
+  background-color: #A8C1B7;
+  border-color: #A8C1B7;
+}
+
+.light-brown{
+  background-color: #ddd5c7;
+  border-color: #ddd5c7;
+}
+
+.ash{
+  background-color: #6c757d;
+}
+
+.layout-blue{
+  color: #080a3c;
+}
+
+.layout-blue-bg{
+  background-color: #080a3c;
+}
+/*CARDS______________________________________________________________________________________*/
+
+/*MAIN CARDS*/
+/*card-large*/
+.card-large{
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  transition: transform 0.3s ease;
+}
+
+.card-large:hover {
+  transform: scale(1.01);
+}
+
+/*card-up*/
+.card-up{
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  transition: transform 0.3s ease;
+}
+
+.card-up:hover {
+  transform: translateY(-5px); 
+  background-color: white;
+  transition: transform 0.5s ease;
+}
+
+.card-shadow-1 {
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+
+.card-shadow-2 {
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
+
+/*CONTAINERS________________________________________________________________________________*/
+/*rfq containers*/
+.custom-container-rfq{
+    border: 1px solid #D5EEBd; 
+    background-color: #D5EEBB;
+    border-radius: 10px; 
+    padding: 30px;
+}
+  
+.custom-container-rfq.container {
+    padding: 20px; 
+    
+}
+
+/*supplier containers*/
+.custom-container-supplier.container{
+  background-color: rgba(159, 166, 148, 0.5);
+  width:"95%";
+  border-radius: 10px; 
+  padding-left: 100px;
+  padding-right: 100px;
+  padding-top: 40px;
+  padding-bottom: 20px;
+}
+
+/*purchase Order containers*/
+
+/*supplier performance containers*/
+.custom-container-supPerformance{
+  background-color: white;
+  width:"95%";
+  border-radius: 10px; 
+  padding-left: 50px;
+  padding-right: 50px;
+}
+
+
+/* HOVER BUTTONS________________________________________________________________________________*/
+.btn {
+  padding: 0.5rem 1.5rem;
+}
+
+.btn-outline-secondary {
+  color: #6c757d; /* Button text color */
+  border-color: #6c757d; /* Button border color */
+}
+
+.btn-outline-secondary:hover {
+  color: #fff; /* Button text color on hover */
+  background-color: #6c757d; /* Button background color on hover */
+  border-color: #6c757d; /* Button border color on hover */
+}
+
+/*side-btn*/
+.side-btn {
+  position: relative;
+  transition: background-color 300ms ease-out;
+}
+
+.side-btn span {
+  display: inline-block;
+  position: relative;
+  transition: all 300ms ease-out;
+  will-change: transform;
+}
+
+.side-btn:hover span {
+  transform: translate3d(-1rem, 0, 0);
+}
+
+.side-btn:hover {
+  opacity: 0.95;
+  color:white;
+}
+
+.side-btn .bi {
+  position: absolute;
+  width: 1.1rem;
+  right: 0;
+  opacity: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: all 300ms ease-out;
+  will-change: right, opacity;
+}
+
+.side-btn:hover .bi {
+  opacity: 1;
+  right: -2rem;
+}
+
+
+/*side-btn-btn*/
+.side-btn-btn {
+  position: relative;
+  transition: background-color 300ms ease-out;
+  background-color: red;
+  text-align: center;
+  border: transparent;
+  padding-left: 20px;
+  padding-right: 20px;
+  width: auto;
+  height: 30px;
+  border-radius: 6px;
+  color: white;
+}
+
+.side-btn-btn span {
+  display: inline-block;
+  position: relative;
+  transition: all 300ms ease-out;
+  will-change: transform;
+  /* top: 50%; */
+  transform: translateY(-50%);
+}
+
+.side-btn-btn:hover span {
+  transform: translate3d(-1rem, 0, 0);
+}
+
+.side-btn-btn:hover {
+  opacity: 0.95;
+  color:white;
+}
+
+.side-btn-btn .bi {
+  position: absolute;
+  width: 2.5rem;
+  right: 0;
+  opacity: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: all 300ms ease-out;
+  will-change: right, opacity;
+}
+
+.side-btn-btn:hover .bi {
+  opacity: 1;
+  right: -0.5rem;
+}
+
+
+
+/*up-btn*/
+#up-btn {
+  position: relative;
+  transition: background-color 300ms ease-out;
+  padding: 8px 0;
+  text-align: center;
+  border: transparent;
+  margin: 20px 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  width: auto;
+  border-radius: 6px;
+}
+
+#up-btn span {
+  display: inline-block;
+  position: relative;
+  transition: all 300ms ease-out;
+  will-change: transform;
+}
+
+#up-btn:hover {
+  background-color: rgba(var(dark-blue), 0.75); /* Use CSS variable for background color */
+  opacity: 0.95;
+}
+
+#up-btn i {
+  position: relative;
+  top: 0;
+  transition: top ease 0.3s;
+}
+
+#up-btn:hover i {
+  top: -5px;
+}
+
+
+
+
+
+#up-btn-btn i {
+  position: relative;
+  top: 0;
+  transition: top ease 0.3s;
+}
+#up-btn-btn:hover i {
+  top: -5px;
+}
+
+
+
+/*po-btn*/
+#po-btn i {
+  position: relative;
+  top: 0;
+  transition: top ease 0.3s;
+}
+#po-btn:hover i {
+  top: -5px;
+}
+
+
+/*back-btn*/
+.back-btn {
+  position: relative;
+  transition: background-color 300ms ease-out;
+  /* background-color: #B6C4B6; */
+}
+
+.back-btn span {
+  display: inline-block;
+  position: relative;
+  transition: all 300ms ease-out;
+  will-change: transform;
+}
+
+.back-btn:hover span {
+  transform: translate3d(0.5rem, 0, 0); 
+}
+
+.back-btn .bi {
+  position: absolute;
+  width: 1.1em;
+  left: 2rem;
+  opacity: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: all 300ms ease-out;
+  will-change: left, opacity;
+}
+
+.back-btn:hover .bi {
+  opacity: 1;
+  left: 0.5rem;
+   
+}
+
+/*OTHER________________________________________________________________________________________*/
+/*invoice choose file*/
+.file-input-container {
+  position: relative;
+  display: inline-block;
+}
+
+.file-input {
+  position: absolute;
+  left: -9999px;
+}
+
+.custom-button {
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.custom-button:hover {
+  background-color: #218838;
+}
+
+
+.search-icon {
+  font-size: 1rem; 
+  color: #6c757d; 
+  padding: 6px; 
+  transition: color 0.3s ease;
+  border-radius: 20px;
+}
+
+.search-button:hover .search-icon {
+  color: white; 
+  transition: color 0.3s ease;
+  
+}
+
+.search-button:hover{
+  border-radius: 20px;
+}
+.search-button {
+  border-radius: 20px;
+  transition: background-color 0.3s ease;
+}
+
+
+/*progress bars*/
+:root {
+  --primary-color: #f50045;
+  --secondary-color: #000;
+  --bar-height: 1.5rem;
+}
+
+button {
+  background-color: var(--secondary-color);
+  border: 0;
+  border-radius: 0;
+  padding: 1rem 2rem;
+  color: #fff;
+  cursor: pointer;
+}
+
+button:hover {
+  border-radius: 6px;
+  background-color: var(--primary-color);
+  transition: all 500ms ease;
+}
+
+.ce_ixelgen_progress_bar {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.ce_ixelgen_progress_bar .progress_bar_item {
+  margin-bottom: 2rem;
+}
+
+.ce_ixelgen_progress_bar .item_label,
+.ce_ixelgen_progress_bar .item_value {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.ce_ixelgen_progress_bar .item_value {
+  font-weight: 400;
+}
+
+.ce_ixelgen_progress_bar .item_bar {
+  position: relative;
+  height: var(--bar-height);
+  width: 100%;
+  background-color: var(--secondary-color);
+  border-radius: 4px;
+}
+
+.ce_ixelgen_progress_bar .item_bar .progress {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  height: var(--bar-height);
+  margin: 0;
+  background-color: var(--primary-color);
+  border-radius: 4px;
+  transition: width 100ms ease;
+}

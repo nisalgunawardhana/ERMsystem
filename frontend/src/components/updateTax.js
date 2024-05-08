@@ -1,23 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Modal } from 'react-bootstrap';
+import Layout from './Layout';
 
 function UpdateTax() {
     const { id } = useParams(); // Get the expense ID from the URL params
-    const [isOpen, setIsOpen] = useState(false);
-    const [totalEPF, setTotalEPF] = useState(0);
-    const [totalETF, setTotalETF] = useState(0);
-    const [total, setTotal] = useState(0);
-    const [profit, setTotalProfits] = useState(0);
-    const [totalAmount, setTotalAmount] = useState(0);
-    const [totalOther, setTotalOther] = useState(0);
-    const [totalSupp, setTotalSupp] = useState(0);
-    const [totalSalary, setTotalSalary] = useState(0);
-    const [Profit_ID, setID] = useState("");
-    const [Month, setMonth] = useState("");
-    const [Date_created, setDate] = useState("");
-    const [Description, setDesc] = useState("");
     const [currentDate, setCurrentDate] = useState('');
     const [totalProfit, setTotalProfit] = useState(0);
     const [rateError, setRateError] = useState('');
@@ -110,16 +97,12 @@ function UpdateTax() {
         axios.put(`http://localhost:8080/tax/update/${Tax._id}`, newTax)
             .then((res) => {
                 console.log(res.data);
-                navigate(`/tax/get/${Tax.Tax_ID}`);
+                navigate(`/dashboard/finance/tax`);
             })
             .catch((err) => {
                 console.log(err);
                 // Handle error
             });
-    };
-
-    const handleBack = () => {
-        navigate(`/profit/get/${Tax.Tax_ID}`); // Reset specificExpense to null to display all expenses
     };
 
     useEffect(() => {
@@ -136,7 +119,8 @@ function UpdateTax() {
     }, []); // Run only once after the component mount
 
     return (
-        <div className="container" style={{ marginTop: '90px' }}>
+        <Layout>
+        <div className="container" style={{ marginTop: '20px' }}>
             <div className="row justify-content-center">
                 <div className="col-lg-8">
                     <form onSubmit={handleSubmit}>
@@ -201,7 +185,7 @@ function UpdateTax() {
                                 <div className="row">
                                     <div className="col">
                                         <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-                                            <button type="submit" className="btn btn-primary me-5 rounded">Update Tax Details</button>
+                                            <button type="submit" className="btn btn-outline-primary me-5"><i className="ri-edit-line"></i>  Update Tax Details</button>
                                         </div>
                                     </div>
                                 </div>
@@ -211,6 +195,7 @@ function UpdateTax() {
                 </div>
             </div>
         </div>
+        </Layout>
     );
 }
 export default UpdateTax;

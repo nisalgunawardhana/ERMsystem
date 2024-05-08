@@ -13,7 +13,7 @@ function TaxDetails() {
     const [searchResult, setSearchResult] = useState(null);
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/tax/get/${id}`)
+        axios.get(`http://localhost:8080/tax`)
             .then((res) => {
                 setTax(res.data.tax);
                 setRate(res.data.tax.Rate);
@@ -168,7 +168,7 @@ function TaxDetails() {
     const submit = (e) => {
         e.preventDefault();
         // Redirect to the page where total amount is fetched for the entered month
-        window.location.href = `/tax/add`;
+        window.location.href = `/dashboard/finance/tax/add`;
     };
 
     const [totalAmount, setTotalAmount] = useState(0);
@@ -238,142 +238,10 @@ function TaxDetails() {
         return months[monthIndex];
     };
 
-    const getPreviousMonth = () => {
-        const months = [
-            'January', 'February', 'March', 'April', 'May', 'June',
-            'July', 'August', 'September', 'October', 'November', 'December'
-        ];
-        const currentDate = new Date();
-        const monthIndex = (currentDate.getMonth() - 1 + 12) % 12; // Handling December as previous month
-        return months[monthIndex];
-    };
 
     const getCurrentYear = () => {
         const currentDate = new Date();
         return currentDate.getFullYear();
-    };
-
-    const getPreviousYear = () => {
-        const currentDate = new Date();
-        const currentYear = currentDate.getFullYear();
-        const previousYear = currentYear - 1;
-        return previousYear;
-    };
-
-    //navigate to profit log
-    const getCurrentMonthProfitId = async () => {
-        try {
-            let currentMonth = getCurrentMonth();
-            let currentYear = getCurrentYear();
-            let response = await axios.get(`http://localhost:8080/profit/search/${currentMonth}`);
-            let profit = response.data;
-
-            if (profit.length > 0) {
-                // Filter profit records based on date_created column
-                const currentYearProfit = profit.find(item => {
-                    const dateCreated = new Date(item.Date_modified);
-                    return dateCreated.getFullYear() === currentYear;
-                });
-
-                if (currentYearProfit) {
-                    // Assuming the first profit record for the current month and year is the relevant one
-                    return currentYearProfit.Profit_ID;
-                }
-            }
-
-            // If there's no profit record for the current month of the current year,
-            // try fetching the previous month's profit of the current year
-            let previousMonth = getPreviousMonth();
-            response = await axios.get(`http://localhost:8080/profit/search/${previousMonth}`);
-            profit = response.data;
-
-            if (profit.length > 0) {
-                // Filter profit records based on date_created column
-                const currentYearProfit = profit.find(item => {
-                    const dateCreated = new Date(item.Date_modified);
-                    return dateCreated.getFullYear() === currentYear;
-                });
-
-                if (currentYearProfit) {
-                    // Assuming the first profit record for the previous month of the current year is the relevant one
-                    return currentYearProfit.Profit_ID;
-                }
-            }
-
-            // If there's no profit record for the previous month as well, or if it's not related to the current year, return null
-            window.location.href = `/profit/get/PL#`;
-            return null;
-        } catch (error) {
-            console.error('Error fetching profit details:', error);
-            return null;
-        }
-    };
-
-    const handleClick = async () => {
-        const profitId = await getCurrentMonthProfitId();
-        if (profitId) {
-            window.location.href = `/profit/get/${profitId}`;
-        } else {
-            console.log('No profit record found for the current and previous months of the current year.');
-            // Handle the case where there's no profit record for the current and previous months of the current year
-        }
-    };
-
-    //navigate to tax doc
-    const getCurrentTaxId = async () => {
-        try {
-            let currentYear = getCurrentYear();
-            let response = await axios.get(`http://localhost:8080/tax/search/${currentYear}`);
-            let tax = response.data;
-
-            if (tax.length > 0) {
-                // Filter tax records based on date_created column
-                const currentYearTax = tax.find(item => {
-                    const dateCreated = new Date(item.Date_modified);
-                    return dateCreated.getFullYear() === currentYear;
-                });
-
-                if (currentYearTax) {
-                    // Assuming the first tax record for the current year is the relevant one
-                    return currentYearTax.Tax_ID;
-                }
-            }
-
-            // If there's no tax record for the current year, try fetching the tax details for the previous year
-            let previousYear = getPreviousYear();
-            response = await axios.get(`http://localhost:8080/tax/search/${previousYear}`);
-            tax = response.data;
-
-            if (tax.length > 0) {
-                // Filter tax records based on date_created column
-                const previousYearTax = tax.find(item => {
-                    const dateCreated = new Date(item.Date_modified);
-                    return dateCreated.getFullYear() === previousYear;
-                });
-
-                if (previousYearTax) {
-                    // Assuming the first tax record for the previous year is the relevant one
-                    return previousYearTax.Tax_ID;
-                }
-            }
-
-            // If there's no tax record for the previous year as well, or if it's not related to the current year, return null
-            window.location.href = `/tax/get/T#`;
-            return null;
-        } catch (error) {
-            console.error('Error fetching tax details:', error);
-            return null;
-        }
-    };
-
-    const handleClickTax = async () => {
-        const taxId = await getCurrentTaxId();
-        if (taxId) {
-            window.location.href = `/tax/get/${taxId}`;
-        } else {
-            console.log('No profit record found for the current and previous months of the current year.');
-            // Handle the case where there's no profit record for the current and previous months of the current year
-        }
     };
 
     useEffect(() => {
@@ -389,131 +257,65 @@ function TaxDetails() {
         setIncomeTax(incomeTax.toFixed(2));
     });
 
+    const [dateTime, setDateTime] = useState(new Date());
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setDateTime(new Date());
+        }, 1000); // Update every second
+
+        // Cleanup function
+        return () => clearInterval(timer);
+    }, []);
+
+    // Format the date and time
+    const formattedDate = dateTime.toLocaleDateString();
+    const formattedTime = dateTime.toLocaleTimeString();
+
     return (
         <Layout>
-        <div className="container">
-            <ul class="nav nav-tabs mb-3" id="myTab0" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <Link
-                        className="nav-link"
-                        id="contact-tab0"
-                        to="/finance"
-                        role="tab"
-                        aria-controls="contact"
-                        aria-selected="false"
-                    >
-                        Dashboard
-                    </Link>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button
-                        data-mdb-tab-init
-                        class="nav-link"
-                        id="profile-tab0"
-                        type="button"
-                        role="tab"
-                        aria-controls="profile"
-                        aria-selected="false"
-                        onClick={handleClick}
-                    >
-                        Profit Log
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <Link
-                        className="nav-link"
-                        id="contact-tab0"
-                        to="/otherExpense"
-                        role="tab"
-                        aria-controls="contact"
-                        aria-selected="false"
-                    >
-                        Other Expenses
-                    </Link>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button
-                        data-mdb-tab-init
-                        class="nav-link active"
-                        id="contact-tab0"
-                        data-mdb-target="#contact0"
-                        type="button"
-                        role="tab"
-                        aria-controls="contact"
-                        aria-selected="false"
-                        onClick={handleClickTax}
-                        style={{ borderBottom: '2px solid #007bff', borderTop: 'none' }}
-                    >
-                        <i className="bi bi-file-earmark"></i> Tax Document
-                    </button>
-                </li>
-            </ul>
-            {/*Breadcrumb for tax doc*/}
-            <nav aria-label="breadcrumb" style={{ marginLeft: '10px' }}>
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="/">Home</a></li>
-                    <li class="breadcrumb-item"><a href="/finance">Finance Dashboard</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Tax Document</li>
-                </ol>
-            </nav>
-            {/* Main Content */}
-            <div className="row mb-2" style={{ marginTop: '35px' }}>
-                <h2 className="text-left mb-4" style={{ marginTop: '5px' }}>Annual Tax Details</h2>
-                {/* Generate tax Report */}
-                <div className="col-lg-6 col-md-12 mb-3">
-                    <div className="card" style={{ height: '160px' }}>
-                        <div className="card-body">
-                            <h5 className="card-title">Generate Annual Tax Report</h5>
-                            <p className="card-text">Click the button below to generate a report for the annual tax report.</p>
-                            <button className="btn btn-primary mb-3" onClick={handleReportGeneration} style={{ marginTop: '10px', width: '200px' }}> Generate Report</button>
-                        </div>
-                    </div>
-                </div>
+            <div className="container">
+                {/*Breadcrumb for tax doc*/}
 
-                {/* Button to add new tax doc */}
-                <div className="col-lg-6 col-md-12 mb-3">
-                    <div className="card" style={{ height: '160px' }}>
-                        <div className="card-body">
-                            <form onSubmit={submit}>
-                                <h5>Add New Tax Document</h5>
-                                <p className="card-text">You can create a tax document to keep track of the tax details.</p>
-                                <div className="row mb-3">
-                                    <div className="col">
-                                        <div className="btn-group">
-                                            <button type="submit" className="btn btn-primary mb-3" style={{ marginTop: '10px',width: '200px' }}>Add Tax Document</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Search bar for tax doc */}
-            <div className="container-fluid" style={{ marginTop: '15px' }}>
                 <div className="row">
-                    <div className="col-md-4">
-                        <select id="year" className="form-control" value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)}>
-                            <option value="">Select Year</option>
-                            {yearsOptions}
-                        </select>
+                    <div className="col-md-8">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="/finance">Finance Dashboard</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Tax Document</li>
+                            </ol>
+                        </nav>
+
                     </div>
-                    <div className="col-md-4 align-self-end">
-                        <button className="btn btn-primary" onClick={handleSearch} onKeyDown={handleKeyDown}>Search Tax Document</button>
+                    <div className="col-md-4 d-flex justify-content-end">
+                        <p>{formattedDate} | {formattedTime}</p>
                     </div>
                 </div>
-
-                <div className="container mt-3" style={{ marginTop: '30px' }}>
-                    <h2 className="mb-4" style={{ marginTop: '30px' }}><i className="fas fa-chart-line"></i> Tax Document {(searchResult || tax) && `- ${year}`}</h2>
-                    <p className="text-muted">Explore the detailed breakdown of your profits, including sales income, expenses, and monthly profit, to gain insights into your financial performance.</p>
+                {/* Main Content */}
+                <div className="row mb-2">
+                    <div className="row align-items-center mb-4">
+                        <div className="col-md-7">
+                            <h2 className="mb-4" style={{ marginTop: '10px' }}><i className="fas fa-chart-line"></i> Tax Document {(searchResult || tax) && `- ${year}`}</h2>
+                        </div>
+                        <div className="col-md-5 d-flex justify-content-end align-items-center">
+                            <div className="col-md-6 me-3">
+                                <select id="year" className="form-control" value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)}>
+                                    <option value="">Select Year</option>
+                                    {yearsOptions}
+                                </select>
+                            </div>
+                            <div className="col-md-6">
+                                <button className="btn btn-outline-primary" onClick={handleSearch} onKeyDown={handleKeyDown}><i className="ri-search-line"></i>  Search Tax Document</button>
+                            </div>
+                        </div>
+                    </div>
 
                     {/* Summary of tax details */}
                     {tax && (
                         <div className="row justify-content-center">
                             <div className="row">
                                 <div className="col-lg-4 col-md-6 mb-3">
-                                    <div className="card" style={{ background: 'linear-gradient(to right, #493240, #f09)', color: '#fff', minWidth: '250px' }}>
+                                    <div className="card" style={{ background: 'white', minWidth: '250px' }}>
                                         <div className="card-body d-flex justify-content-between align-items-center">
                                             <div className="card-body">
                                                 <h2 className="card-title">{new Date(tax.Due_date).toLocaleDateString()}</h2>
@@ -523,41 +325,41 @@ function TaxDetails() {
                                         </div>
                                         <div className="card-footer bg-transparent border-top-0">
                                             <div className="progress" style={{ height: '10px', marginTop: '-25px' }}>
-                                                <div className="progress-bar" role="progressbar" style={{ backgroundColor: '#b2beb5', width: '50%' }} aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                                <div className="progress-bar" role="progressbar" style={{ backgroundColor: 'orange', width: '50%' }} aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div className="col-lg-4 col-md-6 mb-3">
-                                    <div className="card" style={{ background: 'linear-gradient(to right, #0a504a, #38ef7d)', color: '#fff', minWidth: '250px' }}>
+                                    <div className="card" style={{ background: 'white', minWidth: '250px' }}>
                                         <div className="card-body d-flex justify-content-between align-items-center">
                                             <div className="card-body">
                                                 <h2 className="card-title">Rs.{Income_tax}</h2>
                                                 <p className="card-text" style={{ marginTop: '35px' }}>Tax Payable</p>
                                             </div>
-                                            <i className="bi bi-file-earmark-text h1" style={{ marginRight: '15px', fontSize: '3.5rem' }}></i>
+                                            <i className="bi bi-file-earmark-text h1" style={{ marginRight: '15px', fontSize: '2.5rem' }}></i>
                                         </div>
                                         <div className="card-footer bg-transparent border-top-0">
                                             <div className="progress" style={{ height: '10px', marginTop: '-25px' }}>
-                                                <div className="progress-bar" role="progressbar" style={{ backgroundColor: '#b2beb5', width: '75%' }} aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                                                <div className="progress-bar" role="progressbar" style={{ backgroundColor: 'orange', width: '50%' }} aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div className="col-lg-4 col-md-6 mb-3">
-                                    <div className="card" style={{ background: 'linear-gradient(to right, #a86008, #ffba56)', color: '#fff', minWidth: '250px' }}>
+                                    <div className="card" style={{ background: 'white', minWidth: '250px' }}>
                                         <div className="card-body d-flex justify-content-between align-items-center">
                                             <div className="card-body">
                                                 <h2 className="card-title">Rs.{(totalProfit - Income_tax).toFixed(2)}</h2>
                                                 <p className="card-text" style={{ marginTop: '35px' }}>Final Profit</p>
                                             </div>
-                                            <i className="bi bi-cash-stack h1" style={{ marginRight: '15px', fontSize: '3.5rem' }}></i>
+                                            <i className="bi bi-cash-stack h1" style={{ marginRight: '15px', fontSize: '2.5rem' }}></i>
                                         </div>
                                         <div className="card-footer bg-transparent border-top-0">
                                             <div className="progress" style={{ height: '10px', marginTop: '-25px' }}>
-                                                <div className="progress-bar" role="progressbar" style={{ backgroundColor: '#b2beb5', width: '90%' }} aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
+                                                <div className="progress-bar" role="progressbar" style={{ backgroundColor: 'orange', width: '50%' }} aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -566,60 +368,98 @@ function TaxDetails() {
 
                         </div>
                     )}
+
                 </div>
 
-                {/* Display tax details for searched year */}
-                {(searchResult || tax) && (
-                    <div className="row">
-                        {/* Left Column for tax Details */}
-                        <div className="col-md-12">
-                            <div className="card" style={{ marginBottom: '40px' }}>
-                                <div className="card-body">
-                                    <h4 className="mb-3">Valid Period: January 1, {year} - {endDateFormatted}</h4>
-                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginTop: '30px' }}>
-                                        <div className="custom-card col-md-4" style={{ padding: '20px', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', backgroundColor: '#ffffff' }}>
-                                            <div style={{ fontWeight: 'bold' }}><i className="bi bi-file-earmark-text"></i> Tax Doc ID:</div>
-                                            <div style={{ fontStyle: 'italic' }}>{searchResult ? searchResult[0].Tax_ID : tax.Tax_ID}</div>
-                                        </div>
-                                        <div className="custom-card col-md-4" style={{ padding: '20px', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', backgroundColor: '#ffffff' }}>
-                                            <div style={{ fontWeight: 'bold' }}><i className="bi bi-cash"></i> Taxable Income:</div>
-                                            <div style={{ fontStyle: 'italic' }}>Rs.{searchResult ? searchResult[0].Taxable_income.toFixed(2) : tax.Taxable_income.toFixed(2)}</div>
-                                        </div>
-                                        <div className="custom-card col-md-3" style={{ padding: '20px', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', backgroundColor: '#ffffff' }}>
-                                            <div style={{ fontWeight: 'bold' }}><i className="bi bi-cash-coin"></i> Tax Rate:</div>
-                                            <div style={{ fontStyle: 'italic' }}>{searchResult ? searchResult[0].Rate : tax.Rate}%</div>
-                                        </div>
-                                        <div className="custom-card col-md-4" style={{ padding: '20px', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', backgroundColor: '#ffffff' }}>
-                                            <div style={{ fontWeight: 'bold' }}><i className="bi bi-currency-dollar"></i> Income Tax:</div>
-                                            <div style={{ fontStyle: 'italic' }}>Rs.{searchResult ? searchResult[0].Income_tax.toFixed(2) : tax.Income_tax.toFixed(2)}</div>
-                                        </div>
-                                        <div className="custom-card col-md-4" style={{ padding: '20px', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', backgroundColor: '#ffffff' }}>
-                                            <div style={{ fontWeight: 'bold' }}><i className="bi bi-calendar"></i> Due Date:</div>
-                                            <div style={{ fontStyle: 'italic' }}>{searchResult ? new Date(searchResult[0].Due_date).toLocaleDateString() : new Date(tax.Due_date).toLocaleDateString()}</div>
-                                        </div>
-                                        <div className="custom-card col-md-3" style={{ padding: '20px', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', backgroundColor: '#ffffff' }}>
-                                            <div style={{ fontWeight: 'bold' }}><i className="bi bi-clock"></i> Date modified:</div>
-                                            <div style={{ fontStyle: 'italic' }}>{searchResult ? new Date(searchResult[0].Date_modified).toLocaleDateString() : new Date(tax.Date_modified).toLocaleDateString()}</div>
-                                        </div>
-                                        <div className="custom-card col-md-4" style={{ padding: '20px', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', backgroundColor: '#ffffff' }}>
-                                            <div style={{ fontWeight: 'bold' }}><i className="bi bi-check-circle"></i> Payment status:</div>
-                                            <div style={{ fontStyle: 'italic' }}>{searchResult ? searchResult[0].Status : tax.Status}</div>
-                                        </div>
-                                        <div className="custom-card col-md-4" style={{ padding: '20px', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', backgroundColor: '#ffffff' }}>
-                                            <div style={{ fontWeight: 'bold' }}><i className="bi bi-info-circle"></i> Final profit:</div>
-                                            <div style={{ fontStyle: 'italic' }}>Rs.{searchResult ? searchResult[0].Final_profit.toFixed(2) : tax.Final_profit.toFixed(2)}</div>
-                                        </div>
+                {/* Search bar for tax doc */}
+                <div className="container-fluid" style={{ marginTop: '15px' }}>
+                    <div className="container mt-3" style={{ marginTop: '10px' }}>
+                        {/* Generate tax Report */}
+                        <div className='row'>
+                            <div className="col-lg-6 col-md-12 mb-3">
+                                <div className="card" style={{ height: '160px' }}>
+                                    <div className="card-body">
+                                        <h5 className="card-title">Generate Annual Tax Report</h5>
+                                        <p className="card-text">Click the button below to generate a report for the annual tax report.</p>
+                                        <button className="btn btn-dark mb-3" onClick={handleReportGeneration} style={{ marginTop: '10px', width: '200px' }}><i className="bi bi-file-earmark-bar-graph"></i>  Generate Report</button>
                                     </div>
-                                    <div className="button-container text-center" style={{ marginTop: '25px'}}>
-                                        <Link to={`/tax/update/${tax.Tax_ID}`} className="btn btn-primary me-2" style={{ width: '160px' }}>Edit</Link>
+                                </div>
+                            </div>
+
+                            {/* Button to add new tax doc */}
+                            <div className="col-lg-6 col-md-12 mb-3">
+                                <div className="card" style={{ height: '160px' }}>
+                                    <div className="card-body">
+                                        <form onSubmit={submit}>
+                                            <h5>Add New Tax Document</h5>
+                                            <p className="card-text">You can create a tax document to keep track of the tax details.</p>
+                                            <div className="row mb-3">
+                                                <div className="col">
+                                                    <div className="btn-group">
+                                                        <button type="submit" className="btn btn-dark mb-3" style={{ marginTop: '10px', width: '200px' }}><i className="ri-add-line"></i>Add Tax Document</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
                     </div>
-                )}
+
+                    {/* Display tax details for searched year */}
+                    {(searchResult || tax) && (
+                        <div className="row">
+                            {/* Left Column for tax Details */}
+                            <div className="col-md-12">
+                                <div className="card" style={{ marginBottom: '40px' }}>
+                                    <div className="card-body">
+                                        <h4 className="mb-3">Valid Period: January 1, {year} - {endDateFormatted}</h4>
+                                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', marginTop: '30px' }}>
+                                            <div className="custom-card col-md-4" style={{ padding: '20px', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', backgroundColor: '#ffffff' }}>
+                                                <div style={{ fontWeight: 'bold' }}><i className="bi bi-file-earmark-text"></i> Tax Doc ID:</div>
+                                                <div style={{ fontStyle: 'italic' }}>{searchResult ? searchResult[0].Tax_ID : tax.Tax_ID}</div>
+                                            </div>
+                                            <div className="custom-card col-md-4" style={{ padding: '20px', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', backgroundColor: '#ffffff' }}>
+                                                <div style={{ fontWeight: 'bold' }}><i className="bi bi-cash"></i> Taxable Income:</div>
+                                                <div style={{ fontStyle: 'italic' }}>Rs.{searchResult ? searchResult[0].Taxable_income.toFixed(2) : tax.Taxable_income.toFixed(2)}</div>
+                                            </div>
+                                            <div className="custom-card col-md-3" style={{ padding: '20px', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', backgroundColor: '#ffffff' }}>
+                                                <div style={{ fontWeight: 'bold' }}><i className="bi bi-cash-coin"></i> Tax Rate:</div>
+                                                <div style={{ fontStyle: 'italic' }}>{searchResult ? searchResult[0].Rate : tax.Rate}%</div>
+                                            </div>
+                                            <div className="custom-card col-md-4" style={{ padding: '20px', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', backgroundColor: '#ffffff' }}>
+                                                <div style={{ fontWeight: 'bold' }}><i className="bi bi-currency-dollar"></i> Income Tax:</div>
+                                                <div style={{ fontStyle: 'italic' }}>Rs.{searchResult ? searchResult[0].Income_tax.toFixed(2) : tax.Income_tax.toFixed(2)}</div>
+                                            </div>
+                                            <div className="custom-card col-md-4" style={{ padding: '20px', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', backgroundColor: '#ffffff' }}>
+                                                <div style={{ fontWeight: 'bold' }}><i className="bi bi-calendar"></i> Due Date:</div>
+                                                <div style={{ fontStyle: 'italic' }}>{searchResult ? new Date(searchResult[0].Due_date).toLocaleDateString() : new Date(tax.Due_date).toLocaleDateString()}</div>
+                                            </div>
+                                            <div className="custom-card col-md-3" style={{ padding: '20px', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', backgroundColor: '#ffffff' }}>
+                                                <div style={{ fontWeight: 'bold' }}><i className="bi bi-clock"></i> Date modified:</div>
+                                                <div style={{ fontStyle: 'italic' }}>{searchResult ? new Date(searchResult[0].Date_modified).toLocaleDateString() : new Date(tax.Date_modified).toLocaleDateString()}</div>
+                                            </div>
+                                            <div className="custom-card col-md-4" style={{ padding: '20px', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', backgroundColor: '#ffffff' }}>
+                                                <div style={{ fontWeight: 'bold' }}><i className="bi bi-check-circle"></i> Payment status:</div>
+                                                <div style={{ fontStyle: 'italic' }}>{searchResult ? searchResult[0].Status : tax.Status}</div>
+                                            </div>
+                                            <div className="custom-card col-md-4" style={{ padding: '20px', borderRadius: '8px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', backgroundColor: '#ffffff' }}>
+                                                <div style={{ fontWeight: 'bold' }}><i className="bi bi-info-circle"></i> Final profit:</div>
+                                                <div style={{ fontStyle: 'italic' }}>Rs.{searchResult ? searchResult[0].Final_profit.toFixed(2) : tax.Final_profit.toFixed(2)}</div>
+                                            </div>
+                                        </div>
+                                        <div className="button-container text-center" style={{ marginTop: '25px' }}>
+                                            <Link to={`/dashboard/finance/tax/update/${tax.Tax_ID}`} className="btn btn-outline-primary me-2" style={{ width: '160px' }}><i className="ri-edit-line"></i>  Edit</Link>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
             </div>
-        </div>
         </Layout>
     );
 }

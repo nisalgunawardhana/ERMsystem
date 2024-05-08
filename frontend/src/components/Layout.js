@@ -43,7 +43,7 @@ function Layout({children}) {
             icon: 'ri-home-4-line'
         },
         {
-            name: 'Dashboard',
+            name: 'Admin Dashboard',
             path: '/users',
             icon: 'ri-user-settings-line'
         },
@@ -54,7 +54,7 @@ function Layout({children}) {
         },
         {
             name: 'Notes',
-            path: '/notes',
+            path: '/users/notes',
             icon: 'ri-task-line'
         },
     ];
@@ -87,104 +87,91 @@ function Layout({children}) {
     const financialManagerMenu = [
         {
             name: 'Dashboard',
-            path: '/finance',
+            path: '/dashboard/finance',
             icon: 'ri-line-chart-line'
         },
         {
             name: 'Profit Log',
-            path: `/profit/get/profitlog`,
+            path: `/dashboard/finance/profit`,
             icon: 'ri-currency-line'
         },
         {
             name: 'Other Expenses',
-            path: '/otherExpense',
+            path: '/dashboard/finance/otherExpense',
             icon: 'ri-coins-line'
         },
         {
             name: 'Tax Document',
-            path: '/profile',
+            path: '/dashboard/finance/tax',
             icon: 'ri-article-line'
         },
     ];
 
     //4. logistic managers
     const logisticManagerMenu = [
-        {
-            name: 'Home',
-            path: '/',
-            icon: 'ri-home-4-line'
-        },
+        
         {
             name: 'Dashboard',
-            path: '/adminDashboard',
-            icon: 'ri-user-settings-line'
+            path: '/dashboard/logistics',
+            icon: 'ri-align-item-left-fill'
         },
         {
             name: 'Stock',
-            path: '/stock',
+            path: '/dashboard/logistics/stock',
             icon: 'ri-archive-line',
         },
         {
-            name: 'Supplier',
-            path: '/supplier',
+            name: 'Suppliers',
+            path: '/dashboard/logistics/supplier',
             icon: 'ri-truck-line', 
+        },
+        {
+            name: 'Purchase Orders',
+            path: '/dashboard/logistics/purchaseOrder',
+            icon: 'ri-store-2-line', 
         }
     ];
     
     //5. staff manager
     const staffManagerMenu = [
         {
-            name: 'Home',
-            path: '/',
-            icon: 'ri-home-4-line'
-        },
-        {
             name: 'Dashboard',
-            path: '/adminDashboard',
+            path: '/dashboard/employee',
             icon: 'ri-user-settings-line'
         },
         {
-            name: 'Add Employee',
-            path: '/signup',
-            icon: 'ri-add-circle-line'
-        },
-        {
             name: 'Attendance',
-            path: '/attendance',
+            path: '/dashboard/employee/attendence',
             icon: 'ri-check-double-line'
         },
         {
-            name: 'Bonus Points',
-            path: '/bonus-points',
-            icon: 'ri-medal-line'
+            name: 'Leave',
+            path: '/dashboard/employee/leaveview',
+            icon: 'bi bi-calendar2-plus-fill'
         },
         {
-            name: 'Salaries',
-            path: '/salaries',
-            icon: 'ri-money-dollar-circle-line'
-        }
+            name: 'Salary',
+            path: '/dashboard/employee/salary',
+            icon: 'bi bi-cash-stack'
+        },
+
+        {
+            name: 'Tranee management',
+            path: '/dashboard/trainee',
+            icon: 'ri-home-4-line'
+        },
     ];
     
     //6.training coordinator
     const trainingCoordinatorMenu = [
         {
-            name: 'Home',
-            path: '/',
+            name: 'Dashboard',
+            path: '/dashboard/trainee',
             icon: 'ri-home-4-line'
         },
         {
-            name: 'Dashboard',
-            path: '/adminDashboard',
-            icon: 'ri-user-settings-line'
-        },
-        {
-            name: 'Add Trainee',
-            path: '/signup',
-            icon: 'ri-add-circle-line'
-        },
-        {
-            name: 'Add Session',
-            path: '/tasks',
+            name: 'Employee Management',
+            path: '/dashboard/employee',
             icon: 'ri-task-line'
         },
     ];
@@ -227,10 +214,13 @@ function Layout({children}) {
     }
 
     const handleLogout = () => {
+        const confirmLogout = window.confirm('Are you sure you want to logout?');
         // Show a confirmation message before logging out
-        localStorage.clear();
-        dispatch(setUser(null)); // Clear user state in Redux store
-        navigate('/login');
+        if (confirmLogout) {
+            localStorage.clear();
+            dispatch(setUser(null)); // Clear user state in Redux store
+            navigate('/login');
+        }
     };
 
     const getData = async () => {
@@ -245,7 +235,6 @@ function Layout({children}) {
             console.log(error);
         }
     };
-
 
     // Conditionally render children based on user role
     const renderChildren = () => {

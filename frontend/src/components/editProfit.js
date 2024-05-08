@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Modal } from 'react-bootstrap';
+import Layout from './Layout';
 
 function EditProfit() {
     const { id } = useParams(); // Get the expense ID from the URL params
@@ -14,10 +15,6 @@ function EditProfit() {
     const [totalOther, setTotalOther] = useState(0);
     const [totalSupp, setTotalSupp] = useState(0);
     const [totalSalary, setTotalSalary] = useState(0);
-    const [Profit_ID, setID] = useState("");
-    const [Month, setMonth] = useState("");
-    const [Date_created, setDate] = useState("");
-    const [Description, setDesc] = useState("");
     const [editedDate, setEditedDate] = useState(null);
     const [Rate, setRate] = useState("");
     const navigate = useNavigate();
@@ -163,6 +160,8 @@ function EditProfit() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
+        const totProfit = (profit - (profit * Rate /100));
+
         const newProfit = {
             Profit_ID: Profit.Profit_ID,
             Month: Profit.Month,
@@ -171,7 +170,7 @@ function EditProfit() {
             Salaries: totalSalary,
             EPF_ETF: total,
             Other_expenses: totalOther,
-            Monthly_profit: profit,
+            Monthly_profit: totProfit,
             Date_modified: editedDate,
             Description: Profit.Description
         };
@@ -180,16 +179,12 @@ function EditProfit() {
         axios.put(`http://localhost:8080/profit/update/${Profit._id}`, newProfit)
             .then((res) => {
                 console.log(res.data);
-                navigate(`/profit/get/${Profit.Profit_ID}`);
+                navigate(`/dashboard/finance/profit`);
             })
             .catch((err) => {
                 console.log(err);
                 // Handle error
             });
-    };
-
-    const handleBack = () => {
-        navigate(`/profit/get/${Profit.Profit_ID}`); // Reset specificExpense to null to display all expenses
     };
 
     useEffect(() => {
@@ -206,7 +201,8 @@ function EditProfit() {
     }, []); // Run only once after the component mount
 
     return (
-        <div className="container" style={{ marginTop: '90px' }}>
+        <Layout>
+        <div className="container" style={{ marginTop: '20px' }}>
             <div className="row justify-content-center">
                 <div className="col-lg-8">
                     <form onSubmit={handleSubmit}>
@@ -231,7 +227,7 @@ function EditProfit() {
                                             <label htmlFor="sales" className="form-label">
                                                 <i className="bi bi-currency-dollar me-2"></i>Sales income
                                             </label>
-                                            <input type="text" className="form-control" id="sales" name="Sales_income" value={totalAmount} onChange={handleChanges} readOnly />
+                                            <input type="text" className="form-control" id="sales" name="Sales_income" value={totalAmount ? totalAmount.toFixed(2) : ''} onChange={handleChanges} readOnly />
                                         </div>
                                         <div className="mb-3">
                                             <label htmlFor="supplier" className="form-label">
@@ -258,11 +254,11 @@ function EditProfit() {
                                                 <i className="bi bi-calculator me-2"></i>Epf and Etf
                                             </label>
                                             <div className="row">
-                                                <div className="col-md-9">
-                                                    <input type="text" className="form-control" id="epfetf" name="EPF_ETF" value={total} onChange={handleChanges} readOnly />
+                                                <div className="col-md-8">
+                                                    <input type="text" className="form-control" id="epfetf" name="EPF_ETF" value={total ? total.toFixed(2) : ''} onChange={handleChanges} readOnly />
                                                 </div>
-                                                <div className="col-md-3">
-                                                    <button type="button" className="btn btn-primary" onClick={handleShow}>Add</button>
+                                                <div className="col-md-4">
+                                                    <button type="button" className="btn btn-outline-primary" onClick={handleShow}><i className="ri-add-line"></i>Add</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -289,7 +285,7 @@ function EditProfit() {
                                 <div className="row">
                                     <div className="col">
                                         <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-                                            <button type="submit" className="btn btn-primary me-5 rounded">Update Details</button>
+                                            <button type="submit" className="btn btn-outline-primary me-5"><i className="ri-edit-line"></i>  Update Details</button>
                                         </div>
                                     </div>
                                 </div>
@@ -310,8 +306,8 @@ function EditProfit() {
                                             <label htmlFor="salary" className="form-label col-md-4">
                                                 <i className="bi bi-cash me-2"></i>Total Salaries
                                             </label>
-                                            <button type="button" onClick={handleCalculateEPFETF} className="btn btn-primary" style={{ marginLeft: '160px' }}>
-                                                <i className="bi bi-check2-square me-2"></i> Add EPF_ETF
+                                            <button type="button" onClick={handleCalculateEPFETF} className="btn btn-outline-primary" style={{ marginLeft: '160px' }}>
+                                            <i className="ri-add-line"></i>  Add EPF/ETF
                                             </button>
                                         </div>
                                     </div>
@@ -319,7 +315,7 @@ function EditProfit() {
                                 <div className="row">
                                     <div>
                                         <div className="mb-3">
-                                            <input type="text" className="form-control" id="salary" name="Date" value={totalSalary} />
+                                            <input type="text" className="form-control" id="salary" name="Date" value={totalSalary.toFixed(2)} />
                                         </div>
                                     </div>
                                 </div>
@@ -327,17 +323,17 @@ function EditProfit() {
                                     <label htmlFor="epf" className="form-label">
                                         <i className="bi bi-calculator me-2"></i>EPF Value
                                     </label>
-                                    <input type="text" className="form-control" id="epf" value={totalEPF} />
+                                    <input type="text" className="form-control" id="epf" value={totalEPF.toFixed(2)} />
                                 </div>
                                 <div className="mb-3">
                                     <label htmlFor="etf" className="form-label">
                                         <i className="bi bi-calculator me-2"></i>ETF Value
                                     </label>
-                                    <input type="text" className="form-control" id="etf" value={totalETF} />
+                                    <input type="text" className="form-control" id="etf" value={totalETF.toFixed(2)} />
                                 </div>
                                 {/* Submit button */}
-                                <button type="submit" className="btn btn-primary" style={{ marginLeft: '180px' }}>
-                                    <i className="bi bi-arrow-right-circle me-2"></i> Submit
+                                <button type="submit" className="btn btn-outline-primary" style={{ marginLeft: '180px' }}>
+                                <i className="ri-check-line"></i>  Submit
                                 </button>
 
                             </form>
@@ -346,7 +342,7 @@ function EditProfit() {
                 </div>
             </div>
         </div>
-
+        </Layout>
     );
 }
 export default EditProfit;

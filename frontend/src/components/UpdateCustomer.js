@@ -15,6 +15,12 @@ function UpdateCustomer() {
     point: 0,
     gender: 'male'
   });
+  const [formValid, setFormValid] = useState(false);
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setCustomer({ ...customer, [name]: value });
+    };
 
   useEffect(() => {
     axios.get(`http://localhost:8080/customer/${id}`)
@@ -36,9 +42,22 @@ function UpdateCustomer() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const isValidCustomerId = /^\d{10}$/.test(customer.customer_id);
+
+        if (isValidCustomerId) {
+            // Handle form submission (e.g., send data to backend)
+            console.log('Form submitted:', customer);
+            // Reset form after submission (if needed)
+            setCustomer({ customer_id: '' });
+            setFormValid(false); // Reset form validity state
+        } else {
+            // Display error message or handle invalid input
+            alert('Please enter a 10-digit customer ID (phone number).');
+            return;
+        }
     axios.put(`http://localhost:8080/customer/update/${id}`, customer)
       .then(() => {
-        navigate('/customer');
+        navigate('/dashboard/cashier/Customer');
       })
       .catch(error => {
         console.error('Error updating customer:', error);
@@ -49,19 +68,21 @@ function UpdateCustomer() {
     <Layout>
     <div className="custom-form-container">
       <div className="d-flex justify-content-end mb-3">
-        <Button variant="secondary" onClick={() => navigate('/customer')}>Back</Button>
+        
       </div>
       <h2>Update Customer</h2>
       <Form onSubmit={handleSubmit}>
-        <Form.Group controlId="customerId">
-          <Form.Label>Customer ID</Form.Label>
-          <Form.Control
-            type="text"
-            name="customer_id"
-            value={customer.customer_id}
-            onChange={handleChange}
-          />
-        </Form.Group>
+      <Form.Group controlId="customer_id">
+                <Form.Label>Customer ID (Phone Number)</Form.Label>
+                <Form.Control
+                    type="text"
+                    name="customer_id"
+                    onChange={handleInputChange}
+                    value={customer.customer_id}
+                    placeholder="Enter 10-digit phone number"
+                    required
+                />
+            </Form.Group>
         <Form.Group controlId="customerName">
           <Form.Label>Customer Name</Form.Label>
           <Form.Control
@@ -103,11 +124,19 @@ function UpdateCustomer() {
             <option value="other">Other</option>
           </Form.Control>
         </Form.Group>
-        <Button variant="primary" type="submit">
-          Update Customer
-        </Button>
+        <div style={{ marginTop: '10px' }}>
+  <Button variant="primary" type="submit">
+    Update Customer
+  </Button>
+  <span style={{ marginLeft: '10px' }}></span>
+  <Button variant="secondary" onClick={() => navigate('/dashboard/cashier/Customer')}>
+    Back
+  </Button>
+</div>
+
       </Form>
     </div>
+  
     </Layout>
   );
 }

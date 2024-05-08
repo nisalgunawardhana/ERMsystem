@@ -1,7 +1,6 @@
-import React from 'react'
-import { Form, Input, Button, Row, Col } from 'antd';
+import React, { useState, useEffect } from "react";
+import { Form, Input, Button, Select, Col, Row } from 'antd';
 import { Link, useNavigate } from 'react-router-dom'
-import registerImage from '../images/register.jpg'
 import axios from "axios"
 import { toast } from "react-hot-toast"
 import { useDispatch } from "react-redux"
@@ -9,9 +8,21 @@ import { showLoading, hideLoading } from '../redux/alertsSlice';
 import '../User.css'
 import Layout from '../components/Layout';
 
+const { Option } = Select;
+
 function Register() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [currentDateTime, setCurrentDateTime] = useState('');
+    
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            const currentDate = new Date();
+            setCurrentDateTime(currentDate.toLocaleString());
+        }, 1000); // Update every second
+    
+        return () => clearInterval(intervalId); // Cleanup on component unmount
+    }, []);
 
     const onFinish = async(values) => {
         //to make sure all the fields are filled
@@ -27,6 +38,30 @@ function Register() {
         } else if (!values.password) {
             toast.error('Enter a password');
             return;
+        }
+
+        // Set backend values based on role selection
+        switch (values.role) {
+            case 'isAdmin':
+                values.isAdmin = true;
+                break;
+            case 'isCashier':
+                values.isCashier = true;
+                break;
+            case 'isFinancialManager':
+                values.isFinancialManager = true;
+                break;
+            case 'isLogisticManager':
+                values.isLogisticManager = true;
+                break;
+            case 'isTrainingCoordinator':
+                values.isTrainingCoordinator = true;
+                break;
+            case 'isStaffManager':
+                values.isStaffManager = true;
+                break;
+            default:
+                break;
         }
 
         try {
@@ -47,44 +82,72 @@ function Register() {
 
     return (
         <Layout>
-
-<div className='register-container'>
-            <div className='register-background'>
-                <img src={registerImage} alt='Register Image'/>   
-            </div>
-            
-
-            <div className='authentication'>
-                <div className='authentication-form card p-4'>
-                <h1 className='card-topic'>New System User</h1>
-                
-                <Form layout='vertical' onFinish={onFinish}> 
-                    <Form.Item required label='First Name' name='first_name' >
-                        <Input placeholder='First Name'/>
-                    </Form.Item> 
-                        
-                    <Form.Item required  label='Last Name' name='last_name'>
-                        <Input placeholder='Last Name'/>
-                    </Form.Item>        
-                   
-                    <Form.Item required label='Email' name='email'>
-                        <Input placeholder='Email'/>
-                    </Form.Item>
-
-                    <Form.Item required label='Password' name='password'>
-                        <Input placeholder='Password' type='password'/>
-                    </Form.Item>
-                
-                    <Button className='primary-button my-1' htmlType='submit'>Create User</Button>
-            
-                </Form>
-                
+            <div className="p-4">
+            <div className="row">
+            {/* Add user Text */}
+            <div className="col-md-6">
+                <div className="system-users p-3">
+                    <h2>Add New System User</h2>
                 </div>
             </div>
+                
+            {/* Current Date and Time */}
+            <div className="col-md-6 text-md-end mb-6">
+                <div className="date-time p-4">
+                    <span className="date">{currentDateTime.split(',')[0]}</span>
+                    <span className="time"> | {currentDateTime.split(',')[1]}</span>
+                </div>                     
+            </div>
         </div>
+              
+                    <Form layout='vertical' onFinish={onFinish}> 
+                        <Row gutter={[50, 13]}>
+                            <Col span={12}>
+                                <Form.Item required label='First Name' name='first_name' >
+                                    <Input placeholder='First Name'/>
+                                </Form.Item> 
+                            </Col>
+                            
+                            <Col span={12}>
+                                <Form.Item required  label='Last Name' name='last_name'>
+                                    <Input placeholder='Last Name'/>
+                                </Form.Item>   
+                            </Col>
+                        </Row>     
 
-        </Layout>
-        
+                        <Row gutter={[40, 13]}>  
+                            <Col span={12}>
+                                <Form.Item required label='Email' name='email'>
+                                    <Input placeholder='Email' type='email'/>
+                                </Form.Item>
+                            </Col>
+                            
+                            <Col span={12}>
+                                <Form.Item required label='Password' name='password'>
+                                    <Input placeholder='Password' type='password'/>
+                                </Form.Item>
+                            </Col>
+                        </Row>
+
+                        <Form.Item required label='Role' name='role'>
+                            <Select placeholder="Select a role">
+                                <Option value="User">User</Option>
+                                <Option value="isAdmin">Admin</Option>
+                                <Option value="isCashier">Cashier</Option>
+                                <Option value="isFinancialManager">Financial Manager</Option>
+                                <Option value="isLogisticManager">Logistic Manager</Option>
+                                <Option value="isTrainingCoordinator">Staff Training Coordinator</Option>
+                                <Option value="isStaffManager">Staff Manager</Option>
+                            </Select>
+                        </Form.Item>
+
+                        <br/>
+                        <div>
+                        <Button className='btn btn-outline-primary' htmlType='submit'>Create User</Button>
+                        </div>
+                    </Form>        
+                    </div>
+                </Layout>
     )
 }
 

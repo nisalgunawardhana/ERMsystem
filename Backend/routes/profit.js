@@ -41,27 +41,24 @@ router.route("/add").post((req, res) => {
 
 router.route("/add/check").post(async (req, res) => {
   const submittedDate = req.body.Date_modified; // Assuming Date contains the date in the format 2024-01-25T00:00:00.000+00:00
-
-  // Extract the month and year from the submitted date
-  const submittedMonth = new Date(submittedDate).getMonth() + 1; // Add 1 because getMonth() returns zero-based index
   const submittedYear = new Date(submittedDate).getFullYear();
 
   try {
-    // Check if profit log already exists for the submitted month and current year
+    // Check if profit log already exists for the submitted month and year
     const existingProfit = await Profit.findOne({
+      Month: req.body.Month,
       $expr: {
         $and: [
-          { $eq: [{ $month: "$Date_modified" }, submittedMonth] }, // Check month
           { $eq: [{ $year: "$Date_modified" }, submittedYear] } // Check year
         ]
       }
     });
 
     if (existingProfit) {
-      // If profit log already exists, return a response indicating that it exists
+      // If profit log already exists for the specified month and year
       return res.status(200).json({ exists: true, message: "Profit Log already exists", existingProfit });
     } else {
-      // If profit log doesn't exist, return a response indicating that it doesn't exist
+      // If profit log doesn't exist for the specified month and year
       return res.status(200).json({ exists: false, message: "Profit Log doesn't exist" });
     }
   } catch (error) {
@@ -69,16 +66,7 @@ router.route("/add/check").post(async (req, res) => {
     // Handle database errors
     return res.status(500).json({ error: "Internal Server Error" });
   }
-
 });
-
-router.route("/").get((req, res) => {
-  Profit.find().then((profit) => {
-    res.json(profit)
-  }).catch((err) => {
-    console.log(err)
-  })
-})
 
 router.route("/search/:month").get((req, res) => {
   const { month } = req.params;
@@ -190,7 +178,7 @@ router.route("/update/:id").put(async (req, res) => {
 })
 
 //route to get profit log for latest month
-router.route("/get/profitlog").get(async (req, res) => {
+router.route("/").get(async (req, res) => {
   const currentDate = new Date();
   let currentMonth = currentDate.getMonth() + 1; // Adding 1 because getMonth() returns zero-based index
   let currentYear = currentDate.getFullYear();
@@ -520,9 +508,27 @@ function monthToNumeric(month) {
   return monthMap[month];
 }
 
+//function to get monthly sales for billing system
 router.route("/get/bills/total").get(async (req, res) => {
   try {
+    // Get the current month and year
+    const currentMonth = new Date().getUTCMonth() + 1; // Months are zero-indexed, so add 1
+    const currentYear = new Date().getUTCFullYear();
+
+    // Construct the start and end dates for the current month
+    const startDate = new Date(Date.UTC(currentYear, currentMonth - 1, 1, 0, 0, 0)); // Start of the month
+    const endDate = new Date(Date.UTC(currentYear, currentMonth, 0, 23, 59, 59)); // End of the month
+
+    // Aggregate sales details for the current month
     const totalAmount = await bills.aggregate([
+      {
+        $match: {
+          billing_date: {
+            $gte: startDate,
+            $lte: endDate
+          }
+        }
+      },
       {
         $group: {
           _id: null,
@@ -530,7 +536,8 @@ router.route("/get/bills/total").get(async (req, res) => {
         }
       }
     ]);
-    res.json({ totalAmount: totalAmount[0].totalAmount });
+
+    res.json({ totalAmount: totalAmount.length > 0 ? totalAmount[0].totalAmount : 0 });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Internal server error" });

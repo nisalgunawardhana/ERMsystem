@@ -17,6 +17,15 @@ router.route("/add").post((req,res)=>{
     const total_order_amount = req.body.total_order_amount;
     const order_status = req.body.order_status;
     const payment_status = req.body.payment_status;
+    const payment_date = req.body.payment_date;
+    const sup_deliver_date = req.body.sup_deliver_date;
+    const leadTime = req.body.leadTime;
+    const qualityOfGoods = req.body.qualityOfGoods;
+    const quantityAccuracy = req.body.quantityAccuracy;
+    const responsiveness = req.body.responsiveness;
+    const costEffectiveness = req.body.costEffectiveness;
+    const additional = req.body.additional;
+    const overallSatisfaction = req.body.overallSatisfaction;
 
     const newPurchaseOrder = new purchaseOrder({
         purchaseOrder_id,
@@ -32,7 +41,16 @@ router.route("/add").post((req,res)=>{
         invoice_no,
         total_order_amount,
         order_status,
-        payment_status
+        payment_status,
+        payment_date, 
+        sup_deliver_date, 
+        leadTime, 
+        qualityOfGoods, 
+        quantityAccuracy, 
+        responsiveness, 
+        costEffectiveness, 
+        additional,
+        overallSatisfaction
     })
     
     newPurchaseOrder.save().then(()=>{
@@ -56,7 +74,7 @@ router.route("/").get((req,res)=>{
 //UPDATE
 router.route("/update/:id").put(async (req,res)=>{
     let poID = req.params.id;
-    const {purchaseOrder_id, supplier_id, supplier_name, order_date, deliver_date, order_items, order_amount, delivery_information, payment_information, additional_infomation, invoice_no, total_order_amount, order_status, payment_status} = req.body;
+    const {purchaseOrder_id, supplier_id, supplier_name, order_date, deliver_date, order_items, order_amount, delivery_information, payment_information, additional_infomation, invoice_no, total_order_amount, order_status, payment_status, payment_date, sup_deliver_date, leadTime, qualityOfGoods, quantityAccuracy, responsiveness, costEffectiveness, additional,  overallSatisfaction} = req.body;
 
     const updatePO = {
         purchaseOrder_id,
@@ -72,7 +90,16 @@ router.route("/update/:id").put(async (req,res)=>{
         invoice_no,
         total_order_amount,
         order_status,
-        payment_status
+        payment_status,
+        payment_date, 
+        sup_deliver_date, 
+        leadTime, 
+        qualityOfGoods, 
+        quantityAccuracy, 
+        responsiveness, 
+        costEffectiveness, 
+        additional,
+        overallSatisfaction
     }
 
     const update = await purchaseOrder.findByIdAndUpdate(poID, updatePO).then(() => {
@@ -85,17 +112,6 @@ router.route("/update/:id").put(async (req,res)=>{
 
 
 //DELETE
-// router.route("/delete/:id").delete(async (req,res) => {
-//     let poID = req.params.id;
-
-//     await purchaseOrder.findByIdAndDelete(poID).then(() => {
-//         res.status(200).send({status: "Purchase Order deleted"});
-//     }).catch((errr) => {
-//         console.log(errr);
-//         res.status(500).send({status: "Error with deleting Purchase Order"});
-//     })
-// })
-
 router.delete('/delete/:id', async (req, res) => {
     try {
       const deletedOrder = await purchaseOrder.findByIdAndDelete(req.params.id);
@@ -121,5 +137,127 @@ router.route("/get/:id").get(async (req,res) => {
         res.status(500).send({status: "Error with getting purchase Order", error: err.message});
     })
 })
+
+//GET TOTAL ORDER AMOUNTS
+// router.get('/total', async (req, res) => {
+//     try {
+//         const result = await purchaseOrder.aggregate([
+//             {
+//                 $group: {
+//                     _id: null,
+//                     totalAmount: { $sum: "$total_order_amount" }
+//                 }
+//             }
+//         ]);
+//         res.json(result[0]);
+//     } catch (err) {
+//         res.status(500).json({ message: err.message });
+//     }
+// });
+
+router.get('/total', async (req, res) => {
+    try {
+        const result = await purchaseOrder.aggregate([
+            {
+                $group: {
+                    _id: null,
+                    totalAmount: { $sum: { $toDouble: "$total_order_amount" } } // Convert to double
+                }
+            }
+        ]);
+        res.json(result[0]);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
+
+//GET PURCHASE ORDER IDS BY MONTH
+router.get('/idsByMonth/:month', async (req, res) => {
+    const { month } = req.params;
+    try {
+        const purchaseOrders = await purchaseOrder.find();
+        const purchaseOrderIDs = purchaseOrders
+            .filter(order => {
+                const orderMonth = new Date(order.order_date).getMonth();
+                return orderMonth === getMonthNumber(month); // Convert month name to number
+            })
+            .map(order => order.purchaseOrder_id);
+        res.json({ purchaseOrderIDs });
+    } catch (error) {
+        console.error("Error fetching purchase orders by month:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+// Function to convert month name to number
+const getMonthNumber = (monthName) => {
+    const months = {
+        "January": 0,
+        "February": 1,
+        "March": 2,
+        "April": 3,
+        "May": 4,
+        "June": 5,
+        "July": 6,
+        "August": 7,
+        "September": 8,
+        "October": 9,
+        "November": 10,
+        "December": 11
+    };
+    return months[monthName];
+};
+
+
+// GET PURCHASE ORDERS FOR TODAY'S DATE
+router.get('/today', async (req, res) => {
+    try {
+        const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+        const purchaseOrders = await purchaseOrder.find({ order_date: today });
+        res.json({ purchaseOrders });
+    } catch (error) {
+        console.error("Error fetching purchase orders for today:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+
+//DOWNLOAD PURCHASE ORDER
+router.route("/download").get(async (req, res) => {
+    try {
+      const purchaseOrders = await purchaseOrder.find();
+      const fields = [
+        "purchaseOrder_id",
+        "supplier_id",
+        "supplier_name",
+        "order_date",
+        "deliver_date",
+        "order_amount",
+        "delivery_information.delivery_method",
+        "delivery_information.delivery_costs",
+        "payment_information.payment_terms",
+        "payment_information.payment_method",
+        "additional_infomation",
+        "invoice_no",
+        "total_order_amount",
+        "order_status",
+        "payment_status",
+      ]; 
+      const json2csv = require('json2csv').parse;
+  
+      const csv = json2csv(purchaseOrders, { fields });
+  
+      // Send the CSV data in the response
+      res.setHeader('Content-Type', 'text/csv');
+      res.setHeader('Content-Disposition', 'attachment; filename=purchase_orders.csv');
+      res.status(200).send(csv);
+    } catch (error) {
+      console.error("Error generating CSV:", error);
+      res.status(500).json({ error: "Error generating CSV" });
+    }
+  });
+  
+
 
 module.exports = router;

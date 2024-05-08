@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
-import Layout from './Layout';
+import Layout from '../Layout';
 
 const CashierDashboard = () => {
     // State variables to hold data
-    const [salesData, setSalesData] = useState([]);
-    const [totalSales, setTotalSales] = useState(0);
     const [error, setError] = useState('');
     const [totalAmount, setTotalAmount] = useState(0);
     const [totalCus, setTotalCus] = useState(0);
@@ -130,7 +127,7 @@ const CashierDashboard = () => {
                             </a>
                         </div>
                         <div class="col">
-                        <a href="/customer" className="card-link" style={{ textDecoration: 'none', color: 'inherit' }}>
+                        <a href="/dashboard/cashier/Customer" className="card-link" style={{ textDecoration: 'none', color: 'inherit' }}>
                             <div class="card h-100 text-center">
                                 <div class="card-body">
                                     <i class="bi bi-person-plus fs-1 mb-3"></i>
@@ -155,7 +152,7 @@ const CashierDashboard = () => {
                         <a href="/dashboard/cashier/billing" className="card-link" style={{ textDecoration: 'none', color: 'inherit' }}>
                             <div class="card h-100 text-center">
                                 <div class="card-body">
-                                    <i class="bi bi-moon fs-1 mb-3"></i>
+                                    <i class="bi bi-cash-stack fs-1 mb-3"></i>
                                     <h5 class="card-title fs-5 mb-3">Manage Bills</h5>
                                     <p class="card-text fs-6">Manage Bills Here!</p>
                                 </div>

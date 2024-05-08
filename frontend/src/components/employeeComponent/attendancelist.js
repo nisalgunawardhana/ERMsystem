@@ -1,67 +1,93 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Modal, Button } from 'react-bootstrap';
+import Layout from '../Layout';
+import employeecomponent from './employee'
 
-export default function Attendance() {
-    const [uniqueDates, setUniqueDates] = useState([]);
+export default function Employee() {
+    const [employeeIds, setEmployeeIds] = useState([]);
     const [selectedDate, setSelectedDate] = useState('');
-    const [attendanceRecords, setAttendanceRecords] = useState([]);
-    const [showPreviewModal, setShowPreviewModal] = useState(false);
+    const [link, setLink] = useState('http://localhost:3000/dashboard/employee/attendence/form');
 
-    useEffect(() => {
-        axios.get('http://localhost:8080/attendance/') // Fetch all attendance records
-            .then((res) => {
-                // Extract unique dates from attendance records
-                const uniqueDates = [...new Set(res.data.map(record => record.date))];
-                setUniqueDates(uniqueDates);
-            })
-            .catch((err) => {
-                alert(err.message);
-            });
-    }, []);
+    // Function to handle date input change
+    const handleDateChange = (e) => {
+        setSelectedDate(e.target.value);
+    };
 
-    // Function to handle date selection
-    const handleDateSelect = (date) => {
-        setSelectedDate(date);
-        // Fetch attendance records for the selected date
-        axios.get(`http://localhost:8080/attendance/date/${date}`)
-            .then((res) => {
-                setAttendanceRecords(res.data);
-                setShowPreviewModal(true); // Show the preview modal
+    // Function to fetch employee IDs through a specific date
+    const fetchEmployeeIds = () => {
+        axios.get(`http://localhost:8080/attendance/employeeIds/${selectedDate}`)
+            .then(res => {
+                console.log('Response from backend:', res.data); // Log response from backend
+                setEmployeeIds(res.data);
             })
-            .catch((err) => {
-                alert(err.message);
+            .catch(err => {
+                console.error('Error fetching employee IDs:', err);
+                // Handle error (e.g., show error message)
             });
     };
 
+    
+
+    useEffect(() => {
+        // Fetch employee IDs when the component mounts or when the selected date changes
+        if (selectedDate) {
+            fetchEmployeeIds();
+        }
+    }, [selectedDate]);
+    const copyLink = () => {
+        navigator.clipboard.writeText(link);
+        alert('Link copied to successfully!');
+    };
+
     return (
-        <div className="container">
-            <h4>Attendance Records</h4>
+        <Layout>
+            <div className="container">
+                {/* Your existing JSX code */}
+                <div className="row">
+                    <div className="col-md-12">
+                        <div className="card">
+                            <div className="card-body">
+                                <h2 className="card-title">Employee Attendance Record</h2>
+                                <div className="mb-3">
+                                    <label htmlFor="dateInput" className="form-label">Select Date:</label>
+                                    <input type="date" id="dateInput" className="form-control" value={selectedDate} onChange={handleDateChange} />
+                                </div>
+                                <button  className="btn btn-outline-primary" style={{ margin: '0 5px' }} onClick={fetchEmployeeIds}>Show Employee Attendance</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-            {/* Display unique dates */}
-            <div className="dates-container">
-                {uniqueDates.map((date, index) => (
-                    <button key={index} onClick={() => handleDateSelect(date)} className="date-button">{date}</button>
-                ))}
+                {/* Display fetched employee IDs */}
+                <div className="row">
+                    <div className="col-md-12">
+                        <div className="card">
+                            <div className="card-body">
+                                <h2 className="card-title">Show Related Attendance</h2>
+                                <ul>
+                                    {employeeIds.map(employeeId => (
+                                        <li key={employeeId}>{employeeId} - {selectedDate}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="card m-3">
+                    <div className="card-body">
+                        <h3 className="card-text">This is the Attendance Taken Link</h3>
+                    </div>
+                    <div className="card-footer">
+                        <div className="input-group">
+                            <input type="text" className="form-control" value={link} readOnly />
+                            <div className="input-group-append">
+                                <button className="btn btn-outline-secondary" style={{ margin: '0 5px' }} onClick={copyLink}>Copy Link</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            {/* Preview Modal */}
-            <Modal show={showPreviewModal} onHide={() => setShowPreviewModal(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Attendance Records for {selectedDate}</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    {/* Display attendance records */}
-                    <ul>
-                        {attendanceRecords.map((record, index) => (
-                            <li key={index}>{record.employee_Id}</li>
-                        ))}
-                    </ul>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowPreviewModal(false)}>Close</Button>
-                </Modal.Footer>
-            </Modal>
-        </div>
+        </Layout>
     );
 }

@@ -33,6 +33,7 @@ export default function Bills() {
     const [reportContent, setReportContent] = useState('');
 
 
+
     useEffect(() => {
         function getbill() {
             axios.get("http://localhost:8080/bills/").then((res) => {
@@ -78,6 +79,10 @@ export default function Bills() {
             .then(() => {
                 setShowDeleteConfirmation(false);
                 setbill(prevBill => prevBill.filter(b => b._id !== id));
+
+                // Calculate the new total amount after deleting the bill
+                const newTotalAmount = totalAmount - bill.find(b => b._id === id).total_amount;
+                setTotalAmount(newTotalAmount);
                 toast.success("Bill deleted successfully!");
             })
             .catch((err) => {
@@ -168,7 +173,7 @@ export default function Bills() {
             <tr>
                 <td>${bill.customer_id}</td>
                 <td>${bill.billing_date}</td>
-                <td>${bill.total_amount}</td>
+                <td>${bill.total_amount.toFixed(2)}</td>
             </tr>
         `).join('')}
         </tbody>
@@ -223,7 +228,9 @@ export default function Bills() {
     };
 
     const filteredBills = bill.filter(bills =>
-        bills.customer_id.toLowerCase().includes(searchQuery.toLowerCase())
+        bills.customer_id.toLowerCase().includes(searchQuery.toLowerCase()) &&
+        (!startDate || new Date(bills.billing_date) >= new Date(startDate)) &&
+        (!endDate || new Date(bills.billing_date) <= new Date(endDate))
     );
 
     const formatDate = (dateString) => {
@@ -250,18 +257,6 @@ export default function Bills() {
         setbill(updatedBill);
     };
 
-    const handleDeleteSelected = () => {
-        const selectedBills = bill.filter(b => b.selected).map(b => b._id);
-        selectedBills.forEach(id => {
-            axios.delete(`http://localhost:8080/bills/delete/${id}`)
-                .then(() => {
-                    setbill(prevBills => prevBills.filter(b => b._id !== id));
-                })
-                .catch((err) => {
-                    alert(err.message);
-                });
-        });
-    };
 
     const indexOfLastBill = currentPage * billsPerPage;
     const indexOfFirstBill = indexOfLastBill - billsPerPage;
@@ -295,43 +290,40 @@ export default function Bills() {
         setSecretCode('');
     };
     // Function to delete all selected bills
+
     const handleDeleteAllSelected = () => {
 
 
         // Define the actual secret code
-        const actualSecretCode = 'DELETE_ALL_BILLS';
+        const actualSecretCode = '1111';
 
         // Verify the secret code
         if (secretCode === actualSecretCode) {
-            // Show toaster message before initiating delete
             toast.promise(
-                // Promise to delete all selected bills
                 new Promise((resolve, reject) => {
-                    // Perform delete operation
                     const selectedBills = bill.filter(b => b.selected).map(b => b._id);
-                    // Check if any bills are selected
                     if (selectedBills.length > 0) {
-                        // Delete all selected bills
                         Promise.all(selectedBills.map(id => axios.delete(`http://localhost:8080/bills/delete/${id}`)))
                             .then(() => {
                                 resolve("Bills deleted successfully!");
                                 setbill(prevBills => prevBills.filter(b => !b.selected));
+                                // Calculate the new total amount after deleting the selected bills
+                                const newTotalAmount = totalAmount - bill.filter(b => b.selected).reduce((total, b) => total + b.total_amount, 0);
+                                setTotalAmount(newTotalAmount);
                                 resetSecretCode();
                             })
                             .catch((err) => {
                                 reject(err.message);
                             });
                     } else {
-                        // If no bills are selected, reject with a message
                         reject("No bills selected for deletion.");
                     }
                 }),
-                // Toast options
                 {
                     loading: 'Deleting...',
                     success: (msg) => {
-                        handleCloseDeleteAllConfirmation(); // Close confirmation modal
-                        return msg; // Show success message
+                        handleCloseDeleteAllConfirmation();
+                        return msg;
                     },
                     error: (err) => {
                         handleCloseDeleteAllConfirmation(); // Close confirmation modal
@@ -340,7 +332,7 @@ export default function Bills() {
                 }
             );
         } else {
-            alert("Invalid secret code. Please enter the correct secret code to delete all selected bills.");
+            toast.error("Invalid secret code. Please enter the correct secret code to delete all selected bills.");
         }
     };
 
@@ -425,19 +417,34 @@ export default function Bills() {
                 <div className="d-flex flex-wrap align-items-center">
                     <h2 style={{ marginRight: '25px' }}> All Bills</h2>
                     {/* Add expense button */}
-                    <Link to="/dashboard/cashier/bill/CreateBill" className="btn btn-outline-success"><i class="bi bi-plus-circle-fill me-2"></i>Create New Bill</Link>
+                    <Link to="/dashboard/cashier/billing/CreateBill" className="btn btn-outline-success"><i class="bi bi-plus-circle-fill me-2"></i>Create New Bill</Link>
                 </div>
                 <div className="d-flex justify-content-between align-items-center mb-3">
-                    <div className="flex-grow-1">
-                        <input type="text" className="form-control" placeholder="Search by Customer ID" value={searchQuery} onChange={handleSearch} />
-                    </div>
-                    <div>
-                        <button onClick={handleSelectAll} className="btn btn-outline-secondary" style={{ margin: '0 5px' }}>
+                    
+                        <div className="mr-3 me-4">
+                            <span>Customer ID:</span>
+                            <input type="text" className="form-control" placeholder="Search by Customer ID" value={searchQuery} onChange={handleSearch} style={{ height: '38px', width: '500px' }} />
+                        </div>
+                        <div className="mr-3 me-2">
+                            <span>Start Date:</span>
+                            <Form.Control type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)}  style={{ height: '38px', width: '250px' }}/>
+                        </div>
+                        <div>
+                            <span>End Date:</span>
+                            <Form.Control type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} style={{ height: '38px', width: '250px' }} />
+                        </div>
+                    
+                    {/*<div className="d-flex align-items-center">
+                        <button onClick={handleSelectAll} className="btn btn-outline-secondary mr-2 me-2">
                             {selectAll ? 'Unselect All' : 'Select All'}
                         </button>
-                        <button className="btn btn-outline-danger" onClick={handleOpenDeleteAllConfirmation} style={{ margin: '0 5px' }}>Delete All Selected</button>
-                    </div>
+                        <button className="btn btn-outline-danger" onClick={handleOpenDeleteAllConfirmation}>Reset All Selected</button>
+                    </div>*/}
                 </div>
+
+
+
+
 
 
                 <div className="card">
@@ -453,7 +460,7 @@ export default function Bills() {
                                     <th style={{ textAlign: 'center' }}>Items</th>
                                     <th>Total Amount</th>
                                     <th style={{ textAlign: 'center' }}>Action</th>
-                                    <th style={{ textAlign: 'center' }}>Select</th>
+                                    {/*<th style={{ textAlign: 'center' }}>Select</th>*/}
 
 
                                 </tr>
@@ -480,9 +487,9 @@ export default function Bills() {
                                         <td style={{ textAlign: 'center' }}>
                                             <button onClick={() => handlePreview(bills)} className="btn btn-outline-dark" style={{ margin: '0 5px' }}>Preview</button>
                                             <Link to={`/dashboard/cashier/billing/update/${bills._id}`} className="btn btn-outline-primary" style={{ margin: '0 5px' }}>Update</Link>
-                                            <button onClick={() => handleOpenDeleteConfirmation(bills._id)} className="btn btn-outline-danger" style={{ margin: '0 5px' }}>Delete</button>
+                                            {/*<button onClick={() => handleOpenDeleteConfirmation(bills._id)} className="btn btn-outline-danger" style={{ margin: '0 5px' }}>Delete</button>*/}
                                         </td>
-                                        <td style={{ textAlign: 'center' }}><input type="checkbox" checked={bills.selected || false} onChange={() => handleSelectBill(bills._id)} /></td>
+                                        {/*<td style={{ textAlign: 'center' }}><input type="checkbox" checked={bills.selected || false} onChange={() => handleSelectBill(bills._id)} /></td>*/}
                                     </tr>
                                 ))}
                             </tbody>
@@ -531,6 +538,8 @@ export default function Bills() {
                     />
                 )}
 
+
+
                 {/* Delete confirmation modal */}
                 <Modal show={showDeleteConfirmation} onHide={handleCloseDeleteConfirmation}>
                     <Modal.Header closeButton>
@@ -543,6 +552,7 @@ export default function Bills() {
                     </Modal.Footer>
                 </Modal>
 
+                {/* Delete confirmation   modal for delete all */}
                 <Modal show={showDeleteAllConfirmation} onHide={handleCloseDeleteAllConfirmation}>
                     <Modal.Header closeButton>
                         <Modal.Title>Confirm Delete All</Modal.Title>
@@ -562,7 +572,7 @@ export default function Bills() {
                     </Modal.Footer>
                 </Modal>
 
-                {/* Modal for inputting start and end dates */}
+                {/* Modal for repo gen start and end dates */}
                 <Modal show={showModal} onHide={() => setShowModal(false)}>
                     <Modal.Header closeButton>
                         <Modal.Title>Generate Report</Modal.Title>
@@ -589,7 +599,7 @@ export default function Bills() {
                 </Modal>
 
 
-                <Modal show={showReportModal} onHide={closeReportModal} size="lg">
+                <Modal show={showReportModal} onHide={closeReportModal} size="lg" >
                     <Modal.Header closeButton>
                         <Modal.Title>Bills Report</Modal.Title>
                     </Modal.Header>

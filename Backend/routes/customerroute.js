@@ -174,11 +174,11 @@ router.get("/calculate-loyalty-points/:customer_id", async (req, res) => {
         if (!isNaN(totalAmount)) {
             // Calculate loyalty points (example calculation, adjust as needed)
             let loyaltyPoints = 0;
-            if (totalAmount > 1000 && totalAmount < 2000) {
+            if (totalAmount >= 1000 && totalAmount < 2000) {
                 loyaltyPoints = 1;
-            } else if (totalAmount > 2000 && totalAmount < 5000) {
+            } else if (totalAmount >= 2000 && totalAmount < 5000) {
                 loyaltyPoints = 3;
-            } else if (totalAmount > 5000) {
+            } else if (totalAmount >= 5000) {
                 loyaltyPoints = 5;
             }
 
@@ -205,6 +205,23 @@ router.get("/calculate-loyalty-points/:customer_id", async (req, res) => {
         res.status(500).json({ error: "Error calculating loyalty points" });
     }
 });
+
+router.route("/email/:customerId").get(async (req, res) => {
+  const customerId = req.params.customerId;
+
+  try {
+    const customer = await Customer.findOne({ customer_id: customerId });
+    if (customer) {
+      res.json({ email: customer.email });
+    } else {
+      res.status(404).json({ message: 'Customer not found' });
+    }
+  } catch (error) {
+    console.error("Error fetching customer email:", error);
+    res.status(500).json({ message: 'Error fetching customer email' });
+  }
+});
+
 
 
 module.exports = router;

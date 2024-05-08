@@ -15,10 +15,23 @@ function SystemUsers() {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectAll, setSelectAll] = useState(false);
     const [totalUsers, setTotalUsers] = useState(0);
+    const [currentDateTime, setCurrentDateTime] = useState('');
+
+    // Add a state to hold the count of filtered users
+    const [filteredUserCount, setFilteredUserCount] = useState(0);
 
     useEffect(() => {
         // Fetch users data when the component mounts
         fetchUsers(); 
+    }, []);
+
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            const currentDate = new Date();
+            setCurrentDateTime(currentDate.toLocaleString());
+        }, 1000); // Update every second
+    
+        return () => clearInterval(intervalId); // Cleanup on component unmount
     }, []);
 
     const fetchUsers = async () => {
@@ -164,7 +177,11 @@ function SystemUsers() {
     const handleSearch = (e) => {
         const query = e.target.value;
         setSearchQuery(query);
+
+        // Update filtered user count based on the number of filtered users
+        setFilteredUserCount(filteredUsers.length);
     };
+
     const filteredUsers = users.filter(user =>
         user.first_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         user.last_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -173,10 +190,28 @@ function SystemUsers() {
     );
 
     //generate report
-    const generateReport = () => {
+    const generateReport = (reportType) => {
+
+        let reportData = [];
+        let reportTitle = '';
+
+        // Check the report type and prepare data accordingly
+        if (reportType === 'totalUsers') {
+            reportData = users;
+            reportTitle = 'Total Number of System Users';
+        } else if (reportType === 'filteredUsers') {
+            reportData = filteredUsers;
+            reportTitle = 'Filtered Users';
+        } else {
+            // Handle invalid report type
+            console.error('Invalid report type');
+            return;
+        }
+
+        // Generate report based on the report data
         const printWindow = window.open("", "_blank", "width=600,height=600");
         printWindow.document.write(`
-            <html>
+            <html>w
                 <head>
                     <title>System User Report</title>
                     <style>
@@ -200,10 +235,11 @@ function SystemUsers() {
                         th {
                             background-color: #f2f2f2;
                         }
+                        
                     </style>
                 </head>
                 <body>
-                    <h1>System User Report</h1>
+                    <h1>${reportTitle}</h1>
                     <table>
                         <thead>
                             <tr>
@@ -215,7 +251,7 @@ function SystemUsers() {
                             </tr>
                         </thead>
                         <tbody>
-                            ${users.map((user, index) => `
+                            ${reportData.map((user, index) => `
                                 <tr>
                                     <td>${index + 1}</td>
                                     <td>${user.first_name}</td>
@@ -233,50 +269,139 @@ function SystemUsers() {
             </html>
         `);
         printWindow.document.close();
-        printWindow.print();
+        printWindow.print();   
     };
-    
-    
+
     return (
         <Layout>
-            <div className="system-users p-3">
-            <h2>System Users</h2>
-            <hr />
-            <br/>
+
+        <div className="row">
+            {/* System Users Text */}
+            <div className="col-md-6">
+                <div className="system-users p-3">
+                    <h2>System Users</h2>
+                </div>
+            </div>
                 
-            <div className="cards d-flex justify-content-between">
-                <div className="col-md-4">
-                    <div className="card mb-3" 
-                        style={{ background: 'white', 
-                        color: 'black', 
-                        borderRadius: '15px'}}>
+            {/* Current Date and Time */}
+            <div className="col-md-6 text-md-end mb-6">
+                <div className="date-time p-4">
+                    <span className="date">{currentDateTime.split(',')[0]}</span>
+                    <span className="time"> | {currentDateTime.split(',')[1]}</span>
+                </div>                     
+            </div>
+        </div>
 
-                        <div className="card-body p-4">
-                            <h5 className="card-title" style={{ textAlign: 'center' }}>Total Number of System Users</h5>
-                            <p style={{ fontSize: '40px', textAlign: 'center', fontWeight: 'bold' }}>{totalUsers}</p>
+        <div class="container">
+            <div className="row">
+
+                {/*number of users*/}
+                <div className="col-lg-6 col-md-6 mb-1">
+                    <div className="card shadow" style={{ backgroundColor: 'white' }}>
+                        <div className="card-statistic-3 p-4">
+                            <div className="d-flex justify-content-between align-items-center">
+                                <div className="card-body p-">
+                                    <h5 className="card-title" 
+                                     style={{ fontSize: '32px', textAlign: 'center' }}>Total Number of System Users
+                                    </h5>
+                                    <p style={{ fontSize: '40px', textAlign: 'center', fontWeight: 'bold' }}>{totalUsers}</p>
+                                </div>
+                                <i className="ri-account-circle-line h1"></i>
+                            </div>
+                    
+                            <div className="progress mt-1" 
+                                data-height="8" 
+                                style={{ height: '8px' }}>
+                                <div className="progress-bar bg-orange" 
+                                    role="progressbar" 
+                                    data-width="25%" 
+                                    aria-valuenow="25" 
+                                    aria-valuemin="0" 
+                                    aria-valuemax="100" 
+                                    style={{ width: '100%', backgroundColor: 'orange' }}>                                       
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div className="col-md-4">
-                    <div className="card mb-3" 
-                        style={{ background: 'white', 
-                        color: 'black', 
-                        borderRadius: '15px' }}>
+                {/* Number of filtered users */}      
+                <div className="col-lg-6 col-md-6 mb-1">
+                    <div className="card shadow" style={{ backgroundColor: 'white' }}>
+                        <div className="card-statistic-3 p-4">
+                            <div className="d-flex justify-content-between align-items-center">
+                                <div className="card-body p-">
+                                    <h5 className="card-title" style={{ fontSize: '32px', textAlign: 'center' }}>Filtered Users</h5>
+                                    <p style={{ fontSize: '40px', textAlign: 'center', fontWeight: 'bold' }}>{filteredUserCount}</p>
+                                </div>
+                                <i className="ri-account-circle-line h1"></i>
+                            </div>
+                    
+                            <div className="progress mt-1" data-height="8" style={{ height: '8px' }}>
+                                <div className="progress-bar bg-orange" 
+                                    role="progressbar" 
+                                    data-width="25%" 
+                                    aria-valuenow="25" 
+                                    aria-valuemin="0" 
+                                    aria-valuemax="100" 
+                                    style={{ width: '100%', backgroundColor: 'orange' }}>                                       
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                        <div className="card-body p-4">
-                            <h5 className="card-title">Generate Reports</h5>
-                            <p className="card-text">Generate and download System Users report</p>
-                            <button onClick={generateReport} className="btn btn-dark">Generate Report</button>
+                {/*generate report for total users*/}
+                <div className="col-lg-6 col-md-6 mb-3">
+                <div className="card shadow" style={{ backgroundColor: 'white' }}>
+                    <div className="card-statistic-3 p-4">
+                        <div className="d-flex justify-content-between align-items-center">
+                            <div className="col-8">
+                                <h3 className="d-flex align-items-center mb-4">
+                                    Generate Report (Total Users)
+                                </h3>
+                                <p className="card-text">Generate and download report on all System Users</p>
+                                <h5 className="card-title" style={{ marginTop: '25px' }}>
+                                    <button onClick={() => generateReport('totalUsers')} className="btn btn-dark" style={{ backgroundColor: 'black', color: 'white', borderColor: 'black' }}>Generate Report</button>
+                                </h5>
+                            </div>
+                            <i className="ri-file-chart-line h1"></i>
+                        </div>
+                        <div className="progress mt-1" data-height="8" style={{ height: '8px' }}>
+                            <div className="progress-bar bg-orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '100%', backgroundColor: 'orange' }}></div>
                         </div>
                     </div>
                 </div>
             </div>
 
+                    {/*generate report for total users*/}
+                    <div className="col-lg-6 col-md-6 mb-3">
+                    <div className="card shadow" style={{ backgroundColor: 'white' }}>
+                        <div className="card-statistic-3 p-4">
+                            <div className="d-flex justify-content-between align-items-center">
+                                <div className="col-8">
+                                    <h3 className="d-flex align-items-center mb-4">
+                                        Generate Report (Filtered Users)
+                                    </h3>
+                                    <p className="card-text">Generate and download report on Filtered Users</p>
+                                    <h5 className="card-title" style={{ marginTop: '25px' }}>
+                                        <button onClick={() => generateReport('filteredUsers')} className="btn btn-dark" style={{ backgroundColor: 'black', color: 'white', borderColor: 'black' }}>Generate Report</button>
+                                    </h5>
+                                </div>
+                                <i className="ri-file-chart-line h1"></i>
+                            </div>
+                            <div className="progress mt-1" data-height="8" style={{ height: '8px' }}>
+                                <div className="progress-bar bg-orange" role="progressbar" data-width="25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style={{ width: '100%', backgroundColor: 'orange' }}></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>     
             </div>
+        </div>
+            
+        
 
-            <div className="card p-3">
-                <br/>
+        <div className="card" style={{ padding: '30px 20px 20px 20px' }}>
                 <div className="button-group mb-3 d-flex align-items-center">
                    
                     {/* search */}
@@ -287,13 +412,16 @@ function SystemUsers() {
                             value={searchQuery}
                             onChange={handleSearch}
                         />
+                        <span className="filtered-count" style={{ marginLeft: '10px' }}>{filteredUserCount} users filtered</span>
                     </div>
+
+    
                     <div className="three-buttons" style={{ marginLeft: 'auto' }}>
-                    <Button variant="danger" onClick={handleDeleteSelected}>Delete Selected</Button>
-                    <Button variant="dark" onClick={handleSelectAll} style={{ marginLeft: '10px' }}>
+                    <Button variant="btn btn-outline-danger" onClick={handleDeleteSelected}>Delete Selected</Button>
+                    <Button variant="btn btn-outline-dark" onClick={handleSelectAll} style={{ marginLeft: '10px' }}>
                         {selectAll ? 'Deselect All' : 'Select All'}
                     </Button>
-                    <Button variant="dark" onClick={handleClearSelection} style={{ marginLeft: '10px' }}>Clear Selection</Button>
+                    <Button variant="btn btn-outline-danger" onClick={handleClearSelection} style={{ marginLeft: '10px' }}>Clear Selection</Button>
                     </div> 
                 </div>
                 <br/>
@@ -310,6 +438,7 @@ function SystemUsers() {
                             <th>User created date</th>
                         </tr>
                     </thead>
+
                     <tbody>
                     {filteredUsers.map((user, index) => (
                             <tr key={user._id}>
@@ -325,11 +454,11 @@ function SystemUsers() {
                                 <td>{new Date(user.createdAt).toLocaleDateString('en-GB')}</td>
                                 
                                 <td>
-                                    <Button variant="primary" onClick={() => handleUpdate(user)} style={{ marginLeft: '20px' }}>Update</Button>
+                                    <Button variant="btn btn-outline-primary" onClick={() => handleUpdate(user)} style={{ marginLeft: '20px' }}>Update</Button>
                                 </td>
 
                                 <td>
-                                    <Button variant="danger" onClick={() => handleDelete(user._id)} style={{ marginLeft: '20px' }}>Delete</Button>
+                                    <Button variant="btn btn-outline-danger" onClick={() => handleDelete(user._id)} style={{ marginLeft: '20px' }}>Delete</Button>
                                 </td>
                             </tr>
                         ))}

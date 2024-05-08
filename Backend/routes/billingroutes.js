@@ -73,7 +73,19 @@ router.route("/:id").get((req, res) => {
     });
 });
 
-
+router.get('/customer/email/:id', async (req, res) => {
+  try {
+    const customerId = req.params.id;
+    const customer = await Customer.findById(customerId); // Fetch customer by ID from the database
+    if (!customer) {
+      return res.status(404).json({ error: 'Customer not found' });
+    }
+    res.json({ email: customer.email }); // Send the customer's email in the response
+  } catch (error) {
+    console.error('Error fetching customer email:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 
 

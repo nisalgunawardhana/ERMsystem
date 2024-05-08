@@ -17,17 +17,12 @@ const noteSchema = new mongoose.Schema({
     },
     date: {
         type: Date
-    },
-    date_created: {
-        type: Date,
-        default: Date.now // Sets the default value to the current date and time
-    },
-    completed: {
-        type: Boolean,
-        default: false // Sets the default value for the checkbox to false (unchecked)
     }
-});
+    ,
+}, {
+    timestamps: true
+})
 
-const Note = mongoose.model('Note', noteSchema);
+const Note = mongoose.model('notes', noteSchema);
 
 module.exports = Note;

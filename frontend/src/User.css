@@ -1,12 +1,3 @@
-/* antd override */
-input {
-  border: none !important; /* Remove the border */
-  background-color: white; /* Set background color to white */
-  box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
-  border-radius: 15px !important;
-  height: 40px !important;
-}
-
 /*
 input:focus {
   outline: none !important;
@@ -143,12 +134,6 @@ label {
   overflow: hidden; 
 }
 
-.register-background img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; 
-}
-
 
 @keyframes App-logo-spin {
 from {
@@ -164,5 +149,3 @@ to {
   width: 500px; 
   padding-left: 30px;
 }
-
-
