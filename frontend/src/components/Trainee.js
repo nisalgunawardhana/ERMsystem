@@ -124,16 +124,145 @@ export default function Trainee() {
         e.preventDefault();
         if (selectedTraineeId) {
             axios.put(`http://localhost:8080/trainees/update/${selectedTraineeId}`, formData)
-                .then(() => {
+                .then(async () => {
                     window.location.reload();
+                    
+                    const emailResponse = await axios.post('/send-email', {
+                        to: formData.trainee_email,
+                        subject: 'Trainee Updated',
+                        html: `
+        <html>
+            <head>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        background-color: #f4f4f4;
+                        margin: 0;
+                        padding: 20px;
+                    }
+                    .container {
+                        max-width: 600px;
+                        margin: 0 auto;
+                        background-color: #ffffff;
+                        padding: 30px;
+                        border-radius: 10px;
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    }
+                    h1 {
+                        color: #333333;
+                    }
+                    p {
+                        color: #666666;
+                        line-height: 1.6;
+                    }
+                    /* Add more styles as needed */
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h1>Welcome to Our Training Program</h1>
+                    <p>
+                        Hello ${formData.trainee_name},
+                    </p>
+                    <p>
+                        You have been successfully updated trainee details. Here are your updated details:
+                    </p>
+                    <ul>
+                        <li><strong>Trainee ID:</strong> ${formData.trainee_id}</li>
+                        <li><strong>Name:</strong> ${formData.trainee_name}</li>
+                        <li><strong>Email:</strong> ${formData.trainee_email}</li>
+                        <li><strong>Gender:</strong> ${formData.trainee_gender}</li>
+                        <li><strong>Contact No:</strong> ${formData.trainee_contact}</li>
+                        <li><strong>Ratings:</strong> ${formData.trainee_rating}</li>
+                        <li><strong>Date:</strong> ${formData.trainee_date}</li>
+                    </ul>
+                    <p>
+                        If you have any questions or concerns, feel free to contact us.
+                    </p>
+                    <p>
+                        Best regards,
+                        <br>
+                        Your Training Program Team
+                    </p>
+                </div>
+            </body>
+        </html>
+    `
+                    });
+                    console.log('Email sent:', emailResponse.data);
+
                 })
                 .catch((err) => {
                     alert(err.message);
                 });
         } else {
             axios.post('http://localhost:8080/trainees/add', formData)
-                .then(() => {
+                .then(async () => {
                     window.location.reload();
+                    //send mail to relevent trainee
+                    const emailResponse = await axios.post('/send-email', {
+                        to: formData.trainee_email,
+                        subject: 'Trainee Added',
+                        html: `
+                        <html>
+                            <head>
+                                <style>
+                                    body {
+                                        font-family: Arial, sans-serif;
+                                        background-color: #f4f4f4;
+                                        margin: 0;
+                                        padding: 20px;
+                                    }
+                                    .container {
+                                        max-width: 600px;
+                                        margin: 0 auto;
+                                        background-color: #ffffff;
+                                        padding: 30px;
+                                        border-radius: 10px;
+                                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                                    }
+                                    h1 {
+                                        color: #333333;
+                                    }
+                                    p {
+                                        color: #666666;
+                                        line-height: 1.6;
+                                    }
+                                </style>
+                            </head>
+                            <body>
+                                <div class="container">
+                                    <h1>Welcome to Our Training Program</h1>
+                                    <p>
+                                        Hello ${formData.trainee_name},
+                                    </p>
+                                    <p>
+                                        You have been successfully added as a trainee. Here are your details:
+                                    </p>
+                                    <ul>
+                                        <li><strong>Trainee ID:</strong> ${formData.trainee_id}</li>
+                                        <li><strong>Name:</strong> ${formData.trainee_name}</li>
+                                        <li><strong>Email:</strong> ${formData.trainee_email}</li>
+                                        <li><strong>Gender:</strong> ${formData.trainee_gender}</li>
+                                        <li><strong>Contact No:</strong> ${formData.trainee_contact}</li>
+                                        <li><strong>Ratings:</strong> ${formData.trainee_rating}</li>
+                                        <li><strong>Date:</strong> ${formData.trainee_date}</li>
+                                    </ul>
+                                    <p>
+                                        If you have any questions or concerns, feel free to contact us.
+                                    </p>
+                                    <p>
+                                        Best regards,
+                                        <br>
+                                        Your Training Program Team
+                                    </p>
+                                </div>
+                            </body>
+                        </html>
+                    `
+                    });
+                    console.log('Email sent:', emailResponse.data);
+
                 })
                 .catch((err) => {
                     alert(err.message);

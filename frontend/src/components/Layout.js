@@ -145,10 +145,16 @@ function Layout({children}) {
             icon: 'ri-check-double-line'
         },
         {
-            name: 'Salary',
-            path: '/dashboard',
-            icon: 'ri-currency-line'
+            name: 'Leave',
+            path: '/dashboard/employee/leaveview',
+            icon: 'bi bi-calendar2-plus-fill'
         },
+        {
+            name: 'Salary',
+            path: '/dashboard/employee/salary',
+            icon: 'bi bi-cash-stack'
+        },
+
         {
             name: 'Tranee management',
             path: '/dashboard/trainee',
