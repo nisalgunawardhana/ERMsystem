@@ -167,7 +167,7 @@ function UpdateSupplier() {
                         <div className="mt-3">
                             <h6>Product Types</h6>
                             <Row>
-                                {['Mens-Shirts', 'Mens-Trousers', 'Mens T-Shirt', 'Suits', 'Shorts', 'Jackets and Blazers', 'Traditional wear',
+                                {['Clothes', 'Mens-Shirts', 'Mens-Trousers', 'Mens T-Shirt', 'Suits', 'Jackets and Blazers', 'Traditional wear',
                             'Tops and Blouses', 'Dresses','Party dresses', 'Skirts', 'Trousers and Denims', 'Office wear',
                             'Children wear', 'Toys', 'Accessories', ...product_types].map((type, index) => (
                                     <Col className="mt-2" key={index} xs={6} sm={4} md={3} lg={3}>

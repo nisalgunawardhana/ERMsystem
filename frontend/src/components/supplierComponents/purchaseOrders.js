@@ -423,10 +423,10 @@ function PurchaseOrder() {
                 </Row>
             </div>
 
-            <div className="shadow p-3 rounded"> 
+            <div className="mt-3 shadow p-3 rounded"> 
             <div>
                 <div className="fs-5 mt-3 fw-semibold"><i className="bi bi-bar-chart-steps me-2"></i>Order Summery</div>
-                <div className="text-secondary mb-4">Quick reference and analysis to condensed overview of recent purchasing transactions, with metrics like total order count.</div>
+                <div className="text-secondary fw-light mb-4">Quick reference and analysis to condensed overview of recent purchasing transactions, with metrics like total order count.</div>
             </div>
 
 

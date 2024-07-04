@@ -11,6 +11,10 @@ ul {
   background-color: #225874;
 }
 
+.new-blue{
+  background-color: #EBC266;
+}
+
 .red{
   background-color: red;
 }
@@ -34,8 +38,16 @@ ul {
   border-color: #ddd5c7;
 }
 
+.seal{
+  background-color: #69acc2;
+}
+
 .ash{
-  background-color: #6c757d;
+  background-color: #83878f;
+}
+
+.brown{
+  background-color: #9fa694;
 }
 
 .layout-blue{
@@ -44,6 +56,11 @@ ul {
 
 .layout-blue-bg{
   background-color: #080a3c;
+}
+
+.layout-blue-bg-half{
+  background-color: #080a3c;
+  opacity: 85%;
 }
 /*CARDS______________________________________________________________________________________*/
 
@@ -229,7 +246,7 @@ ul {
   padding: 8px 0;
   text-align: center;
   border: transparent;
-  margin: 20px 10px;
+  /* margin: 20px 10px; */
   padding-left: 10px;
   padding-right: 10px;
   width: auto;
@@ -288,6 +305,7 @@ ul {
 .back-btn {
   position: relative;
   transition: background-color 300ms ease-out;
+  /* margin: 20px 10px; */
   /* background-color: #B6C4B6; */
 }
 

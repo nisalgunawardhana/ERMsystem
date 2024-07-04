@@ -58,96 +58,68 @@ function Supplier () {
                 <head>
                     <meta charset="UTF-8">
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>Purchase Order</title>
+                    <title>Supplier Report</title>
                     <style>
-                        body {
-                            font-family: Arial, sans-serif;
-                            padding: 20px;
-                            background-color: #f5f5f5;
-                        }
-
-                        .container {
-                            max-width: 90%;
-                            margin: 0 auto;
-                            background-color: #fff;
-                            border-radius: 10px;
-                            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                            padding: 20px;
-                        }
-
-                        .header {
-                            text-align: center;
-                            margin-bottom: 20px;
-                        }
-
-                        .section {
-                            margin-bottom: 20px;
-                        }
-
-                        .section-title {
-                            font-size: 20px;
-                            font-weight: bold;
-                            margin-bottom: 10px;
-                        }
-
-                        .item {
-                            margin-left: 20px;
-                        }
-
-                        .item-title {
-                            font-weight: bold;
-                        }
-
+                        /* Your styles here */
+                        /* Define table styles */
                         table {
                             width: 100%;
                             border-collapse: collapse;
-                            margin-top: 20px;
-                            border-radius: 10px;
-                            overflow: hidden;
                         }
-
                         th, td {
                             border: 1px solid #ddd;
-                            padding: 12px;
+                            padding: 8px;
                             text-align: left;
                         }
-
                         th {
                             background-color: #f2f2f2;
-                            text-align: left;
-                        }
-
-                        .bg-info {
-                            background-color: #F1EEDC;
-                            color: #fff;
-                            padding: 10px 15px;
-                            border-radius: 5px;
-                        }
-
-                        .bg-info-dates{
-                            background-color: #B3C8CF;
-                            color: #fff;
-                            padding: 10px 15px;
-                            border-radius: 5px;
-                        }
-
-                        .bg-success-subtle {
-                            background-color: #d4edda;
-                            color: #155724;
-                            padding: 10px 15px;
-                            border-radius: 5px;
                         }
                     </style>
-
-                    </head>
-                    <body>
-                        
-                    </body>
+                </head>
+                <body>
+                    <div class="container">
+                        <div class="header">
+                            <h1>Supplier Report</h1>
+                        </div>
+                        <div class="supplier-details">
+                            <h2>All Suppliers</h2>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Supplier Name</th>
+                                        <th>Supplier ID</th>
+                                        <th>Address</th>
+                                        <th>Email</th>
+                                        <th>Contact</th>
+                                        <th>Product Types</th>
+                                        <th>Supplier Performance (Quality)</th>
+                                        <th>Supplier Performance (Delivery Time)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${suppliers.map(supplier => `
+                                        <tr>
+                                            <td>${supplier.supplier_name}</td>
+                                            <td>${supplier.supplier_id}</td>
+                                            <td>${supplier.address}</td>
+                                            <td>${supplier.email}</td>
+                                            <td>${supplier.contact}</td>
+                                            <td>${supplier.product_types.join(', ')}</td>
+                                            <td>${supplier.sup_performance.quality}</td>
+                                            <td>${supplier.sup_performance.delivery_time}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </body>
             </html>
         `);
         printWindow.document.close();
         printWindow.print();
     };
+    
 
 
     const renderSuppliers = searchQuery === "" ? suppliers : searchResults
@@ -258,7 +230,7 @@ function Supplier () {
                 <Row xs={1} sm={2} md={3} lg={4}>
                     {renderSuppliers.map((supplier, index) => (
                         <Col key={index} className="mb-4">
-                            <Card className="card-up card-shadow-1" style={{height:"90%"}} >
+                            <Card className="card-up card-shadow-1" style={{height:"100%"}} >
                                 <Card.Body>
                                     <Card.Title className="text-center">{supplier.supplier_name}</Card.Title><br></br>
                                     <Card.Text className="text-center">
@@ -273,13 +245,13 @@ function Supplier () {
                                         <div className="fw-light">Product Types:</div> {supplier.product_types.join(', ')}
                                     </ListGroup.Item>
                                 </ListGroup>
-                                <Card.Body >
+                                <Card.Footer>
                                     <div className="fw-light">Supplier Performance:</div>
                                     <div>Quality: {supplier.sup_performance.quality}</div>
                                     <div>Delivery Time: {supplier.sup_performance.delivery_time}</div>
                                     
-                                    <div>
-                                        <div className="mt-4 d-flex flex-column justify-content-between align-items-center">
+                                    <div className="">
+                                        <div className="text-center mt-3">
                                             <Link to={`/supplier/get/${supplier._id}`} style={{ textDecoration: 'none' }}>
                                                 <Button variant="dark" id="up-btn" size="sm" className="mt-2">
                                                     <i className="bi bi-shop-window me-2"></i> View Supplier
@@ -287,7 +259,7 @@ function Supplier () {
                                             </Link>
                                         </div>
                                     </div>
-                                </Card.Body>
+                                </Card.Footer>
                             </Card>
                         </Col>
                     ))}

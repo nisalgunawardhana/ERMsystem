@@ -25,6 +25,9 @@ function AddSupplier() {
     const [showPopover, setShowPopover] = useState(false);
     const [showContactPopover, setShowContactPopover] = useState(false);
     const [showEmailPopover, setShowEmailPopover] = useState(false);
+    const [showDuplicatePopover, setShowDuplicatePopover] = useState(false); // State variable for showing duplicate popover
+    const [duplicatePopoverMessage, setDuplicatePopoverMessage] = useState(""); // State variable for duplica
+
 
 
     function sendData(e) {
@@ -57,6 +60,32 @@ function AddSupplier() {
             alert(err)
         })
     }
+
+    const checkDuplicateSupplierID = async () => {
+        try {
+            const response = await axios.get(`http://localhost:8080/supplier/${supplier_id}`);
+            if (response.data.exists) {
+                setShowDuplicatePopover(true);
+                setDuplicatePopoverMessage("Supplier ID already exists");
+                return true;
+            } else {
+                setShowDuplicatePopover(false);
+                return false;
+            }
+        } catch (error) {
+            console.error("Error checking duplicate supplier ID:", error);
+            return false;
+        }
+    };
+
+    const duplicatePopover = (
+        <Popover id="duplicate-popover">
+            <Popover.Body>{duplicatePopoverMessage}</Popover.Body>
+        </Popover>
+    );
+
+    
+    
 
     //Validate contact
     const validateContactNumber = () => {
@@ -125,14 +154,33 @@ function AddSupplier() {
 
             <div className="mt-4 container custom-container-supplier card-shadow-1" >
                 <Form onSubmit={sendData}>
-                    <Form.Group controlId="supplierID">
+                    {/* <Form.Group controlId="supplierID">
                         <Form.Label>Supplier ID</Form.Label>
                         <Form.Control type="text" name="supplier_id"  required 
                         value={supplier_id} 
                         onChange={(e) => {
                             setSupplierID(e.target.value);
                         }} />
-                    </Form.Group>
+                    </Form.Group> */}
+
+<OverlayTrigger
+                        trigger="focus"
+                        placement="top"
+                        show={showDuplicatePopover}
+                        overlay={duplicatePopover}
+                    >
+                        <Form.Control
+                            type="text"
+                            name="supplier_id"
+                            required
+                            value={supplier_id}
+                            onBlur={checkDuplicateSupplierID} // Trigger duplicate check onBlur
+                            onChange={(e) => {
+                                setSupplierID(e.target.value);
+                            }}
+                        />
+                    </OverlayTrigger>
+
 
                     <Form.Group className="mt-2" controlId="supplierName">
                         <Form.Label>Supplier Name</Form.Label>
@@ -268,7 +316,7 @@ function AddSupplier() {
                     <div className="mt-4">
                         <h6><i className="bi bi-magic me-2"></i>Product Types</h6>
                         <Row>
-                        {['Mens-Shirts', 'Mens-Trousers', 'Mens T-Shirt', 'Suits', 'Shorts', 'Jackets and Blazers', 'Traditional wear',
+                        {['Clothes', 'Mens-Shirts', 'Mens-Trousers', 'Mens T-Shirt', 'Suits', 'Jackets and Blazers', 'Traditional wear',
                         'Tops and Blouses', 'Dresses','Party dresses', 'Skirts', 'Trousers and Denims', 'Office wear',
                         'Children wear', 'Toys', 'Accessories'].map((type, index) => (
                             <Col className="mt-2" key={index} xs={6} sm={4} md={3} lg={3}>

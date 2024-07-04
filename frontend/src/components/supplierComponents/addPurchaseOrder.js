@@ -9,7 +9,7 @@ function AddPurchaseOrder() {
 
     const navigate = useNavigate();
 
-    const [purchaseOrder_id, setPOid] = useState("");
+    const [purchaseOrder_id, setPOid] = useState("PO");
     const [order_date, setPurchaseOrderDate] = useState("");
     const [deliver_date, setDeliveryDate] = useState("");
     const [item_name, setItemName] = useState("");
@@ -42,6 +42,8 @@ function AddPurchaseOrder() {
     const [supplier_id, setSupId] = useState("");
     const [showDeliveryCostsPopover, setShowDeliveryCostsPopover] = useState(false);
     const [showOrderDatePopover, setShowOrderDatePopover] = useState(false);
+    const [showDuplicatePopover, setShowDuplicatePopover] = useState(false); // State variable for showing duplicate popover
+    const [duplicatePopoverMessage, setDuplicatePopoverMessage] = useState(""); // State variable for duplicate popover message
     
     
     function sendDataPO(e) {
@@ -97,6 +99,31 @@ function AddPurchaseOrder() {
     
         console.log(newPurchaseOrder);
     }
+
+    //PURCHASE ORDER ID CHECK 
+    const checkDuplicatePurchaseOrderID = async () => {
+        try {
+            const response = await axios.get(`http://localhost:8080/purchaseOrder/check/${purchaseOrder_id}`);
+            if (response.data.exists) {
+                setShowDuplicatePopover(true);
+                setDuplicatePopoverMessage("Purchase Order ID already exists");
+                return true;
+            } else {
+                setShowDuplicatePopover(false);
+                return false;
+            }
+        } catch (error) {
+            console.error("Error checking duplicate purchase order ID:", error);
+            return false;
+        }
+    };
+
+    const duplicatePopover = (
+        <Popover id="duplicate-popover">
+            <Popover.Body>{duplicatePopoverMessage}</Popover.Body>
+        </Popover>
+    );
+
     
 
     //GET SUPPLIER NAMES DROPDOWN
@@ -154,6 +181,24 @@ function AddPurchaseOrder() {
     };
 
 
+    // const checkPurchaseOrderId = async (id) => {
+    //     try {
+    //         const response = await axios.get(`http://localhost:8080/purchaseOrder/check/${id}`);
+    //         setIdExists(response.data.exists);
+    //     } catch (error) {
+    //         console.error("Error checking purchase order ID:", error);
+    //     }
+    // };
+
+    // // Function to handle purchase order ID change
+    // const handlePurchaseOrderIdChange = (e) => {
+    //     const id = e.target.value;
+    //     setPurchaseOrderId(id);
+    //     if (id.trim() !== "") {
+    //         checkPurchaseOrderId(id);
+    //     }
+    // };
+
     //Add Order Items and display Total Amount
     const handleAddOrderItems = () => {
         const totalAmount = quantity * unit_price;
@@ -191,14 +236,45 @@ function AddPurchaseOrder() {
 
                 <div className="container custom-container-supplier">
                     <Form onSubmit={sendDataPO}>
-                    <Form.Group controlId="POid">
+                    {/* <Form.Group controlId="POid"> */}
                         <Form.Label>Purchase Order ID</Form.Label>
-                        <Form.Control type="text" name="purchaseOrder_id" required 
-                        value={purchaseOrder_id}
-                        onChange={(e) => {
-                            setPOid(e.target.value)
-                        }} />
-                    </Form.Group>
+                        <OverlayTrigger
+                            trigger="focus"
+                            placement="bottom"
+                            show={showDuplicatePopover}
+                            overlay={duplicatePopover}
+                        >
+                            <Form.Control type="text" name="purchaseOrder_id" required 
+                            value={purchaseOrder_id}
+                            onChange={(e) => {
+                                setPOid(e.target.value)
+                            }} />
+                        </OverlayTrigger>
+                    {/* </Form.Group> */}
+
+                    {/* <Form.Group controlId="purchaseOrder_id">
+                        <Form.Label>Purchase Order ID</Form.Label>
+                        <OverlayTrigger
+                            trigger="focus"
+                            placement="bottom"
+                            overlay={
+                                <Popover id="popover-purchaseOrder-id">
+                                    {idExists ? (
+                                        <Popover.Content>This purchase order ID already exists.</Popover.Content>
+                                    ) : (
+                                        <Popover.Content>Enter a unique purchase order ID.</Popover.Content>
+                                    )}
+                                </Popover>
+                            }
+                        >
+                            <Form.Control
+                                type="text"
+                                name="purchaseOrder_id"
+                                value={purchaseOrder_id}
+                                onChange={handlePurchaseOrderIdChange}
+                            />
+                        </OverlayTrigger>
+                    </Form.Group> */}
 
                     <Form.Group controlId="supplierName" className="mt-3">
                         <Form.Label>Supplier Name</Form.Label>

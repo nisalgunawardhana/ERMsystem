@@ -390,7 +390,7 @@ function ViewPO() {
             <div className="mb-3 bg">
                 
                 <div>
-                    <div className="layout-blue">
+                    <div className="layout-blue mb-3">
                         <p className="fw-light">Purchase order Management
                         <h2 >Purchase Order {purchaseOrder.purchaseOrder_id}</h2></p>
                         <Link to="/purchaseOrder">
@@ -399,6 +399,7 @@ function ViewPO() {
 
                         <Button className="ms-2 text-white " variant="info" onClick={printPdfPO} id="up-btn" ><i className="bi bi-filetype-pdf me-2"></i>Download Purchase Order</Button>
                     </div>
+
                     <Row >
                         <Col xs={7}>
                             <div className="p-3 shadow-lg rounded"> 
@@ -529,10 +530,10 @@ function ViewPO() {
                                 <div className=" p-3 rounded shadow-lg rounded ">
                                     <p className="mb-4 ms-2 layout-blue fw-light text-center"><i className="bi bi-shop fw-light me-2"></i>Supplier<br></br><span className="fw-normal  fs-3">{supplier.supplier_name}</span></p>
                                     <div className="text-center">
-                                        <p className="mt-5">Supplier ID: {supplier.supplier_id}</p>
-                                        <p>Email: {supplier.email}</p>
-                                        <p>Address: {supplier.address}</p>
-                                        <p>Contact Number: {supplier.contact}</p>
+                                        <p className="mt-5"><i className="bi bi-person-check me-2"></i>Supplier ID: {supplier.supplier_id}</p>
+                                        <p><i className="bi bi-envelope-at me-2" ></i> {supplier.email}</p>
+                                        <p><i className="bi bi-house me-2"></i> {supplier.address}</p>
+                                        <p><i className="bi bi-telephone me-2"></i> {supplier.contact}</p>
                                     </div>
 
                                     {/* <Link to={`/supplier/get/${supplier._id}`}>
@@ -557,25 +558,26 @@ function ViewPO() {
                                             </li>
                                         ))}
                                     </ul>
+                                    
 
                                 </div>
                             </Row>
                             <Row>
                                 <div className="card-shadow-1 rounded p-3 mt-4 layout-blue">
-                                    <div className="mb-5 text-center fw-light">{purchaseOrder.supplier_name}<br></br><span className="fs-4 mb-5 fw-normal ">Supplier Performance</span>
+                                    <div className="mb-5 text-center fw-light">{purchaseOrder.supplier_name}<br></br><span className="fs-4 mb-5 fw-normal "><i className="bi bi-award me-2"></i>Supplier Performance</span>
                                     <p className=" fs-6 fw-">for purchase order ID #{purchaseOrder.purchaseOrder_id}</p></div>
 
                                     <p>Payment Date: {purchaseOrder.payment_date}</p>
                                     <p >Supplier Deliver date:{purchaseOrder.sup_deliver_date} </p>
-                                    <p><b>Lead time took the supplier to finish purchase order process: {PurchaseOrder.leadTime}</b></p>
-                                    <p className="my-5">Measurement of the quality of the products as a percentage: <span className="fs-3 fw-semibold">{purchaseOrder.qualityOfGoods}%</span></p>
-                                    <div>Accuracy of the quantity of goods delivered compared to the ordered quantity:</div>
+                                    <p><b>Lead time </b>took the supplier to finish purchase order process:<br></br><span className="fw-semibold "> {purchaseOrder.leadTime} days</span></p>
+                                    <p className="my-4">Measurement of the<b> quality of the products </b>as a percentage: <span className="fs-3 fw-semibold">{purchaseOrder.qualityOfGoods}%</span></p>
+                                    <div><b>Accuracy of the quantity of goods </b>delivered compared to the ordered quantity:</div>
                                     <div className="fs-3 mb-4  fw-semibold ">{purchaseOrder.quantityAccuracy}%</div>
-                                    <p>Timeliness and effectiveness of the supplier's responses to purchase orders and inquiries: {purchaseOrder.responsiveness} </p>
-                                    <p className="fw-semibold mt-4">Additional info<br></br><span className="fw-normal">{purchaseOrder.additional}</span></p>
-                                    <p className="my-5">Overall cost-effectiveness: <span className="fs-4 fw-semibold layout-blue">{purchaseOrder.costEffectiveness}</span></p>
+                                    <p><b>Timeliness and effectiveness of the supplier's responses to purchase orders and inquiries: {purchaseOrder.responsiveness} </b></p>
+                                    <p className="mt-4">Additional info<br></br><span className="fw-normal">{purchaseOrder.additional}</span></p>
+                                    <p className="my-5">Overall <b>cost-effectiveness: </b><span className="fs-4 fw-semibold layout-blue">{purchaseOrder.costEffectiveness}</span></p>
 
-                                    <p>Are you satisfied with the purchase order {purchaseOrder.purchaseOrder_id}? <span className="fs-4 fw-semibold">{purchaseOrder.overallSatisfaction}</span> </p>
+                                    <p className="fs-5 text-center">Are you satisfied with the purchase order {purchaseOrder.purchaseOrder_id}? <br></br><span className="fs-4 fw-semibold">{purchaseOrder.overallSatisfaction}</span> </p>
 
                                 </div>
                             </Row>

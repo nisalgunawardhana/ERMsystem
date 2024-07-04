@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button, Row, Col } from "react-bootstrap";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import axios from 'axios';
 import Layout from '../Layout';
 import './supplier.css';
@@ -180,8 +180,24 @@ function UpdatePurchaseOrder() {
         <Layout>
             <div className="bg">
                 <div className="container ">
-                
-                    <p className="fw-light layout-blue">Purchase Order Management<h3 className="layout-blue">Update Purchase Order {purchaseOrder.purchaseOrder_id}</h3></p>
+                    <Row>
+                        <Col>
+                            <p className="fw-light layout-blue">Purchase Order Management<h3 className="layout-blue">Update Purchase Order {purchaseOrder.purchaseOrder_id}</h3></p>
+                        </Col>
+                        <Col>
+                            <div className="">
+                                <small className="d-flex justify-content-end text-secondary">Reconsider performance of this po?</small>
+                                <div className="d-flex justify-content-end">
+                                    <Link to={`/purchaseOrder/addPerformance/${purchaseOrder._id}`}>
+                                        <Button id="up-btn" variant="secondary" style={{ fontSize: "small"}}  className="text-white"><i class="bi bi-file-earmark-text me-1"></i>Update Performance</Button>
+                                    </Link>
+                                </div>
+                            </div>
+                        </Col>
+                    </Row>
+                    
+
+                    
 
                     <div className="mt-5 container custom-container-supplier" >
                         <Form onSubmit={handleSubmit}>

@@ -260,4 +260,43 @@ router.route("/download").get(async (req, res) => {
   
 
 
+//   router.get("/:purchaseOrderId", async (req, res) => {
+//     const { purchaseOrderId } = req.params;
+//     try {
+//         // Find a purchase order with the specified purchaseOrder_id
+//         const existingPurchaseOrder = await purchaseOrder.findOne({ purchaseOrder_id: purchaseOrderId });
+        
+//         // Check if a purchase order with the specified ID exists
+//         if (existingPurchaseOrder) {
+//             // If the purchase order exists, return a response indicating its existence
+//             res.json({ exists: true });
+//         } else {
+//             // If the purchase order does not exist, return a response indicating its non-existence
+//             res.json({ exists: false });
+//         }
+//     } catch (error) {
+//         // Handle any errors that occur during the database operation
+//         console.error("Error checking purchase order ID:", error);
+//         res.status(500).json({ error: "Error checking purchase order ID" });
+//     }
+// });
+
+// Backend Route to check if Purchase Order ID exists
+router.get("/check/:purchaseOrderID", async (req, res) => {
+    const { purchaseOrderID } = req.params;
+    try {
+        const existingPurchaseOrder = await purchaseOrder.findOne({ purchaseOrder_id: purchaseOrderID });
+        if (existingPurchaseOrder) {
+            res.json({ exists: true });
+        } else {
+            res.json({ exists: false });
+        }
+    } catch (error) {
+        console.error("Error checking purchase order ID:", error);
+        res.status(500).json({ error: "Error checking purchase order ID" });
+    }
+});
+
+
+
 module.exports = router;

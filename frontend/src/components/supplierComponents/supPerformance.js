@@ -207,14 +207,14 @@ function AddSupplierPerformance() {
     const calculateQualityOfGoods = () => {
         const totalOrderItems = calculateTotalQuantity();
         const qualityPercentage = ((totalOrderItems - noofDamages) / totalOrderItems) * 100;
-        return qualityPercentage;
+        return qualityPercentage.toFixed(2);
     };
 
     //CALCULATE QUANTITY ACCURACY
     const calculateQuantityAccuracy = () => {
         const totalOrderItems = calculateTotalQuantity();
-        const actualItemsPercentage = ((noofActualItems) / totalOrderItems) * 100
-        return actualItemsPercentage;
+        const actualItemsPercentage = (noofActualItems / totalOrderItems) * 100
+        return actualItemsPercentage.toFixed(2);
     }
 
     //OVERALL SATISFACTION
@@ -239,6 +239,7 @@ function AddSupplierPerformance() {
                 if (foundSupplier) {
                     // If a matching supplier is found, update the state with its details
                     setSupplier({
+                        id: foundSupplier._id,
                         supplier_id: foundSupplier.supplier_id,
                         supplier_name: foundSupplier.supplier_name,
                         address: foundSupplier.address,
@@ -268,8 +269,8 @@ function AddSupplierPerformance() {
                             <Link to="/purchaseOrder">
                                 <Button className="back-btn" variant="secondary" ><i className="bi bi-arrow-left me-2"></i><span>Back</span></Button>
                             </Link>
-                            <Link to="/purchaseOrder/add">
-                            <Button className="ms-2 text-white layout-blue-bg" variant="secondary" id="up-btn" ><i className="bi bi-filetype-pdf me-2"></i>Create New Purchase Order</Button>
+                            <Link to={`/purchaseOrder/get/${purchaseOrder._id}`}>
+                            <Button className="ms-2 text-white layout-blue-bg" variant="secondary" id="up-btn" ><i className="bi bi-filetype-pdf me-2"></i>View Purchase Order</Button>
                             </Link>
                         </div>
 
@@ -277,13 +278,14 @@ function AddSupplierPerformance() {
                             <p className="fs-4 fw-light">Purchase Order ID: {purchaseOrder.purchaseOrder_id}</p>
                             <p className="fs-6">Mongo DB database ID: {id}</p>
                             <p>Supplier ID: {purchaseOrder.supplier_id}</p>
+                            <p>Supplier: <b className="fs-5 layout-blue">{supplier.supplier_name}</b></p>
 
                             <div >
                                 <p >Order date: <span className="fw-semibold fs-5">{purchaseOrder.order_date}</span></p>
                                 <p >Delivery date: <span className="fw-semibold fs-5">{purchaseOrder.deliver_date}</span></p>
                             </div>
 
-                            <p>Number of order items from the supplier: {purchaseOrder.order_items.length}</p>
+                            <p>Number of products from the supplier: {purchaseOrder.order_items.length}</p>
 
                             <div>
                                 <Row>
@@ -326,12 +328,28 @@ function AddSupplierPerformance() {
                                 </Row>
                             </div>
                         </div>
+
+                        <div className="p-3 shadow mt-3">
+                            <h4>Other purchase orders of {supplier.supplier_name} </h4>
+                        </div>
                     </div>
                 </Col>
                 <Col>
+                    <div className="d-flex justify-content-end">
+                        <Link to="/purchaseOrder/add">
+                            <Button className="ms-2 text-white layout-blue-bg" variant="secondary" id="up-btn" size="sm" ><i className="bi bi-filetype-pdf me-2"></i>Create New Purchase Order</Button>
+                        </Link>
+                    </div>
+
                     <div className="my-3 border border-secondary rounded card-shadow-1">
                         <h3 className="text-center mt-4 layout-blue">
                             <i className="bi bi-graph-up-arrow me-2"></i>Supplier Performance<br></br><span className="fw-light fs-5 ">based on purchase order {purchaseOrder.purchaseOrder_id}</span></h3>
+
+                        <div className="d-flex justify-content-end">
+                            <Link to={`/supplier/get/${supplier.id}`}>
+                                <Button id="up-btn" variant="secondary" style={{ fontSize: "small"}}  className="text-white me-3 mt-2"><i class="bi bi-file-earmark-text me-1"></i>More supplier details</Button>
+                            </Link>
+                        </div>
 
                         <div className="d-flex justify-content-center">
                             <div className="container custom-container-supPerformance">
@@ -359,14 +377,15 @@ function AddSupplierPerformance() {
                                     <div className="text-center p-3 my-4 shadow rounded-4">
                                         <div className="p-3 ">
                                             <h5><i className="bi bi-hourglass-bottom"></i></h5>
-                                            Days Difference <br></br>
-                                            <span className="fw-semibold fs-4">{calculateDateDifference()} days</span>
+                                            Difference between negotiated deliver date and actuall deliver date<br></br>
+                                            <div className="fw-semibold fs-4">{calculateDateDifference()} days</div>
                                         </div>
 
                                         <div className="p-3 ">
                                             <h5><i className="bi bi-stopwatch"></i></h5>
                                             Lead Time<br></br>
-                                            <span className="fw-semibold fs-4"> {calculateLeadTime()} days</span>
+                                            <div className="text-secondary">Time took the whole order process to finish from the day started</div>
+                                            <div className="fw-semibold fs-4"> {calculateLeadTime()} days</div>
                                         </div>                               
 
                                         <div class="progress mt-1 " data-height="8" style={{ height: '8px' }}>
@@ -408,18 +427,20 @@ function AddSupplierPerformance() {
                                     </Form.Group>
 
                                     <div className="shadow p-3 my-4 rounded-4">
-                                        <p className="mt-2 text-center">
+                                        <div className="my-3 text-center">
                                             <h5><i className="bi bi-bar-chart-line"></i></h5>
-                                            <b>Quantity Accuracy<br></br>
-                                            <span className="fw-semibold fs-4"> {calculateQuantityAccuracy()}%</span></b></p>
+                                            <b>Quantity Accuracy</b><br></br>
+                                            <div className="text-secondary">Percentage of really delivered quantity from order quantity</div>
+                                            <div className="fw-semibold fs-4 mt-2">{calculateQuantityAccuracy()}%</div>
+                                        </div>
 
                                         <div class="progress mt-1 " data-height="8" style={{ height: '8px' }}>
                                             <div class="progress-bar orange" role="progressbar" data-width="25%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style={{ width: '75%' }}></div>
                                         </div>
                                     </div>
                                     
-                                    <Form.Group controlId="responsiveness" className="mt-4 mb-3">
-                                    <Form.Label>Responsiveness:</Form.Label><br></br>
+                                    <Form.Group controlId="responsiveness" className="mt-5 mb-3">
+                                    <Form.Label>Responsiveness of the supplier to this PO:</Form.Label><br></br>
                                     <div className="btn-group d-flex justify-content-center">
                                         <input
                                             type="radio"
@@ -478,8 +499,8 @@ function AddSupplierPerformance() {
 
 
 
-                                    <Form.Group controlId="costEffectiveness" className="mt-2">
-                                        <Form.Label>Cost Effectiveness</Form.Label>
+                                    <Form.Group controlId="costEffectiveness" className="mt-4">
+                                        <Form.Label>Cost Effectiveness<br></br><span className="text-secondary">Is this Purchase Order worth the cost?</span></Form.Label>
                                         <Form.Control
                                             type="text"
                                             name="costEffectiveness"

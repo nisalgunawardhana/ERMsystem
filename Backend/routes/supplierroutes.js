@@ -118,5 +118,20 @@ router.route("/getByName/:name").get(async (req,res)=>{
     res.json({supplier});
 });
 
+router.route("/:supplier_id").get(async (req, res) => {
+    const supplier_id = req.params.supplier_id;
+    try {
+        const existingSupplier = await suppliers.findOne({ supplier_id });
+        if (existingSupplier) {
+            res.status(200).json({ exists: true });
+        } else {
+            res.status(200).json({ exists: false });
+        }
+    } catch (error) {
+        console.error("Error checking duplicate supplier ID:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
 
 module.exports = router;
