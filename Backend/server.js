@@ -8,7 +8,13 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 const nodemailer = require('nodemailer');
 
-app.use(cors());
+app.use(cors(
+    {
+        origin: ["https://deploy-mern-1whq.vercel.app"],
+        methods: ["POST", "GET"], 
+        credentials: true
+    }
+));
 app.use(bodyParser.json());
 
 const URL = process.env.MONGODB_URL;
