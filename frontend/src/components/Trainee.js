@@ -476,13 +476,13 @@ export default function Trainee() {
             });
     };
 
-
+    // Filter trainees based on search term
     const filteredTrainees = trainees.filter(trainee =>
         (trainee.trainee_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             searchTerm === '') &&
-        (trainee.trainee_gender.toLowerCase().includes(genderSearchTerm.toLowerCase()) ||
+        (trainee.trainee_gender.toLowerCase() === genderSearchTerm.toLowerCase() ||
             genderSearchTerm === '')
-    );
+    );    
 
     // useEffect to create or update the line chart
     useEffect(() => {
@@ -766,14 +766,16 @@ export default function Trainee() {
                                         />
                                     </div>
                                     <div className="col-md-4">
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            placeholder="Search by Gender"
-                                            value={genderSearchTerm}
-                                            onChange={(e) => setGenderSearchTerm(e.target.value)}
-                                        />
-                                    </div>
+                                    <select
+                                        className="form-control"
+                                        value={genderSearchTerm}
+                                        onChange={(e) => setGenderSearchTerm(e.target.value)}
+                                    >
+                                        <option value="">All</option>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                    </select>
+                                </div>
                                 </div>
                                 <br></br>
                                 <div className="row row-cols-1 row-cols-md-2 g-4">
