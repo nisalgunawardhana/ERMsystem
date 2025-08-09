@@ -163,22 +163,22 @@ function CreateBill() {
     };
     items.forEach(item => {
   axios.put(`http://localhost:8080/clothes/decrement/${item.code}`, { quantity: item.quantity })
-    .then(response => {
-      console.log(`Stock updated for item ${item.code} in clothes database`);
+    .then(() => {
+      console.log("Stock updated for item in clothes database", { code: item.code });
     })
-    .catch(error => {
-      console.error(`Error updating stock for item ${item.code} in clothes database:`, error);
+    .catch((error) => {
+      console.error("Error updating stock for item in clothes database", { code: item.code, error });
     });
 });
 
 // Update stock in toys database
 items.forEach(item => {
   axios.put(`http://localhost:8080/toys/decrement/${item.code}`, { quantity: item.quantity })
-    .then(response => {
-      console.log(`Stock updated for item ${item.code} in toys database`);
+    .then(() => {
+      console.log("Stock updated for item in toys database", { code: item.code });
     })
-    .catch(error => {
-      console.error(`Error updating stock for item ${item.code} in toys database:`, error);
+    .catch((error) => {
+      console.error("Error updating stock for item in toys database", { code: item.code, error });
     });
 });
 
@@ -205,7 +205,7 @@ items.forEach(item => {
       .get(`http://localhost:8080/customer/calculate-loyalty-points/${customer_id}`)
       .then((response) => {
         const { loyaltyPoints } = response.data;
-        console.log(`Points Added: ${loyaltyPoints}`);
+        console.log("Points Added:", loyaltyPoints);
       })
       .catch((err) => {
         console.error("Error while submitting form:", err);
