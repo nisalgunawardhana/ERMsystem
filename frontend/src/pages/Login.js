@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Form, Input, Button } from 'antd';
 import { useNavigate } from 'react-router-dom'
 import loginImage from '../images/login.jpg'
@@ -12,7 +12,20 @@ function Login() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const onFinish = async(values) => {
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const token = params.get("token");
+        if (token) {
+            localStorage.setItem("token", token);
+            navigate("/dashboard/finance/");
+        }
+    }, [navigate]);
+
+    const handleGoogleLogin = () => {
+        window.location.href = "http://localhost:8080/auth/google";
+    };
+
+    const onFinish = async (values) => {
         try {
             dispatch(showLoading())
             const response = await axios.post('/api/user/login', values)
@@ -20,7 +33,7 @@ function Login() {
 
             if (response.data.success) {
                 toast.success(response.data.message)
-                
+
 
                 // Extract role information from response data
                 const role = response.data.role;
@@ -65,25 +78,33 @@ function Login() {
     return (
         <div className='login-container'>
             <div className='login-background'>
-                <img src={loginImage} alt='Login Image'/>   
+                <img src={loginImage} alt='Login Image' />
             </div>
 
             <div className='authentication'>
                 <div className='authentication-form card p-4'>
-                
-                <h1 className='card-topic'>Welcome Back!</h1>
-                <br></br>
-                <Form className='' layout='vertical' onFinish={onFinish}>
-                    <Form.Item label='Email' name='email'>
-                        <Input  className='loginginput'placeholder='Email'/>
-                    </Form.Item>
 
-                    <Form.Item label='Password' name='password'>
-                        <Input className='loginginput' placeholder='Password' type='password'/>
-                    </Form.Item>
+                    <h1 className='card-topic'>Welcome Back!</h1>
+                    <br></br>
+                    <Form className='' layout='vertical' onFinish={onFinish}>
+                        <Form.Item label='Email' name='email'>
+                            <Input className='loginginput' placeholder='Email' />
+                        </Form.Item>
 
-                    <Button className='primary-button my-1' htmlType='submit'>LOGIN</Button>
-                </Form>
+                        <Form.Item label='Password' name='password'>
+                            <Input className='loginginput' placeholder='Password' type='password' />
+                        </Form.Item>
+
+                        <Button className='primary-button my-1' htmlType='submit'>LOGIN</Button>
+                    </Form>
+                    <br />
+                    <Button
+                        className='google-login-button'
+                        style={{ background: '#4285F4', color: '#fff', width: '100%', marginTop: '10px' }}
+                        onClick={handleGoogleLogin}
+                    >
+                        Login with Google
+                    </Button>
                 </div>
             </div>
         </div>
