@@ -6,6 +6,7 @@ import { toast } from "react-hot-toast"
 import axios from "axios"
 import { useDispatch } from "react-redux"
 import { hideLoading, showLoading } from '../redux/alertsSlice';
+import { FcGoogle } from "react-icons/fc";
 
 
 function Login() {
@@ -100,10 +101,22 @@ function Login() {
                     <br />
                     <Button
                         className='google-login-button'
-                        style={{ background: '#4285F4', color: '#fff', width: '100%', marginTop: '10px' }}
+                        style={{
+                            background: '#fff',
+                            color: '#444',
+                            width: '100%',
+                            marginTop: '10px',
+                            border: '1px solid #ddd',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontWeight: 'bold',
+                            fontSize: '16px'
+                        }}
                         onClick={handleGoogleLogin}
                     >
-                        Login with Google
+                        <FcGoogle style={{ marginRight: '8px', fontSize: '22px' }} />
+                        Sign in with Google
                     </Button>
                 </div>
             </div>
