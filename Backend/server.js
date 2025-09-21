@@ -8,7 +8,6 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 const nodemailer = require('nodemailer');
 
-app.use(cors());
 app.use(bodyParser.json());
 
 const URL = process.env.MONGODB_URL;
@@ -132,7 +131,25 @@ const toys = require("./routes/toysRoutes.js");
 const Leaves = require("./models/leavesmodel.js");
 app.use("/toys", toys);
 
+// Define allowed origins
+const allowedOrigins = [
+  'https://your-frontend-domain.com', // Replace with your actual frontend domain
+  'http://localhost:3000'             // For local development
+];
 
+// Restrictive CORS policy
+app.use(cors({
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true
+}));
 
 app.listen(PORT, () => {
     console.log(`Server is up and running on: ${PORT}`);
