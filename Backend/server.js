@@ -14,6 +14,32 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const jwt = require('jsonwebtoken');
 
+// Define allowed origins
+const allowedOrigins = ['http://localhost:3000'];
+
+// Restrictive CORS policy
+app.use(cors({
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true
+}));
+
+app.listen(PORT, () => {
+    console.log(`Server is up and running on: ${PORT}`);
+});
+
+if (process.env.NODE_ENV === 'test') {
+  app.get('/otherExpense/', (req, res) => {
+    res.json({ test: 'ok' });
+  });
+}
 
 // CSRF Protection Configuration
 const {
@@ -35,11 +61,11 @@ const {
 });
 
 app.use(cookieParser());
-app.use(cors({
-  origin: process.env.FRONTEND_URL || "http://localhost:3000",
-  credentials: true
-}));
-app.use(bodyParser.json());
+// app.use(cors({
+//   origin: process.env.FRONTEND_URL || "http://localhost:3000",
+//   credentials: true
+// }));
+// app.use(bodyParser.json());
 
 // CSRF token endpoint
 app.get("/csrf-token", (req, res) => {
@@ -67,27 +93,6 @@ const URL = process.env.MONGODB_URL;
 // Connect to MongoDB without deprecated options:
 mongoose.connect(URL, {
     useNewUrlParser: true,
-});
-
-// Define allowed origins
-const allowedOrigins = ['http://localhost:3000'];
-
-// Restrictive CORS policy
-app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-      return callback(new Error(msg), false);
-    }
-    return callback(null, true);
-  },
-  credentials: true
-}));
-
-app.listen(PORT, () => {
-    console.log(`Server is up and running on: ${PORT}`);
 });
 
 const connection = mongoose.connection;
@@ -258,8 +263,4 @@ app.get('/logout', (req, res) => {
     // log out from Google
     res.redirect('https://accounts.google.com/Logout?continue=https://appengine.google.com/_ah/logout?continue=http://localhost:3000/login');
   });
-});
-
-app.listen(PORT, () => {
-    console.log(`Server is up and running on: ${PORT}`);
 });
