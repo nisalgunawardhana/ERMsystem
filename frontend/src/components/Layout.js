@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import './Layout.css';
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux" ;
+import { useSelector, useDispatch } from "react-redux";
 import { Popover, Space } from 'antd';
 import axios from 'axios';
-import {Button} from 'react-bootstrap';
-import { setUser } from '../redux/userSlice'; 
+import { Button } from 'react-bootstrap';
+import { setUser } from '../redux/userSlice';
 
-function Layout({children}) {
+function Layout({ children }) {
     const [collapsed, setCollapsed] = useState(false);
     const { user } = useSelector((state) => state.user);
     const location = useLocation();
@@ -82,7 +82,7 @@ function Layout({children}) {
             path: '/dashboard/cashier/customer',
         }
     ];
-    
+
     //3. financial manager
     const financialManagerMenu = [
         {
@@ -109,7 +109,7 @@ function Layout({children}) {
 
     //4. logistic managers
     const logisticManagerMenu = [
-        
+
         {
             name: 'Dashboard',
             path: '/dashboard/logistics',
@@ -123,15 +123,15 @@ function Layout({children}) {
         {
             name: 'Suppliers',
             path: '/dashboard/logistics/supplier',
-            icon: 'ri-truck-line', 
+            icon: 'ri-truck-line',
         },
         {
             name: 'Purchase Orders',
             path: '/dashboard/logistics/purchaseOrder',
-            icon: 'ri-store-2-line', 
+            icon: 'ri-store-2-line',
         }
     ];
-    
+
     //5. staff manager
     const staffManagerMenu = [
         {
@@ -161,7 +161,7 @@ function Layout({children}) {
             icon: 'ri-home-4-line'
         },
     ];
-    
+
     //6.training coordinator
     const trainingCoordinatorMenu = [
         {
@@ -213,19 +213,24 @@ function Layout({children}) {
             break;
     }
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
         const confirmLogout = window.confirm('Are you sure you want to logout?');
-        // Show a confirmation message before logging out
         if (confirmLogout) {
+            try {
+                // Call backend logout to destroy session (for OAuth)
+                await axios.get('http://localhost:8080/logout', { withCredentials: true });
+            } catch (error) {
+                // Even if backend logout fails, proceed with frontend logout
+                console.error('Backend logout failed:', error);
+            }
             localStorage.clear();
             dispatch(setUser(null)); // Clear user state in Redux store
             navigate('/login');
         }
     };
-
     const getData = async () => {
         try {
-            const response = await axios.post('/api/users/get-employee-info-by-id', {} , {
+            const response = await axios.post('/api/users/get-employee-info-by-id', {}, {
                 headers: {
                     Authorization: 'Bearer ' + localStorage.getItem('token')
                 },
@@ -251,21 +256,20 @@ function Layout({children}) {
 
     return (
         <div className="main p-2">
-            <div className="d-flex layout"> 
+            <div className="d-flex layout">
                 {/* sidebar */}
                 <div className={`${collapsed ? 'collapsed-sidebar' : 'sidebar'}`}>
                     <div className="sidebar-header">
                         <div className={`${collapsed ? 'collapsed-sidebar-shopname' : 'sidebar-shopname'}`}>
-                            Diyana Fashion 
-                        </div> 
+                            Diyana Fashion
+                        </div>
                     </div>
                     <div className="menu">
                         {menuToBeRendered.map((menu) => {
                             const isActive = location.pathname === menu.path;
                             return (
-                                <div 
-                                    className={`d-flex menu-item ${
-                                        isActive && "active-menu-item"}`}
+                                <div
+                                    className={`d-flex menu-item ${isActive && "active-menu-item"}`}
                                     key={menu.name}
                                 >
                                     <i className={menu.icon}></i>
@@ -276,14 +280,14 @@ function Layout({children}) {
 
                         {/*logout*/}
                         <div className="logout">
-                            <div 
-                                className={`d-flex menu-item`} 
+                            <div
+                                className={`d-flex menu-item`}
                                 onClick={handleLogout}
                             >
                                 <i className="ri-logout-circle-r-line"></i>
                                 {!collapsed && <Link to='/login'>Logout</Link>}
-                            </div>  
-                        </div> 
+                            </div>
+                        </div>
 
                     </div>
                 </div>
@@ -292,23 +296,23 @@ function Layout({children}) {
                         {/*icon change from close button to menu icon*/}
                         {collapsed ? (
                             <Space wrap>
-                            <Popover content={popoverContent} title="Expand Sidebar" trigger="hover" overlayClassName="open-popover">
-                            <i 
-                                className="ri-menu-line header-action-icon" 
-                                onClick={() => setCollapsed(false)}
-                            ></i>
-                            </Popover>
+                                <Popover content={popoverContent} title="Expand Sidebar" trigger="hover" overlayClassName="open-popover">
+                                    <i
+                                        className="ri-menu-line header-action-icon"
+                                        onClick={() => setCollapsed(false)}
+                                    ></i>
+                                </Popover>
                             </Space>
                         ) : (
                             <Space wrap>
                                 <Popover content={popoverContent} title="Close Sidebar" trigger="hover" overlayClassName="close-popover">
-                                 <i 
-                                className="ri-close-line header-action-icon" 
-                                onClick={() => setCollapsed(true)}
-                            ></i>
-                            </Popover>
+                                    <i
+                                        className="ri-close-line header-action-icon"
+                                        onClick={() => setCollapsed(true)}
+                                    ></i>
+                                </Popover>
                             </Space>
-                           
+
                         )}
                         {/*name*/}
                         <div className="d-flex align-items-center px-5">
@@ -318,7 +322,7 @@ function Layout({children}) {
 
                     {/*body*/}
                     <div className="body">
-                    {renderChildren()}
+                        {renderChildren()}
                     </div>
                 </div>
             </div>
