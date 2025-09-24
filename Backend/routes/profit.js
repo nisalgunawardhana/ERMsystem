@@ -490,7 +490,7 @@ router.route("/other/:month").get(async (req, res) => {
 });
 
 // Function to convert month name to numeric representation
-function monthToNumeric(month) {
+function monthToNumeric2(month) {
   const monthMap = {
     "January": "01",
     "February": "02",
