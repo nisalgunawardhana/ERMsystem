@@ -69,6 +69,27 @@ mongoose.connect(URL, {
     useNewUrlParser: true,
 });
 
+// Define allowed origins
+const allowedOrigins = ['http://localhost:3000'];
+
+// Restrictive CORS policy
+app.use(cors({
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true
+}));
+
+app.listen(PORT, () => {
+    console.log(`Server is up and running on: ${PORT}`);
+});
+
 const connection = mongoose.connection;
 connection.once("open", () => {
     console.log("MongoDB connection successful");
@@ -175,23 +196,7 @@ const toys = require("./routes/toysRoutes.js");
 const Leaves = require("./models/leavesmodel.js");
 app.use("/toys", toys);
 
-// CORS middleware - place this BEFORE all routes
-const allowedOrigins = [
-  'http://localhost:3000',
-  'https://your-frontend-domain.com'
-];
-
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-      return callback(new Error(msg), false);
-    }
-    return callback(null, true);
-  },
-  credentials: true
-}));
+module.exports = app;
 
 // Session middleware
 app.use(session({
