@@ -6,7 +6,7 @@ const {
     sanitizeParams, 
     sanitizeObjectId,
     sanitizeInput 
-} = require("../utils/inputSanitizer");
+} = require("../middlewares/inputSanitizer");
 
 router.route("/add").post((req,res)=>{
     try {
