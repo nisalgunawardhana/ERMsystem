@@ -1,12 +1,18 @@
-const router = require("express").Router();
+const express = require('express');
+const router = express.Router();
 const mongoose = require('mongoose');
 let employees = require("../models/employeemodel");
 const { 
     sanitizeReqBody, 
     sanitizeParams, 
     sanitizeObjectId,
-    sanitizeInput 
+    sanitizeInput,
+    sanitizeMiddleware,
+    strictSanitize 
 } = require("../middlewares/inputSanitizer");
+
+// Apply sanitization middleware to all routes
+router.use(sanitizeMiddleware);
 
 router.route("/add").post((req,res)=>{
     try {
@@ -139,6 +145,45 @@ router.delete('/deleteMultiple', async (req, res) => {
     }
 });
 
+// Example routes with enhanced protection
+router.get('/search', async (req, res) => {
+    try {
+        // Query is already sanitized by middleware
+        const employees = await Employee.find(req.query);
+        res.json(employees);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+router.get('/:id', async (req, res) => {
+    try {
+        const sanitizedId = sanitizeObjectId(req.params.id);
+        if (!sanitizedId) {
+            return res.status(400).json({ error: 'Invalid employee ID' });
+        }
+        
+        const employee = await Employee.findById(sanitizedId);
+        if (!employee) {
+            return res.status(404).json({ error: 'Employee not found' });
+        }
+        
+        res.json(employee);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// For authentication routes, use strict sanitization
+router.post('/login', async (req, res) => {
+    try {
+        const sanitizedBody = strictSanitize(req.body);
+        // Process login with sanitized data
+        // ...existing login logic...
+    } catch (error) {
+        res.status(400).json({ error: 'Invalid login data' });
+    }
+});
 
 module.exports = router;
 

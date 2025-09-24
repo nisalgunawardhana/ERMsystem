@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const mongoSanitize = require('express-mongo-sanitize');
 
 const sanitizeValue = (value) => {
     if (value === null || value === undefined) {
@@ -11,7 +12,7 @@ const sanitizeValue = (value) => {
         return str.substring(1);
     }
 
-    // Remove dangerous JavaScript patterns
+    // Enhanced dangerous patterns for MongoDB injection prevention
     const dangerousPatterns = [
         /\$where/gi,
         /\$regex/gi,
@@ -32,9 +33,22 @@ const sanitizeValue = (value) => {
         /\$all/gi,
         /\$size/gi,
         /\$elemMatch/gi,
+        /\$slice/gi,
+        /\$push/gi,
+        /\$pull/gi,
+        /\$pop/gi,
+        /\$unset/gi,
+        /\$set/gi,
+        /\$inc/gi,
+        /\$mul/gi,
+        /\$rename/gi,
+        /\$min/gi,
+        /\$max/gi,
+        /\$currentDate/gi,
         /javascript:/gi,
         /eval\(/gi,
-        /function\(/gi
+        /function\(/gi,
+        /ObjectId\(/gi
     ];
 
     // Check for dangerous patterns
@@ -48,11 +62,7 @@ const sanitizeValue = (value) => {
     return value;
 };
 
-/**
- * Recursively sanitizes an object or array
- * @param {any} input - The input to sanitize
- * @returns {any} - The sanitized input
- */
+
 const sanitizeObject = (input) => {
     if (input === null || input === undefined) {
         return input;
@@ -67,11 +77,18 @@ const sanitizeObject = (input) => {
         
         for (const key in input) {
             if (input.hasOwnProperty(key)) {
-                // Sanitize the key name (remove $ operators)
-                const sanitizedKey = key.startsWith('$') ? key.substring(1) : key;
+                // Enhanced key sanitization - remove all $ operators
+                const sanitizedKey = key.replace(/^\$+/, '');
                 
                 // Skip dangerous keys entirely
-                if (sanitizedKey === 'where' || sanitizedKey === 'mapReduce' || sanitizedKey === 'group') {
+                const dangerousKeys = [
+                    'where', 'mapReduce', 'group', 'eval', 'function',
+                    '$where', '$mapReduce', '$group', '$eval', '$function',
+                    'constructor', 'prototype', '__proto__'
+                ];
+                
+                if (dangerousKeys.includes(sanitizedKey.toLowerCase()) || 
+                    dangerousKeys.includes(key.toLowerCase())) {
                     continue;
                 }
                 
@@ -86,50 +103,43 @@ const sanitizeObject = (input) => {
     return sanitizeValue(input);
 };
 
-/**
- * Main sanitization function that handles all input types
- * @param {any} input - The input to sanitize
- * @returns {any} - The sanitized input
- */
 const sanitizeInput = (input) => {
-    if (typeof input === 'object' && input !== null) {
-        return sanitizeObject(input);
+    // First pass: Use express-mongo-sanitize
+    let sanitized = mongoSanitize(input);
+    
+    // Second pass: Apply custom sanitization
+    if (typeof sanitized === 'object' && sanitized !== null) {
+        sanitized = sanitizeObject(sanitized);
+    } else {
+        sanitized = sanitizeValue(sanitized);
     }
     
-    return sanitizeValue(input);
+    return sanitized;
 };
 
-/**
- * Sanitizes request body data
- * @param {object} reqBody - The request body to sanitize
- * @returns {object} - The sanitized request body
- */
+
 const sanitizeReqBody = (reqBody) => {
     if (!reqBody || typeof reqBody !== 'object') {
         return {};
     }
     
-    return sanitizeInput(reqBody);
+    // Apply mongo-sanitize first, then custom sanitization
+    let sanitized = mongoSanitize(reqBody);
+    return sanitizeInput(sanitized);
 };
 
-/**
- * Sanitizes query parameters
- * @param {object} queryParams - The query parameters to sanitize
- * @returns {object} - The sanitized query parameters
- */
+
 const sanitizeQueryParams = (queryParams) => {
     if (!queryParams || typeof queryParams !== 'object') {
         return {};
     }
     
-    return sanitizeInput(queryParams);
+    // Apply mongo-sanitize first, then custom sanitization
+    let sanitized = mongoSanitize(queryParams);
+    return sanitizeInput(sanitized);
 };
 
-/**
- * Sanitizes URL parameters
- * @param {object} params - The URL parameters to sanitize
- * @returns {object} - The sanitized parameters
- */
+
 const sanitizeParams = (params) => {
     if (!params || typeof params !== 'object') {
         return {};
@@ -138,54 +148,70 @@ const sanitizeParams = (params) => {
     const sanitized = {};
     for (const key in params) {
         if (params.hasOwnProperty(key)) {
-            sanitized[key] = sanitizeValue(params[key]);
+            // Apply both mongo-sanitize and custom sanitization to params
+            const mongoSanitized = mongoSanitize(params[key]);
+            sanitized[key] = sanitizeValue(mongoSanitized);
         }
     }
     
     return sanitized;
 };
 
-/**
- * Validates and sanitizes MongoDB ObjectId
- * @param {string} id - The ID to validate
- * @returns {string|null} - Valid ObjectId or null if invalid
- */
+
 const sanitizeObjectId = (id) => {
     if (!id) return null;
     
-    const sanitizedId = sanitizeValue(id);
+    // First sanitize the input
+    const sanitizedId = sanitizeValue(mongoSanitize(id));
     
+    // Check if it's a valid ObjectId
     if (!mongoose.Types.ObjectId.isValid(sanitizedId)) {
+        return null;
+    }
+    
+    // Additional check to ensure it's a proper 24-character hex string
+    if (!/^[0-9a-fA-F]{24}$/.test(sanitizedId)) {
         return null;
     }
     
     return sanitizedId;
 };
 
-/**
- * Express middleware for automatic input sanitization
- * @param {object} req - Express request object
- * @param {object} res - Express response object
- * @param {function} next - Express next function
- */
 const sanitizeMiddleware = (req, res, next) => {
     try {
-        // Sanitize request body
-        if (req.body) {
-            req.body = sanitizeReqBody(req.body);
-        }
-        
-        // Sanitize query parameters
-        if (req.query) {
-            req.query = sanitizeQueryParams(req.query);
-        }
-        
-        // Sanitize URL parameters
-        if (req.params) {
-            req.params = sanitizeParams(req.params);
-        }
-        
-        next();
+        // Apply express-mongo-sanitize middleware first
+        mongoSanitize({
+            replaceWith: '_',
+            onSanitize: ({ req, key }) => {
+                console.warn(`MongoDB injection attempt detected and sanitized: ${key}`);
+            }
+        })(req, res, () => {
+            // Then apply custom sanitization
+            try {
+                // Sanitize request body
+                if (req.body) {
+                    req.body = sanitizeReqBody(req.body);
+                }
+                
+                // Sanitize query parameters
+                if (req.query) {
+                    req.query = sanitizeQueryParams(req.query);
+                }
+                
+                // Sanitize URL parameters
+                if (req.params) {
+                    req.params = sanitizeParams(req.params);
+                }
+                
+                next();
+            } catch (error) {
+                console.error('Error in custom input sanitization:', error);
+                res.status(400).json({ 
+                    error: 'Invalid input data',
+                    message: 'Request contains potentially harmful data'
+                });
+            }
+        });
     } catch (error) {
         console.error('Error in input sanitization middleware:', error);
         res.status(400).json({ 
@@ -195,6 +221,20 @@ const sanitizeMiddleware = (req, res, next) => {
     }
 };
 
+
+const strictSanitize = (input) => {
+    // Remove all MongoDB operators completely
+    let sanitized = JSON.stringify(input);
+    sanitized = sanitized.replace(/"\$[^"]*":/g, '"":');
+    try {
+        sanitized = JSON.parse(sanitized);
+    } catch (e) {
+        return {};
+    }
+    
+    return sanitizeInput(sanitized);
+};
+
 module.exports = {
     sanitizeInput,
     sanitizeReqBody,
@@ -202,5 +242,6 @@ module.exports = {
     sanitizeParams,
     sanitizeObjectId,
     sanitizeValue,
-    sanitizeMiddleware
+    sanitizeMiddleware,
+    strictSanitize
 };
