@@ -9,6 +9,11 @@ const app = express();
 
 const PORT = process.env.PORT || 8080;
 const nodemailer = require('nodemailer');
+const session = require('express-session');
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const jwt = require('jsonwebtoken');
+
 
 // CSRF Protection Configuration
 const {
@@ -170,7 +175,85 @@ const toys = require("./routes/toysRoutes.js");
 const Leaves = require("./models/leavesmodel.js");
 app.use("/toys", toys);
 
+// CORS middleware - place this BEFORE all routes
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://your-frontend-domain.com'
+];
 
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true
+}));
+
+// Session middleware
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: true
+}));
+
+// Initialize passport
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Serialize/deserialize user
+passport.serializeUser((user, done) => done(null, user));
+passport.deserializeUser((obj, done) => done(null, obj));
+
+// Configure Google OAuth strategy
+passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: process.env.GOOGLE_CALLBACK_URL
+  },
+  function(accessToken, refreshToken, profile, done) {
+    // Here, you can save/find the user in your DB if needed
+    return done(null, profile);
+  }
+));
+
+// Google OAuth routes
+app.get('/auth/google',
+  passport.authenticate('google', { scope: ['profile', 'email'] })
+);
+
+const User = require("./models/userModel")
+
+app.get('/auth/google/callback', 
+  passport.authenticate('google', { failureRedirect: '/' }),
+  async function(req, res) {
+    const googleEmail = req.user.emails[0].value;
+    const user = await User.findOne({ email: googleEmail });
+
+    if (!user) {
+      // Optionally, create the user here or reject
+      return res.redirect('http://localhost:3000/login?error=not_registered');
+    }
+
+    // Generate JWT with DB user info
+    const token = jwt.sign(
+      { id: user._id, role: user.role }, // used role flags
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+    res.redirect(`http://localhost:3000/login?token=${token}`);
+  }
+);
+
+app.get('/logout', (req, res) => {
+  req.logout(() => {
+    // log out from Google
+    res.redirect('https://accounts.google.com/Logout?continue=https://appengine.google.com/_ah/logout?continue=http://localhost:3000/login');
+  });
+});
 
 app.listen(PORT, () => {
     console.log(`Server is up and running on: ${PORT}`);
