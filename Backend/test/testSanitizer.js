@@ -4,7 +4,7 @@ const {
     sanitizeReqBody,
     sanitizeObjectId,
     sanitizeParams
-} = require('../utils/inputSanitizer');
+} = require('../middlewares/inputSanitizer');
 
 console.log('🔍 Testing Input Sanitizer...\n');
 
