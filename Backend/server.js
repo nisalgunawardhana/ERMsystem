@@ -201,7 +201,7 @@ app.get('/auth/google/callback',
 
     // Generate JWT with DB user info
     const token = jwt.sign(
-      { id: user._id, role: user.role }, // or use your role flags
+      { id: user._id, role: user.role }, // used role flags
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );
@@ -211,7 +211,8 @@ app.get('/auth/google/callback',
 
 app.get('/logout', (req, res) => {
   req.logout(() => {
-    res.redirect('/');
+    // log out from Google
+    res.redirect('https://accounts.google.com/Logout?continue=https://appengine.google.com/_ah/logout?continue=http://localhost:3000/login');
   });
 });
 
