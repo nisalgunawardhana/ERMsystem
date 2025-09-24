@@ -5,6 +5,30 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Layout from '../Layout';
 
+// Input sanitization utility functions
+const sanitizeInput = (input) => {
+  if (typeof input !== 'string') {
+    return String(input);
+  }
+  // Remove or escape potentially dangerous characters
+  return input
+    .replace(/[%{}]/g, '') // Remove format specifiers
+    .replace(/[\r\n\t]/g, ' ') // Replace newlines and tabs with spaces
+    .trim()
+    .substring(0, 1000); // Limit length to prevent log flooding
+};
+
+const sanitizeForLogging = (data) => {
+  if (typeof data === 'object' && data !== null) {
+    const sanitized = {};
+    for (const [key, value] of Object.entries(data)) {
+      sanitized[sanitizeInput(key)] = sanitizeInput(value);
+    }
+    return sanitized;
+  }
+  return sanitizeInput(data);
+};
+
 
 
 function CreateBill() {
@@ -24,13 +48,14 @@ function CreateBill() {
 
   useEffect(() => {
   if (itemCode) {
-    axios.get(`http://localhost:8080/clothes/price/${itemCode}`)
+    const sanitizedItemCode = sanitizeInput(itemCode);
+    axios.get(`http://localhost:8080/clothes/price/${encodeURIComponent(sanitizedItemCode)}`)
       .then(response => {
         if (response.data.price !== undefined) {
           setItemPrice(response.data.price);
         } else {
           // If item is not found in clothes database, fetch from toys database
-          axios.get(`http://localhost:8080/toys/price/${itemCode}`)
+          axios.get(`http://localhost:8080/toys/price/${encodeURIComponent(sanitizedItemCode)}`)
             .then(response => {
               if (response.data.price !== undefined) {
                 setItemPrice(response.data.price);
@@ -40,15 +65,15 @@ function CreateBill() {
               }
             })
             .catch(error => {
-              console.log("Error fetching item price from toys database:", error);
+              console.log("Error fetching item price from toys database:", sanitizeForLogging(error));
               setItemPrice(0);
             });
         }
       })
       .catch(error => {
-        console.log("Error fetching item price from clothes database:", error);
+        console.log("Error fetching item price from clothes database:", sanitizeForLogging(error));
         // If an error occurs while fetching from clothes database, try fetching from toys database
-        axios.get(`http://localhost:8080/toys/price/${itemCode}`)
+        axios.get(`http://localhost:8080/toys/price/${encodeURIComponent(sanitizedItemCode)}`)
           .then(response => {
             if (response.data.price !== undefined) {
               setItemPrice(response.data.price);
@@ -58,7 +83,7 @@ function CreateBill() {
             }
           })
           .catch(error => {
-            console.log("Error fetching item price from toys database:", error);
+            console.log("Error fetching item price from toys database:", sanitizeForLogging(error));
             setItemPrice(0);
           });
       });
@@ -75,7 +100,7 @@ function CreateBill() {
         setDiscountRules(response.data);
       })
       .catch((error) => {
-        console.error("Error fetching discount rules:", error);
+        console.error("Error fetching discount rules:", sanitizeForLogging(error));
         // Handle error appropriately (e.g., show error message to the user)
       });
   }, []);
@@ -93,22 +118,23 @@ function CreateBill() {
 
   useEffect(() => {
     if (customer_id) {
-      axios.get(`http://localhost:8080/customer/points/${customer_id}`)
+      const sanitizedCustomerId = sanitizeInput(customer_id);
+      axios.get(`http://localhost:8080/customer/points/${encodeURIComponent(sanitizedCustomerId)}`)
         .then(response => {
           const points = response.data.points;
           const calculatedDiscount = points / 10;
           const newPointcount =  points-calculatedDiscount
           setDiscount(calculatedDiscount);
-          axios.put(`http://localhost:8080/customer/update/${customer_id}`, { point: newPointcount })
+          axios.put(`http://localhost:8080/customer/update/${encodeURIComponent(sanitizedCustomerId)}`, { point: newPointcount })
             .then(response => {
-              console.log("Customer points updated:", response.data);
+              console.log("Customer points updated:", sanitizeForLogging(response.data));
             })
             .catch(error => {
-              console.error("Error updating customer points:", error);
+              console.error("Error updating customer points:", sanitizeForLogging(error));
             });
         })
         .catch(error => {
-          console.error("Error fetching customer points:", error);
+          console.error("Error fetching customer points:", sanitizeForLogging(error));
         });
     } else {
       setDiscount(0);
@@ -128,7 +154,32 @@ function CreateBill() {
 
 
   const addItem = () => {
-    const newItem = { code: itemCode, price: itemPrice, quantity: itemQuantity };
+    // Sanitize inputs before processing
+    const sanitizedCode = sanitizeInput(itemCode);
+    const sanitizedPrice = parseFloat(itemPrice) || 0;
+    const sanitizedQuantity = parseInt(itemQuantity) || 1;
+    
+    // Validate inputs
+    if (!sanitizedCode || sanitizedCode.length === 0) {
+      alert("Please enter a valid item code");
+      return;
+    }
+    
+    if (sanitizedPrice <= 0) {
+      alert("Please enter a valid price");
+      return;
+    }
+    
+    if (sanitizedQuantity <= 0) {
+      alert("Please enter a valid quantity");
+      return;
+    }
+    
+    const newItem = { 
+      code: sanitizedCode, 
+      price: sanitizedPrice, 
+      quantity: sanitizedQuantity 
+    };
     setItems([...items, newItem]);
     setItemCode("");
     setItemQuantity(1);
@@ -144,41 +195,58 @@ function CreateBill() {
     e.preventDefault();
     console.log("Submitting form...");
 
-
-
+    // Sanitize and validate form inputs
+    const sanitizedCustomerId = sanitizeInput(customer_id);
+    const sanitizedBillingDate = sanitizeInput(billing_date);
+    
+    // Validate required fields
+    if (!sanitizedCustomerId || sanitizedCustomerId.length === 0) {
+      alert("Please enter a valid customer ID");
+      return;
+    }
+    
+    if (!sanitizedBillingDate || sanitizedBillingDate.length === 0) {
+      alert("Please select a valid billing date");
+      return;
+    }
+    
+    if (items.length === 0) {
+      alert("Please add at least one item to the bill");
+      return;
+    }
 
     const convertedItems = items.map(item => ({
-      product_id: item.code,
-      quantity: item.quantity,
-      unit_price: item.price
+      product_id: sanitizeInput(item.code),
+      quantity: parseInt(item.quantity) || 0,
+      unit_price: parseFloat(item.price) || 0
     }));
 
-
-
     const newBill = {
-      customer_id,
-      billing_date,
+      customer_id: sanitizedCustomerId,
+      billing_date: sanitizedBillingDate,
       items: convertedItems,
-      total_amount: totalAmount
+      total_amount: parseFloat(totalAmount) || 0
     };
     items.forEach(item => {
-  axios.put(`http://localhost:8080/clothes/decrement/${item.code}`, { quantity: item.quantity })
+  const sanitizedItemCode = sanitizeInput(item.code);
+  axios.put(`http://localhost:8080/clothes/decrement/${encodeURIComponent(sanitizedItemCode)}`, { quantity: parseInt(item.quantity) || 0 })
     .then(() => {
-      console.log("Stock updated for item in clothes database", { code: item.code });
+      console.log("Stock updated for item in clothes database", sanitizeForLogging({ code: item.code }));
     })
     .catch((error) => {
-      console.error("Error updating stock for item in clothes database", { code: item.code, error });
+      console.error("Error updating stock for item in clothes database", sanitizeForLogging({ code: item.code, error }));
     });
 });
 
 // Update stock in toys database
 items.forEach(item => {
-  axios.put(`http://localhost:8080/toys/decrement/${item.code}`, { quantity: item.quantity })
+  const sanitizedItemCode = sanitizeInput(item.code);
+  axios.put(`http://localhost:8080/toys/decrement/${encodeURIComponent(sanitizedItemCode)}`, { quantity: parseInt(item.quantity) || 0 })
     .then(() => {
-      console.log("Stock updated for item in toys database", { code: item.code });
+      console.log("Stock updated for item in toys database", sanitizeForLogging({ code: item.code }));
     })
     .catch((error) => {
-      console.error("Error updating stock for item in toys database", { code: item.code, error });
+      console.error("Error updating stock for item in toys database", sanitizeForLogging({ code: item.code, error }));
     });
 });
 
@@ -198,17 +266,17 @@ items.forEach(item => {
       })
       
       .catch((err) => {
-        console.error("Error while submitting form:", err);
+        console.error("Error while submitting form:", sanitizeForLogging(err));
         alert("Error occurred while submitting the form. Please try again later.");
       });
       axios
-      .get(`http://localhost:8080/customer/calculate-loyalty-points/${customer_id}`)
+      .get(`http://localhost:8080/customer/calculate-loyalty-points/${encodeURIComponent(sanitizedCustomerId)}`)
       .then((response) => {
         const { loyaltyPoints } = response.data;
-        console.log("Points Added:", loyaltyPoints);
+        console.log("Points Added:", sanitizeInput(loyaltyPoints));
       })
       .catch((err) => {
-        console.error("Error while submitting form:", err);
+        console.error("Error while submitting form:", sanitizeForLogging(err));
         
       });
       
