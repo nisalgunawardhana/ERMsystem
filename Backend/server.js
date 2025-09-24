@@ -3,20 +3,65 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 require('dotenv').config();
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
+const { doubleCsrf } = require("csrf-csrf");
 const app = express();
-//app.use(express.json())
+
 const PORT = process.env.PORT || 8080;
 const nodemailer = require('nodemailer');
 
-app.use(cors());
+// CSRF Protection Configuration
+const {
+  invalidCsrfTokenError,
+  generateToken,
+  validateRequest,
+} = doubleCsrf({
+  getSecret: () => process.env.CSRF_SECRET || "your-csrf-secret-key-change-in-production",
+  cookieName: "__Host-psifi.x-csrf-token",
+  cookieOptions: {
+    httpOnly: true,
+    sameSite: "lax",
+    path: "/",
+    secure: process.env.NODE_ENV === "production",
+  },
+  size: 64,
+  ignoredMethods: ["GET", "HEAD", "OPTIONS"],
+  getTokenFromRequest: (req) => req.headers["x-csrf-token"],
+});
+
+app.use(cookieParser());
+app.use(cors({
+  origin: process.env.FRONTEND_URL || "http://localhost:3000",
+  credentials: true
+}));
 app.use(bodyParser.json());
+
+// CSRF token endpoint
+app.get("/csrf-token", (req, res) => {
+  const token = generateToken(req, res);
+  res.json({ csrfToken: token });
+});
+
+// Apply CSRF protection to state-changing operations
+app.use(validateRequest);
+
+// Handle CSRF errors
+app.use((error, req, res, next) => {
+  if (error == invalidCsrfTokenError) {
+    res.status(403).json({
+      error: "Invalid CSRF token",
+      message: "Request forbidden due to invalid CSRF token"
+    });
+  } else {
+    next();
+  }
+});
 
 const URL = process.env.MONGODB_URL;
 
 // Connect to MongoDB without deprecated options:
 mongoose.connect(URL, {
     useNewUrlParser: true,
-    
 });
 
 const connection = mongoose.connection;
@@ -45,7 +90,6 @@ app.post("/send-email", (req, res) => {
     }
   });
 });
-
 
 //other expenses
 const expenseRouter = require("./routes/expenseroutes.js");
@@ -93,8 +137,6 @@ app.use("/leave", leavesRoute);
 const SalaryRoute = require("./routes/salary.js");
 app.use("/salary",SalaryRoute);
 
-
-
 //supplier func
 const supplierRouter = require("./routes/supplierroutes.js");
 app.use("/supplier", supplierRouter);
@@ -102,10 +144,6 @@ app.use("/supplier", supplierRouter);
 //purchase order func
 const purchaseOrderRouter = require("./routes/purchaseOrderroutes.js");
 app.use("/purchaseOrder", purchaseOrderRouter);
-
-//supplier performance func
-// const SupPerformanceRouter = require("./routes/superformanceroutes.js");
-// app.use("/supPerformance", SupPerformanceRouter);
 
 //Requests For Quotations(RFQ) func
 const requestForQuotationRouter = require("./routes/rfqroutes.js");
