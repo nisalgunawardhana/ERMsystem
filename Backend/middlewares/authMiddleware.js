@@ -3,7 +3,8 @@ const jwt = require("jsonwebtoken")
 module.exports = async(req, res, next) => {
     try {
         const token = req.headers["authorization"].split(" ")[1];
-        jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+        const jwtSecret = process.env.JWT_SECRET || 'your-jwt-secret-key-change-in-production';
+        jwt.verify(token, jwtSecret, (err, decoded) => {
 
         if(err) {
             return res.status(401).send({

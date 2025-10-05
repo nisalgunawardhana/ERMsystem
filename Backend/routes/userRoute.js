@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt')
 const jwt = require("jsonwebtoken")
 const authMiddleware = require("../middlewares/authMiddleware")
 const Note = require('../models/noteModel');
+const { getUserRole } = require('../utils/userRole');
 
 
 //--system users--
@@ -47,12 +48,14 @@ router.post('/login', async(req, res) => {
             .status(200)
             .send({ message: "Password is incorrect", success: false })
         } else {
-            const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
+            const role = getUserRole(user);
+            const jwtSecret = process.env.JWT_SECRET || 'your-jwt-secret-key-change-in-production';
+            const token = jwt.sign({ id: user._id, role }, jwtSecret, {
                 expiresIn: "1d"
             })
             res
                 .status(200)
-                .send({ message: "Login successful", success: true, data: token })
+                .send({ message: "Login successful", success: true, data: token, role })
         }
     }catch (error) {
         console.log(error)
@@ -65,20 +68,18 @@ router.post('/login', async(req, res) => {
 //READ BY USER ID
 router.post('/get-user-info-by-id', authMiddleware, async(req, res) => {
     try {
-        const user = await User.findOne({ _id: req.body.userId })
-        user.password =  undefined; //so that password wont be displayed
+        const user = await User.findOne({ _id: req.body.userId });
         if (!user) {
             return res
                 .status(200)
                 .send({ message: "User does not exist", success: false })
         } else {
+            user.password = undefined; // so that password won't be returned
+            const role = getUserRole(user);
             res.status(200).send({ 
                 success: true, 
-                data: user/*{
-                   first_name: user.first_name,
-                    last_name: user.last_name,
-                    email: user.email
-                } ,*/
+                data: user,
+                role,
             });
         }
     } catch (error) {

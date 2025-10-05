@@ -4,67 +4,62 @@ const bodyParser = require("body-parser");
 require('dotenv').config();
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const { doubleCsrf } = require("csrf-csrf");
 const app = express();
-
 const PORT = process.env.PORT || 8080;
 const nodemailer = require('nodemailer');
 const session = require('express-session');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const jwt = require('jsonwebtoken');
+const { getUserRole } = require('./utils/userRole');
 
+const FRONTEND_BASE_URL = process.env.FRONTEND_BASE_URL || 'http://localhost:3000';
+const jwtSecret = process.env.JWT_SECRET || 'your-jwt-secret-key-change-in-production';
 
-// CSRF Protection Configuration
-const {
-  invalidCsrfTokenError,
-  generateToken,
-  validateRequest,
-} = doubleCsrf({
-  getSecret: () => process.env.CSRF_SECRET || "your-csrf-secret-key-change-in-production",
-  cookieName: "__Host-psifi.x-csrf-token",
-  cookieOptions: {
-    httpOnly: true,
-    sameSite: "lax",
-    path: "/",
-    secure: process.env.NODE_ENV === "production",
-  },
-  size: 64,
-  ignoredMethods: ["GET", "HEAD", "OPTIONS"],
-  getTokenFromRequest: (req) => req.headers["x-csrf-token"],
-});
+// Define allowed origins
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:3000')
+  .split(',')
+  .map(origin => origin.trim())
+  .filter(Boolean);
 
+// Middleware setup (order is important)
+// 1. Basic middleware
+app.use(bodyParser.json());
 app.use(cookieParser());
+
+// 2. Restrictive CORS policy
 app.use(cors({
-  origin: process.env.FRONTEND_URL || "http://localhost:3000",
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
   credentials: true
 }));
-app.use(bodyParser.json());
 
-// CSRF token endpoint
-app.get("/csrf-token", (req, res) => {
-  const token = generateToken(req, res);
-  res.json({ csrfToken: token });
-});
-
-// Apply CSRF protection to state-changing operations
-app.use(validateRequest);
-
-// Handle CSRF errors
-app.use((error, req, res, next) => {
-  if (error == invalidCsrfTokenError) {
-    res.status(403).json({
-      error: "Invalid CSRF token",
-      message: "Request forbidden due to invalid CSRF token"
-    });
-  } else {
-    next();
+// 3. Session middleware - MUST be before passport
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'change-this-secret-in-production',
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
   }
-});
+}));
 
+// 4. Initialize passport
+app.use(passport.initialize());
+app.use(passport.session());
+
+// MongoDB Connection
 const URL = process.env.MONGODB_URL;
 
-// Connect to MongoDB without deprecated options:
 mongoose.connect(URL, {
     useNewUrlParser: true,
 });
@@ -95,14 +90,32 @@ connection.once("open", () => {
     console.log("MongoDB connection successful");
 });
 
+// Serialize/deserialize user for passport
+passport.serializeUser((user, done) => done(null, user));
+passport.deserializeUser((obj, done) => done(null, obj));
+
+// Configure Google OAuth strategy
+passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: process.env.GOOGLE_CALLBACK_URL || 'http://localhost:8080/auth/google/callback'
+  },
+  function(accessToken, refreshToken, profile, done) {
+    // Here, you can save/find the user in your DB if needed
+    return done(null, profile);
+  }
+));
+
+// Email transporter
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'diyanafashionerm@gmail.com',
-    pass: 'pcgm mxfb jsro qcwi'
+    user: process.env.EMAIL_USER || 'diyanafashionerm@gmail.com',
+    pass: process.env.EMAIL_PASSWORD || 'pcgm mxfb jsro qcwi'
   }
 });
 
+// Route for sending email
 app.post("/send-email", (req, res) => {
   const mailOptions = req.body;
 
@@ -116,6 +129,63 @@ app.post("/send-email", (req, res) => {
     }
   });
 });
+
+// Google OAuth routes
+app.get('/auth/google',
+  passport.authenticate('google', { scope: ['profile', 'email'] })
+);
+
+const User = require("./models/userModel");
+
+app.get('/auth/google/callback', 
+  passport.authenticate('google', { failureRedirect: `${FRONTEND_BASE_URL}/login?error=authentication_failed` }),
+  async function(req, res) {
+    try {
+      const googleEmail = req.user?.emails?.[0]?.value || req.user?._json?.email;
+      if (!googleEmail) {
+        return res.redirect(`${FRONTEND_BASE_URL}/login?error=authentication_failed`);
+      }
+      const user = await User.findOne({ email: googleEmail });
+
+      if (!user) {
+        // Optionally, create the user here or reject
+        return res.redirect(`${FRONTEND_BASE_URL}/login?error=not_registered`);
+      }
+
+      // Generate JWT with DB user info
+      const role = getUserRole(user);
+      const token = jwt.sign(
+        { id: user._id, role }, // used role flags
+        jwtSecret,
+        { expiresIn: '1h' }
+      );
+
+      const params = new URLSearchParams({
+        token,
+        role,
+      });
+
+      res.redirect(`${FRONTEND_BASE_URL}/login?${params.toString()}`);
+    } catch (error) {
+      console.error('Google OAuth callback error:', error);
+      res.redirect(`${FRONTEND_BASE_URL}/login?error=authentication_failed`);
+    }
+  }
+);
+
+app.get('/logout', (req, res) => {
+  req.logout(() => {
+    // log out from Google
+    res.redirect(`https://accounts.google.com/Logout?continue=https://appengine.google.com/_ah/logout?continue=${encodeURIComponent(`${FRONTEND_BASE_URL}/login`)}`);
+  });
+});
+
+// Test endpoint for testing environment
+if (process.env.NODE_ENV === 'test') {
+  app.get('/otherExpense/', (req, res) => {
+    res.json({ test: 'ok' });
+  });
+}
 
 //other expenses
 const expenseRouter = require("./routes/expenseroutes.js");
@@ -182,7 +252,6 @@ app.use("/customer", customer);
 const discounts = require("./routes/discounttoute.js");
 app.use("/discounts", discounts);
 
-
 //user management
 const userRoute = require("./routes/userRoute.js");
 app.use("/api/user", userRoute);    //fetch user
@@ -196,70 +265,9 @@ const toys = require("./routes/toysRoutes.js");
 const Leaves = require("./models/leavesmodel.js");
 app.use("/toys", toys);
 
-module.exports = app;
-
-// Session middleware
-app.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: true
-}));
-
-// Initialize passport
-app.use(passport.initialize());
-app.use(passport.session());
-
-// Serialize/deserialize user
-passport.serializeUser((user, done) => done(null, user));
-passport.deserializeUser((obj, done) => done(null, obj));
-
-// Configure Google OAuth strategy
-passport.use(new GoogleStrategy({
-    clientID: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: process.env.GOOGLE_CALLBACK_URL
-  },
-  function(accessToken, refreshToken, profile, done) {
-    // Here, you can save/find the user in your DB if needed
-    return done(null, profile);
-  }
-));
-
-// Google OAuth routes
-app.get('/auth/google',
-  passport.authenticate('google', { scope: ['profile', 'email'] })
-);
-
-const User = require("./models/userModel")
-
-app.get('/auth/google/callback', 
-  passport.authenticate('google', { failureRedirect: '/' }),
-  async function(req, res) {
-    const googleEmail = req.user.emails[0].value;
-    const user = await User.findOne({ email: googleEmail });
-
-    if (!user) {
-      // Optionally, create the user here or reject
-      return res.redirect('http://localhost:3000/login?error=not_registered');
-    }
-
-    // Generate JWT with DB user info
-    const token = jwt.sign(
-      { id: user._id, role: user.role }, // used role flags
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    );
-    res.redirect(`http://localhost:3000/login?token=${token}`);
-  }
-);
-
-app.get('/logout', (req, res) => {
-  req.logout(() => {
-    // log out from Google
-    res.redirect('https://accounts.google.com/Logout?continue=https://appengine.google.com/_ah/logout?continue=http://localhost:3000/login');
-  });
-});
-
+// Start the server
 app.listen(PORT, () => {
     console.log(`Server is up and running on: ${PORT}`);
 });
+
+module.exports = app;
